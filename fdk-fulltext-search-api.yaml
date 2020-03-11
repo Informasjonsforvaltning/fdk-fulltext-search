@@ -1,0 +1,495 @@
+openapi: 3.0.2
+info:
+  title: FDK fulltext search API
+  description: API for fulltext searches in Felles Datakatalogs content
+  version: 1.0.0
+  contact:
+    name: Digitaliseringsdirektoratet
+    url: 'https://fellesdatakatalog.digdir.no'
+    email: fellesdatakatalog@digdir.no
+  license:
+    name: License of API
+    url: 'http://data.norge.no/nlod/no/2.0'
+servers:
+  - url: 'https://search.fellesdatakatalog.digdir.no'
+    description: Produksjonsversjon av API server
+  - url: 'https://staging.search.fellesdatakatalog.no'
+    description: utviklingsversjon av API server
+tags:
+  - name: fdk-full-text-search
+paths:
+  /search:
+    post:
+      summary: Returns a list of hits from full text searches in Felles Datakatalog's content
+      operationId: searchAllContent
+      responses:
+        '200':
+          description: A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+components:
+  schemas:
+    SearchRequest:
+      description: Body with searh parameters
+      properties:
+        searchString:
+          type: string
+          description: string to perform a search on
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+        size:
+          type: integer
+          description: how many elements that should be returned, defaults to 10
+        sorting:
+            $ref: '#/components/schemas/Sort'
+    SearchResult:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ElasticSearchData'
+        - properties:
+            hits:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/Concept'
+                  - $ref: '#/components/schemas/InformationModel'
+                  - $ref: '#/components/schemas/DataService'
+                  - $ref: '#/components/schemas/DataSet'
+            page:
+              $ref: '#/components/schemas/Page'
+    Filter:
+      type: object
+      description: Which field and value to filter by, defaults to none
+      properties:
+        field:
+          description: field the search should filter by
+          type: string
+        value:
+          description: value to filter by, defaults to queryStrin
+          type: string
+        forTypes:
+          description: which type of data the filter should be applied to, defaults to all
+          type: array
+          items:
+            type: string
+            enum: [dataset,dataservice,concept,informationmodel]
+    Sort:
+      type: object
+      properties:
+        field:
+         description: which field the sort should be performed on, defaults to relevance
+         type: string
+        direction:
+          description: the direction of the sort. avaiable values are asc, desc
+          type: string
+          enum: [asc, desc]
+    Page:
+      type: object
+      properties:
+        "size" :
+          type: integer
+          description: how many elements was returned
+        "totalElements":
+          type: integer
+          description: The total amount of hits for search
+        "number":
+          type: integer
+    InformationModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [informationmodel]
+        id:
+          type: string
+          description: The id given by the harvest system
+        uri:
+          type: string
+          description: The uri of the concept [dct:identifier]
+        publisher:
+          $ref: '#/components/schemas/Publisher'
+        harvest:
+          $ref: "#/components/schemas/HarvestMetadata"
+        harvestSourceUri:
+          type: string
+          description: The source where the record was harvested from
+        schema:
+          type: string
+          description: json schema of the model
+        title:
+          $ref: '#/components/schemas/TextField'
+    DataService:
+      type: object
+      properties:
+        nationalComponent:
+          type: boolean
+        isOpenAccess:
+          type: boolean
+        isOpenLicence:
+          type: boolean
+        isFree:
+          type: boolean
+        statusCode:
+          type: string
+          enum: [ STABLE ]
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        descriptionFormatted:
+          type: string
+        formats:
+          type: array
+          items:
+            type: string
+        publisher:
+          $ref: '#/components/schemas/Publisher'
+    DataSet:
+      type: object
+      properties:
+        _source:
+          type: object
+          properties:
+            expandedLosTema:
+              type: array
+              items:
+                type: string
+            losTheme:
+              $ref: '#/components/schemas/LosTheme'
+            id:
+              type: string
+            uri:
+              type: string
+            source:
+              type: string
+            harvest:
+              $ref: '#/components/schemas/HarvestMetadata'
+            title:
+              $ref: '#/components/schemas/TextField'
+            description:
+              $ref: '#/components/schemas/TextField'
+            descriptionFormatted:
+              $ref: '#/components/schemas/TextField'
+            objective:
+              $ref: '#/components/schemas/TextField'
+            contactPoint:
+              $ref: '#/components/schemas/ContactPoint'
+            keyword:
+              $ref: '#/components/schemas/TextField'
+            publisher:
+              $ref: '#/components/schemas/PublisherDetailed'
+            landingpage:
+              type: string
+            theme:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+            distribution:
+              $ref: '#/components/schemas/Distribution'
+            accessRights:
+              $ref: '#/components/schemas/AccessRights'
+            hasRelevanceAnnotation:
+              $ref: '#/components/schemas/RelevanceAnnotation'
+            provenance:
+              $ref: '#/components/schemas/Provenance'
+            conformsTo:
+              $ref: '#/components/schemas/Conformation'
+            type:
+              type: string
+            catalog:
+              $ref: '#/components/schemas/Catalog'
+    Concept:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [concept]
+        id:
+          type: string
+          description: The id given by the harvest system
+        uri:
+          type: string
+          description: The uri of the concept [dct:identifier]
+        identifier:
+          type: string
+          description: Identifier
+        definition:
+          $ref: "#/components/schemas/Definition"
+        alternativeDefinition:
+          $ref: "#/components/schemas/Definition"
+        subject:
+          $ref: "#/components/schemas/Subject"
+        prefLabel:
+          $ref: "#/components/schemas/PrefLabel"
+        altLabel:
+          type: array
+          items:
+            $ref: "#/components/schemas/AltLabel"
+        hiddenLabel:
+          type: array
+          items:
+            $ref: "#/components/schemas/HiddenLabel"
+        contactPoint:
+          $ref: "#/components/schemas/ContactPoint"
+        publisher:
+          $ref: "#/components/schemas/Publisher"
+        harvestSourceUri:
+          type: string
+          description: The source where the record was harvested from
+        harvest:
+          $ref: "#/components/schemas/HarvestMetadata"
+    Catalog:
+      type: object
+      properties:
+        id:
+          type: string
+        uri:
+          type: string
+        title:
+          $ref: '#/components/schemas/TextField'
+        "publisher":
+          $ref: '#/components/schemas/PublisherDetailed'
+    Conformation:
+      allOf:
+        - $ref: '#/components/schemas/Identification'
+        - properties:
+            extraType:
+              type: string
+    RelevanceAnnotation:
+      type: object
+      properties:
+        inDimension:
+          type: string
+        hasBody:
+          $ref: '#/components/schemas/TextField'
+    Distribution:
+      properties:
+        description:
+          $ref: '#/components/schemas/TextField'
+        downloadUrl:
+          type: array
+          items:
+            type: string
+        accessUrl:
+          type: array
+          items:
+            type: string
+        openLicense:
+          type: boolean
+        page:
+          type: array
+          items:
+            type: object
+            properties:
+              uri:
+                type: string
+              extraType:
+                type: string
+    AccessRights:
+      allOf:
+        - $ref: '#/components/schemas/Identification'
+        - properties:
+            code:
+              type: string
+              enum: [PUBLIC,RESTRICTED,NON_PUBLIC,ukjent]
+    LosTheme:
+      type: object
+      properties:
+        children:
+          type: array
+          items:
+            type: string
+        parents:
+          type: array
+          items:
+            type: string
+        isTema:
+          type: boolean
+        losPaths:
+          type: array
+          items:
+            type: string
+    Definition:
+      type: object
+      description: The definition [skosno:Definisjon]
+      properties:
+        text:
+          type: object
+          properties:
+            nb:
+              type: string
+              description: the definition text in Norwegian Bokmål
+        remark:
+          type: object
+          properties:
+            nb:
+              type: string
+              description: the definition remark in Norwegian Bokmål
+        source:
+          $ref: "#/components/schemas/Source"
+        targetGroup:
+          type: string
+          description: Target group
+        lastUpdated:
+          type: string
+          description: Date when the definition was last updated
+    Subject:
+      type: object
+      description: Subject [dct:subject]
+    PrefLabel:
+      type: object
+      description: Preferred label [skosxl:prefLabel]
+      properties:
+        nb:
+          type: string
+          description: Preferred label [skosxl:prefLabel] in Norwegian Bokmål
+        no:
+          type: string
+          description: Preferred label [skosxl:prefLabel] in Norwegian (General)
+        nn:
+          type: string
+          description: Preferred label [skosxl:prefLabel] in Norwegian (Nynorsk)
+        en:
+          type: string
+          description: Preferred label [skosxl:prefLabel] in english
+    AltLabel:
+      type: object
+      description: Alternative label [skosxl:altLabel]
+      properties:
+        nb:
+          type: string
+          description: Preferred label [skosxl:altLabel] in Norwegian Bokmål
+    HiddenLabel:
+      type: object
+      description: Hidden label [skos:hiddenLabel]
+      properties:
+        nb:
+          type: string
+          description: Hidden label [skosxl:altLabel] in Norwegian Bokmål
+    TextField:
+      type: object
+      properties:
+        nb:
+          type: string
+          description: the text in Bokmål(Norwegian)
+        nn:
+          type: string
+          description: the text in Nynorsk(Norwegian)
+        no:
+          type: string
+          description: the text in Norwegian(general)
+        en:
+          type: string
+          description: the text in Nynorsk(general)
+    ContactPoint:
+      type: object
+      description: Hidden label [skos:hiddenLabel]
+      properties:
+        email:
+          type: string
+        telephone:
+          type: string
+    Publisher:
+      type: object
+      description: The publisher of the concept [dct:publisher]
+      properties:
+        uri:
+          type: string
+          description: Link to the organization entry in The Brønnøysund Register Centre
+        id:
+          type: string
+          description: Organization number
+        name:
+          type: string
+          description: The name of the organization as given in the The Brønnøysund Register Centre
+        orgPath:
+          type: string
+        prefLabel:
+          $ref: "#/components/schemas/PrefLabel"
+    PublisherDetailed:
+      allOf:
+        - $ref: '#/components/schemas/Publisher'
+        - type: object
+          properties:
+            overordnetEnhet:
+              type: string
+            organisasjonsform:
+              type: string
+            naeringskode:
+              $ref: '#/components/schemas/Code'
+            prefLabel:
+              $ref: '#/components/schemas/PrefLabel'
+    Code:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        prefLabel:
+          $ref: '#/components/schemas/PrefLabel'
+    Provenance:
+      allOf:
+        - $ref: '#/components/schemas/Identification'
+        - properties:
+            code:
+              type: string
+              enum: [ NASJONAL ]
+    HarvestMetadata:
+      type: object
+      description: Information about when the concept was first and last harvested by the system
+      properties:
+        firstHarvested:
+          type: string
+        lastHarvested:
+          type: string
+        lastChanged:
+          type: string
+        changed:
+          type: array
+          items:
+            type: string
+    Source:
+      description: The source of the definition
+      allOf:
+        - $ref: '#/components/schemas/Identification'
+    Identification:
+      type: object
+      properties:
+        uri:
+          type: string
+        prefLabel:
+          $ref: '#/components/schemas/PrefLabel'
+    ElasticSearchData:
+      type: object
+      description: Data about the object from ElasticSearch
+      properties:
+        _index:
+          type: string
+          description: index where the object is stored
+        _type:
+          type: string
+          description: type of the object
+          enum: [datasett, concept, dataservice, informationmodel]
+        _id:
+          type: string
+          description: id of the stored object
+        _score:
+          type: number
+          description: relevance score given by elasticsearch
+    ErrorMessage:
+      type: object
+      properties:
+        status:
+          type: integer
+        reason:
+          type: string
