@@ -32,7 +32,7 @@ paths:
 components:
   schemas:
     SearchRequest:
-      description: Body with searh parameters
+      description: Body with search parameters
       properties:
         searchString:
           type: string

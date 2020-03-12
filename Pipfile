@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 flask = "*"
+python-dotenv = "*"
+flask-restful = "*"
+elasticsearch = "*"
+elasticsearch-dsl = "*"
 
 [requires]
 python_version = "3.7"
