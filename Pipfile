@@ -11,6 +11,7 @@ python-dotenv = "*"
 flask-restful = "*"
 elasticsearch = "*"
 elasticsearch-dsl = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

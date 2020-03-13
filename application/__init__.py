@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
-from .endpoints import Search, AutoComplete, ApplicationStatus
+from .endpoints import *
 
 
 def create_app(test_config=None):
@@ -23,5 +23,6 @@ def create_app(test_config=None):
     api = Api(app)
     api.add_resource(Search, '/search')
     api.add_resource(AutoComplete, '/autocomplete')
-    api.add_resource(ApplicationStatus, '/count')
+    api.add_resource(Count, '/count')
+    api.add_resource(Harvest, '/harvest')
     return app

@@ -1,5 +1,6 @@
 from .queries import *
 from elasticsearch import Elasticsearch
+from ..ingest import fetch_information_models
 
 client = Elasticsearch()
 
@@ -8,7 +9,7 @@ def search_all(queryString):
     s = None
     if queryString == "":
         s = client.search(body=match_all)
-        return s
+    return s
 
 
 def count():
