@@ -21,8 +21,8 @@ class Count(Resource):
 
 class Harvest(Resource):
     def post(self):
-        fetch_information_models()
-        fetch_concepts()
-        fetch_dataservices()
+        # fetch_information_models()
+        # fetch_concepts()
+        # fetch_dataservices()
         fetch_datasets()
         return {"status": "successfull"}

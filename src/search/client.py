@@ -1,13 +1,12 @@
 from .queries import *
 from elasticsearch import Elasticsearch
-from ..ingest import fetch_information_models
 
 client = Elasticsearch()
 
 
-def search_all(queryString):
+def search_all(query_string: str):
     s = None
-    if queryString == "":
+    if query_string == "":
         s = client.search(body=match_all)
     return s
 
