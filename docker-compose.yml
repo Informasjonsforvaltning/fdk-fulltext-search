@@ -11,3 +11,8 @@ services:
       - xpack.monitoring.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
+  servicesmock:
+      image: stoplight/prism:3
+      command: >
+        mock -p 3100 --host 0.0.0.0 full-text-mock.yaml
+
