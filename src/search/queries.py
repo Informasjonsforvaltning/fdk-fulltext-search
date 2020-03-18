@@ -5,7 +5,11 @@ match_all = {
 }
 
 all_indices = {
-
+    "query": {
+        "dismax": {
+            "queries": []
+        }
+    }
 }
 
 

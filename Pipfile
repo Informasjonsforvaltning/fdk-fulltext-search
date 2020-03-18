@@ -30,6 +30,7 @@ flask-restful = "*"
 elasticsearch = "*"
 elasticsearch-dsl = "*"
 requests = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
