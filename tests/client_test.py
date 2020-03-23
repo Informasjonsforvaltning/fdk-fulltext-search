@@ -1,6 +1,4 @@
 import pytest
-from mock import Mock
-
 from src.search.client import search_all
 from src.search.queries import match_all
 
@@ -10,11 +8,12 @@ def mock_elastic(mocker):
     return mocker.patch('elasticsearch.Elasticsearch.search')
 
 
-def test_should_call_search_with_match_all_query(mock_elastic: Mock):
+@pytest.mark.unit
+def test_should_call_search_with_match_all_query(mock_elastic):
     search_all(query_string="")
     mock_elastic.assert_called_once_with(body=match_all)
 
-
-def test_should_call_search_with_dismax_query(mock_elastic: Mock):
+@pytest.mark.unit
+def test_should_call_search_with_dismax_query(mock_elastic):
     search_all(query_string="some search string")
     mock_elastic.assert_called_once_with(body={"dismax": {"queries": []}})

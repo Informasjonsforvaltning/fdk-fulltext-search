@@ -1,7 +1,5 @@
 from .queries import *
-from elasticsearch import Elasticsearch
 from ..ingest import client
-
 
 
 def search_all(query_string: str):

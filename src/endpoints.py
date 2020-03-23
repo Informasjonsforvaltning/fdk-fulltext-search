@@ -16,7 +16,7 @@ class AutoComplete(Resource):
 
 class Count(Resource):
     def get(self):
-        return {"item count": client.count()}
+        return client.count()
 
 
 class Harvest(Resource):

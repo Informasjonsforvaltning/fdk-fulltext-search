@@ -3,8 +3,8 @@ import requests
 import os
 from elasticsearch import Elasticsearch, helpers
 
-ES_HOST = os.getenv('ELASTIC_HOST')
-ES_PORT = os.getenv('ELASTIC_PORT')
+ES_HOST = os.getenv('ELASTIC_HOST') or "localhost"
+ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 client = Elasticsearch([ES_HOST+':'+ES_PORT])
 API_URL = os.getenv('API_URL')
 
