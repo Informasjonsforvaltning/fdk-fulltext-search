@@ -6,7 +6,7 @@ from .ingest import fetch_information_models, fetch_concepts, fetch_dataservices
 class Search(Resource):
     def post(self):
         result = client.search_all("")
-        return {"hits": result}
+        return result
 
 
 class AutoComplete(Resource):

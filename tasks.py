@@ -13,6 +13,8 @@ def unit_test(ctx):
 @task
 def build_image(ctx):
     print("building image as digdir/fulltext-search:latest")
+    gen_requirements = "pipenv lock -r >requirements.txt"
+    ctx.run(gen_requirements)
     build_cmd = "docker build . -t digdir/fulltext-search:latest --rm "
     ctx.run(build_cmd)
 

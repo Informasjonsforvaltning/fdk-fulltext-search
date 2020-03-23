@@ -5,6 +5,7 @@ from flask import Flask
 from flask_restful import Api
 from .endpoints import *
 
+
 def create_app(test_config=None):
     # Create and configure the app
     load_dotenv(override=True)
