@@ -49,7 +49,6 @@ components:
     SearchResult:
       type: object
       allOf:
-        - $ref: '#/components/schemas/ElasticSearchData'
         - properties:
             hits:
               type: array
@@ -96,8 +95,12 @@ components:
         "totalElements":
           type: integer
           description: The total amount of hits for search
-        "number":
+        "currentPage":
           type: integer
+          description: which page was returned
+        "totalPages":
+          type: integer
+          description: total available pages
     InformationModel:
       type: object
       properties:
