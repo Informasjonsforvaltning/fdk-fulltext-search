@@ -25,7 +25,6 @@ def create_app(test_config=None):
     # add endpoints
     api = Api(app)
     api.add_resource(Search, '/search')
-    api.add_resource(AutoComplete, '/autocomplete')
     api.add_resource(Count, '/count')
-    api.add_resource(Harvest, '/harvest')
+    api.add_resource(Update, '/update')
     return app

@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from requests import post, get
 
@@ -19,21 +17,35 @@ def api():
 class TestSearchAll:
     @pytest.mark.contract
     def test_harvest_should_not_create_duplicates(self, api):
-        harvest_response = post(service_url + "/harvest")
-        if harvest_response.status_code != 200:
+        update_response = post(service_url + "/update")
+        if update_response.status_code != 200:
             raise Exception(
-                'Test containers: received http status' + harvest_response.status_code + "when attempting to start harvest")
+                'Test containers: received http status' + update_response.status_code + "when attempting to start "
+                                                                                        "update")
         amount_after_first_harvest = 130
-        result = post(service_url + "/search")
-        amount_after_second_harvest = result.json()["hits"]["total"]["value"]
-        assert amount_after_second_harvest is amount_after_first_harvest
+        result = get(service_url + "/count").json()["count"]
+        assert result is amount_after_first_harvest
 
     @pytest.mark.contract
     def test_search_without_body_should_return_response_with_hits_aggregations_and_page(self, api):
         result = post(service_url + "/search").json()
-        assert "hits" in result
-        assert "aggregations" in result
-        assert "page" in result
+        hasHits = False
+        hasAggregation = False
+        hasPage = False
+        unknownItems = []
+        for k, v in result.items():
+            if k == "hits":
+                hasHits = True
+            elif k == "aggregations":
+                hasAggregation = True
+            elif k == "page":
+                hasPage = True
+            else:
+                unknownItems.append(k)
+        assert hasHits is True
+        assert hasAggregation is True
+        assert hasPage is True
+        assert len(unknownItems) is 0
 
     @pytest.mark.contract
     def test_search_without_body_should_return_list_of_content_with_authority_boost(self, api):
@@ -55,3 +67,15 @@ class TestSearchAll:
             else:
                 previous_was_authority = False
 
+    @pytest.mark.contract
+    def test_search_without_body_should_contain_default_aggs(self, api):
+        result = post(service_url + "/search").json()["aggregations"]
+        keys = result.keys()
+        assert "los" in keys
+        assert "orgPath" in keys
+        assert "isOpenAccess" in keys
+        assert "accessRights" in keys
+        assert len(result["los"]["buckets"]) > 0
+        assert len(result["orgPath"]["buckets"]) > 0
+        assert len(result["isOpenAccess"]["buckets"]) > 0
+        assert len(result["accessRights"]["buckets"]) > 0

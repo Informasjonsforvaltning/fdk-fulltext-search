@@ -41,3 +41,7 @@ def contract_test(ctx):
     pipenv_run_test = "pipenv run pytest -m contract"
     ctx.run(pipenv_cmd)
     ctx.run(pipenv_run_test)
+
+@task
+def no_setup_contract_test(ctx):
+    ctx.run("pytest -m contract")

@@ -1,12 +1,13 @@
 from flask_restful import Resource
 from .search import client
 from .ingest import fetch_information_models, fetch_concepts, fetch_dataservices, fetch_datasets
+from .search.responses import SearchResponse
 
 
 class Search(Resource):
     def post(self):
         result = client.search_all("")
-        return result
+        return SearchResponse().map_response(result)
 
 
 class Count(Resource):

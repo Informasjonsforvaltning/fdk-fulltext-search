@@ -1,18 +1,32 @@
-from dataclasses import dataclass
+from math import ceil
 
 
-@dataclass
-class Page:
-    size: int
-    totalElements: int
-    currentPage: int
-
-@dataclass
-class Aggregations:
-    name: str
-
-@dataclass
 class SearchResponse:
-    hits: dict
-    page: Page
-    aggregations: Aggregations
+    response: dict = {
+        "hits": {},
+        "page": {},
+        "aggregations": {}
+    }
+
+    def map_response(self, es_result, size=10, requested_page=0):
+        self.map_page(es_result["hits"], size, requested_page)
+        self.map_aggregations(es_result["aggregations"])
+        self.map_hits(es_result["hits"]["hits"])
+        return self.response
+
+    def map_page(self, es_hits, size, requested_page):
+        total = es_hits["total"]["value"]
+        total_pages = ceil(float(total) / float(size))
+        page = {
+            "size": size,
+            "totalElements": total,
+            "totalPages": total_pages,
+            "currentPage": requested_page
+        }
+        self.response["page"] = page
+
+    def map_aggregations(self, aggregations_result):
+        self.response["aggregations"] = aggregations_result
+
+    def map_hits(self, hits_result):
+        self.response["hits"] = hits_result

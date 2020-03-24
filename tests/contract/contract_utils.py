@@ -12,10 +12,11 @@ def wait_for_es():
 
 def populate():
     print("populating db")
-    harvest_response = requests.post("http://localhost:8080/harvest")
-    if harvest_response.status_code != 200:
+    update_response = requests.post("http://localhost:8080/update")
+    if update_response.status_code != 200:
         raise Exception(
-            'Test containers: received http status' + harvest_response.status_code + "when attempting to start content harvest")
+            'Test containers: received http status' + str(update_response.status_code) + "when attempting to start "
+                                                                                          "content update")
 
     timeout = time.time() + 90
     while True:

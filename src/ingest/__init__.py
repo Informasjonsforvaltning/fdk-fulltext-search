@@ -1,4 +1,4 @@
-# TODO : setup rabbit listeners; "new_harvest": [informationmodels,concepts,datasets,dataservices]
+# TODO : setup rabbit listeners; "update_es": [informationmodels,concepts,datasets,dataservices]
 import requests
 import os
 from elasticsearch import Elasticsearch, helpers
