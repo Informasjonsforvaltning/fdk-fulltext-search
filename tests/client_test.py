@@ -1,6 +1,6 @@
 import pytest
 from src.search.client import search_all
-from src.search.queries import match_all
+from src.search.queries import all_indices, add_size
 
 
 @pytest.fixture
@@ -11,9 +11,5 @@ def mock_elastic(mocker):
 @pytest.mark.unit
 def test_should_call_search_with_match_all_query(mock_elastic):
     search_all(query_string="")
-    mock_elastic.assert_called_once_with(body=match_all)
+    mock_elastic.assert_called_once_with(body=add_size(all_indices))
 
-@pytest.mark.unit
-def test_should_call_search_with_dismax_query(mock_elastic):
-    search_all(query_string="some search string")
-    mock_elastic.assert_called_once_with(body={"dismax": {"queries": []}})

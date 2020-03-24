@@ -20,34 +20,1327 @@ tags:
 paths:
   /search:
     post:
-      summary: Returns a list of hits from full text searches in Felles Datakatalog's content
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's content"
       operationId: searchAllContent
       responses:
         '200':
-          description: A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
+              examples:
+                example-1:
+                  value:
+                    hits:
+                      - type: dataservice
+                        nationalComponent: true
+                        isOpenAccess: true
+                        isOpenLicense: true
+                        isFree: true
+                        statusCode: EXPERIMENTAL
+                        id: 0670b703-e230-42ec-967e-27fe11ed3a69
+                        title: Åpne Data fra Enhetsregisteret - API Dokumentasjon
+                        description: "Teknisk beskrivelse av REST-tjenestene i Åpne Data fra Enhetsregisteret - Work in progress\n---\n\n## Ordbok\n### Enhetsregisteret\nRegister over grunndata om juridiske personer og andre enheter. Enhetsregisteret tildeler organisasjonsnummer for entydig identifisering av enheter.\n\n### Organisasjonsnummer\nNisifret nummer som entydig identifiserer enheter i Enhetsregisteret.\n\n### Enhet\nEnhet på øverste nivå i registreringsstrukturen i Enhetsregisteret. Eksempelvis enkeltpersonforetak, foreninger, selskap, sameier og andre som er registrert i Enhetsregisteret. Identifiseres med organisasjonsnummer.\n\n### Underenhet\nEnhet på laveste nivå i registreringsstrukturen i Enhetsregisteret. En underenhet kan ikke eksistere alene og har alltid knytning til en hovedenhet. Identifiseres med organisasjonsnummer.\n\n### Organisasjonsform\nOrganisasjonsform er virksomhetens formelle organisering og gir retningslinjer overfor blant annet ansvarsforhold, skatt, revisjonsplikt, rettigheter og plikter.\n\n### Næringskode\n[Næringskoder]: https://www.brreg.no/bedrift/naeringskoder/\n[Næringskoder] på brreg.no\n\n[Standard for næringsgruppering]: https://www.ssb.no/klass/klassifikasjoner/6\n[Standard for næringsgruppering]\n---\n\n## Versjonering\nDu kan velge major versjon ved å spesifisere HTTP Accept-headeren. Bruk headeren spesifisert i tabellen under. Hvis versjon ikke spesifiseres, vil man få siste versjon.\n\n \n \n API\n Header\n \n \n \n \n /\n application/vnd.enhetsregisteret.v1+json\n \n \n /organisasjonsformer\n application/vnd.enhetsregisteret.organisasjonsform.v1+json\n \n \n\n\n\n### Strategi\nVi skal normalt ikke bryte bakoverkompabiliteten med våre brukere. Likevel kan det være nødvendig i enkelte situasjoner, av for eksempel juridiske årsaker eller vedlikehold, å gjøre endringer som medfører et slikt brudd. Vi vil i dette tilfellet versjonere tjenesten slik at nyeste versjon vil være tilgjengelig sammen med forrige versjon.\n\n#### Dersom man ikke benytter versjonering i accept header, vil man få siste versjon.\n\nEldre versjon vil anses som utdatert/deprecated, og vil på sikt bli tatt bort. Ved behov for denne typen endringer vil vi forsøke å gi bruker god tid, og varsle om endringen i forkant. Se punkt om varsling.\n\n### Når innføres ny versjon\nVi vil innføre en ny versjon når vi introduserer en endring som påvirker bakoverkompabiliteten. Mindre endringer og patcher vil ikke medføre versjonsendring i header.\n\n### Når fjernes en versjon\nVi vil legge ut varsel/driftsmeldinger i god tid på følgende steder:\n- [Driftsmeldinger]: https://www.brreg.no/om-oss/driftsmeldinger/\n[Driftsmeldinger]\n- [RSS-feed]: https://www.brreg.no/produkter-og-tjenester/rss-feed/\n[RSS-feed].\n\nEksempel på endring som medfører versjonering:\n\n- Fjerne eller endre navn på et attributt i HTTP-responsen.\n\n- Fjerne eller endre navn på et REST endepunkt.\n\n---\n\n## Endringslogg\n\n \n \n Versjon\n Dato\n Endring\n \n \n \n \n 1.1.0\n 14. august 2018\n Ny tjeneste /oppdateringer/enheter og /oppdateringer/underenheter\n \n \n 1.0.0\n 6. april 2018\n Produksjonssetting av ny åpne data tjeneste for Enhetsregisteret\n \n \n\n"
+                        descriptionFormatted: |
+                          Teknisk beskrivelse av REST-tjenestene i Åpne Data fra Enhetsregisteret - Work in progress
+                          ---
+
+                          ## Ordbok
+                          ### Enhetsregisteret
+                          Register over grunndata om juridiske personer og andre enheter. Enhetsregisteret tildeler organisasjonsnummer for entydig identifisering av enheter.
+
+                          ### Organisasjonsnummer
+                          Nisifret nummer som entydig identifiserer enheter i Enhetsregisteret.
+
+                          ### Enhet
+                          Enhet på øverste nivå i registreringsstrukturen i Enhetsregisteret. Eksempelvis enkeltpersonforetak, foreninger, selskap, sameier og andre som er registrert i Enhetsregisteret. Identifiseres med organisasjonsnummer.
+
+                          ### Underenhet
+                          Enhet på laveste nivå i registreringsstrukturen i Enhetsregisteret. En underenhet kan ikke eksistere alene og har alltid knytning til en hovedenhet. Identifiseres med organisasjonsnummer.
+
+                          ### Organisasjonsform
+                          Organisasjonsform er virksomhetens formelle organisering og gir retningslinjer overfor blant annet ansvarsforhold, skatt, revisjonsplikt, rettigheter og plikter.
+
+                          ### Næringskode
+                          [Næringskoder]: https://www.brreg.no/bedrift/naeringskoder/
+                          [Næringskoder]  på brreg.no
+
+                          [Standard for næringsgruppering]: https://www.ssb.no/klass/klassifikasjoner/6
+                          [Standard for næringsgruppering]
+                          ---
+
+                          ## Versjonering
+                          Du kan velge major versjon ved å spesifisere HTTP Accept-headeren. Bruk headeren spesifisert i tabellen under. Hvis versjon ikke spesifiseres, vil man få siste versjon.
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>API</th>
+                                <th>Header</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>/</td>
+                                <td>application/vnd.enhetsregisteret.v1+json</td>
+                              </tr>
+                              <tr>
+                                <td>/organisasjonsformer</td>
+                                <td>application/vnd.enhetsregisteret.organisasjonsform.v1+json</td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+
+                          ### Strategi
+                          Vi skal normalt ikke bryte bakoverkompabiliteten med våre brukere. Likevel kan det være nødvendig i enkelte situasjoner, av for eksempel juridiske årsaker eller vedlikehold, å gjøre endringer som medfører et slikt brudd. Vi vil i dette tilfellet versjonere tjenesten slik at nyeste versjon vil være tilgjengelig sammen med forrige versjon.
+
+                          #### Dersom man ikke benytter versjonering i accept header, vil man få siste versjon.
+
+                          Eldre versjon vil anses som utdatert/deprecated, og vil på sikt bli tatt bort. Ved behov for denne typen endringer vil vi forsøke å gi bruker god tid, og varsle om endringen i forkant. Se punkt om varsling.
+
+                          ### Når innføres ny versjon
+                          Vi vil innføre en ny versjon når vi introduserer en endring som påvirker bakoverkompabiliteten. Mindre endringer og patcher vil ikke medføre versjonsendring i header.
+
+                          ### Når fjernes en versjon
+                          Vi vil legge ut varsel/driftsmeldinger i god tid på følgende steder:
+                          - [Driftsmeldinger]: https://www.brreg.no/om-oss/driftsmeldinger/
+                          [Driftsmeldinger]
+                          - [RSS-feed]: https://www.brreg.no/produkter-og-tjenester/rss-feed/
+                          [RSS-feed].
+
+                          Eksempel på endring som medfører versjonering:
+
+                          - Fjerne eller endre navn på et attributt i HTTP-responsen.
+
+                          - Fjerne eller endre navn på et REST endepunkt.
+
+                          ---
+
+                          ## Endringslogg
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Versjon</th>
+                                <th>Dato</th>
+                                <th>Endring</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1.1.0</td>
+                                <td>14. august 2018</td>
+                                <td>Ny tjeneste /oppdateringer/enheter og /oppdateringer/underenheter</td>
+                              </tr>
+                              <tr>
+                                <td>1.0.0</td>
+                                <td>6. april 2018</td>
+                                <td>Produksjonssetting av ny åpne data tjeneste for Enhetsregisteret</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        formats:
+                          - application/json
+                          - application/vnd.enhetsregisteret.enhet.v1+json
+                          - application/vnd.enhetsregisteret.organisasjonsform.v1+json
+                        publisher:
+                          id: '910244132'
+                          name: RAMSUND OG ROGNAN REVISJON
+                          orgPath: /ANNET/910244132
+                      - type: dataservice
+                        nationalComponent: true
+                        isOpenAccess: true
+                        isOpenLicense: true
+                        isFree: true
+                        statusCode: STABLE
+                        id: d84027ac-fabc-4c50-b729-a61c6e34683b
+                        title: National API Directory Search API
+                        description: Provides a basic search api against the National API Directory of Norway
+                        descriptionFormatted: Provides a basic search api against the National API Directory of Norway
+                        formats:
+                          - application/json
+                        publisher:
+                          id: '910244132'
+                          name: RAMSUND OG ROGNAN REVISJON
+                          orgPath: /ANNET/910244132
+                      - type: concept
+                        id: fe70dfdf-a4bf-402c-bf79-b8e1f16d107b
+                        uri: 'https://fellesdatakatalog.brreg.no/api/concepts/fe70dfdf-a4bf-402c-bf79-b8e1f16d107b'
+                        identifier: 'https://registrering-begrep-api.fellesdatakatalog.brreg.no/961181399/c12f144e-e9d4-4581-9351-5af37abd8a68'
+                        application: []
+                        definition:
+                          text:
+                            nn: 'ei logisk avgrensa informasjonsmengd som er lagra på eit medium for seinare lesing, lyding, framsyning eller overføring'
+                          source:
+                            prefLabel:
+                              nb: lov 4. desember 1992 nr. 126 om arkiv
+                          sourceRelationship: sitatFraKilde
+                          sources:
+                            - text:
+                                nb: lov 4. desember 1992 nr. 126 om arkiv
+                              uri: 'https://lovdata.no/lov/1992-12-04-126/§2'
+                        prefLabel:
+                          nn: dokument
+                        altLabel: []
+                        hiddenLabel: []
+                        contactPoint:
+                          email: begrep@arkivverket.no
+                        seeAlso: []
+                        publisher:
+                          uri: 'http://data.brreg.no/enhetsregisteret/enhet/961181399'
+                          name: ARKIVVERKET
+                          orgPath: /STAT/972417866/961181399
+                          prefLabel:
+                            'no': Arkivverket
+                        harvest:
+                          firstHarvested: '2020-02-18T07:57:00.170+0000'
+                          lastHarvested: '2020-02-18T07:57:00.170+0000'
+                      - expandedLosTema:
+                          - kultur
+                          - kultur
+                          - culture
+                          - 'kultur, idrett og fritid'
+                          - 'kultur, idrett og fritid'
+                          - 'culture, sport and recreation'
+                          - film og kino
+                          - film og kino
+                          - film and cinema
+                          - musikk- og kulturskule
+                          - musikk- og kulturskole
+                          - music and arts centres
+                          - kulturtilbod
+                          - kulturtilbud
+                          - cultural activities
+                          - museum
+                          - museum
+                          - museums
+                          - kulturbygg
+                          - kulturbygg
+                          - cultural buildings
+                          - festival
+                          - festival
+                          - festivals
+                          - bibliotektenester
+                          - bibliotektjenester
+                          - library services
+                          - kulturminne
+                          - kulturminner
+                          - cultural heritage
+                          - arkiv
+                          - arkiv
+                          - archives
+                          - slektsforsking
+                          - slektsforskning
+                          - genealogy
+                          - idrettsarrangement
+                          - idrettsarrangement
+                          - sports events
+                          - idrett
+                          - idrett
+                          - sport
+                          - 'kultur, idrett og fritid'
+                          - 'kultur, idrett og fritid'
+                          - 'culture, sport and recreation'
+                          - idrettslag
+                          - idrettslag
+                          - sports clubs
+                          - idrettsforening
+                          - idrettsklubb
+                          - idrettslag
+                          - idrett
+                          - idrett
+                          - sport
+                          - 'kultur, idrett og fritid'
+                          - 'kultur, idrett og fritid'
+                          - 'culture, sport and recreation'
+                          - idrett
+                          - idrett
+                          - sport
+                          - 'kultur, idrett og fritid'
+                          - 'kultur, idrett og fritid'
+                          - 'culture, sport and recreation'
+                          - idrettsanlegg
+                          - idrettsanlegg
+                          - sports facilities
+                          - symjehall
+                          - svømmehall
+                          - swimming pool
+                          - doping
+                          - doping
+                          - doping
+                          - idrettsarrangement
+                          - idrettsarrangement
+                          - sports events
+                          - idrettslag
+                          - idrettslag
+                          - sports clubs
+                        losTheme:
+                          - children:
+                              - 'https://psi.norge.no/los/ord/film-og-kino'
+                              - 'https://psi.norge.no/los/ord/musikk-og-kulturskole'
+                              - 'https://psi.norge.no/los/ord/kulturtilbud'
+                              - 'https://psi.norge.no/los/ord/museum'
+                              - 'https://psi.norge.no/los/ord/kulturbygg'
+                              - 'https://psi.norge.no/los/ord/festival'
+                              - 'https://psi.norge.no/los/ord/bibliotektjenester'
+                              - 'https://psi.norge.no/los/ord/kulturminner'
+                              - 'https://psi.norge.no/los/ord/arkiv'
+                              - 'https://psi.norge.no/los/ord/slektsforskning'
+                            parents:
+                              - 'https://psi.norge.no/los/tema/kultur-idrett-og-fritid'
+                            isTema: true
+                            losPaths:
+                              - kultur-idrett-og-fritid/kultur
+                            name:
+                              nn: Kultur
+                              nb: Kultur
+                              en: Culture
+                            uri: 'https://psi.norge.no/los/tema/kultur'
+                            synonyms: []
+                          - parents:
+                              - 'https://psi.norge.no/los/tema/idrett'
+                            isTema: false
+                            losPaths:
+                              - kultur-idrett-og-fritid/idrett/idrettsarrangement
+                            name:
+                              nn: Idrettsarrangement
+                              nb: Idrettsarrangement
+                              en: Sports events
+                            uri: 'https://psi.norge.no/los/ord/idrettsarrangement'
+                            synonyms: []
+                          - parents:
+                              - 'https://psi.norge.no/los/tema/idrett'
+                            isTema: false
+                            losPaths:
+                              - kultur-idrett-og-fritid/idrett/idrettslag
+                            name:
+                              nn: Idrettslag
+                              nb: Idrettslag
+                              en: Sports clubs
+                            uri: 'https://psi.norge.no/los/ord/idrettslag'
+                            synonyms:
+                              - Idrettsforening
+                              - Idrettsklubb
+                              - Idrettslag
+                            relatedTerms:
+                              - 'https://psi.norge.no/los/ord/lag-og-foreninger'
+                          - children:
+                              - 'https://psi.norge.no/los/ord/idrettsanlegg'
+                              - 'https://psi.norge.no/los/ord/svommehall'
+                              - 'https://psi.norge.no/los/ord/doping'
+                              - 'https://psi.norge.no/los/ord/idrettsarrangement'
+                              - 'https://psi.norge.no/los/ord/idrettslag'
+                            parents:
+                              - 'https://psi.norge.no/los/tema/kultur-idrett-og-fritid'
+                            isTema: true
+                            losPaths:
+                              - kultur-idrett-og-fritid/idrett
+                            name:
+                              nn: Idrett
+                              nb: Idrett
+                              en: Sport
+                            uri: 'https://psi.norge.no/los/tema/idrett'
+                            synonyms: []
+                        id: e39269af-85e1-4a10-a60f-9b767f7d2b27
+                        uri: 'http://brreg.no/catalogs/910244132/datasets/b3b8a5b2-b88e-4f3d-95be-1cecb4e9b500'
+                        source: B
+                        harvest:
+                          firstHarvested: '2019-04-29T13:29:00+0200'
+                          lastHarvested: '2020-03-23T08:46:02+0100'
+                          lastChanged: '2020-03-23T08:46:02+0100'
+                          changed:
+                            - '2019-04-29T13:29:00+0200'
+                            - '2019-04-29T13:32:05+0200'
+                            - '2019-04-30T01:01:55+0200'
+                            - '2019-05-01T01:02:01+0200'
+                            - '2019-05-02T01:01:55+0200'
+                            - '2019-05-03T01:01:58+0200'
+                            - '2019-05-04T01:01:51+0200'
+                            - '2019-05-05T01:02:03+0200'
+                            - '2019-05-06T01:02:08+0200'
+                            - '2019-05-07T01:02:04+0200'
+                            - '2019-05-08T01:02:12+0200'
+                            - '2019-05-09T01:02:04+0200'
+                            - '2019-05-10T01:02:08+0200'
+                            - '2019-05-11T01:02:24+0200'
+                            - '2019-05-12T01:02:23+0200'
+                            - '2019-05-13T01:02:17+0200'
+                            - '2019-05-14T01:02:10+0200'
+                            - '2019-05-14T07:11:46+0200'
+                            - '2019-05-14T07:34:30+0200'
+                            - '2019-05-14T07:38:29+0200'
+                            - '2019-05-14T07:43:47+0200'
+                            - '2019-05-14T07:44:57+0200'
+                            - '2019-05-14T15:08:40+0200'
+                            - '2019-05-15T01:02:38+0200'
+                            - '2019-05-16T01:02:15+0200'
+                            - '2019-05-17T01:02:13+0200'
+                            - '2019-05-18T01:02:06+0200'
+                            - '2019-05-19T01:02:04+0200'
+                            - '2019-05-20T01:02:03+0200'
+                            - '2019-05-20T09:29:02+0200'
+                            - '2019-05-20T09:41:01+0200'
+                            - '2019-05-20T09:42:30+0200'
+                            - '2019-05-21T01:02:32+0200'
+                            - '2019-05-22T01:03:08+0200'
+                            - '2019-05-23T01:02:25+0200'
+                            - '2019-05-23T15:39:02+0200'
+                            - '2019-05-23T15:40:57+0200'
+                            - '2019-05-24T01:02:21+0200'
+                            - '2019-05-24T12:34:57+0200'
+                            - '2019-05-24T12:36:47+0200'
+                            - '2019-05-25T01:02:50+0200'
+                            - '2019-05-26T01:02:39+0200'
+                            - '2019-05-27T01:02:23+0200'
+                            - '2019-05-28T01:02:17+0200'
+                            - '2019-05-29T01:02:11+0200'
+                            - '2019-05-30T01:02:21+0200'
+                            - '2019-05-31T01:02:21+0200'
+                            - '2019-06-01T01:02:18+0200'
+                            - '2019-06-02T01:02:26+0200'
+                            - '2019-06-24T13:54:56+0200'
+                            - '2019-06-25T14:11:41+0200'
+                            - '2019-06-26T01:03:11+0200'
+                            - '2019-06-27T01:03:01+0200'
+                            - '2019-06-28T01:02:52+0200'
+                            - '2019-06-29T01:02:51+0200'
+                            - '2019-06-30T01:02:46+0200'
+                            - '2019-07-01T01:02:45+0200'
+                            - '2019-07-02T01:02:45+0200'
+                            - '2019-07-03T01:02:54+0200'
+                            - '2019-07-04T01:02:51+0200'
+                            - '2019-07-05T01:02:49+0200'
+                            - '2019-07-06T01:02:52+0200'
+                            - '2019-07-07T01:02:47+0200'
+                            - '2019-07-08T01:03:04+0200'
+                            - '2019-07-09T01:03:09+0200'
+                            - '2019-07-10T01:03:22+0200'
+                            - '2019-07-11T01:03:15+0200'
+                            - '2019-07-12T01:03:21+0200'
+                            - '2019-07-13T01:02:57+0200'
+                            - '2019-07-14T01:03:26+0200'
+                            - '2019-07-15T01:03:00+0200'
+                            - '2019-07-16T01:03:06+0200'
+                            - '2019-07-17T01:03:23+0200'
+                            - '2019-07-18T01:03:12+0200'
+                            - '2019-07-19T01:03:00+0200'
+                            - '2019-07-20T01:03:14+0200'
+                            - '2019-07-21T01:03:19+0200'
+                            - '2019-07-22T01:03:24+0200'
+                            - '2019-07-23T01:03:19+0200'
+                            - '2019-07-24T01:03:47+0200'
+                            - '2019-07-25T01:03:03+0200'
+                            - '2019-07-26T01:03:08+0200'
+                            - '2019-07-27T01:03:19+0200'
+                            - '2019-07-28T01:03:01+0200'
+                            - '2019-07-29T01:03:16+0200'
+                            - '2019-07-30T01:03:11+0200'
+                            - '2019-07-31T01:03:19+0200'
+                            - '2019-07-31T14:29:27+0200'
+                            - '2019-07-31T15:13:55+0200'
+                            - '2019-08-01T01:03:35+0200'
+                            - '2019-08-02T01:03:07+0200'
+                            - '2019-08-03T01:03:06+0200'
+                            - '2019-08-04T01:03:03+0200'
+                            - '2019-08-05T01:03:06+0200'
+                            - '2019-08-06T01:03:02+0200'
+                            - '2019-08-07T01:03:01+0200'
+                            - '2019-08-08T01:03:04+0200'
+                            - '2019-08-09T01:02:58+0200'
+                            - '2019-08-10T01:02:58+0200'
+                            - '2019-08-11T01:02:59+0200'
+                            - '2019-08-12T01:03:09+0200'
+                            - '2019-08-12T13:47:43+0200'
+                            - '2019-08-13T01:03:07+0200'
+                            - '2019-08-14T01:03:09+0200'
+                            - '2019-08-15T01:03:18+0200'
+                            - '2019-08-16T01:03:06+0200'
+                            - '2019-08-17T01:03:09+0200'
+                            - '2019-08-18T01:03:00+0200'
+                            - '2019-08-19T01:03:01+0200'
+                            - '2019-08-20T01:03:06+0200'
+                            - '2019-08-20T08:16:53+0200'
+                            - '2019-08-20T08:30:35+0200'
+                            - '2019-08-21T01:03:13+0200'
+                            - '2019-08-22T01:03:10+0200'
+                            - '2019-08-22T12:26:11+0200'
+                            - '2019-08-23T01:03:08+0200'
+                            - '2019-08-24T01:03:05+0200'
+                            - '2019-08-25T01:03:01+0200'
+                            - '2019-08-26T01:03:06+0200'
+                            - '2019-08-27T01:03:21+0200'
+                            - '2019-08-28T01:03:01+0200'
+                            - '2019-08-29T01:02:55+0200'
+                            - '2019-08-30T01:02:58+0200'
+                            - '2019-08-31T01:03:03+0200'
+                            - '2019-09-01T01:02:58+0200'
+                            - '2019-09-02T01:02:59+0200'
+                            - '2019-09-03T01:03:05+0200'
+                            - '2019-09-03T15:00:09+0200'
+                            - '2019-09-04T01:03:04+0200'
+                            - '2019-09-05T01:03:01+0200'
+                            - '2019-09-06T01:03:06+0200'
+                            - '2019-09-07T01:02:58+0200'
+                            - '2019-09-08T01:02:59+0200'
+                            - '2019-09-09T01:03:00+0200'
+                            - '2019-09-10T01:03:01+0200'
+                            - '2019-09-11T01:03:35+0200'
+                            - '2019-09-12T01:01:05+0200'
+                            - '2019-09-13T01:01:00+0200'
+                            - '2019-09-14T01:01:04+0200'
+                            - '2019-09-15T01:01:12+0200'
+                            - '2019-09-16T01:01:10+0200'
+                            - '2019-09-17T01:03:02+0200'
+                            - '2019-09-18T01:03:04+0200'
+                            - '2019-09-19T01:03:09+0200'
+                            - '2019-09-19T13:06:33+0200'
+                            - '2019-09-19T14:12:47+0200'
+                            - '2019-09-19T14:18:24+0200'
+                            - '2019-09-20T01:03:05+0200'
+                            - '2019-09-20T09:45:57+0200'
+                            - '2019-09-20T09:51:54+0200'
+                            - '2019-09-21T01:03:05+0200'
+                            - '2019-09-22T01:02:53+0200'
+                            - '2019-09-23T01:03:26+0200'
+                            - '2019-09-24T01:03:34+0200'
+                            - '2019-09-25T01:03:20+0200'
+                            - '2019-09-26T01:02:57+0200'
+                            - '2019-09-27T01:03:06+0200'
+                            - '2019-09-28T01:03:19+0200'
+                            - '2019-09-29T01:02:57+0200'
+                            - '2019-09-30T01:02:53+0200'
+                            - '2019-09-30T10:11:38+0200'
+                            - '2019-09-30T10:20:55+0200'
+                            - '2019-09-30T10:23:31+0200'
+                            - '2019-09-30T13:01:24+0200'
+                            - '2019-09-30T13:28:52+0200'
+                            - '2019-09-30T13:32:07+0200'
+                            - '2019-09-30T13:35:00+0200'
+                            - '2019-10-01T01:03:07+0200'
+                            - '2019-10-02T01:03:16+0200'
+                            - '2019-10-03T01:03:09+0200'
+                            - '2019-10-04T01:02:59+0200'
+                            - '2019-10-05T01:02:59+0200'
+                            - '2019-10-06T01:03:16+0200'
+                            - '2019-10-07T01:02:56+0200'
+                            - '2019-10-08T01:03:55+0200'
+                            - '2019-10-09T01:03:06+0200'
+                            - '2019-10-10T01:03:05+0200'
+                            - '2019-10-11T01:02:57+0200'
+                            - '2019-10-12T01:03:23+0200'
+                            - '2019-10-13T01:03:26+0200'
+                            - '2019-10-14T01:02:59+0200'
+                            - '2019-10-14T16:12:18+0200'
+                            - '2019-10-15T01:03:42+0200'
+                            - '2019-10-16T01:03:24+0200'
+                            - '2019-10-17T01:02:57+0200'
+                            - '2019-10-18T01:02:55+0200'
+                            - '2019-10-19T01:03:43+0200'
+                            - '2019-10-20T01:03:10+0200'
+                            - '2019-10-21T01:03:02+0200'
+                            - '2019-10-21T13:09:06+0200'
+                            - '2019-10-21T13:13:38+0200'
+                            - '2019-10-22T01:03:24+0200'
+                            - '2019-10-23T01:02:52+0200'
+                            - '2019-10-24T01:02:50+0200'
+                            - '2019-10-25T01:03:04+0200'
+                            - '2019-10-26T01:04:56+0200'
+                            - '2019-10-27T01:04:52+0200'
+                            - '2019-10-28T01:05:02+0100'
+                            - '2019-10-29T01:02:46+0100'
+                            - '2019-10-30T01:02:49+0100'
+                            - '2019-10-31T01:02:51+0100'
+                            - '2019-11-01T01:03:31+0100'
+                            - '2019-11-01T14:11:25+0100'
+                            - '2019-11-02T01:03:16+0100'
+                            - '2019-11-03T01:03:18+0100'
+                            - '2019-11-04T01:02:54+0100'
+                            - '2019-11-05T01:03:03+0100'
+                            - '2019-11-05T09:43:37+0100'
+                            - '2019-11-05T09:46:40+0100'
+                            - '2019-11-05T09:51:01+0100'
+                            - '2019-11-05T10:03:25+0100'
+                            - '2019-11-06T01:03:25+0100'
+                            - '2019-11-07T01:03:00+0100'
+                            - '2019-11-07T14:56:32+0100'
+                            - '2019-11-08T01:03:51+0100'
+                            - '2019-11-09T01:03:18+0100'
+                            - '2019-11-10T01:03:13+0100'
+                            - '2019-11-12T17:00:51+0100'
+                            - '2019-11-13T01:03:08+0100'
+                            - '2019-11-14T01:03:07+0100'
+                            - '2019-11-15T01:02:54+0100'
+                            - '2019-11-16T01:03:13+0100'
+                            - '2019-11-17T01:03:17+0100'
+                            - '2019-11-18T01:03:12+0100'
+                            - '2019-11-19T01:03:35+0100'
+                            - '2019-11-19T14:27:25+0100'
+                            - '2019-11-19T14:31:37+0100'
+                            - '2019-11-20T01:03:26+0100'
+                            - '2019-11-21T01:03:29+0100'
+                            - '2019-11-22T01:03:08+0100'
+                            - '2019-11-23T01:03:03+0100'
+                            - '2019-11-24T01:03:06+0100'
+                            - '2019-11-25T01:03:19+0100'
+                            - '2019-11-26T01:03:07+0100'
+                            - '2019-11-26T12:54:37+0100'
+                            - '2019-11-27T01:03:37+0100'
+                            - '2019-11-27T12:21:46+0100'
+                            - '2019-11-27T14:40:54+0100'
+                            - '2019-11-28T01:03:54+0100'
+                            - '2019-11-28T10:39:47+0100'
+                            - '2019-11-28T10:44:11+0100'
+                            - '2019-11-29T01:03:36+0100'
+                            - '2019-11-29T09:47:46+0100'
+                            - '2019-11-29T11:36:44+0100'
+                            - '2019-11-30T01:03:30+0100'
+                            - '2019-12-01T01:03:56+0100'
+                            - '2019-12-02T01:03:36+0100'
+                            - '2019-12-03T01:03:08+0100'
+                            - '2019-12-03T15:43:59+0100'
+                            - '2019-12-03T16:34:31+0100'
+                            - '2019-12-04T01:03:24+0100'
+                            - '2019-12-05T01:03:17+0100'
+                            - '2019-12-05T14:53:24+0100'
+                            - '2019-12-06T01:03:25+0100'
+                            - '2019-12-06T10:34:37+0100'
+                            - '2019-12-07T01:03:11+0100'
+                            - '2019-12-08T01:03:12+0100'
+                            - '2019-12-09T01:03:24+0100'
+                            - '2019-12-10T01:03:09+0100'
+                            - '2019-12-11T01:03:26+0100'
+                            - '2019-12-12T01:03:49+0100'
+                            - '2019-12-12T14:51:44+0100'
+                            - '2019-12-12T14:51:54+0100'
+                            - '2019-12-13T01:03:28+0100'
+                            - '2019-12-14T01:04:09+0100'
+                            - '2019-12-15T01:03:14+0100'
+                            - '2019-12-16T01:03:15+0100'
+                            - '2019-12-17T01:03:18+0100'
+                            - '2019-12-18T01:03:05+0100'
+                            - '2019-12-18T10:01:28+0100'
+                            - '2019-12-18T10:01:36+0100'
+                            - '2019-12-18T10:01:44+0100'
+                            - '2019-12-18T10:01:54+0100'
+                            - '2019-12-18T10:02:05+0100'
+                            - '2019-12-18T10:02:13+0100'
+                            - '2019-12-18T10:02:21+0100'
+                            - '2019-12-18T10:02:28+0100'
+                            - '2019-12-18T10:02:39+0100'
+                            - '2019-12-18T10:02:48+0100'
+                            - '2019-12-18T10:02:57+0100'
+                            - '2019-12-18T10:03:06+0100'
+                            - '2019-12-18T10:03:14+0100'
+                            - '2019-12-18T10:03:22+0100'
+                            - '2019-12-18T10:03:30+0100'
+                            - '2019-12-18T10:03:40+0100'
+                            - '2019-12-18T10:04:04+0100'
+                            - '2019-12-18T10:04:13+0100'
+                            - '2019-12-18T10:04:32+0100'
+                            - '2019-12-18T10:04:41+0100'
+                            - '2019-12-18T10:04:53+0100'
+                            - '2019-12-18T10:05:04+0100'
+                            - '2019-12-18T10:06:48+0100'
+                            - '2019-12-18T10:16:05+0100'
+                            - '2019-12-18T10:16:11+0100'
+                            - '2020-02-10T08:13:16+0100'
+                            - '2020-02-11T01:03:28+0100'
+                            - '2020-02-12T01:03:51+0100'
+                            - '2020-02-13T01:03:54+0100'
+                            - '2020-02-14T01:04:18+0100'
+                            - '2020-02-15T01:03:52+0100'
+                            - '2020-02-16T01:03:42+0100'
+                            - '2020-02-17T01:03:30+0100'
+                            - '2020-02-18T01:03:49+0100'
+                            - '2020-02-18T09:46:22+0100'
+                            - '2020-02-18T12:22:16+0100'
+                            - '2020-02-18T12:22:26+0100'
+                            - '2020-02-18T12:22:37+0100'
+                            - '2020-02-18T12:22:46+0100'
+                            - '2020-02-18T12:22:57+0100'
+                            - '2020-02-18T12:23:07+0100'
+                            - '2020-02-18T12:23:17+0100'
+                            - '2020-02-18T12:23:25+0100'
+                            - '2020-02-18T12:23:32+0100'
+                            - '2020-02-18T12:23:39+0100'
+                            - '2020-02-18T12:23:48+0100'
+                            - '2020-02-18T12:23:56+0100'
+                            - '2020-02-18T12:24:06+0100'
+                            - '2020-02-18T12:24:15+0100'
+                            - '2020-02-18T12:24:23+0100'
+                            - '2020-02-18T12:24:30+0100'
+                            - '2020-02-18T12:24:37+0100'
+                            - '2020-02-18T12:24:44+0100'
+                            - '2020-02-18T12:24:51+0100'
+                            - '2020-02-18T12:26:05+0100'
+                            - '2020-02-18T12:26:24+0100'
+                            - '2020-02-18T12:30:24+0100'
+                            - '2020-02-18T12:32:52+0100'
+                            - '2020-02-18T12:33:00+0100'
+                            - '2020-02-18T12:33:10+0100'
+                            - '2020-02-18T12:33:19+0100'
+                            - '2020-02-18T12:33:25+0100'
+                            - '2020-02-18T12:33:32+0100'
+                            - '2020-02-18T12:33:40+0100'
+                            - '2020-02-18T12:33:47+0100'
+                            - '2020-02-18T12:33:53+0100'
+                            - '2020-02-18T12:34:00+0100'
+                            - '2020-02-18T12:43:53+0100'
+                            - '2020-02-18T12:44:05+0100'
+                            - '2020-02-18T12:44:13+0100'
+                            - '2020-02-18T12:44:20+0100'
+                            - '2020-02-18T12:44:28+0100'
+                            - '2020-02-18T12:44:36+0100'
+                            - '2020-02-18T12:44:43+0100'
+                            - '2020-02-19T01:03:52+0100'
+                            - '2020-02-20T01:05:02+0100'
+                            - '2020-02-20T10:10:22+0100'
+                            - '2020-02-20T10:10:31+0100'
+                            - '2020-02-20T10:10:41+0100'
+                            - '2020-02-20T10:10:50+0100'
+                            - '2020-02-20T10:11:02+0100'
+                            - '2020-02-20T10:11:13+0100'
+                            - '2020-02-20T10:11:25+0100'
+                            - '2020-02-20T10:11:34+0100'
+                            - '2020-02-20T10:11:43+0100'
+                            - '2020-02-20T10:11:51+0100'
+                            - '2020-02-20T10:11:59+0100'
+                            - '2020-02-20T10:12:08+0100'
+                            - '2020-02-20T10:12:18+0100'
+                            - '2020-02-20T10:12:28+0100'
+                            - '2020-02-20T10:12:37+0100'
+                            - '2020-02-20T10:12:48+0100'
+                            - '2020-02-20T10:12:55+0100'
+                            - '2020-02-20T10:13:05+0100'
+                            - '2020-02-20T10:13:14+0100'
+                            - '2020-02-20T10:13:23+0100'
+                            - '2020-02-20T10:13:35+0100'
+                            - '2020-02-20T10:13:45+0100'
+                            - '2020-02-20T10:13:52+0100'
+                            - '2020-02-20T10:14:02+0100'
+                            - '2020-02-20T10:14:12+0100'
+                            - '2020-02-20T10:14:21+0100'
+                            - '2020-02-20T10:14:31+0100'
+                            - '2020-02-20T10:14:41+0100'
+                            - '2020-02-20T10:14:49+0100'
+                            - '2020-02-20T10:14:57+0100'
+                            - '2020-02-20T10:15:06+0100'
+                            - '2020-02-20T10:15:15+0100'
+                            - '2020-02-20T10:15:27+0100'
+                            - '2020-02-20T10:15:36+0100'
+                            - '2020-02-20T10:15:45+0100'
+                            - '2020-02-20T10:37:22+0100'
+                            - '2020-02-20T10:37:31+0100'
+                            - '2020-02-20T10:37:39+0100'
+                            - '2020-02-20T10:37:47+0100'
+                            - '2020-02-20T10:37:57+0100'
+                            - '2020-03-03T08:04:45+0100'
+                            - '2020-03-03T08:05:39+0100'
+                            - '2020-03-03T08:05:47+0100'
+                            - '2020-03-03T08:05:56+0100'
+                            - '2020-03-03T08:06:07+0100'
+                            - '2020-03-03T08:06:16+0100'
+                            - '2020-03-03T08:06:26+0100'
+                            - '2020-03-03T08:06:34+0100'
+                            - '2020-03-03T08:06:43+0100'
+                            - '2020-03-04T01:03:54+0100'
+                            - '2020-03-05T01:03:51+0100'
+                            - '2020-03-05T13:49:50+0100'
+                            - '2020-03-05T13:50:10+0100'
+                            - '2020-03-05T13:50:18+0100'
+                            - '2020-03-05T14:35:25+0100'
+                            - '2020-03-06T01:03:06+0100'
+                            - '2020-03-06T09:56:06+0100'
+                            - '2020-03-07T01:03:09+0100'
+                            - '2020-03-08T01:02:54+0100'
+                            - '2020-03-09T01:03:21+0100'
+                            - '2020-03-09T08:28:58+0100'
+                            - '2020-03-09T08:29:04+0100'
+                            - '2020-03-09T08:29:10+0100'
+                            - '2020-03-09T08:29:16+0100'
+                            - '2020-03-09T08:29:21+0100'
+                            - '2020-03-09T08:29:27+0100'
+                            - '2020-03-09T08:29:33+0100'
+                            - '2020-03-09T08:29:43+0100'
+                            - '2020-03-09T08:30:01+0100'
+                            - '2020-03-09T13:29:33+0100'
+                            - '2020-03-09T13:29:39+0100'
+                            - '2020-03-09T13:30:40+0100'
+                            - '2020-03-09T13:30:47+0100'
+                            - '2020-03-09T13:32:35+0100'
+                            - '2020-03-09T13:32:42+0100'
+                            - '2020-03-09T13:33:02+0100'
+                            - '2020-03-09T13:33:08+0100'
+                            - '2020-03-09T13:33:14+0100'
+                            - '2020-03-09T13:33:20+0100'
+                            - '2020-03-09T13:33:26+0100'
+                            - '2020-03-09T13:33:33+0100'
+                            - '2020-03-09T13:34:22+0100'
+                            - '2020-03-09T13:35:41+0100'
+                            - '2020-03-09T13:35:47+0100'
+                            - '2020-03-09T14:07:39+0100'
+                            - '2020-03-09T14:07:53+0100'
+                            - '2020-03-09T14:08:00+0100'
+                            - '2020-03-10T01:03:02+0100'
+                            - '2020-03-10T13:19:27+0100'
+                            - '2020-03-11T01:02:58+0100'
+                            - '2020-03-12T01:02:53+0100'
+                            - '2020-03-13T01:03:01+0100'
+                            - '2020-03-14T01:03:02+0100'
+                            - '2020-03-15T01:03:05+0100'
+                            - '2020-03-16T01:02:55+0100'
+                            - '2020-03-17T01:02:53+0100'
+                            - '2020-03-18T01:02:58+0100'
+                            - '2020-03-19T01:02:55+0100'
+                            - '2020-03-19T12:08:05+0100'
+                            - '2020-03-19T12:08:11+0100'
+                            - '2020-03-19T12:08:18+0100'
+                            - '2020-03-19T12:08:24+0100'
+                            - '2020-03-19T12:08:31+0100'
+                            - '2020-03-19T12:08:39+0100'
+                            - '2020-03-19T12:08:46+0100'
+                            - '2020-03-19T12:08:51+0100'
+                            - '2020-03-19T12:08:58+0100'
+                            - '2020-03-19T12:09:04+0100'
+                            - '2020-03-19T12:09:11+0100'
+                            - '2020-03-19T12:09:18+0100'
+                            - '2020-03-19T12:09:24+0100'
+                            - '2020-03-19T12:09:30+0100'
+                            - '2020-03-19T12:09:37+0100'
+                            - '2020-03-19T12:09:44+0100'
+                            - '2020-03-19T12:09:50+0100'
+                            - '2020-03-19T12:09:57+0100'
+                            - '2020-03-19T12:10:04+0100'
+                            - '2020-03-19T12:10:11+0100'
+                            - '2020-03-19T12:11:10+0100'
+                            - '2020-03-19T12:11:17+0100'
+                            - '2020-03-19T12:11:44+0100'
+                            - '2020-03-19T13:08:35+0100'
+                            - '2020-03-19T13:08:42+0100'
+                            - '2020-03-19T13:08:48+0100'
+                            - '2020-03-19T13:08:54+0100'
+                            - '2020-03-19T13:09:01+0100'
+                            - '2020-03-19T13:18:45+0100'
+                            - '2020-03-19T13:32:20+0100'
+                            - '2020-03-19T13:32:27+0100'
+                            - '2020-03-19T13:38:23+0100'
+                            - '2020-03-19T13:38:30+0100'
+                            - '2020-03-19T13:38:37+0100'
+                            - '2020-03-19T13:38:43+0100'
+                            - '2020-03-19T13:38:50+0100'
+                            - '2020-03-19T13:38:56+0100'
+                            - '2020-03-19T13:39:03+0100'
+                            - '2020-03-19T13:39:09+0100'
+                            - '2020-03-19T13:39:15+0100'
+                            - '2020-03-19T13:39:22+0100'
+                            - '2020-03-19T13:39:30+0100'
+                            - '2020-03-19T13:39:37+0100'
+                            - '2020-03-19T13:39:44+0100'
+                            - '2020-03-19T13:39:50+0100'
+                            - '2020-03-19T13:43:22+0100'
+                            - '2020-03-19T13:43:29+0100'
+                            - '2020-03-19T13:43:35+0100'
+                            - '2020-03-19T13:43:41+0100'
+                            - '2020-03-19T13:43:48+0100'
+                            - '2020-03-19T13:43:56+0100'
+                            - '2020-03-19T13:44:02+0100'
+                            - '2020-03-19T13:44:08+0100'
+                            - '2020-03-19T14:23:39+0100'
+                            - '2020-03-19T14:23:46+0100'
+                            - '2020-03-19T14:23:51+0100'
+                            - '2020-03-19T14:23:57+0100'
+                            - '2020-03-19T14:24:04+0100'
+                            - '2020-03-19T14:24:10+0100'
+                            - '2020-03-19T14:24:18+0100'
+                            - '2020-03-19T14:24:27+0100'
+                            - '2020-03-19T14:24:34+0100'
+                            - '2020-03-19T14:24:39+0100'
+                            - '2020-03-20T01:02:54+0100'
+                            - '2020-03-20T10:05:44+0100'
+                            - '2020-03-20T10:20:21+0100'
+                            - '2020-03-20T10:47:14+0100'
+                            - '2020-03-21T01:03:00+0100'
+                            - '2020-03-22T01:03:49+0100'
+                            - '2020-03-23T01:03:43+0100'
+                            - '2020-03-23T08:46:02+0100'
+                        title:
+                          nb: Viking
+                        description:
+                          nb: Fotballlag frå Stavanger
+                        descriptionFormatted:
+                          nb: Fotballlag frå Stavanger
+                        objective:
+                          nb: 'Prodtest '
+                        contactPoint:
+                          - email: mail@post.no
+                            organizationUnit: Avdelingsjæfen
+                            hasURL: 'https://kontakt.no'
+                            hasTelephone: '+4711234566'
+                        publisher:
+                          type: no.dcat.datastore.domain.dcat.Publisher
+                          valid: false
+                          uri: 'http://data.brreg.no/enhetsregisteret/enhet/910244132'
+                          id: '910244132'
+                          name: RAMSUND OG ROGNAN REVISJON
+                          orgPath: /ANNET/910244132
+                        issued: '2019-04-15T00:00:00+0200'
+                        modified: '2019-04-03T00:00:00+0200'
+                        language:
+                          - uri: 'http://publications.europa.eu/resource/authority/language/NOR'
+                            code: NOR
+                            prefLabel:
+                              nb: Norsk
+                              nn: Norsk
+                              'no': Norsk
+                              en: Norwegian
+                        landingPage: []
+                        theme:
+                          - id: 'https://psi.norge.no/los/tema/kultur'
+                          - id: 'https://psi.norge.no/los/ord/idrettsarrangement'
+                          - id: 'https://psi.norge.no/los/ord/idrettslag'
+                          - id: 'https://psi.norge.no/los/tema/idrett'
+                        distribution:
+                          - downloadURL: []
+                            accessURL: []
+                            openLicense: false
+                            type: API
+                            accessService:
+                              uri: 'http://dataset-catalogue:8080/catalogs/57254e7c-3c1e-4abf-98ed-2d0c0531df27'
+                              description:
+                                nb: Nasjonalt skoleregister API
+                              endpointDescription:
+                                - uri: 119f6f04-bc9b-486e-86b3-f74a46f8dccd
+                                  extraType: 'http://xmlns.com/foaf/0.1/Document'
+                          - description:
+                              nb: asdasd asdasdasd
+                            downloadURL: []
+                            accessURL:
+                              - 'https://vg.no'
+                            license:
+                              uri: 'http://creativecommons.org/publicdomain/zero/1.0/'
+                              prefLabel:
+                                en: Creative Commons Universal Public Domain Dedication
+                                'no': Creative Commons Universal Fristatus-erklæring
+                              extraType: 'http://purl.org/dc/terms/LicenseDocument'
+                            openLicense: true
+                            format:
+                              - json
+                            type: API
+                        sample:
+                          - description:
+                              nb: 'eksempel asd laksjdh pdisfsva adf asdf ADFs '
+                            downloadURL: []
+                            accessURL:
+                              - 'https://vg.no'
+                            openLicense: false
+                            format:
+                              - json
+                        temporal:
+                          - startDate: '2019-04-01T00:00:00+0200'
+                            endDate: '2019-05-05T00:00:00+0200'
+                        spatial:
+                          - uri: 'https://data.geonorge.no/administrativeEnheter/fylke/id/173142'
+                            code: 'https://data.geonorge.no/administrativeEnheter/fylke/id/173142'
+                            prefLabel:
+                              'no': Finnmárku
+                        accessRights:
+                          uri: 'http://publications.europa.eu/resource/authority/access-right/PUBLIC'
+                          code: PUBLIC
+                          prefLabel:
+                            en: Public
+                            nb: Offentlig
+                            nn: Offentlig
+                        hasAccuracyAnnotation:
+                          inDimension: 'http://iso.org/25012/2008/dataquality/Accuracy'
+                          hasBody:
+                            nb: nøyaktig
+                        hasCompletenessAnnotation:
+                          inDimension: 'http://iso.org/25012/2008/dataquality/Completeness'
+                          hasBody:
+                            nb: komplett
+                        hasCurrentnessAnnotation:
+                          inDimension: 'http://iso.org/25012/2008/dataquality/Currentness'
+                          hasBody:
+                            nb: ert
+                        hasAvailabilityAnnotation:
+                          inDimension: 'http://iso.org/25012/2008/dataquality/Availability'
+                          hasBody:
+                            nb: tilgjengelig
+                        hasRelevanceAnnotation:
+                          inDimension: 'http://iso.org/25012/2008/dataquality/Relevance'
+                          hasBody:
+                            nb: asdasd
+                        references:
+                          - referenceType:
+                              uri: 'http://purl.org/dc/terms/isPartOf'
+                              code: isPartOf
+                              prefLabel:
+                                en: Is Part Of
+                                nn: Er del av
+                                nb: Er en del av
+                            source:
+                              uri: 'http://brreg.no/catalogs/910244132/datasets/2468de68-f6e0-4158-a4ab-e3c86034f4a5'
+                          - referenceType:
+                              uri: 'http://purl.org/dc/terms/requires'
+                              code: requires
+                              prefLabel:
+                                en: Requires
+                                nn: Krevjar
+                                nb: Krever
+                            source:
+                              uri: 'http://brreg.no/catalogs/910244132/datasets/5325dea3-eb86-4e89-ac77-12f3c32cfb3f'
+                        provenance:
+                          uri: 'http://data.brreg.no/datakatalog/provinens/nasjonal'
+                          code: NASJONAL
+                          prefLabel:
+                            en: Authoritativ source
+                            nb: Autoritativ kilde
+                            nn: Autoritativ kilde
+                        accrualPeriodicity:
+                          uri: 'http://publications.europa.eu/resource/authority/frequency/ANNUAL'
+                          code: ANNUAL
+                          prefLabel:
+                            de: jährlich
+                            lv: reizi gadā
+                            bg: годишен
+                            nl: jaarlijks
+                            sk: ročný
+                            'no': årlig
+                            sv: årlig
+                            pl: roczny
+                            hr: godišnje
+                            sl: letni
+                            fi: vuotuinen
+                            mt: annwali
+                            lt: kasmetinis
+                            fr: annuel
+                            ga: bliantúil
+                            da: årligt
+                            et: aastane
+                            pt: anual
+                            ro: anual
+                            es: anual
+                            el: ετήσιος
+                            en: annual
+                            cs: roční
+                            it: annuale
+                            hu: évenkénti
+                        subject:
+                          - uri: 'https://fellesdatakatalog.brreg.no/api/concepts/fd0fe2be-c84e-4729-8b54-2a69ec6ab04e'
+                            identifier: 'http://begrepskatalogen/begrep/46f4d762-4c6c-11e8-bb3e-005056821322'
+                            prefLabel:
+                              nb: saksbehandleridentifikator
+                            definition:
+                              nb: bruker-identifikatoren til den saksbehandleren som har utført en bestemt tilstandsendring i et gitt informasjonselement
+                          - uri: 'https://fellesdatakatalog.brreg.no/api/concepts/53187c64-9e2e-4766-8d15-f778dbc94f7d'
+                            identifier: 'http://data.brreg.no/begrep/40660'
+                            prefLabel:
+                              nb: term
+                            definition:
+                              nb: |
+                                "betegnelse for et allmennbegrep som tilhører et fagområde"
+                        conformsTo:
+                          - uri: 'https://viking.no'
+                            extraType: 'http://purl.org/dc/terms/Standard'
+                        informationModel:
+                          - uri: 'https://infomodell.no'
+                            prefLabel:
+                              nb: Nr
+                            extraType: 'http://purl.org/dc/terms/Standard'
+                        type: dataset
+                        catalog:
+                          id: '910244132'
+                          uri: 'http://dataset-catalogue:8080/catalogs/910244132'
+                          title:
+                            nb: Datakatalog for RAMSUND OG ROGNAN REVISJON
+                          publisher:
+                            type: no.dcat.datastore.domain.dcat.Publisher
+                            valid: false
+                            uri: 'http://data.brreg.no/enhetsregisteret/enhet/910244132'
+                            id: '910244132'
+                            name: RAMSUND OG ROGNAN REVISJON
+                            orgPath: /ANNET/910244132
+                      - type: informationmodel
+                        id: a05823cf-2b63-4f8f-8a03-8def943ce80f
+                        title:
+                          nb: Gjbrev_V3
+                        publisher: {}
+                        harvest:
+                          firstHarvested: '2020-02-26T11:54:04'
+                          lastHarvested: '2020-03-23T06:10:04'
+                          lastChanged: '2020-02-26T11:54:04'
+                        harvestSourceUri: 'https://fdk-dev-altinn.appspot.com/api/v1/schemas2551_4'
+                        schema: "{\n\t\"$schema\" : \"http://json-schema.org/schema#\",\n\t\"$id\" : \"schema.json\",\n\t\"type\" : \"object\",\n\t\"properties\" : {\n\t\t\t\"melding\" : {\n\t\t\t\t\t\"$ref\" : \"#/definitions/VT-1507VedtakStipendLaan3012_M\"\n\t\t\t\t}\n\t\t},\n\t\"definitions\" : {\n\t\t\t\"VT-1507VedtakStipendLaan3012_M\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"dataFormatProvider\" : {\n\t\t\t\t\t\t\t\t\t\"type\" : \"string\",\n\t\t\t\t\t\t\t\t\t\"const\" : \"SERES\",\n\t\t\t\t\t\t\t\t\t\"@xsdType\" : \"XmlAttribute\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"dataFormatId\" : {\n\t\t\t\t\t\t\t\t\t\"type\" : \"string\",\n\t\t\t\t\t\t\t\t\t\"const\" : \"3234\",\n\t\t\t\t\t\t\t\t\t\"@xsdType\" : \"XmlAttribute\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"dataFormatVersion\" : {\n\t\t\t\t\t\t\t\t\t\"type\" : \"string\",\n\t\t\t\t\t\t\t\t\t\"const\" : \"31714\",\n\t\t\t\t\t\t\t\t\t\"@xsdType\" : \"XmlAttribute\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"OppgaveVT-1507\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/OppgaveVT-1507\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"SkjemainnholdVT-1507\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/SkjemainnholdVT-1507\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"dataFormatProvider\",\n\t\t\t\t\t\t\t\"dataFormatId\",\n\t\t\t\t\t\t\t\"dataFormatVersion\",\n\t\t\t\t\t\t\t\"OppgaveVT-1507\",\n\t\t\t\t\t\t\t\"SkjemainnholdVT-1507\"\n\t\t\t\t\t\t],\n\t\t\t\t\t\"@xsdAnyAttribute\" : true\n\t\t\t\t},\n\t\t\t\"OppgaveVT-1507\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"innledning\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"avsender\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Avsender\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"kunde\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Kunde\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"bilag\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Bilag\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"skole\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Navn\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"signeringsfrist\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Dato\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"innledning\",\n\t\t\t\t\t\t\t\"avsender\",\n\t\t\t\t\t\t\t\"bilag\",\n\t\t\t\t\t\t\t\"skole\",\n\t\t\t\t\t\t\t\"signeringsfrist\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"RichText\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"RichText\" : {\n\t\t\t\t\t\t\t\t\t\"type\" : \"array\",\n\t\t\t\t\t\t\t\t\t\"minItems\" : 0,\n\t\t\t\t\t\t\t\t\t\"items\" : {\n\t\t\t\t\t\t\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\"@xsdType\" : \"XmlAny\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\"Tekst2000\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 2000,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Avsender\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"avsenderNavn\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Navn\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"organisasjonsnummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"saksbehandler\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Navn\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"avsenderNavn\",\n\t\t\t\t\t\t\t\"organisasjonsnummer\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Navn\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 175,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Tekst100\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 100,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Kunde\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"kundeNavn\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Navn\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"foedselsnummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Foedselsnummer\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"kundenummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Kundenummer\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"kundeNavn\",\n\t\t\t\t\t\t\t\"foedselsnummer\",\n\t\t\t\t\t\t\t\"kundenummer\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Foedselsnummer\" : {\n\t\t\t\t\t\"pattern\" : \"[0-9]{11}\",\n\t\t\t\t\t\"type\" : \"integer\"\n\t\t\t\t},\n\t\t\t\"Kundenummer\" : {\n\t\t\t\t\t\"pattern\" : \"[0-9]{7}\",\n\t\t\t\t\t\"type\" : \"integer\"\n\t\t\t\t},\n\t\t\t\"Bilag\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"bilagsnummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Bilagsnummer\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"innvilgelsesdato\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Dato\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"bilagsnummer\",\n\t\t\t\t\t\t\t\"innvilgelsesdato\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Bilagsnummer\" : {\n\t\t\t\t\t\"minLength\" : 10,\n\t\t\t\t\t\"maxLength\" : 13,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Dato\" : {\n\t\t\t\t\t\"minLength\" : 10,\n\t\t\t\t\t\"maxLength\" : 10,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"SkjemainnholdVT-1507\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"studiefinansiering\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Studiefinansiering\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"vilkaar\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Vilkaar\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"kontonummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Kontoopplysninger\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"sammendrag\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Sammendrag\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"avslutning\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"avslutning\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Studiefinansiering\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"vedtak\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/RichText\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"beregning\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/RichText\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"utbetaling\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/RichText\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"meldinger\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"klagerettighet\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"periode\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/RichText\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"tilbakebetaling\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"stipend\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Beloep\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"studielaan\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Studielaan\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"sammendragPeriode\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"vedtak\",\n\t\t\t\t\t\t\t\"klagerettighet\",\n\t\t\t\t\t\t\t\"periode\",\n\t\t\t\t\t\t\t\"tilbakebetaling\",\n\t\t\t\t\t\t\t\"stipend\",\n\t\t\t\t\t\t\t\"studielaan\",\n\t\t\t\t\t\t\t\"sammendragPeriode\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Tekst10000\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 10000,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Tekst30000\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 30000,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Tekst4000\" : {\n\t\t\t\t\t\"minLength\" : 1,\n\t\t\t\t\t\"maxLength\" : 4000,\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Beloep\" : {\n\t\t\t\t\t\"type\" : \"number\"\n\t\t\t\t},\n\t\t\t\"Studielaan\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"tildeltLaan\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Beloep\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"gjeld\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Beloep\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"tildeltLaan\",\n\t\t\t\t\t\t\t\"gjeld\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Vilkaar\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"vilkaarErkjennelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"vilkaarBekreftelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Alternativ\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"vilkaarLest\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"vilkaarErkjennelse\",\n\t\t\t\t\t\t\t\"vilkaarBekreftelse\",\n\t\t\t\t\t\t\t\"vilkaarLest\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Alternativ\" : {\n\t\t\t\t\t\"type\" : \"boolean\"\n\t\t\t\t},\n\t\t\t\"Kontoopplysninger\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"foreslaattKontonummer\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"listenummerEndret\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Kontonummerliste\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"manglerBekreftelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"bekreftet\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Alternativ\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"oppgavegiverBekreftelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"studiefinansieringBekreftelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"manglerBekreftelse\",\n\t\t\t\t\t\t\t\"bekreftet\",\n\t\t\t\t\t\t\t\"oppgavegiverBekreftelse\",\n\t\t\t\t\t\t\t\"studiefinansieringBekreftelse\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Kontonummerliste\" : {\n\t\t\t\t\t\"enum\" : [\n\t\t\t\t\t\t\t\"1\",\n\t\t\t\t\t\t\t\"2\",\n\t\t\t\t\t\t\t\"3\",\n\t\t\t\t\t\t\t\"4\",\n\t\t\t\t\t\t\t\"5\",\n\t\t\t\t\t\t\t\"6\",\n\t\t\t\t\t\t\t\"7\"\n\t\t\t\t\t\t],\n\t\t\t\t\t\"type\" : \"string\"\n\t\t\t\t},\n\t\t\t\"Sammendrag\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"kontonummerSammendrag\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst100\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"signering\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Signering\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"signering\"\n\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\"Signering\" : {\n\t\t\t\t\t\"properties\" : {\n\t\t\t\t\t\t\t\"sammendragBekreftelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Alternativ\"\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\"sammendragErkjennelse\" : {\n\t\t\t\t\t\t\t\t\t\"$ref\" : \"#/definitions/Tekst2000\"\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\"required\" : [\n\t\t\t\t\t\t\t\"sammendragBekreftelse\",\n\t\t\t\t\t\t\t\"sammendragErkjennelse\"\n\t\t\t\t\t\t]\n\t\t\t\t}\n\t\t}\n}"
+                    page:
+                      size: 5
+                      totalElements: 10
+                      currentPage: 0
+                      totalPages: 2
+                    aggregations:
+                      orgPath:
+                        buckets:
+                          - key: /STAT
+                            count: 3582
+                          - key: /STAT/972417807
+                            count: 3249
+                          - key: /STAT/972417807/974761076
+                            count: 3249
+                          - key: /STAT/912660680
+                            count: 241
+                          - key: /STAT/912660680/974760673
+                            count: 241
+                          - key: /STAT/972417858
+                            count: 48
+                          - key: /STAT/972417866
+                            count: 41
+                          - key: /STAT/972417866/961181399
+                            count: 41
+                          - key: /STAT/972417858/991825827
+                            count: 38
+                          - key: /STAT/972417858/974760223
+                            count: 10
+                          - key: /STAT/972417831
+                            count: 3
+                          - key: /STAT/972417831/915429785
+                            count: 3
+                          - key: /KOMMUNE
+                            count: 2
+                          - key: /KOMMUNE/964338531
+                            count: 2
+                      los:
+                        doc_count_error_upper_bound: 0
+                        sum_other_doc_count: 0
+                        buckets:
+                          - key: Ukjent
+                            doc_count: 1255
+                          - key: skatt-og-avgift
+                            doc_count: 33
+                          - key: trafikk-og-transport
+                            doc_count: 17
+                          - key: skatt-og-avgift/skatt
+                            doc_count: 10
+                          - key: trafikk-og-transport/veg-og-vegregulering
+                            doc_count: 8
+                          - key: arbeid
+                            doc_count: 7
+                          - key: bygg-og-eiendom
+                            doc_count: 7
+                          - key: demokrati-og-innbyggerrettigheter
+                            doc_count: 6
+                          - key: trafikk-og-transport/veg-og-vegregulering/vegnett
+                            doc_count: 6
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger
+                            doc_count: 5
+                          - key: familie-og-barn
+                            doc_count: 5
+                          - key: naring
+                            doc_count: 5
+                          - key: skatt-og-avgift/avgift
+                            doc_count: 5
+                          - key: familie-og-barn/ekteskap
+                            doc_count: 3
+                          - key: familie-og-barn/foreldre-og-foresatte
+                            doc_count: 3
+                          - key: helse-og-omsorg
+                            doc_count: 3
+                          - key: lov-og-rett
+                            doc_count: 3
+                          - key: lov-og-rett/rettsvesen
+                            doc_count: 3
+                          - key: skatt-og-avgift/avgift/merverdiavgift
+                            doc_count: 3
+                          - key: sosiale-tjenester
+                            doc_count: 3
+                          - key: arbeid/arbeidsliv
+                            doc_count: 2
+                          - key: arbeid/arbeidsliv/arbeidsavtale
+                            doc_count: 2
+                          - key: arbeid/arbeidsliv/arbeidsgiver
+                            doc_count: 2
+                          - key: arbeid/arbeidssoking
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/apenhet
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/apenhet/personvern
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter/statsborgerskap
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/fodselsnummer
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/personnavn
+                            doc_count: 2
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/personvern
+                            doc_count: 2
+                          - key: familie-og-barn/dodsfall-og-gravferd
+                            doc_count: 2
+                          - key: familie-og-barn/foreldre-og-foresatte/personnavn
+                            doc_count: 2
+                          - key: familie-og-barn/samliv
+                            doc_count: 2
+                          - key: familie-og-barn/samliv/personnavn
+                            doc_count: 2
+                          - key: helse-og-omsorg/helsetjenester
+                            doc_count: 2
+                          - key: naring/landbruk
+                            doc_count: 2
+                          - key: natur-klima-og-miljo
+                            doc_count: 2
+                          - key: natur-klima-og-miljo/naturforvaltning
+                            doc_count: 2
+                          - key: skole-og-utdanning
+                            doc_count: 2
+                          - key: sosiale-tjenester/okonomiske-ytelser-og-radgivning
+                            doc_count: 2
+                          - key: sosiale-tjenester/okonomiske-ytelser-og-radgivning/okonomisk-radgiving
+                            doc_count: 2
+                          - key: trafikk-og-transport/kjoretoy
+                            doc_count: 2
+                          - key: trafikk-og-transport/mobilitetstilbud
+                            doc_count: 2
+                          - key: trafikk-og-transport/mobilitetstilbud/ruteinformasjon
+                            doc_count: 2
+                          - key: arbeid/arbeidsliv/arbeidstillatelse
+                            doc_count: 1
+                          - key: arbeid/arbeidsliv/permittering
+                            doc_count: 1
+                          - key: arbeid/arbeidssoking/arbeidstillatelse
+                            doc_count: 1
+                          - key: arbeid/arbeidssoking/yrkesautorisasjon
+                            doc_count: 1
+                          - key: arbeid/inntekt
+                            doc_count: 1
+                          - key: arbeid/inntektssikring
+                            doc_count: 1
+                          - key: bygg-og-eiendom/eiendom
+                            doc_count: 1
+                          - key: bygg-og-eiendom/flytting
+                            doc_count: 1
+                          - key: bygg-og-eiendom/flytting/flyttemelding
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter/flyktninger-og-beskyttelse
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter/menneskerettigheter
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter/oppholdstillatelse
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/innbyggerrettigheter/pass-og-visum
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/d-nummer
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/flyttemelding
+                            doc_count: 1
+                          - key: demokrati-og-innbyggerrettigheter/personopplysninger/fodselsattest
+                            doc_count: 1
+                          - key: familie-og-barn/barnehage
+                            doc_count: 1
+                          - key: familie-og-barn/barnevern-og-foreldrestotte
+                            doc_count: 1
+                          - key: familie-og-barn/barnevern-og-foreldrestotte/barnevern
+                            doc_count: 1
+                          - key: familie-og-barn/dodsfall-og-gravferd/dodsattest
+                            doc_count: 1
+                          - key: familie-og-barn/ekteskap/tvangsekteskap
+                            doc_count: 1
+                          - key: helse-og-omsorg/akutt-hjelp
+                            doc_count: 1
+                          - key: helse-og-omsorg/helsetjenester/alternativ-behandling
+                            doc_count: 1
+                          - key: helse-og-omsorg/helsetjenester/europeisk-helsetrygdkort
+                            doc_count: 1
+                          - key: helse-og-omsorg/svangerskap
+                            doc_count: 1
+                          - key: kultur-idrett-og-fritid
+                            doc_count: 1
+                          - key: kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid
+                            doc_count: 1
+                          - key: kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/tilskudd-til-tro-og-livssyn
+                            doc_count: 1
+                          - key: lov-og-rett/lovbrudd-og-straff
+                            doc_count: 1
+                          - key: lov-og-rett/lovbrudd-og-straff/anmeldelse
+                            doc_count: 1
+                          - key: lov-og-rett/rettsvesen/dom
+                            doc_count: 1
+                          - key: lov-og-rett/rettsvesen/domstol
+                            doc_count: 1
+                          - key: lov-og-rett/rettsvesen/namsmyndighet
+                            doc_count: 1
+                          - key: natur-klima-og-miljo/naturforvaltning/akvakultur
+                            doc_count: 1
+                          - key: natur-klima-og-miljo/naturforvaltning/jakt-og-fangst
+                            doc_count: 1
+                          - key: samfunnssikkerhet-og-beredskap
+                            doc_count: 1
+                          - key: skatt-og-avgift/avgift/toll
+                            doc_count: 1
+                          - key: trafikk-og-transport/bat-havn-og-kyst
+                            doc_count: 1
+                          - key: trafikk-og-transport/bat-havn-og-kyst/havn
+                            doc_count: 1
+                          - key: trafikk-og-transport/bat-havn-og-kyst/kystforvaltning
+                            doc_count: 1
+                          - key: trafikk-og-transport/bat-havn-og-kyst/sjofart
+                            doc_count: 1
+                          - key: trafikk-og-transport/bat-havn-og-kyst/sjosikkerhet
+                            doc_count: 1
+                          - key: trafikk-og-transport/forerkort-og-sertifikat
+                            doc_count: 1
+                          - key: trafikk-og-transport/forerkort-og-sertifikat/flysertifikat
+                            doc_count: 1
+                          - key: trafikk-og-transport/forerkort-og-sertifikat/forerkort
+                            doc_count: 1
+                          - key: trafikk-og-transport/kjoretoy/vrakpant
+                            doc_count: 1
+                          - key: trafikk-og-transport/luftfart
+                            doc_count: 1
+                          - key: trafikk-og-transport/luftfart/fly-og-helikopter
+                            doc_count: 1
+                          - key: trafikk-og-transport/mobilitetstilbud/reisebillett
+                            doc_count: 1
+                          - key: trafikk-og-transport/mobilitetstilbud/reisegaranti
+                            doc_count: 1
+                          - key: trafikk-og-transport/trafikkinformasjon
+                            doc_count: 1
+                          - key: trafikk-og-transport/yrkestransport
+                            doc_count: 1
+                          - key: trafikk-og-transport/yrkestransport/persontransport
+                            doc_count: 1
+                      accessRights:
+                        doc_count_error_upper_bound: 0
+                        sum_other_doc_count: 0
+                        buckets:
+                          - key: PUBLIC
+                            doc_count: 114
+                          - key: RESTRICTED
+                            doc_count: 119
+                          - key: Ukjent
+                            doc_count: 11
+                          - key: NON_PUBLIC
+                            doc_count: 8
+                      openData:
+                        buckets:
+                          - key: isOpenAccess
+                            doc_count: 4
+          description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
 components:
   schemas:
     SearchRequest:
       description: Body with search parameters
       properties:
-        searchString:
-          type: string
-          description: string to perform a search on
+        size:
+          type: integer
+          description: 'how many elements that should be returned, defaults to 10'
+        sorting:
+          $ref: '#/components/schemas/Sort'
         filters:
           type: array
           items:
             $ref: '#/components/schemas/Filter'
-        size:
-          type: integer
-          description: how many elements that should be returned, defaults to 10
-        sorting:
-            $ref: '#/components/schemas/Sort'
+        searchString:
+          type: string
+          description: string to perform a search on
     SearchResult:
-      type: object
       allOf:
         - properties:
             hits:
@@ -60,63 +1353,75 @@ components:
                   - $ref: '#/components/schemas/DataSet'
             page:
               $ref: '#/components/schemas/Page'
+            aggregations:
+              type: string
+      type: object
+      x-examples:
+        example-1: {}
     Filter:
       type: object
-      description: Which field and value to filter by, defaults to none
+      description: 'Which field and value to filter by, defaults to none'
       properties:
         field:
           description: field the search should filter by
           type: string
         value:
-          description: value to filter by, defaults to queryStrin
+          description: 'value to filter by, defaults to queryStrin'
           type: string
         forTypes:
-          description: which type of data the filter should be applied to, defaults to all
+          description: 'which type of data the filter should be applied to, defaults to all'
           type: array
           items:
             type: string
-            enum: [dataset,dataservice,concept,informationmodel]
+            enum:
+              - dataset
+              - dataservice
+              - concept
+              - informationmodel
     Sort:
       type: object
       properties:
         field:
-         description: which field the sort should be performed on, defaults to relevance
-         type: string
-        direction:
-          description: the direction of the sort. avaiable values are asc, desc
+          description: 'which field the sort should be performed on, defaults to relevance'
           type: string
-          enum: [asc, desc]
+        direction:
+          description: 'the direction of the sort. avaiable values are asc, desc'
+          type: string
+          enum:
+            - asc
+            - desc
     Page:
       type: object
       properties:
-        "size" :
+        size:
           type: integer
           description: how many elements was returned
-        "totalElements":
+        totalElements:
           type: integer
           description: The total amount of hits for search
-        "currentPage":
-          type: integer
-          description: which page was returned
-        "totalPages":
+        totalPages:
           type: integer
           description: total available pages
+        currentPage:
+          type: integer
+          description: which page was returned
     InformationModel:
       type: object
       properties:
         type:
           type: string
-          enum: [informationmodel]
+          enum:
+            - informationmodel
         id:
           type: string
           description: The id given by the harvest system
         uri:
           type: string
-          description: The uri of the concept [dct:identifier]
+          description: 'The uri of the concept [dct:identifier]'
         publisher:
           $ref: '#/components/schemas/Publisher'
         harvest:
-          $ref: "#/components/schemas/HarvestMetadata"
+          $ref: '#/components/schemas/HarvestMetadata'
         harvestSourceUri:
           type: string
           description: The source where the record was harvested from
@@ -134,15 +1439,6 @@ components:
           type: boolean
         isOpenLicence:
           type: boolean
-        isFree:
-          type: boolean
-        statusCode:
-          type: string
-          enum: [ STABLE ]
-        id:
-          type: string
-        title:
-          type: string
         description:
           type: string
         descriptionFormatted:
@@ -153,6 +1449,16 @@ components:
             type: string
         publisher:
           $ref: '#/components/schemas/Publisher'
+        title:
+          type: string
+        id:
+          type: string
+        statusCode:
+          type: string
+          enum:
+            - STABLE
+        isFree:
+          type: boolean
     DataSet:
       type: object
       properties:
@@ -215,41 +1521,42 @@ components:
       properties:
         type:
           type: string
-          enum: [concept]
+          enum:
+            - concept
         id:
           type: string
           description: The id given by the harvest system
         uri:
           type: string
-          description: The uri of the concept [dct:identifier]
+          description: 'The uri of the concept [dct:identifier]'
         identifier:
           type: string
           description: Identifier
         definition:
-          $ref: "#/components/schemas/Definition"
+          $ref: '#/components/schemas/Definition'
         alternativeDefinition:
-          $ref: "#/components/schemas/Definition"
+          $ref: '#/components/schemas/Definition'
         subject:
-          $ref: "#/components/schemas/Subject"
+          $ref: '#/components/schemas/Subject'
         prefLabel:
-          $ref: "#/components/schemas/PrefLabel"
+          $ref: '#/components/schemas/PrefLabel'
         altLabel:
           type: array
           items:
-            $ref: "#/components/schemas/AltLabel"
+            $ref: '#/components/schemas/AltLabel'
         hiddenLabel:
           type: array
           items:
-            $ref: "#/components/schemas/HiddenLabel"
+            $ref: '#/components/schemas/HiddenLabel'
         contactPoint:
-          $ref: "#/components/schemas/ContactPoint"
+          $ref: '#/components/schemas/ContactPoint'
         publisher:
-          $ref: "#/components/schemas/Publisher"
+          $ref: '#/components/schemas/Publisher'
         harvestSourceUri:
           type: string
           description: The source where the record was harvested from
         harvest:
-          $ref: "#/components/schemas/HarvestMetadata"
+          $ref: '#/components/schemas/HarvestMetadata'
     Catalog:
       type: object
       properties:
@@ -259,7 +1566,7 @@ components:
           type: string
         title:
           $ref: '#/components/schemas/TextField'
-        "publisher":
+        publisher:
           $ref: '#/components/schemas/PublisherDetailed'
     Conformation:
       allOf:
@@ -303,7 +1610,11 @@ components:
         - properties:
             code:
               type: string
-              enum: [PUBLIC,RESTRICTED,NON_PUBLIC,ukjent]
+              enum:
+                - PUBLIC
+                - RESTRICTED
+                - NON_PUBLIC
+                - ukjent
     LosTheme:
       type: object
       properties:
@@ -323,7 +1634,7 @@ components:
             type: string
     Definition:
       type: object
-      description: The definition [skosno:Definisjon]
+      description: 'The definition [skosno:Definisjon]'
       properties:
         text:
           type: object
@@ -338,7 +1649,7 @@ components:
               type: string
               description: the definition remark in Norwegian Bokmål
         source:
-          $ref: "#/components/schemas/Source"
+          $ref: '#/components/schemas/Source'
         targetGroup:
           type: string
           description: Target group
@@ -347,37 +1658,37 @@ components:
           description: Date when the definition was last updated
     Subject:
       type: object
-      description: Subject [dct:subject]
+      description: 'Subject [dct:subject]'
     PrefLabel:
       type: object
-      description: Preferred label [skosxl:prefLabel]
+      description: 'Preferred label [skosxl:prefLabel]'
       properties:
         nb:
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian Bokmål
-        no:
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian Bokmål'
+        'no':
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian (General)
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian (General)'
         nn:
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian (Nynorsk)
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian (Nynorsk)'
         en:
           type: string
-          description: Preferred label [skosxl:prefLabel] in english
+          description: 'Preferred label [skosxl:prefLabel] in english'
     AltLabel:
       type: object
-      description: Alternative label [skosxl:altLabel]
+      description: 'Alternative label [skosxl:altLabel]'
       properties:
         nb:
           type: string
-          description: Preferred label [skosxl:altLabel] in Norwegian Bokmål
+          description: 'Preferred label [skosxl:altLabel] in Norwegian Bokmål'
     HiddenLabel:
       type: object
-      description: Hidden label [skos:hiddenLabel]
+      description: 'Hidden label [skos:hiddenLabel]'
       properties:
         nb:
           type: string
-          description: Hidden label [skosxl:altLabel] in Norwegian Bokmål
+          description: 'Hidden label [skosxl:altLabel] in Norwegian Bokmål'
     TextField:
       type: object
       properties:
@@ -387,7 +1698,7 @@ components:
         nn:
           type: string
           description: the text in Nynorsk(Norwegian)
-        no:
+        'no':
           type: string
           description: the text in Norwegian(general)
         en:
@@ -395,7 +1706,7 @@ components:
           description: the text in Nynorsk(general)
     ContactPoint:
       type: object
-      description: Hidden label [skos:hiddenLabel]
+      description: 'Hidden label [skos:hiddenLabel]'
       properties:
         email:
           type: string
@@ -403,7 +1714,7 @@ components:
           type: string
     Publisher:
       type: object
-      description: The publisher of the concept [dct:publisher]
+      description: 'The publisher of the concept [dct:publisher]'
       properties:
         uri:
           type: string
@@ -417,7 +1728,7 @@ components:
         orgPath:
           type: string
         prefLabel:
-          $ref: "#/components/schemas/PrefLabel"
+          $ref: '#/components/schemas/PrefLabel'
     PublisherDetailed:
       allOf:
         - $ref: '#/components/schemas/Publisher'
@@ -446,7 +1757,8 @@ components:
         - properties:
             code:
               type: string
-              enum: [ NASJONAL ]
+              enum:
+                - NASJONAL
     HarvestMetadata:
       type: object
       description: Information about when the concept was first and last harvested by the system
@@ -472,23 +1784,12 @@ components:
           type: string
         prefLabel:
           $ref: '#/components/schemas/PrefLabel'
-    ElasticSearchData:
-      type: object
-      description: Data about the object from ElasticSearch
-      properties:
-        _index:
-          type: string
-          description: index where the object is stored
-        _type:
-          type: string
-          description: type of the object
-          enum: [datasett, concept, dataservice, informationmodel]
-        _id:
-          type: string
-          description: id of the stored object
         _score:
           type: number
           description: relevance score given by elasticsearch
+        _id:
+          type: string
+          description: id of the stored object
     ErrorMessage:
       type: object
       properties:
@@ -496,3 +1797,17 @@ components:
           type: integer
         reason:
           type: string
+    Buckets:
+      type: object
+      properties:
+        key:
+          type: string
+        doc_count:
+          type: integer
+    Aggregation:
+      type: object
+      properties:
+        buckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Buckets'

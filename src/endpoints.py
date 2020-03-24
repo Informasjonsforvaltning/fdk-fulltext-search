@@ -9,17 +9,12 @@ class Search(Resource):
         return result
 
 
-class AutoComplete(Resource):
-    def post(self):
-        return {"hello": "autocomplete"}
-
-
 class Count(Resource):
     def get(self):
         return client.count()
 
 
-class Harvest(Resource):
+class Update(Resource):
     def post(self):
         fetch_information_models()
         fetch_concepts()
