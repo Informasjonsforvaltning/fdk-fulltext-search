@@ -20,7 +20,7 @@ class TestSearchAll:
         update_response = post(service_url + "/update")
         if update_response.status_code != 200:
             raise Exception(
-                'Test containers: received http status' + update_response.status_code + "when attempting to start "
+                'Test containers: received http status' + update_response.status_code + "when attempting to start second"
                                                                                         "update")
         amount_after_first_harvest = 130
         result = get(service_url + "/count").json()["count"]
@@ -79,3 +79,10 @@ class TestSearchAll:
         assert len(result["orgPath"]["buckets"]) > 0
         assert len(result["isOpenAccess"]["buckets"]) > 0
         assert len(result["accessRights"]["buckets"]) > 0
+
+    @pytest.mark.contract
+    def test_all_hits_should_have_type(self, api):
+        result = post(service_url + "/search").json()["hits"]
+        for hit in result:
+            assert "type" in hit.keys()
+            assert hit[type] is "dataservice" or hit["type"] is "dataset" or hit[type] is "concept" or hit["type"] is "informationmodel"

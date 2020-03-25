@@ -1,17 +1,20 @@
 import time
 from invoke import task
 
+pipenv_install = "pipenv install --dev"
 
 @task
-def unit_test(ctx):
-    pipenv_cmd = "pipenv install --dev"
+def unit_test(ctx, install=False):
     pipenv_run_test = "pipenv run pytest -m unit"
-    ctx.run(pipenv_cmd)
+    if install:
+        ctx.run(pipenv_install)
     ctx.run(pipenv_run_test)
 
 
 @task
-def build_image(ctx, tags="digdir/fulltext-search:latest"):
+def build_image(ctx, tags="digdir/fulltext-search:latest", staging=False):
+    if staging:
+        ctx.run(pipenv_install)
     gen_requirements = "pipenv lock -r >requirements.txt"
     ctx.run(gen_requirements)
     tag = ""
@@ -23,7 +26,7 @@ def build_image(ctx, tags="digdir/fulltext-search:latest"):
     ctx.run(build_cmd)
 
 
-@task(pre=[build_image])
+@task
 def start_docker(ctx):
     print("starting docker network..")
     start_compose = "docker-compose -f tests/docker-compose.contract.yml up -d"
@@ -38,15 +41,14 @@ def stop_docker(ctx):
     ctx.run(down_and_clean)
 
 
-@task(pre=[start_docker], post=[stop_docker])
-def contract_test(ctx):
-    print("______CONTRACT TESTS_______")
-    pipenv_cmd = "pipenv install"
-    pipenv_run_test = "pipenv run pytest -m contract"
-    ctx.run(pipenv_cmd)
-    ctx.run(pipenv_run_test)
-
-
 @task
-def no_setup_contract_test(ctx):
-    ctx.run("pytest -m contract")
+def contract_test(ctx, compose=False, build=False):
+    print("______CONTRACT TESTS_______")
+    if build:
+        build_image(ctx)
+    if compose:
+        start_docker(ctx)
+    pipenv_run_test = "pipenv run pytest -m contract"
+    ctx.run(pipenv_run_test)
+    if compose:
+        stop_docker(ctx)

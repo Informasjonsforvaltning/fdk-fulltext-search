@@ -1327,6 +1327,7 @@ components:
   schemas:
     SearchRequest:
       description: Body with search parameters
+      type: object
       properties:
         size:
           type: integer
@@ -1336,7 +1337,7 @@ components:
         filters:
           type: array
           items:
-            $ref: '#/components/schemas/Filter'
+            type: string
         searchString:
           type: string
           description: string to perform a search on
@@ -1358,26 +1359,6 @@ components:
       type: object
       x-examples:
         example-1: {}
-    Filter:
-      type: object
-      description: 'Which field and value to filter by, defaults to none'
-      properties:
-        field:
-          description: field the search should filter by
-          type: string
-        value:
-          description: 'value to filter by, defaults to queryStrin'
-          type: string
-        forTypes:
-          description: 'which type of data the filter should be applied to, defaults to all'
-          type: array
-          items:
-            type: string
-            enum:
-              - dataset
-              - dataservice
-              - concept
-              - informationmodel
     Sort:
       type: object
       properties:

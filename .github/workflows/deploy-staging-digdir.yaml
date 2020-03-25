@@ -31,9 +31,9 @@ jobs:
       - run: gcloud auth configure-docker
 
       - name: Build Docker image with GitHub commit sha tag and staging tag
-        run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
+        run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest --staging
 
-      - name: run tests
+      - name: Run tests
         run: invoke unit-test
 
       - name: Publish docker image to Google Cloud
