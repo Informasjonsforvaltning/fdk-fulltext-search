@@ -4,7 +4,7 @@ from invoke import task
 
 @task
 def unit_test(ctx):
-    pipenv_cmd = "pipenv install"
+    pipenv_cmd = "pipenv install --dev"
     pipenv_run_test = "pipenv run pytest -m unit"
     ctx.run(pipenv_cmd)
     ctx.run(pipenv_run_test)
