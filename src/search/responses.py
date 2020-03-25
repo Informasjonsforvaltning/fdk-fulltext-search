@@ -29,4 +29,13 @@ class SearchResponse:
         self.response["aggregations"] = aggregations_result
 
     def map_hits(self, hits_result):
-        self.response["hits"] = hits_result
+        hits = []
+        for item in hits_result:
+            hits.append(self.map_hit_item(item))
+
+        self.response["hits"] = hits
+
+    def map_hit_item(self, item):
+        mapped_item = item["_source"]
+        mapped_item["type"] = item["_index"].rstrip('s')
+        return mapped_item

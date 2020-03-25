@@ -4,7 +4,7 @@ from requests import post, get
 from tests.contract.contract_utils import wait_for_es, populate, clean_es
 
 service_url = "http://localhost:8080"
-
+data_types = ["dataservice", "dataset", "concept", "informationmodel"]
 
 @pytest.fixture(scope="module")
 def api():
@@ -86,4 +86,12 @@ class TestSearchAll:
         result = post(service_url + "/search").json()["hits"]
         for hit in result:
             assert "type" in hit.keys()
-            assert hit[type] is "dataservice" or hit["type"] is "dataset" or hit[type] is "concept" or hit["type"] is "informationmodel"
+            assert hit["type"] in data_types
+
+    @pytest.mark.contract
+    def test_hits_should_have_object_without_es_data(self, api):
+        result = post(service_url + "/search").json()["hits"]
+        for hit in result:
+            assert "_type" not in hit.keys()
+            assert "_source" not in hit.keys()
+

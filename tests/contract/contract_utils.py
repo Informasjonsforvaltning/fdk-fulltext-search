@@ -29,7 +29,7 @@ def populate():
         response = requests.get("http://localhost:8080/count")
         if response.status_code != 200:
             raise Exception('Test containers: request to service returned ' + response.status_code)
-        if response.json()['count'] > 100:
+        if response.json()['count'] == 130:
             break
         if (time.time() > timeout):
             raise Exception('Test containers: timed out while waiting for count response ' + response.status_code)
