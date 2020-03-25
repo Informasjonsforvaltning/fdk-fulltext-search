@@ -33,15 +33,14 @@ jobs:
       - name: Build Docker image with GitHub commit sha tag and staging tag
         run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest --staging
 
+      - name: Publish docker image to Google Cloud
+        run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search
+
       - name: Run tests
         run: |
           invoke unit-test
-          invoke invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
+          invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
           invoke stop_docker
-
-
-      - name: Publish docker image to Google Cloud
-        run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search
 
       - name: Apply Helm template
         uses: stefanprodan/kube-tools@v1
