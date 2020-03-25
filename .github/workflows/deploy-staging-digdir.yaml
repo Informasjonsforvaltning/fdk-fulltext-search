@@ -19,8 +19,6 @@ jobs:
 
       - name: setup python environment
         run: pip install invoke
-      - name: generate requirements.txt
-        run: pipenv lock -r >requirements.txt
 
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -33,7 +31,7 @@ jobs:
       - run: gcloud auth configure-docker
 
       - name: Build Docker image with GitHub commit sha tag and staging tag
-        run: docker build . -t eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA -t eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
+        run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
 
       - name: run tests
         run: invoke unit-test

@@ -11,11 +11,15 @@ def unit_test(ctx):
 
 
 @task
-def build_image(ctx):
-    print("building image as digdir/fulltext-search:latest")
+def build_image(ctx, tags="digdir/fulltext-search:latest"):
     gen_requirements = "pipenv lock -r >requirements.txt"
     ctx.run(gen_requirements)
-    build_cmd = "docker build . -t digdir/fulltext-search:latest --rm "
+    tag = ""
+    for t in tags.split(","):
+        tag = tag + ' -t ' + t
+
+    print("building image with tag " + tag)
+    build_cmd = "docker build . " + tag
     ctx.run(build_cmd)
 
 
@@ -41,6 +45,7 @@ def contract_test(ctx):
     pipenv_run_test = "pipenv run pytest -m contract"
     ctx.run(pipenv_cmd)
     ctx.run(pipenv_run_test)
+
 
 @task
 def no_setup_contract_test(ctx):
