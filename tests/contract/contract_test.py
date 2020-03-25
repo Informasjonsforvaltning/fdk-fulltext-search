@@ -17,12 +17,13 @@ def api():
 class TestSearchAll:
     @pytest.mark.contract
     def test_harvest_should_not_create_duplicates(self, api):
+        amount_after_first_harvest = get(service_url + "/count").json()["count"]
+
         update_response = post(service_url + "/update")
         if update_response.status_code != 200:
             raise Exception(
                 'Test containers: received http status' + update_response.status_code + "when attempting to start second"
                                                                                         "update")
-        amount_after_first_harvest = 130
         result = get(service_url + "/count").json()["count"]
         assert result is amount_after_first_harvest
 

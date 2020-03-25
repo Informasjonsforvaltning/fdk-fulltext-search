@@ -3,6 +3,7 @@ from invoke import task
 
 pipenv_install = "pipenv install --dev"
 
+
 @task
 def unit_test(ctx, install=False):
     pipenv_run_test = "pipenv run pytest -m unit"
@@ -27,11 +28,10 @@ def build_image(ctx, tags="digdir/fulltext-search:latest", staging=False):
 
 
 @task
-def start_docker(ctx):
+def start_docker(ctx, image="digdir/fulltext-search:latest"):
     print("starting docker network..")
-    start_compose = "docker-compose -f tests/docker-compose.contract.yml up -d"
+    start_compose = "TEST_IMAGE={0} docker-compose -f  tests/docker-compose.contract.yml up -d".format(image)
     ctx.run(start_compose)
-    time.sleep(6)
 
 
 @task
@@ -42,13 +42,11 @@ def stop_docker(ctx):
 
 
 @task
-def contract_test(ctx, compose=False, build=False):
+def contract_test(ctx, image="digdir/fulltext-search:latest", compose=False, build=False):
     print("______CONTRACT TESTS_______")
     if build:
-        build_image(ctx)
+        build_image(ctx, image)
     if compose:
-        start_docker(ctx)
+        start_docker(ctx, image)
     pipenv_run_test = "pipenv run pytest -m contract"
     ctx.run(pipenv_run_test)
-    if compose:
-        stop_docker(ctx)

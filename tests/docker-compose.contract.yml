@@ -18,7 +18,7 @@ services:
       command: >
         mock -p 3100 --host 0.0.0.0 https://raw.githubusercontent.com/Informasjonsforvaltning/fdk-fulltext-search/setup/tests/mock_server/full-text-mock.yaml
   fdk-fulltext-search:
-      image: digdir/fulltext-search:latest
+      image: $TEST_IMAGE
       ports:
         - "8080:8080"
       depends_on:
