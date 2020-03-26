@@ -16,7 +16,7 @@ class Count(Resource):
 
 
 class Update(Resource):
-    def post(self):
+    def put(self):
         fetch_information_models()
         fetch_concepts()
         fetch_dataservices()

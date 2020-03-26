@@ -11,9 +11,9 @@ info:
     name: License of API
     url: 'http://data.norge.no/nlod/no/2.0'
 servers:
-  - url: 'https://search.fellesdatakatalog.digdir.no'
+  - url: 'https://fdk-fulltext-search.staging.fellesdatakatalog.digdir.no'
     description: Produksjonsversjon av API server
-  - url: 'https://staging.search.fellesdatakatalog.no'
+  - url: 'https://fdk-fulltext-search.staging.fellesdatakatalog.digdir.no'
     description: utviklingsversjon av API server
 tags:
   - name: fdk-full-text-search
@@ -1323,6 +1323,42 @@ paths:
                           - key: isOpenAccess
                             doc_count: 4
           description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
+  /update:
+    put:
+      summary: ''
+      operationId: put-update
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+      description: triggers a new data collection from felles datakatalogs harvesters
+  /count:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+      operationId: get-count
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples: {}
 components:
   schemas:
     SearchRequest:
