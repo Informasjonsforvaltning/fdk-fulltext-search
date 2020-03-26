@@ -22,3 +22,15 @@ class Update(Resource):
         fetch_dataservices()
         fetch_datasets()
         return {"status": "successfull"}
+
+
+class Ping(Resource):
+    def get(self):
+        client.count()
+        return {}
+
+
+class Ready(Resource):
+    def get(self):
+        client.count()
+        return {}

@@ -40,7 +40,7 @@ jobs:
         run: |
           invoke unit-test
           invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
-          invoke stop_docker
+          invoke stop-docker
 
       - name: Apply Helm template
         uses: stefanprodan/kube-tools@v1
