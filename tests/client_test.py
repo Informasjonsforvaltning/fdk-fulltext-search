@@ -1,6 +1,5 @@
 import pytest
-from src.search.client import search_all
-from src.search.queries import all_indices, add_aggregation
+from src.search.client import search_all, AllIndicesQuery
 
 
 @pytest.fixture
@@ -10,6 +9,8 @@ def mock_elastic(mocker):
 
 @pytest.mark.unit
 def test_should_call_search_with_match_all_query(mock_elastic):
-    search_all(query_string="")
-    mock_elastic.assert_called_once_with(body=add_aggregation(all_indices))
+    search_all()
+    expectedQuery = AllIndicesQuery()
+    expectedQuery.add_aggs()
+    mock_elastic.assert_called_once_with(body=expectedQuery.query)
 

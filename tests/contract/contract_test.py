@@ -1,5 +1,5 @@
 import pytest
-from requests import post, get
+from requests import post, get, put
 
 from tests.contract.contract_utils import wait_for_es, populate, clean_es
 
@@ -19,7 +19,7 @@ class TestSearchAll:
     def test_harvest_should_not_create_duplicates(self, api):
         amount_after_first_harvest = get(service_url + "/count").json()["count"]
 
-        update_response = post(service_url + "/update")
+        update_response = put(service_url + "/update")
         if update_response.status_code != 200:
             raise Exception(
                 'Test containers: received http status' + update_response.status_code + "when attempting to start second"

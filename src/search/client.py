@@ -2,12 +2,20 @@ from .queries import *
 from ..ingest import client
 
 
-def search_all(query_string: str):
-    s = None
-    if query_string == "":
-        s = client.search(body=add_aggregation(query=all_indices, fields=None))
-    return s
+def search_all(request: dict = None):
+    q = AllIndicesQuery()
+    if request is None:
+        q.add_aggs()
+    else:
+        #TODO
+        if "aggs" not in request:
+            q.add_aggs()
+        if "searchString" in request:
+            q.add_search_string(request.get("searchString"))
+    return client.search(body=q.query)
 
 
 def count():
     return client.count()
+
+

@@ -1,0 +1,10 @@
+{
+  "analysis": {
+    "analyzer": {
+      "path-analyzer": {
+        "type": "custom",
+        "tokenizer": "path_hierarchy"
+      }
+    }
+  }
+}

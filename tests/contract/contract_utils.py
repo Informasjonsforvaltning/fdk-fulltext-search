@@ -18,7 +18,7 @@ def wait_for_es():
 
 def populate():
     print("populating db")
-    update_response = requests.post("http://localhost:8080/update")
+    update_response = requests.put("http://localhost:8080/update")
     if update_response.status_code != 200:
         raise Exception(
             'Test containers: received http status' + str(update_response.status_code) + "when attempting to start "
