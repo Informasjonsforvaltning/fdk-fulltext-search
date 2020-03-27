@@ -17,6 +17,7 @@ def wait_for_es():
 
 
 def populate():
+    requests.delete("http://localhost:8080/update")
     print("populating db")
     update_response = requests.put("http://localhost:8080/update")
     if update_response.status_code != 200:
