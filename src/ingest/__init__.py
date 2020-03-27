@@ -71,14 +71,32 @@ def yield_documents_from_source(documents, index, id_key):
 
 
 def create_indices():
-    if client.count()["count"] == 0:
-        with open(os.getcwd() + "/elasticsearch/create_concept_index.json") as concept_mapping:
-            client.indices.create(index="concepts", body=json.load(concept_mapping))
-        with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
+    count = client.count()
+    with open(os.getcwd() + "/elasticsearch/create_concept_index.json") as concept_mapping:
+            try:
+                client.indices.delete(index="concepts")
+            except:
+                print("indices concept does not exist")
+            finally:
+                client.indices.create(index="concepts", body=json.load(concept_mapping))
+    with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
+        try:
+            client.indices.delete(index="dataservices")
+        except:
+            print("indices dataservices does not exist")
+        finally:
             client.indices.create(index="dataservices", body=json.load(dataservice_mapping))
-        with open(os.getcwd() + "/elasticsearch/create_datasets_index.json") as datasets_mapping:
+    with open(os.getcwd() + "/elasticsearch/create_datasets_index.json") as datasets_mapping:
+        try:
+            client.indices.delete(index="datasets")
+        except:
+            print("indices datasets does not exist")
+        finally:
             client.indices.create(index="datasets", body=json.load(datasets_mapping))
-        with(open(os.getcwd() + "/elasticsearch/create_info_index.json")) as info_mapping:
+    with(open(os.getcwd() + "/elasticsearch/create_info_index.json")) as info_mapping:
+        try:
+            client.indices.delete(index="informationmodels")
+        except:
+            print("indices informationmodels does not exist")
+        finally:
             client.indices.create(index="informationmodels", body=json.load(info_mapping))
-    else:
-        print("indices already exists")

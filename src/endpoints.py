@@ -21,14 +21,14 @@ class Count(Resource):
 
 class Update(Resource):
     def put(self):
-        create_indices()
         fetch_information_models()
         fetch_concepts()
         fetch_dataservices()
         fetch_datasets()
         fetch_datasets()
         return {"status": "successfull"}
-
+    def delete(self):
+        create_indices()
 
 class Ping(Resource):
     def get(self):
