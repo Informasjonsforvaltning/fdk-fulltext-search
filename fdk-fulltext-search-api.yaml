@@ -1353,12 +1353,18 @@ paths:
                   count:
                     type: integer
       operationId: get-count
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-            examples: {}
+  /recent:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-recent
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
 components:
   schemas:
     SearchRequest:
@@ -1392,9 +1398,6 @@ components:
               $ref: '#/components/schemas/Page'
             aggregations:
               type: string
-      type: object
-      x-examples:
-        example-1: {}
     Sort:
       type: object
       properties:
