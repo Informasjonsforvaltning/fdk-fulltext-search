@@ -1,0 +1,108 @@
+{
+    "mappings": {
+            "properties": {
+                "harvest": {
+                    "properties": {
+                        "firstHarvested": {
+                            "type": "date"
+                        },
+                        "lastChanged": {
+                            "type": "date"
+                        },
+                        "lastHarvested": {
+                            "type": "date"
+                        }
+                    }
+                },
+                "harvestSourceUri": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "id": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "publisher": {
+                    "properties": {
+                        "name": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "orgPath": {
+                                    "type": "text",
+                                    "analyzer": "path-analyzer",
+                                    "fielddata": true,
+                                    "fields": {
+                                        "keyword": {
+                                            "type": "keyword",
+                                            "ignore_above": 256
+                                        }
+                                    }
+                                },
+                        "uri": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                },
+                "schema": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "title": {
+                    "properties": {
+                        "nb": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "path-analyzer": {
+                    "type": "custom",
+                    "tokenizer": "path-tokenizer"
+                }
+            },
+            "tokenizer": {
+                "path-tokenizer": {
+                    "type": "path_hierarchy",
+                    "delimiter": "/"
+                }
+            }
+        }
+    }
+}

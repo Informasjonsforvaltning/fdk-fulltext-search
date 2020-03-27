@@ -1,0 +1,146 @@
+{
+    "mappings": {
+            "properties": {
+                "deprecationInfoExpirationDate": {
+                    "type": "date"
+                },
+                "deprecationInfoReplacedWithUrl": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "description": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "descriptionFormatted": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "formats": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "id": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "isFree": {
+                    "type": "boolean"
+                },
+                "isOpenAccess": {
+                    "type": "boolean"
+                },
+                "isOpenLicense": {
+                    "type": "boolean"
+                },
+                "nationalComponent": {
+                    "type": "boolean"
+                },
+                "publisher": {
+                    "properties": {
+                        "id": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "name": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "orgPath": {
+                            "type": "text",
+                            "analyzer" : "path-analyzer",
+                            "fielddata": "true",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "prefLabel": {
+                            "properties": {
+                                "no": {
+                                    "type": "text",
+                                    "fields": {
+                                        "keyword": {
+                                            "type": "keyword",
+                                            "ignore_above": 256
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "statusCode": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "title": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                }
+            }
+        },
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "path-analyzer": {
+                    "type": "custom",
+                    "tokenizer": "path-tokenizer"
+                }
+            },
+            "tokenizer": {
+                "path-tokenizer": {
+                    "type": "path_hierarchy",
+                    "delimiter": "/"
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,6 @@
 # TODO : setup rabbit listeners; "update_es": [informationmodels,concepts,datasets,dataservices]
+import json
+
 import requests
 import os
 from elasticsearch import Elasticsearch, helpers
@@ -42,7 +44,6 @@ def fetch_dataservices():
     elasticsearch_ingest(documents, "dataservices", "id")
 
 
-
 def elasticsearch_ingest(documents, index, id_key):
     result = helpers.bulk(client=client, actions=yield_documents(documents, index, id_key))
 
@@ -53,10 +54,8 @@ def elasticsearch_ingest_from_source(documents, index, id_key):
 
 def yield_documents(documents, index, id_key):
     for doc in documents:
-        print(doc)
         yield {
             "_index": index,
-            "_type": "document",
             "_id": doc[id_key],
             "_source": doc
         }
@@ -64,10 +63,22 @@ def yield_documents(documents, index, id_key):
 
 def yield_documents_from_source(documents, index, id_key):
     for doc in documents:
-        print(doc)
         yield {
             "_index": index,
             "_id": doc["_id"],
-            "_type": "document",
             "_source": doc["_source"]
         }
+
+
+def create_indices():
+    if client.count()["count"] == 0:
+        with open(os.getcwd() + "/elasticsearch/create_concept_index.json") as concept_mapping:
+            client.indices.create(index="concepts", body=json.load(concept_mapping))
+        with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
+            client.indices.create(index="dataservices", body=json.load(dataservice_mapping))
+        with open(os.getcwd() + "/elasticsearch/create_datasets_index.json") as datasets_mapping:
+            client.indices.create(index="datasets", body=json.load(datasets_mapping))
+        with(open(os.getcwd() + "/elasticsearch/create_info_index.json")) as info_mapping:
+            client.indices.create(index="informationmodels", body=json.load(info_mapping))
+    else:
+        print("indices already exists")

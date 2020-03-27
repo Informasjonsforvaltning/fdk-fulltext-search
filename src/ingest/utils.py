@@ -11,9 +11,4 @@ class Indexes:
     DATA_SERVICES_ID_KEY = "id"
 
 
-def get_source():
-    return
 
-
-def get_id():
-    return
