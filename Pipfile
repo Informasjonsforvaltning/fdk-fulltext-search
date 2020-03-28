@@ -32,6 +32,7 @@ elasticsearch-dsl = "*"
 requests = "*"
 gunicorn = "*"
 flask-cors = "*"
+jsonpath-ng = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,4 +1,12 @@
 # noinspection PyTypeChecker
+from enum import Enum
+
+
+class Direction(Enum):
+    ASC = "asc"
+    DESC = "desc"
+
+
 class AllIndicesQuery:
     default_aggs = {
         "los": {

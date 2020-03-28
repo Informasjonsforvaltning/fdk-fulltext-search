@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import request
 from .search import client
-from .ingest import fetch_information_models, fetch_concepts, fetch_dataservices, fetch_datasets, create_indices
+from .ingest import fetch_from_services,create_indices
 from .search.responses import SearchResponse
 
 
@@ -21,14 +21,11 @@ class Count(Resource):
 
 class Update(Resource):
     def put(self):
-        fetch_information_models()
-        fetch_concepts()
-        fetch_dataservices()
-        fetch_datasets()
-        fetch_datasets()
-        return {"status": "successfull"}
+        return fetch_from_services()
+
     def delete(self):
         create_indices()
+
 
 class Ping(Resource):
     def get(self):
