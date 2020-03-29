@@ -12,22 +12,22 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
   servicesmock:
-      image: stoplight/prism:3
-      ports:
-        - "3100:3100"
-      command: >
-        mock -p 3100 --host 0.0.0.0 https://raw.githubusercontent.com/Informasjonsforvaltning/fdk-fulltext-search/setup/tests/mock_server/full-text-mock.yaml
+    image: rodolpheche/wiremock
+    ports:
+      - "8080:8080"
+    volumes:
+      - $MOCK_DIR/mock_mappings/mappings:/home/wiremock/mappings
   fdk-fulltext-search:
       image: $TEST_IMAGE
       ports:
-        - "8080:8080"
+        - "8000:8000"
       depends_on:
         - elasticsearch
         - servicesmock
       environment:
         - HOST_URL=http://localhost
-        - HOST_PORT=8080
+        - HOST_PORT=8000
         - ELASTIC_HOST=elasticsearch
         - ELASTIC_PORT=9200
         - ELASTIC_TCP_PORT=9300
-        - API_URL=http://servicesmock:3100/
+        - API_URL=http://servicesmock:8080/

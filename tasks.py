@@ -1,3 +1,4 @@
+import os
 import time
 from invoke import task
 
@@ -30,7 +31,17 @@ def build_image(ctx, tags="digdir/fulltext-search:latest", staging=False):
 @task
 def start_docker(ctx, image="digdir/fulltext-search:latest"):
     print("starting docker network..")
-    start_compose = "TEST_IMAGE={0} docker-compose -f  tests/docker-compose.contract.yml up -d".format(image)
+    host_dir = os.getcwd()
+    print(host_dir)
+    start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose -f  tests/docker-compose.contract.yml up -d".format(image,host_dir)
+    ctx.run(start_compose)
+
+@task
+def start_docker_local(ctx, image="digdir/fulltext-search:latest"):
+    print("starting docker network..")
+    host_dir = os.getcwd()
+    print(host_dir)
+    start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose up".format(image,host_dir)
     ctx.run(start_compose)
 
 

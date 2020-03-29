@@ -12,8 +12,8 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
   servicesmock:
-      image: stoplight/prism:3
+      image: rodolpheche/wiremock
       ports:
-        - "3100:3100"
-      command: >
-        mock -p 3100 --host 0.0.0.0 https://raw.githubusercontent.com/Informasjonsforvaltning/fdk-fulltext-search/setup/tests/mock_server/full-text-mock.yaml
+        - "3100:8080"
+      volumes:
+        - $MOCK_DIR/mock_mappings/mappings:/home/wiremock/mappings

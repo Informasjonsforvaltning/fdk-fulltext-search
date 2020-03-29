@@ -21,9 +21,14 @@ def fetch_from_services():
     concept_status = fetch_concepts()
     service_status = fetch_dataservices()
     datasets_status = fetch_datasets()
-    totalTime = time.time() - start
+    total_time = time.time() - start
+    total_concepts = 0
+    for iteration in concept_status:
+        total_concepts = total_concepts + iteration[0]
+    totalElements = info_status[0]+total_concepts+service_status[0]+datasets_status[0]
     result = {
-        "took": totalTime,
+        "took": total_time,
+        "total": totalElements,
         "informationmodels": info_status,
         "concepts": concept_status,
         "dataservice": service_status,

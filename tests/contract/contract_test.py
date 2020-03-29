@@ -3,7 +3,7 @@ from requests import post, get, put
 
 from tests.contract.contract_utils import wait_for_es, populate, clean_es
 
-service_url = "http://localhost:8080"
+service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
 
 @pytest.fixture(scope="module")
@@ -25,7 +25,8 @@ class TestSearchAll:
                 'Test containers: received http status' + update_response.status_code + "when attempting to start second"
                                                                                         "update")
         result = get(service_url + "/count").json()["count"]
-        assert result is amount_after_first_harvest
+
+        assert result == amount_after_first_harvest
 
     @pytest.mark.contract
     def test_search_without_body_should_return_response_with_hits_aggregations_and_page(self, api):
