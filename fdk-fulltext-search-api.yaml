@@ -1380,7 +1380,7 @@ components:
           type: array
           items:
             type: string
-        searchString:
+        q:
           type: string
           description: string to perform a search on
     SearchResult:

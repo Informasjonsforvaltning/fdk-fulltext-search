@@ -1,16 +1,6 @@
-# noinspection PyTypeChecker
-import os
 from enum import Enum
 
-
-def simple_query_string(search_string: str):
-    return {
-        "simple_query_string": {
-            "query": "{0} {0}*".format(search_string),
-            "boost": 0.5,
-            "default_operator": "or"
-        }
-    }
+from src.search.query_utils import simple_query_string, constant_simple_query
 
 
 class Direction(Enum):
@@ -22,26 +12,27 @@ class AllIndicesQuery:
     default_aggs = {
         "los": {
             "terms": {
-                "field": "losTheme.losPaths.keyword"
+                "field": "losTheme.losPaths.keyword",
+                "size": 1000000000
             }
         },
         "orgPath": {
             "terms": {
                 "field": "publisher.orgPath",
                 "missing": "MISSING",
-                "size": 100000000
+                "size": 1000000000
             }
         },
         "isOpenAccess": {
             "terms": {
                 "field": "isOpenAccess",
-                "size": 100000000
+                "size": 3
             }
         },
         "accessRights": {
             "terms": {
                 "field": "accessRights.code.keyword",
-                "size": 100000000
+                "size": 10
             }
         }
     }
@@ -79,8 +70,12 @@ class AllIndicesQuery:
         }
     }
 
-    def __init__(self):
+    def __init__(self, searchString=None, aggs=None):
         self.query = self.query_template
+        if searchString:
+            self.add_search_string(searchString)
+        if aggs is None:
+            self.add_aggs()
 
     def add_page(self, size=None, start=None) -> dict:
         if size is not None:
@@ -94,7 +89,8 @@ class AllIndicesQuery:
         # TODO: self defined aggs
 
     def add_search_string(self, param):
-        self.query["query"]["dis_max"]["queries"][1] = simple_query_string(param)
+        self.query["query"]["dis_max"]["queries"][0] = constant_simple_query(param)
+        self.query["query"]["dis_max"]["queries"][1] = simple_query_string(search_string=param, boost=0.1)
 
 
 class RecentQuery:

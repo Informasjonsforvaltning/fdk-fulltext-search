@@ -11,9 +11,9 @@ def search_all(request: dict = None):
         # TODO
         if "aggs" not in request:
             q.add_aggs()
-        if "searchString" in request:
-            q.add_search_string(request.get("searchString"))
-    return client.search(body=q.query)
+        if "q" in request:
+            q.add_search_string(request.get("q"))
+    return client.search(body=q.query, search_type='dfs_query_then_fetch')
 
 
 def count():

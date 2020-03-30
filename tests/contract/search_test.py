@@ -1,3 +1,6 @@
+import json
+import re
+
 import pytest
 from requests import post, get, put
 
@@ -23,8 +26,9 @@ class TestSearchAll:
         update_response = put(service_url + "/update")
         if update_response.status_code != 200:
             raise Exception(
-                'Test containers: received http status' + update_response.status_code + "when attempting to start second"
-                                                                                        "update")
+                'Test containers: received http status' + str(
+                    update_response.status_code) + "when attempting to start second"
+                                                   "update")
         result = get(service_url + "/count").json()["count"]
 
         assert result == amount_after_first_harvest
@@ -96,3 +100,14 @@ class TestSearchAll:
         for hit in result:
             assert "_type" not in hit.keys()
             assert "_source" not in hit.keys()
+
+    @pytest.mark.contract
+    def test_hits_should_contain_search_string(self):
+        body = {
+            "q": "barnehage"
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            values = json.dumps(hit)
+            arr = re.findall("barnehage", values)
+            assert (len(arr)) > 0
