@@ -22,7 +22,7 @@ class AllIndicesQuery:
     default_aggs = {
         "los": {
             "terms": {
-                "field": "expandedLosTema.keyword"
+                "field": "losTheme.losPaths.keyword"
             }
         },
         "orgPath": {
