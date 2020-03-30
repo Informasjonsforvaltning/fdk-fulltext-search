@@ -6,6 +6,7 @@ from tests.contract.contract_utils import wait_for_es, populate, clean_es
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
 
+
 @pytest.fixture(scope="module")
 def api():
     wait_for_es()
@@ -95,4 +96,3 @@ class TestSearchAll:
         for hit in result:
             assert "_type" not in hit.keys()
             assert "_source" not in hit.keys()
-

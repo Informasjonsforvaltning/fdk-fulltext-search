@@ -2,12 +2,13 @@ from .queries import *
 from ..ingest import client
 
 
+
 def search_all(request: dict = None):
     q = AllIndicesQuery()
     if request is None:
         q.add_aggs()
     else:
-        #TODO
+        # TODO
         if "aggs" not in request:
             q.add_aggs()
         if "searchString" in request:
@@ -19,3 +20,6 @@ def count():
     return client.count()
 
 
+def get_recent(size=None):
+    q = RecentQuery(size).query
+    return client.search(body=q)

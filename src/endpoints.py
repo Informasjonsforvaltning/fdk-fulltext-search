@@ -1,7 +1,7 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from flask import request
 from .search import client
-from .ingest import fetch_from_services,create_indices
+from .ingest import fetch_from_services, create_indices
 from .search.responses import SearchResponse
 
 
@@ -37,3 +37,13 @@ class Ready(Resource):
     def get(self):
         client.count()
         return {}
+
+
+class Recent(Resource):
+    def get(self):
+        args = request.args
+        size = 5
+        if "size" in args:
+            size = args["size"]
+        result = client.get_recent(size=size)
+        return SearchResponse().map_response(es_result=result, size=size)

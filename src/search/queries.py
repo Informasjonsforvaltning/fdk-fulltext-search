@@ -1,5 +1,16 @@
 # noinspection PyTypeChecker
+import os
 from enum import Enum
+
+
+def simple_query_string(search_string: str):
+    return {
+        "simple_query_string": {
+            "query": "{0} {0}*".format(search_string),
+            "boost": 0.5,
+            "default_operator": "or"
+        }
+    }
 
 
 class Direction(Enum):
@@ -34,7 +45,7 @@ class AllIndicesQuery:
             }
         }
     }
-    query = {
+    query_template = {
         "query": {
             "dis_max": {
                 "queries": [
@@ -68,6 +79,9 @@ class AllIndicesQuery:
         }
     }
 
+    def __init__(self):
+        self.query = self.query_template
+
     def add_page(self, size=None, start=None) -> dict:
         if size is not None:
             self.query['size'] = size
@@ -83,11 +97,15 @@ class AllIndicesQuery:
         self.query["query"]["dis_max"]["queries"][1] = simple_query_string(param)
 
 
-def simple_query_string(search_string: str):
-    return {
-        "simple_query_string": {
-            "query": "{0} {0}*".format(search_string),
-            "boost": 0.5,
-            "default_operator": "or"
+class RecentQuery:
+    def __init__(self, size=None):
+        self.query = {
+            "size": 5,
+            "sort": {"harvest.firstHarvested": {
+                "order": Direction.DESC.value
+            }
+            }
         }
-    }
+
+        if size is not None:
+            self.query["size"] = size

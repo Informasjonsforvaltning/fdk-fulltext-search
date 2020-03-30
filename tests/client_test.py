@@ -1,5 +1,5 @@
 import pytest
-from src.search.client import search_all, AllIndicesQuery
+from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery
 
 
 @pytest.fixture
@@ -13,4 +13,22 @@ def test_should_call_search_with_match_all_query(mock_elastic):
     expectedQuery = AllIndicesQuery()
     expectedQuery.add_aggs()
     mock_elastic.assert_called_once_with(body=expectedQuery.query)
+
+@pytest.mark.unit
+def test_should_call_search_with_recent_query(mock_elastic):
+    get_recent()
+    expectedQuery = RecentQuery().query
+    mock_elastic.assert_called_once_with(body=expectedQuery)
+
+
+@pytest.mark.unit
+def test_should_call_search_with_recent_query_and_size_10(mock_elastic):
+    get_recent(size=10)
+    expectedQuery = RecentQuery(10).query
+    mock_elastic.assert_called_once_with(body=expectedQuery)
+
+
+
+
+
 

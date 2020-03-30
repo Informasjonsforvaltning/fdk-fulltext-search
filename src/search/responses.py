@@ -10,7 +10,8 @@ class SearchResponse:
 
     def map_response(self, es_result, size=10, requested_page=0):
         self.map_page(es_result["hits"], size, requested_page)
-        self.map_aggregations(es_result["aggregations"])
+        if "aggregations" in es_result.keys():
+            self.map_aggregations(es_result["aggregations"])
         self.map_hits(es_result["hits"]["hits"])
         return self.response
 
