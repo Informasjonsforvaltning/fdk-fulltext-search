@@ -165,7 +165,6 @@ def test_all_indices_should_return_query_with_filter():
                         }
                     }
                 ],
-                "must_not": []
             }
         },
         "aggs": {
@@ -200,11 +199,13 @@ def test_all_indices_should_return_query_with_filter():
     assert json.dumps(result.query) == json.dumps(expected)
 
 
+@pytest.mark.unit
 def test_all_indices_should_return_query_with_must_not():
     expected = {
         "query": {
-            "bool": {
-                "must": [{
+        "bool": {
+            "must": [
+                {
                     "dis_max": {
                         "queries": [
                             {
@@ -246,17 +247,21 @@ def test_all_indices_should_return_query_with_must_not():
                             }
                         ]
                     }
-                }],
-                "filter": [],
-                "must_not": [
-                    {
-                        "exists": {
-                            "field": "publisher.orgPath"
+                }
+            ],
+            "filter": [
+                {
+                    "bool": {
+                        "must_not": {
+                        	"exists": {
+                        		"field":"publisher.orgPath"
+                        	}
                         }
                     }
-                ]
-            }
-        },
+                }
+            ]
+        }
+    },
         "aggs": {
             "los": {
                 "terms": {

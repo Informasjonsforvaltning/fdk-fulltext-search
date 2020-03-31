@@ -1,6 +1,7 @@
 from enum import Enum
 
-from src.search.query_utils import simple_query_string, constant_simple_query, get_filter, get_filter_key
+from src.search.query_utils import simple_query_string, constant_simple_query, get_filter, get_filter_key, \
+    must_not_query
 
 
 class Direction(Enum):
@@ -108,11 +109,10 @@ class AllIndicesQuery:
 
     def add_filters(self, filters):
         self.query["query"]["bool"]["filter"] = []
-        self.query["query"]["bool"]["must_not"] = []
         for f in filters:
             key = list(f.keys())[0]
-            if(f[key]) == 'MISSING':
-                self.query["query"]["bool"]["must_not"].append({"exists": {"field": get_filter_key(key)}})
+            if (f[key]) == 'MISSING':
+                self.query["query"]["bool"]["filter"].append(must_not_query(key))
             else:
                 self.query["query"]["bool"]["filter"].append({"term": get_filter(f)})
 

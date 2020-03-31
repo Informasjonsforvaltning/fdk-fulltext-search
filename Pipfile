@@ -33,6 +33,7 @@ requests = "*"
 gunicorn = "*"
 flask-cors = "*"
 jsonpath-ng = "*"
+gevent = "*"
 
 [requires]
 python_version = "3.7"

@@ -121,8 +121,10 @@ class TestSearchAll:
         for hit in result.json()["hits"]:
             assert "PRIVAT" in hit["publisher"]["orgPath"]
 
+    @pytest.mark.contract
     def test_hits_should_have_word_and_be_filtered_on_orgPath(self, api):
         body = {
+            "q": "barnehage",
             "filters": [{"orgPath": "/KOMMUNE/840029212"}]
         }
         result = post(url=service_url + "/search", json=body)
@@ -130,4 +132,42 @@ class TestSearchAll:
             values = json.dumps(hit)
             arr = re.findall("barnehage", values)
             assert (len(arr)) > 0
-            assert "/KOMMUNE/840029212" in hit["publisher"]
+            assert "/KOMMUNE/840029212" in hit["publisher"]["orgPath"]
+
+    @pytest.mark.contract
+    def test_hits_should_be_filtered_on_is_open_Access(self, api):
+        body = {
+            "filters": [{"isOpenAccess": "true"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            assert hit["isOpenAccess"] is True
+
+    @pytest.mark.contract
+    def test_hits_should_have_word_and_be_filtered_on_is_not_open_Access(self, api):
+        body = {
+            "filters": [{"isOpenAccess": "false"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            assert hit["isOpenAccess"] is False
+
+    @pytest.mark.contract
+    def test_hits_should_be_filtered_on_accessRights_PUBLIC(self, api):
+        body = {
+            "filters": [{"accessRights": "PUBLIC"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            assert hit["accessRights"]["code"] == "PUBLIC"
+
+    @pytest.mark.contract
+    def test_hits_should_be_filtered_on_accessRights_NON_PUBLIC(self, api):
+        body = {
+            "filters": [{"accessRights": "NON_PUBLIC"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            hit["accessRights"]["code"]
+
+
