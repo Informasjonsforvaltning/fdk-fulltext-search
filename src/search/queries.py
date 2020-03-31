@@ -31,11 +31,13 @@ class AllIndicesQuery:
         else:
             self.query["query"] = self.dismax
 
-    def add_page(self, size=None, start=None) -> dict:
+    def add_page(self, size=10, page=None) -> dict:
+        print(size)
+        print(page)
         if size is not None:
             self.query['size'] = size
-        if start is not None:
-            self.query['from'] = start
+        if page is not None:
+            self.query['from'] = page
 
     def add_aggs(self, fields=None):
         if fields is None:
