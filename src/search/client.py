@@ -16,7 +16,6 @@ def search_all(request: dict = None):
         if "filters" in request:
             f = request.get("filters")
     q = AllIndicesQuery(search_string=search_str, aggs=aggs, filters=f)
-    print(json.dumps(q.query))
     return client.search(body=q.query, search_type='dfs_query_then_fetch')
 
 

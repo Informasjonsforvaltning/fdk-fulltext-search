@@ -168,6 +168,16 @@ class TestSearchAll:
         }
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
-            hit["accessRights"]["code"]
+            assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
-
+    @pytest.mark.contract
+    def test_empty_request_after_request_with_q_should_return_default(self,api):
+        body = {
+            "q": "barn"
+        }
+        post(url=service_url + "/search", json=body)
+        post(url=service_url + "/search", json=body)
+        post(url=service_url + "/search", json=body)
+        pre_request = post(url=service_url + "/search", json=body)
+        result = post(url=service_url + "/search")
+        assert json.dumps(pre_request.json()) != json.dumps(result.json())

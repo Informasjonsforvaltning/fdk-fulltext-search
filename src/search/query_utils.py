@@ -52,7 +52,6 @@ def get_filter_key(filter_key):
 
 
 def must_not_query(filter_key):
-
     return {
         "bool": {
             "must_not":
@@ -61,5 +60,74 @@ def must_not_query(filter_key):
                         "field": get_filter_key(filter_key)
                     }
                 }
+        }
+    }
+
+
+def default_aggs():
+    return {
+        "los": {
+            "terms": {
+                "field": "losTheme.losPaths.keyword",
+                "size": 1000000000
+            }
+        },
+        "orgPath": {
+            "terms": {
+                "field": "publisher.orgPath",
+                "missing": "MISSING",
+                "size": 1000000000
+            }
+        },
+        "isOpenAccess": {
+            "terms": {
+                "field": "isOpenAccess",
+                "size": 3
+            }
+        },
+        "accessRights": {
+            "terms": {
+                "field": "accessRights.code.keyword",
+                "size": 10
+            }
+        }
+    }
+
+
+def default_dismax():
+    return {"dis_max": {
+        "queries": [
+            {
+                "constant_score": {
+                    "filter": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "match": {
+                                        "provenance.code": "NASJONAL"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "nationalComponent": "true"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "boost": 1.2
+                }
+            },
+            {
+                "match_all": {}
+            }
+
+        ]
+    }}
+
+
+def query_template():
+    return {
+        "query": {
         }
     }
