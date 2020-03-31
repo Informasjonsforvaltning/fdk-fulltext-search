@@ -21,7 +21,7 @@ fdk-fulltext-search
 % invoke unit-test
 ```
 ```
-% invoke contract-tests
+% invoke contract-test --compose --build
 ```
 ### Running the service locally
 ```
