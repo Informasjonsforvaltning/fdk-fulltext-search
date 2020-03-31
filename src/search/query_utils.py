@@ -14,7 +14,7 @@ def constant_simple_query(search_string: str):
             "must": [
                 {
                     "constant_score": {
-                        "filter": simple_query_string(search_string = search_string, boost=1),
+                        "filter": simple_query_string(search_string=search_string, boost=1),
                         "boost": 1.2
                     }
                 }
@@ -33,3 +33,15 @@ def constant_simple_query(search_string: str):
             ]
         }
     }
+
+
+def get_filter(filter):
+    key = list(filter.keys())[0]
+    return {get_filter_key(key): filter[key]}
+
+
+def get_filter_key(filter_key):
+    if filter_key == "orgPath":
+        return "publisher.orgPath"
+    else:
+        return filter_key

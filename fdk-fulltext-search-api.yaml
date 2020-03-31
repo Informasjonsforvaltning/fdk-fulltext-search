@@ -1379,7 +1379,7 @@ components:
         filters:
           type: array
           items:
-            type: string
+            - $ref : "#/components"
         q:
           type: string
           description: string to perform a search on
@@ -1398,6 +1398,12 @@ components:
               $ref: '#/components/schemas/Page'
             aggregations:
               type: string
+    "Filter":
+      type: object
+      additionalProperties:
+        type:string
+      example:
+        {"orgPath": "/STAT"}
     Sort:
       type: object
       properties:

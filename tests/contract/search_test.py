@@ -102,7 +102,7 @@ class TestSearchAll:
             assert "_source" not in hit.keys()
 
     @pytest.mark.contract
-    def test_hits_should_contain_search_string(self):
+    def test_hits_should_contain_search_string(self, api):
         body = {
             "q": "barnehage"
         }
@@ -111,3 +111,23 @@ class TestSearchAll:
             values = json.dumps(hit)
             arr = re.findall("barnehage", values)
             assert (len(arr)) > 0
+
+    @pytest.mark.contract
+    def test_hits_should_be_filtered_on_orgPath(self, api):
+        body = {
+            "filters": [{"orgPath": "/PRIVAT"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            assert "PRIVAT" in hit["publisher"]["orgPath"]
+
+    def test_hits_should_have_word_and_be_filtered_on_orgPath(self, api):
+        body = {
+            "filters": [{"orgPath": "/KOMMUNE/840029212"}]
+        }
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            values = json.dumps(hit)
+            arr = re.findall("barnehage", values)
+            assert (len(arr)) > 0
+            assert "/KOMMUNE/840029212" in hit["publisher"]

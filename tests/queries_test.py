@@ -70,7 +70,7 @@ def test_all_indices_query_should_return_query_with_constant_score():
                     {
                         "simple_query_string": {
                             "query": "stønad stønad*",
-                            "boost": 0.1,
+                            "boost": 0.01,
                             "default_operator": "or"
                         }
                     }
@@ -106,5 +106,184 @@ def test_all_indices_query_should_return_query_with_constant_score():
         }
 
     }
-    result = AllIndicesQuery(searchString="stønad")
+    result = AllIndicesQuery(search_string="stønad")
+    assert json.dumps(result.query) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_all_indices_should_return_query_with_filter():
+    expected = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "constant_score": {
+                                                "filter": {
+                                                    "simple_query_string": {
+                                                        "query": "barnehage barnehage*",
+                                                        "boost": 1,
+                                                        "default_operator": "or"
+                                                    }
+                                                },
+                                                "boost": 1.2
+                                            }
+                                        }
+                                    ],
+                                    "should": [
+                                        {
+                                            "match": {
+                                                "provenance.code": "NASJONAL"
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "nationalComponent": "true"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "barnehage barnehage*",
+                                    "boost": 0.01,
+                                    "default_operator": "or"
+                                }
+                            }
+                        ]
+                    }
+                }],
+                "filter": [
+                    {
+                        "term": {
+                            "publisher.orgPath": "/KOMMUNE/840029212"
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "aggs": {
+            "los": {
+                "terms": {
+                    "field": "losTheme.losPaths.keyword",
+                    "size": 1000000000
+                }
+            },
+            "orgPath": {
+                "terms": {
+                    "field": "publisher.orgPath",
+                    "missing": "MISSING",
+                    "size": 1000000000
+                }
+            },
+            "isOpenAccess": {
+                "terms": {
+                    "field": "isOpenAccess",
+                    "size": 3
+                }
+            },
+            "accessRights": {
+                "terms": {
+                    "field": "accessRights.code.keyword",
+                    "size": 10
+                }
+            }
+        }
+    }
+    result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': '/KOMMUNE/840029212'}])
+    assert json.dumps(result.query) == json.dumps(expected)
+
+
+def test_all_indices_should_return_query_with_must_not():
+    expected = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "constant_score": {
+                                                "filter": {
+                                                    "simple_query_string": {
+                                                        "query": "barnehage barnehage*",
+                                                        "boost": 1,
+                                                        "default_operator": "or"
+                                                    }
+                                                },
+                                                "boost": 1.2
+                                            }
+                                        }
+                                    ],
+                                    "should": [
+                                        {
+                                            "match": {
+                                                "provenance.code": "NASJONAL"
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "nationalComponent": "true"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "barnehage barnehage*",
+                                    "boost": 0.01,
+                                    "default_operator": "or"
+                                }
+                            }
+                        ]
+                    }
+                }],
+                "filter": [],
+                "must_not": [
+                    {
+                        "exists": {
+                            "field": "publisher.orgPath"
+                        }
+                    }
+                ]
+            }
+        },
+        "aggs": {
+            "los": {
+                "terms": {
+                    "field": "losTheme.losPaths.keyword",
+                    "size": 1000000000
+                }
+            },
+            "orgPath": {
+                "terms": {
+                    "field": "publisher.orgPath",
+                    "missing": "MISSING",
+                    "size": 1000000000
+                }
+            },
+            "isOpenAccess": {
+                "terms": {
+                    "field": "isOpenAccess",
+                    "size": 3
+                }
+            },
+            "accessRights": {
+                "terms": {
+                    "field": "accessRights.code.keyword",
+                    "size": 10
+                }
+            }
+        }
+    }
+    result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
     assert json.dumps(result.query) == json.dumps(expected)

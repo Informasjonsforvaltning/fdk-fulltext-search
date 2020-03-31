@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from src.search.query_utils import constant_simple_query
+from src.search.query_utils import constant_simple_query, get_filter
 
 
 @pytest.mark.unit
@@ -41,3 +41,15 @@ def test_constant_simple_query_should_return_correct_query():
     result = constant_simple_query("barnehage")
     assert json.dumps(result) == json.dumps(expected)
 
+
+@pytest.mark.unit
+def test_should_return_filter_with_modified_key():
+    expected = {"publisher.orgPath": "KOMMUNE/678687"}
+    result = get_filter({"orgPath": "KOMMUNE/678687"})
+    assert result == expected
+
+@pytest.mark.unit
+def test_should_return_filter_with_unmodified_key():
+    expected = {"openLicence": "KOMMUNE/678687"}
+    result = get_filter(expected)
+    assert result == expected

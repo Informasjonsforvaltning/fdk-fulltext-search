@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.search.query_utils import simple_query_string, constant_simple_query
+from src.search.query_utils import simple_query_string, constant_simple_query, get_filter, get_filter_key
 
 
 class Direction(Enum):
@@ -36,46 +36,60 @@ class AllIndicesQuery:
             }
         }
     }
+    default_dismax = \
+        {"dis_max": {
+            "queries": [
+                {
+                    "constant_score": {
+                        "filter": {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "provenance.code": "NASJONAL"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "nationalComponent": "true"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "boost": 1.2
+                    }
+                },
+                {
+                    "match_all": {}
+                }
+
+            ]
+        }}
     query_template = {
         "query": {
-            "dis_max": {
-                "queries": [
-                    {
-                        "constant_score": {
-                            "filter": {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "match": {
-                                                "provenance.code": "NASJONAL"
-                                            }
-                                        },
-                                        {
-                                            "term": {
-                                                "nationalComponent": "true"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "boost": 1.2
-                        }
-                    },
-                    {
-                        "match_all": {}
-                    }
-
-                ]
-            }
         }
     }
 
-    def __init__(self, searchString=None, aggs=None):
+    def __init__(self, search_string=None, aggs=None, filters=None):
         self.query = self.query_template
-        if searchString:
-            self.add_search_string(searchString)
+        self.dismax = self.default_dismax
+        if search_string:
+            self.add_search_string(search_string)
         if aggs is None:
             self.add_aggs()
+        if filters:
+            self.query["query"] = {
+                "bool":
+                    {
+                        "must": [
+                            self.dismax
+                        ]
+                    }
+            }
+            self.add_filters(filters)
+        else:
+            self.query["query"] = self.dismax
 
     def add_page(self, size=None, start=None) -> dict:
         if size is not None:
@@ -89,8 +103,18 @@ class AllIndicesQuery:
         # TODO: self defined aggs
 
     def add_search_string(self, param):
-        self.query["query"]["dis_max"]["queries"][0] = constant_simple_query(param)
-        self.query["query"]["dis_max"]["queries"][1] = simple_query_string(search_string=param, boost=0.1)
+        self.dismax["dis_max"]["queries"][0] = constant_simple_query(param)
+        self.dismax["dis_max"]["queries"][1] = simple_query_string(search_string=param, boost=0.01)
+
+    def add_filters(self, filters):
+        self.query["query"]["bool"]["filter"] = []
+        self.query["query"]["bool"]["must_not"] = []
+        for f in filters:
+            key = list(f.keys())[0]
+            if(f[key]) == 'MISSING':
+                self.query["query"]["bool"]["must_not"].append({"exists": {"field": get_filter_key(key)}})
+            else:
+                self.query["query"]["bool"]["filter"].append({"term": get_filter(f)})
 
 
 class RecentQuery:
