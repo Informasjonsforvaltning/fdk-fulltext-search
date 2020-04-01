@@ -110,7 +110,9 @@ class TestSearchAll:
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             values = json.dumps(hit)
-            arr = re.findall("barnehage", values)
+            prt1 = re.findall("barnehage", values)
+            prt2 = re.findall("Barnehage", values)
+            arr = prt1 + prt2
             assert (len(arr)) > 0
 
     @pytest.mark.contract
@@ -131,7 +133,9 @@ class TestSearchAll:
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             values = json.dumps(hit)
-            arr = re.findall("barnehage", values)
+            prt1 = re.findall("barnehage", values)
+            prt2 = re.findall("Barnehage", values)
+            arr = prt1 + prt2
             assert (len(arr)) > 0
             assert "/KOMMUNE/840029212" in hit["publisher"]["orgPath"]
 
