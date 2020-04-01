@@ -36,7 +36,7 @@ class AllIndicesQuery:
             size = 10
             self.query['size'] = size
         if page is not None:
-            self.query['from'] = page*size
+            self.query['from'] = page * size
 
     def add_aggs(self, fields=None):
         if fields is None:
@@ -55,6 +55,13 @@ class AllIndicesQuery:
                 self.query["query"]["bool"]["filter"].append(must_not_query(key))
             else:
                 self.query["query"]["bool"]["filter"].append({"term": get_filter(f)})
+
+    def add_sorting(self, param):
+        self.query["sort"] ={
+            param.get("field"): {
+                "order": param.get("direction")
+            }
+        }
 
 
 class RecentQuery:

@@ -1,5 +1,6 @@
 import json
 import re
+from datetime import datetime
 
 import pytest
 from requests import post, get, put
@@ -171,7 +172,7 @@ class TestSearchAll:
             assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
     @pytest.mark.contract
-    def test_empty_request_after_request_with_q_should_return_default(self,api):
+    def test_empty_request_after_request_with_q_should_return_default(self, api):
         body = {
             "q": "barn"
         }
@@ -181,3 +182,37 @@ class TestSearchAll:
         pre_request = post(url=service_url + "/search", json=body)
         result = post(url=service_url + "/search")
         assert json.dumps(pre_request.json()) != json.dumps(result.json())
+
+    @pytest.mark.contract
+    def test_sort_should_returns_the_most_recent_hits(self, api):
+        body = {
+            "sorting": {
+                "field": "harvest.firstHarvested",
+                "direction": "desc"
+            }
+        }
+        result = post(url=service_url + "/search", json=body)
+        last_date = None
+        for hit in result.json()["hits"]:
+            assert "harvest" in hit
+            current_date = datetime.strptime(hit["harvest"]["firstHarvested"].split('T')[0], '%Y-%m-%d')
+            if last_date is not None:
+                assert current_date <= last_date
+            last_date = current_date
+
+    @pytest.mark.contract
+    def test_sort_should_returns_the_most_recent_hits(self, api):
+        body = {
+            "sorting": {
+                "field": "harvest.firstHarvested",
+                "direction": "asc"
+            }
+        }
+        result = post(url=service_url + "/search", json=body)
+        last_date = None
+        for hit in result.json()["hits"]:
+            assert "harvest" in hit
+            current_date = datetime.strptime(hit["harvest"]["firstHarvested"].split('T')[0], '%Y-%m-%d')
+            if last_date is not None:
+                assert current_date >= last_date
+            last_date = current_date
