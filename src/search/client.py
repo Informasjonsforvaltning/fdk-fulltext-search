@@ -29,6 +29,7 @@ def search_all(request: dict = None):
         q.add_page(size=size, page=page)
     if sorting:
         q.add_sorting(sorting)
+    print(json.dumps(q.query))
     return client.search(body=q.query, search_type='dfs_query_then_fetch')
 
 

@@ -34,6 +34,9 @@ def test_recent_query_should_have_size_18():
 @pytest.mark.unit
 def test_all_indices_query_should_return_query_with_constant_score():
     expected = {
+        "indices_boost": {
+            "datasets": 1.2
+        },
         "query": {
             "dis_max": {
                 "queries": [
@@ -72,6 +75,21 @@ def test_all_indices_query_should_return_query_with_constant_score():
                             "query": "stønad stønad*",
                             "boost": 0.01,
                             "default_operator": "or"
+                        }
+                    },
+                    {
+                        "term": {
+                            "title.nb.raw": "stønad"
+                        }
+                    },
+                    {
+                        "term": {
+                            "title.raw": "stønad"
+                        }
+                    },
+                    {
+                        "term": {
+                            "prefLabel.nb.raw": "stønad"
                         }
                     }
                 ]
@@ -113,6 +131,9 @@ def test_all_indices_query_should_return_query_with_constant_score():
 @pytest.mark.unit
 def test_all_indices_should_return_query_with_filter():
     expected = {
+        "indices_boost": {
+            "datasets": 1.2
+        },
         "query": {
             "bool": {
                 "must": [{
@@ -153,6 +174,21 @@ def test_all_indices_should_return_query_with_filter():
                                     "query": "barnehage barnehage*",
                                     "boost": 0.01,
                                     "default_operator": "or"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "title.nb.raw": "barnehage"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "title.raw": "barnehage"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "prefLabel.nb.raw": "barnehage"
                                 }
                             }
                         ]
@@ -202,6 +238,9 @@ def test_all_indices_should_return_query_with_filter():
 @pytest.mark.unit
 def test_all_indices_should_return_query_with_must_not():
     expected = {
+        "indices_boost": {
+            "datasets": 1.2
+        },
         "query": {
         "bool": {
             "must": [
@@ -243,6 +282,21 @@ def test_all_indices_should_return_query_with_must_not():
                                     "query": "barnehage barnehage*",
                                     "boost": 0.01,
                                     "default_operator": "or"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "title.nb.raw": "barnehage"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "title.raw": "barnehage"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "prefLabel.nb.raw": "barnehage"
                                 }
                             }
                         ]

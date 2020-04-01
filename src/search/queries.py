@@ -1,7 +1,7 @@
 from enum import Enum
 
 from src.search.query_utils import simple_query_string, constant_simple_query, get_filter, get_filter_key, \
-    must_not_query, query_template, default_dismax, default_aggs
+    must_not_query, query_template, default_dismax, default_aggs, title_term_query
 
 
 class Direction(Enum):
@@ -52,6 +52,10 @@ class AllIndicesQuery:
     def add_search_string(self, param):
         self.dismax["dis_max"]["queries"][0] = constant_simple_query(param)
         self.dismax["dis_max"]["queries"][1] = simple_query_string(search_string=param, boost=0.01)
+        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="title.nb.raw"))
+        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="title.raw"))
+        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="prefLabel.nb.raw"))
+
 
     def add_filters(self, filters):
         self.query["query"]["bool"]["filter"] = []

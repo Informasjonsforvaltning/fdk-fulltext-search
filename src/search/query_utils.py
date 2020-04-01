@@ -7,6 +7,13 @@ def simple_query_string(search_string: str, boost=0.5):
         }
     }
 
+def title_term_query(field, search_string):
+    return {
+        "term": {
+            field: search_string
+        }
+    }
+
 
 def constant_simple_query(search_string: str):
     return {
@@ -128,6 +135,9 @@ def default_dismax():
 
 def query_template():
     return {
+        "indices_boost": {
+            "datasets": 1.2
+        },
         "query": {
         }
     }
