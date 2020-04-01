@@ -125,14 +125,36 @@
                     "nb": {
                         "type": "text",
                         "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "nn": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "no": {
+                        "type": "search_as_you_type",
+                        "fields": {
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256
                             }
                         }
                     },
-                    "nn": {
-                        "type": "text",
+                    "en": {
+                        "type": "search_as_you_type",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",

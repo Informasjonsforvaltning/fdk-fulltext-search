@@ -14,6 +14,7 @@ class AllIndicesQuery:
     def __init__(self, search_string=None, aggs=None, filters=None):
         self.query = query_template()
         self.dismax = default_dismax()
+        self.add_indices_boost()
         if search_string:
             self.add_search_string(search_string)
         if aggs is None:
@@ -38,6 +39,11 @@ class AllIndicesQuery:
         if page is not None:
             self.query['from'] = page * size
 
+    def add_indices_boost(self):
+        self.query["indices_boost"]: {
+            "datasets": 1.2
+        }
+
     def add_aggs(self, fields=None):
         if fields is None:
             self.query["aggs"] = default_aggs()
@@ -57,7 +63,7 @@ class AllIndicesQuery:
                 self.query["query"]["bool"]["filter"].append({"term": get_filter(f)})
 
     def add_sorting(self, param):
-        self.query["sort"] ={
+        self.query["sort"] = {
             param.get("field"): {
                 "order": param.get("direction")
             }
