@@ -35,7 +35,7 @@ def test_recent_query_should_have_size_18():
 def test_all_indices_query_should_return_query_with_constant_score():
     expected = {
         "indices_boost": {
-            "datasets": 1.2
+            "datasets": 1.1
         },
         "query": {
             "dis_max": {
@@ -132,7 +132,7 @@ def test_all_indices_query_should_return_query_with_constant_score():
 def test_all_indices_should_return_query_with_filter():
     expected = {
         "indices_boost": {
-            "datasets": 1.2
+            "datasets": 1.1
         },
         "query": {
             "bool": {
@@ -239,83 +239,83 @@ def test_all_indices_should_return_query_with_filter():
 def test_all_indices_should_return_query_with_must_not():
     expected = {
         "indices_boost": {
-            "datasets": 1.2
+            "datasets": 1.1
         },
         "query": {
-        "bool": {
-            "must": [
-                {
-                    "dis_max": {
-                        "queries": [
-                            {
-                                "bool": {
-                                    "must": [
-                                        {
-                                            "constant_score": {
-                                                "filter": {
-                                                    "simple_query_string": {
-                                                        "query": "barnehage barnehage*",
-                                                        "boost": 1,
-                                                        "default_operator": "or"
-                                                    }
-                                                },
-                                                "boost": 1.2
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            "queries": [
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "constant_score": {
+                                                    "filter": {
+                                                        "simple_query_string": {
+                                                            "query": "barnehage barnehage*",
+                                                            "boost": 1,
+                                                            "default_operator": "or"
+                                                        }
+                                                    },
+                                                    "boost": 1.2
+                                                }
                                             }
-                                        }
-                                    ],
-                                    "should": [
-                                        {
-                                            "match": {
-                                                "provenance.code": "NASJONAL"
+                                        ],
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
                                             }
-                                        },
-                                        {
-                                            "term": {
-                                                "nationalComponent": "true"
-                                            }
-                                        }
-                                    ]
+                                        ]
+                                    }
+                                },
+                                {
+                                    "simple_query_string": {
+                                        "query": "barnehage barnehage*",
+                                        "boost": 0.01,
+                                        "default_operator": "or"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "title.nb.raw": "barnehage"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "title.raw": "barnehage"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "prefLabel.nb.raw": "barnehage"
+                                    }
                                 }
-                            },
-                            {
-                                "simple_query_string": {
-                                    "query": "barnehage barnehage*",
-                                    "boost": 0.01,
-                                    "default_operator": "or"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "title.nb.raw": "barnehage"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "title.raw": "barnehage"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "prefLabel.nb.raw": "barnehage"
-                                }
-                            }
-                        ]
-                    }
-                }
-            ],
-            "filter": [
-                {
-                    "bool": {
-                        "must_not": {
-                        	"exists": {
-                        		"field":"publisher.orgPath"
-                        	}
+                            ]
                         }
                     }
-                }
-            ]
-        }
-    },
+                ],
+                "filter": [
+                    {
+                        "bool": {
+                            "must_not": {
+                                "exists": {
+                                    "field": "publisher.orgPath"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
         "aggs": {
             "los": {
                 "terms": {

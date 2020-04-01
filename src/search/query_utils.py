@@ -136,7 +136,7 @@ def default_dismax():
 def query_template():
     return {
         "indices_boost": {
-            "datasets": 1.2
+            "datasets": 1.1
         },
         "query": {
         }
