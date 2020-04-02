@@ -2013,27 +2013,33 @@
                     "en": {
                         "type": "text",
                         "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword"
                             }
                         }
                     },
                     "nb": {
                         "type": "text",
                         "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword"
                             }
                         }
                     },
                     "nn": {
                         "type": "text",
                         "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword"
                             }
                         }
                     }
