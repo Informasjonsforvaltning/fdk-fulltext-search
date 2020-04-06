@@ -5,7 +5,7 @@ from datetime import datetime
 import pytest
 from requests import post, get, put
 
-from tests.contract.contract_utils import wait_for_es, populate, clean_es
+from tests.contract.contract_utils import wait_for_es, populate
 
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
@@ -16,24 +16,9 @@ def api():
     wait_for_es()
     populate()
     yield
-    clean_es()
 
 
 class TestSearchAll:
-    @pytest.mark.contract
-    def test_harvest_should_not_create_duplicates(self, api):
-        amount_after_first_harvest = get(service_url + "/count").json()["count"]
-
-        update_response = put(service_url + "/update")
-        if update_response.status_code != 200:
-            raise Exception(
-                'Test containers: received http status' + str(
-                    update_response.status_code) + "when attempting to start second"
-                                                   "update")
-        result = get(service_url + "/count").json()["count"]
-
-        assert result == amount_after_first_harvest
-
     @pytest.mark.contract
     def test_search_without_body_should_return_response_with_hits_aggregations_and_page(self, api):
         result = post(service_url + "/search").json()

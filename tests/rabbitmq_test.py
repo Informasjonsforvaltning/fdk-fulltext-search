@@ -3,17 +3,23 @@ from unittest import mock
 import pika
 import pytest
 
+from src.adapters.rabbit import queue, user_name, password, host
+
 
 def send_message(data_type):
     msg = json.dumps({
-        "type": data_type,
-        "update_content": "all"
+        "updatesearch": data_type
     })
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    credentials = pika.PlainCredentials(username=user_name,
+                                        password=password)
+
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=host, credentials=credentials)
+    )
     channel = connection.channel()
-    channel.queue_declare(queue='search')
+    channel.queue_declare(queue=queue)
     channel.basic_publish(exchange='',
-                          routing_key='search',
+                          routing_key=queue,
                           body=msg)
     connection.close()
 

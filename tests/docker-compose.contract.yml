@@ -17,11 +17,14 @@ services:
       - "8080:8080"
     volumes:
       - $MOCK_DIR/mock_mappings/mappings:/home/wiremock/mappings
-    rabbitmq:
-      image: rabbitmq:3.6-alpine
-      ports:
-        - '5672:5672'
-        - '15672:15672'
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
   fdk-fulltext-search:
       image: $TEST_IMAGE
       ports:
@@ -29,6 +32,7 @@ services:
       depends_on:
         - elasticsearch
         - servicesmock
+        - rabbitmq
       environment:
         - HOST_URL=http://localhost
         - HOST_PORT=8000
@@ -36,3 +40,6 @@ services:
         - ELASTIC_PORT=9200
         - ELASTIC_TCP_PORT=9300
         - API_URL=http://servicesmock:8080/
+        - RABBIT_USERNAME=admin
+        - RABBIT_PASSWORD=admin
+        - RABBIT_HOST=rabbitmq
