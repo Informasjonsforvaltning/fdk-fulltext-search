@@ -1,6 +1,3 @@
-import json
-import re
-
 import pytest
 from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery
 

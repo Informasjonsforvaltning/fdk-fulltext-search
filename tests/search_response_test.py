@@ -1,5 +1,5 @@
 import pytest
-from .mock_data.test_data import test_hits
+from tests.mock_data.test_data import test_hits
 from src.search.responses import SearchResponse
 
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]

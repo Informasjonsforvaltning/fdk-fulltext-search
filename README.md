@@ -31,3 +31,14 @@ fdk-fulltext-search
 ```
 % gunicorn "src:create_app()"  --config=dataservicecatalog/gunicorn_config.py
 ```
+
+
+###Troubleshooting
+####Mac: unknown locale: UTF-8 in Python
+`open ~/.bash_profile:`
+
+```
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+```
+restart terminal

@@ -14,8 +14,11 @@ ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL')
 
+def reindex():
+    create_indices()
+    fetch_all_content()
 
-def fetch_from_services():
+def fetch_all_content():
     start = time.time()
     info_status = fetch_information_models()
     concept_status = fetch_concepts()

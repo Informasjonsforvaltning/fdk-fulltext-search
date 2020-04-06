@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask import request
 from .search import client
-from .ingest import fetch_from_services, create_indices
+from .ingest import fetch_all_content, create_indices
 from .search.responses import SearchResponse
 
 
@@ -21,7 +21,7 @@ class Count(Resource):
 
 class Update(Resource):
     def put(self):
-        return fetch_from_services()
+        return fetch_all_content()
 
     def delete(self):
         create_indices()
