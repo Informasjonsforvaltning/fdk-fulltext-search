@@ -2017,7 +2017,8 @@
                                 "type": "search_as_you_type"
                             },
                             "raw": {
-                                "type": "keyword"
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     },
@@ -2028,7 +2029,8 @@
                                 "type": "search_as_you_type"
                             },
                             "raw": {
-                                "type": "keyword"
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     },
@@ -2039,7 +2041,8 @@
                                 "type": "search_as_you_type"
                             },
                             "raw": {
-                                "type": "keyword"
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     }
@@ -2078,7 +2081,15 @@
                     "type": "path_hierarchy",
                     "delimiter": "/"
                 }
+            },
+            "normalizer" : {
+                "exact_normalizer":{
+                    "type": "custom",
+                    "char_filter": [],
+                    "filter": ["lowercase"]
+                }
             }
+
         }
     }
 }

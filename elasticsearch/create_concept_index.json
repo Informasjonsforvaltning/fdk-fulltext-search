@@ -129,7 +129,8 @@
                                 "type": "search_as_you_type"
                             },
                             "raw": {
-                                "type": "keyword"
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     },
@@ -140,25 +141,32 @@
                                 "type": "search_as_you_type"
                             },
                             "raw": {
-                                "type": "keyword"
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     },
                     "no": {
-                        "type": "search_as_you_type",
+                        "type": "text",
                         "fields": {
-                            "keyword": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     },
                     "en": {
-                        "type": "search_as_you_type",
+                        "type": "text",
                         "fields": {
-                            "keyword": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "normalizer": "exact_normalizer"
                             }
                         }
                     }
@@ -247,7 +255,14 @@
                         "type": "path_hierarchy",
                         "delimiter": "/"
                     }
+                },
+            "normalizer" : {
+                "exact_normalizer":{
+                    "type": "custom",
+                    "char_filter": [],
+                    "filter": ["lowercase"]
                 }
+            }
         }
     }
 }

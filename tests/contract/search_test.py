@@ -59,6 +59,7 @@ class TestSearchAll:
                     previous_was_authority = False
             else:
                 previous_was_authority = False
+        assert len(hits) > 0
 
     @pytest.mark.contract
     def test_search_without_body_should_contain_default_aggs(self, api):
@@ -86,6 +87,40 @@ class TestSearchAll:
         for hit in result:
             assert "_type" not in hit.keys()
             assert "_source" not in hit.keys()
+
+    @pytest.mark.contract
+    def test_hits_should_start_with_exact_matches_in_title(self, api):
+        srch_string = "enhetsregisteret"
+        body = {
+            "q": "enhetsregisteret",
+            "size": 1000
+        }
+        last_was_exact = True
+        exact_matches = 0
+        result = post(url=service_url + "/search", json=body)
+        for hit in result.json()["hits"]:
+            if "prefLabel" in hit:
+                prefLabels = hit["prefLabel"]
+                if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
+                    assert last_was_exact
+                    exact_matches += 1
+                else:
+                    last_was_exact = False
+            elif "title" in hit:
+                title = hit["title"]
+                if isinstance(title, dict):
+                    if is_exact_match(title.keys(), title, srch_string):
+                        assert last_was_exact
+                        exact_matches += 1
+                    else:
+                        last_was_exact = False
+                else:
+                    if title.lower() == srch_string:
+                        assert last_was_exact
+                        exact_matches += 1
+                    else:
+                        last_was_exact = False
+        assert exact_matches > 0
 
     @pytest.mark.contract
     def test_hits_should_contain_search_string(self, api):
@@ -205,3 +240,10 @@ class TestSearchAll:
             if last_date is not None:
                 assert current_date >= last_date
             last_date = current_date
+
+
+def is_exact_match(keys, hit, search):
+    for key in keys:
+        if hit[key].lower() == search:
+            return True
+    return False
