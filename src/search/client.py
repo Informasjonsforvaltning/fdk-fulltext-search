@@ -39,4 +39,5 @@ def count():
 
 def get_recent(size=None):
     q = RecentQuery(size).query
+    print(json.dumps(q))
     return client.search(body=q)

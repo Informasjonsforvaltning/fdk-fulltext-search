@@ -62,8 +62,8 @@ class UpdateConsumer:
                 connected = True
             except (AMQPError, AMQPConnectorSocketConnectError, AMQPConnectionError) as err:
                 logging.error("[rabbitmq]Error in consumer \n {0}".format(err.args))
-                # wait 10 seconds, then retry
-                time.sleep(10)
+                # wait 60 seconds, then retry
+                time.sleep(60)
 
         if channel:
             try:
