@@ -32,22 +32,22 @@ class UpdateConsumer:
         consumer_process.start()
 
     def callback(self, ch, method, properties, body):
-        print("[rabbitmq]Received msg from queue:\n {0}".format(body))
+        logging.info("[rabbitmq]Received msg from queue:\n {0}".format(body))
         update_type = json.loads(body)["updatesearch"]
         try:
             update_with = update_fun[update_type]
             if update_with:
                 result = update_with()
-                print("[rabbitmq]Result: {0}".format(result))
+                logging.info("[rabbitmq]Result: {0}".format(result))
         except KeyError:
-            print("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
+            logging.error("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
 
     def start_listener(self):
         channel = None
         connected = False
         while not connected:
             try:
-                print("[rabbitmq] Connection established")
+                logging.info("[rabbitmq] Connection established")
                 credentials = pika.PlainCredentials(username=user_name,
                                                     password=password)
 
