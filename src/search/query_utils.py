@@ -7,6 +7,7 @@ def simple_query_string(search_string: str, boost=0.5):
         }
     }
 
+
 def title_term_query(field, search_string):
     return {
         "term": {
@@ -86,10 +87,25 @@ def default_aggs():
                 "size": 1000000000
             }
         },
-        "isOpenAccess": {
-            "terms": {
-                "field": "isOpenAccess",
-                "size": 3
+        "availability": {
+            "filters": {
+                "filters": {
+                    "isOpenAccess": {
+                        "term": {
+                            "isOpenAccess": "true"
+                        }
+                    },
+                    "isOpenLicense": {
+                        "term": {
+                            "isOpenLicense": "true"
+                        }
+                    },
+                    "isFree": {
+                        "term": {
+                            "isFree": "true"
+                        }
+                    }
+                }
             }
         },
         "accessRights": {

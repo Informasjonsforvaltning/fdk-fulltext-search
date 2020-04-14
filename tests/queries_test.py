@@ -109,10 +109,25 @@ def test_all_indices_query_should_return_query_with_constant_score():
                     "size": 1000000000
                 }
             },
-            "isOpenAccess": {
-                "terms": {
-                    "field": "isOpenAccess",
-                    "size": 3
+            "availability": {
+                "filters": {
+                    "filters": {
+                        "isOpenAccess": {
+                            "term": {
+                                "isOpenAccess": "true"
+                            }
+                        },
+                        "isOpenLicense": {
+                            "term": {
+                                "isOpenLicense": "true"
+                            }
+                        },
+                        "isFree": {
+                            "term": {
+                                "isFree": "true"
+                            }
+                        }
+                    }
                 }
             },
             "accessRights": {
@@ -217,10 +232,25 @@ def test_all_indices_should_return_query_with_filter():
                     "size": 1000000000
                 }
             },
-            "isOpenAccess": {
-                "terms": {
-                    "field": "isOpenAccess",
-                    "size": 3
+            "availability": {
+                "filters": {
+                    "filters": {
+                        "isOpenAccess": {
+                            "term": {
+                                "isOpenAccess": "true"
+                            }
+                        },
+                        "isOpenLicense": {
+                            "term": {
+                                "isOpenLicense": "true"
+                            }
+                        },
+                        "isFree": {
+                            "term": {
+                                "isFree": "true"
+                            }
+                        }
+                    }
                 }
             },
             "accessRights": {
@@ -330,10 +360,25 @@ def test_all_indices_should_return_query_with_must_not():
                     "size": 1000000000
                 }
             },
-            "isOpenAccess": {
-                "terms": {
-                    "field": "isOpenAccess",
-                    "size": 3
+            "availability": {
+                "filters": {
+                    "filters": {
+                        "isOpenAccess": {
+                            "term": {
+                                "isOpenAccess": "true"
+                            }
+                        },
+                        "isOpenLicense": {
+                            "term": {
+                                "isOpenLicense": "true"
+                            }
+                        },
+                        "isFree": {
+                            "term": {
+                                "isFree": "true"
+                            }
+                        }
+                    }
                 }
             },
             "accessRights": {
