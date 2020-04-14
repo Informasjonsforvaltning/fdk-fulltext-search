@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import time
+from json import JSONDecodeError
+
 import pika
 from multiprocessing import Process
 from pika.adapters.utils.connection_workflow import AMQPConnectorSocketConnectError
@@ -32,22 +34,25 @@ class UpdateConsumer:
         consumer_process.start()
 
     def callback(self, ch, method, properties, body):
-        print("[rabbitmq]Received msg from queue:\n {0}".format(body))
-        update_type = json.loads(body)["updatesearch"]
+        logging.info("[rabbitmq]Received msg from queue:\n {0}".format(body))
         try:
+            update_type = json.loads(body)["updatesearch"]
             update_with = update_fun[update_type]
             if update_with:
                 result = update_with()
-                print("[rabbitmq]Result: {0}".format(result))
+                logging.info("[rabbitmq]Result: {0}".format(result))
         except KeyError:
-            print("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
+            logging.error("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
+        except JSONDecodeError:
+            logging.error("[rabbitmq]Error: invalid json")
+            logging.error("[rabbitmq]Error: Received invalid JSON :\n {0}".format(body))
 
     def start_listener(self):
         channel = None
         connected = False
         while not connected:
             try:
-                print("[rabbitmq] Connection established")
+                logging.info("[rabbitmq] Connection established")
                 credentials = pika.PlainCredentials(username=user_name,
                                                     password=password)
 
