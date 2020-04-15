@@ -1,11 +1,14 @@
 # TODO : setup rabbit listeners; "update_es": [informationmodels,concepts,datasets,dataservices]
 import json
+import logging
 import math
 import time
 
 import requests
 import os
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch.helpers import BulkIndexError
+
 from .utils import Indexes
 from jsonpath_ng import parse
 
@@ -14,9 +17,11 @@ ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL')
 
+
 def reindex():
     create_indices()
     fetch_all_content()
+
 
 def fetch_all_content():
     start = time.time()
@@ -28,7 +33,7 @@ def fetch_all_content():
     total_concepts = 0
     for iteration in concept_status:
         total_concepts = total_concepts + iteration[0]
-    totalElements = info_status[0]+total_concepts+service_status[0]+datasets_status[0]
+    totalElements = info_status[0] + total_concepts + service_status[0] + datasets_status[0]
     result = {
         "took": total_time,
         "total": totalElements,
@@ -114,12 +119,21 @@ def fetch_dataservices():
 
 
 def elasticsearch_ingest(documents, index, id_key):
-    result = helpers.bulk(client=client, actions=yield_documents(documents, index, id_key))
+    try:
+        result = helpers.bulk(client=client, actions=yield_documents(documents, index, id_key))
+    except BulkIndexError as err:
+        result = (f"ingest {index}", err.errors)
+        logging.error(result)
     return result
 
 
 def elasticsearch_ingest_from_source(documents, index, id_key):
-    result = helpers.bulk(client=client, actions=yield_documents_from_source(documents, index, id_key))
+    try:
+        result = helpers.bulk(client=client, actions=yield_documents_from_source(documents, index, id_key))
+    except BulkIndexError as err:
+        result = (f"ingest {index}", err.errors)
+        logging.error(result)
+        return result
     return result
 
 
