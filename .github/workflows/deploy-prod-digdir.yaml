@@ -39,7 +39,7 @@ jobs:
 
     - name: Run tests
       run: |
-        invoke unit-test
+        invoke unit-test --install
         invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
         invoke stop-docker
 
