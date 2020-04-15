@@ -11,20 +11,62 @@ info:
     name: License of API
     url: 'http://data.norge.no/nlod/no/2.0'
 servers:
-  - url: 'https://search.fellesdatakatalog.digdir.no'
+  - url: 'https://fdk-fulltext-search.staging.fellesdatakatalog.digdir.no'
     description: Produksjonsversjon av API server
-  - url: 'https://staging.search.fellesdatakatalog.no'
+  - url: 'https://fdk-fulltext-search.staging.fellesdatakatalog.digdir.no'
     description: utviklingsversjon av API server
 tags:
   - name: fdk-full-text-search
 paths:
   /search:
     post:
-      summary: Returns a list of hits from full text searches in Felles Datakatalog's content
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's content"
       operationId: searchAllContent
+      description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
       responses:
         '200':
-          description: A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+  /update:
+    put:
+      summary: ''
+      operationId: put-update
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+      description: triggers a new data collection from felles datakatalogs harvesters
+  /count:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+      operationId: get-count
+  /recent:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-recent
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
@@ -32,24 +74,23 @@ paths:
 components:
   schemas:
     SearchRequest:
-      description: Body with searh parameters
+      description: Body with search parameters
+      type: object
       properties:
-        searchString:
-          type: string
-          description: string to perform a search on
+        size:
+          type: integer
+          description: 'how many elements that should be returned, defaults to 10'
+        sorting:
+          $ref: '#/components/schemas/Sort'
         filters:
           type: array
           items:
-            $ref: '#/components/schemas/Filter'
-        size:
-          type: integer
-          description: how many elements that should be returned, defaults to 10
-        sorting:
-            $ref: '#/components/schemas/Sort'
+            - $ref : "#/components"
+        q:
+          type: string
+          description: string to perform a search on
     SearchResult:
-      type: object
       allOf:
-        - $ref: '#/components/schemas/ElasticSearchData'
         - properties:
             hits:
               type: array
@@ -61,59 +102,58 @@ components:
                   - $ref: '#/components/schemas/DataSet'
             page:
               $ref: '#/components/schemas/Page'
-    Filter:
+            aggregations:
+              type: string
+    "Filter":
       type: object
-      description: Which field and value to filter by, defaults to none
-      properties:
-        field:
-          description: field the search should filter by
-          type: string
-        value:
-          description: value to filter by, defaults to queryStrin
-          type: string
-        forTypes:
-          description: which type of data the filter should be applied to, defaults to all
-          type: array
-          items:
-            type: string
-            enum: [dataset,dataservice,concept,informationmodel]
+      additionalProperties:
+        type:string
+      example:
+        {"orgPath": "/STAT"}
     Sort:
       type: object
       properties:
         field:
-         description: which field the sort should be performed on, defaults to relevance
-         type: string
-        direction:
-          description: the direction of the sort. avaiable values are asc, desc
+          description: 'which field the sort should be performed on, defaults to relevance'
           type: string
-          enum: [asc, desc]
+        direction:
+          description: 'the direction of the sort. avaiable values are asc, desc'
+          type: string
+          enum:
+            - asc
+            - desc
     Page:
       type: object
       properties:
-        "size" :
+        size:
           type: integer
           description: how many elements was returned
-        "totalElements":
+        totalElements:
           type: integer
           description: The total amount of hits for search
-        "number":
+        totalPages:
           type: integer
+          description: total available pages
+        currentPage:
+          type: integer
+          description: which page was returned
     InformationModel:
       type: object
       properties:
         type:
           type: string
-          enum: [informationmodel]
+          enum:
+            - informationmodel
         id:
           type: string
           description: The id given by the harvest system
         uri:
           type: string
-          description: The uri of the concept [dct:identifier]
+          description: 'The uri of the concept [dct:identifier]'
         publisher:
           $ref: '#/components/schemas/Publisher'
         harvest:
-          $ref: "#/components/schemas/HarvestMetadata"
+          $ref: '#/components/schemas/HarvestMetadata'
         harvestSourceUri:
           type: string
           description: The source where the record was harvested from
@@ -131,15 +171,6 @@ components:
           type: boolean
         isOpenLicence:
           type: boolean
-        isFree:
-          type: boolean
-        statusCode:
-          type: string
-          enum: [ STABLE ]
-        id:
-          type: string
-        title:
-          type: string
         description:
           type: string
         descriptionFormatted:
@@ -150,6 +181,16 @@ components:
             type: string
         publisher:
           $ref: '#/components/schemas/Publisher'
+        title:
+          type: string
+        id:
+          type: string
+        statusCode:
+          type: string
+          enum:
+            - STABLE
+        isFree:
+          type: boolean
     DataSet:
       type: object
       properties:
@@ -212,41 +253,42 @@ components:
       properties:
         type:
           type: string
-          enum: [concept]
+          enum:
+            - concept
         id:
           type: string
           description: The id given by the harvest system
         uri:
           type: string
-          description: The uri of the concept [dct:identifier]
+          description: 'The uri of the concept [dct:identifier]'
         identifier:
           type: string
           description: Identifier
         definition:
-          $ref: "#/components/schemas/Definition"
+          $ref: '#/components/schemas/Definition'
         alternativeDefinition:
-          $ref: "#/components/schemas/Definition"
+          $ref: '#/components/schemas/Definition'
         subject:
-          $ref: "#/components/schemas/Subject"
+          $ref: '#/components/schemas/Subject'
         prefLabel:
-          $ref: "#/components/schemas/PrefLabel"
+          $ref: '#/components/schemas/PrefLabel'
         altLabel:
           type: array
           items:
-            $ref: "#/components/schemas/AltLabel"
+            $ref: '#/components/schemas/AltLabel'
         hiddenLabel:
           type: array
           items:
-            $ref: "#/components/schemas/HiddenLabel"
+            $ref: '#/components/schemas/HiddenLabel'
         contactPoint:
-          $ref: "#/components/schemas/ContactPoint"
+          $ref: '#/components/schemas/ContactPoint'
         publisher:
-          $ref: "#/components/schemas/Publisher"
+          $ref: '#/components/schemas/Publisher'
         harvestSourceUri:
           type: string
           description: The source where the record was harvested from
         harvest:
-          $ref: "#/components/schemas/HarvestMetadata"
+          $ref: '#/components/schemas/HarvestMetadata'
     Catalog:
       type: object
       properties:
@@ -256,7 +298,7 @@ components:
           type: string
         title:
           $ref: '#/components/schemas/TextField'
-        "publisher":
+        publisher:
           $ref: '#/components/schemas/PublisherDetailed'
     Conformation:
       allOf:
@@ -300,7 +342,11 @@ components:
         - properties:
             code:
               type: string
-              enum: [PUBLIC,RESTRICTED,NON_PUBLIC,ukjent]
+              enum:
+                - PUBLIC
+                - RESTRICTED
+                - NON_PUBLIC
+                - ukjent
     LosTheme:
       type: object
       properties:
@@ -320,7 +366,7 @@ components:
             type: string
     Definition:
       type: object
-      description: The definition [skosno:Definisjon]
+      description: 'The definition [skosno:Definisjon]'
       properties:
         text:
           type: object
@@ -335,7 +381,7 @@ components:
               type: string
               description: the definition remark in Norwegian Bokmål
         source:
-          $ref: "#/components/schemas/Source"
+          $ref: '#/components/schemas/Source'
         targetGroup:
           type: string
           description: Target group
@@ -344,37 +390,37 @@ components:
           description: Date when the definition was last updated
     Subject:
       type: object
-      description: Subject [dct:subject]
+      description: 'Subject [dct:subject]'
     PrefLabel:
       type: object
-      description: Preferred label [skosxl:prefLabel]
+      description: 'Preferred label [skosxl:prefLabel]'
       properties:
         nb:
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian Bokmål
-        no:
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian Bokmål'
+        'no':
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian (General)
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian (General)'
         nn:
           type: string
-          description: Preferred label [skosxl:prefLabel] in Norwegian (Nynorsk)
+          description: 'Preferred label [skosxl:prefLabel] in Norwegian (Nynorsk)'
         en:
           type: string
-          description: Preferred label [skosxl:prefLabel] in english
+          description: 'Preferred label [skosxl:prefLabel] in english'
     AltLabel:
       type: object
-      description: Alternative label [skosxl:altLabel]
+      description: 'Alternative label [skosxl:altLabel]'
       properties:
         nb:
           type: string
-          description: Preferred label [skosxl:altLabel] in Norwegian Bokmål
+          description: 'Preferred label [skosxl:altLabel] in Norwegian Bokmål'
     HiddenLabel:
       type: object
-      description: Hidden label [skos:hiddenLabel]
+      description: 'Hidden label [skos:hiddenLabel]'
       properties:
         nb:
           type: string
-          description: Hidden label [skosxl:altLabel] in Norwegian Bokmål
+          description: 'Hidden label [skosxl:altLabel] in Norwegian Bokmål'
     TextField:
       type: object
       properties:
@@ -384,7 +430,7 @@ components:
         nn:
           type: string
           description: the text in Nynorsk(Norwegian)
-        no:
+        'no':
           type: string
           description: the text in Norwegian(general)
         en:
@@ -392,7 +438,7 @@ components:
           description: the text in Nynorsk(general)
     ContactPoint:
       type: object
-      description: Hidden label [skos:hiddenLabel]
+      description: 'Hidden label [skos:hiddenLabel]'
       properties:
         email:
           type: string
@@ -400,7 +446,7 @@ components:
           type: string
     Publisher:
       type: object
-      description: The publisher of the concept [dct:publisher]
+      description: 'The publisher of the concept [dct:publisher]'
       properties:
         uri:
           type: string
@@ -414,7 +460,7 @@ components:
         orgPath:
           type: string
         prefLabel:
-          $ref: "#/components/schemas/PrefLabel"
+          $ref: '#/components/schemas/PrefLabel'
     PublisherDetailed:
       allOf:
         - $ref: '#/components/schemas/Publisher'
@@ -443,7 +489,8 @@ components:
         - properties:
             code:
               type: string
-              enum: [ NASJONAL ]
+              enum:
+                - NASJONAL
     HarvestMetadata:
       type: object
       description: Information about when the concept was first and last harvested by the system
@@ -469,23 +516,12 @@ components:
           type: string
         prefLabel:
           $ref: '#/components/schemas/PrefLabel'
-    ElasticSearchData:
-      type: object
-      description: Data about the object from ElasticSearch
-      properties:
-        _index:
-          type: string
-          description: index where the object is stored
-        _type:
-          type: string
-          description: type of the object
-          enum: [datasett, concept, dataservice, informationmodel]
-        _id:
-          type: string
-          description: id of the stored object
         _score:
           type: number
           description: relevance score given by elasticsearch
+        _id:
+          type: string
+          description: id of the stored object
     ErrorMessage:
       type: object
       properties:
@@ -493,3 +529,17 @@ components:
           type: integer
         reason:
           type: string
+    Buckets:
+      type: object
+      properties:
+        key:
+          type: string
+        doc_count:
+          type: integer
+    Aggregation:
+      type: object
+      properties:
+        buckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Buckets'

@@ -13,8 +13,19 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    # Setup gcloud CLI
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - name: Setup pyhton environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Install pipenv
+      uses: dschep/install-pipenv-action@v1
+
+    - name: Install invoke
+      run: pip install invoke
+
+    - name: Setup gcloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '270.0.0'
         service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
@@ -26,13 +37,11 @@ jobs:
     - name: Build Docker image with GitHub commit sha tag and latest tag
       run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
 
-    - uses: actions/setup-python@v1
-      with:
-       python-version: 3.7
     - name: Run tests
       run: |
-       invoke contract-test
-       invoke unit test
+        invoke unit-test
+        invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
+        invoke stop-docker
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search

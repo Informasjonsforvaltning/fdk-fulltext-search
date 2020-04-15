@@ -1,0 +1,25 @@
+{
+  "id" : "fbf46748-57cc-4ecf-9a03-07e1bc5c8d31",
+  "name" : "api_informationmodels",
+  "request" : {
+    "url" : "/api/informationmodels",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "<!DOCTYPE html>\n<html>\n<head>\n\t<base href=\"/\" />\n\t<meta charset=\"utf-8\" />\n\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n\t<title>Felles datakatalog</title>\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n\t<meta name=\"author\" content=\"Brønnøysundregistrene\" />\n\n\t<meta property=\"og:url\"                content=\"https://fellesdatakatalog.brreg.no\" />\n\t<meta property=\"og:type\"               content=\"website\" />\n\t<meta property=\"og:title\"              content=\"Felles datakatalog\" />\n\t<meta property=\"og:description\"        content=\"Felles Datakatalog er en oversikt over hvilke data de ulike offentlige virksomhetene har, hvordan de henger sammen og hva de betyr. Datakatalogen gjør det mulig for deg å søke i opplysningene hos offentlige virksomheter og bruke de til for eksempel analyseformål.\" />\n\n\t<script>\n\t\tif (\n  location.hostname.indexOf('nap.') >= 0 ||\n  location.hostname.indexOf('transportportal.') >= 0\n) {\n\t\t  document.write(\n    '<link rel=\"icon\" type=\"image/x-icon\" href=\"/img/favicon-nap.ico\">'\n  );\n\t\t} else {\n\t\t  document.write(\n    '<link rel=\"icon\" type=\"image/x-icon\" href=\"/img/favicon.ico\">'\n  );\n\t\t}\n\t</script>\n\n\t<link media=\"screen\" rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Heebo:100,300,400,500,700,800,900\">\n\t<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"https://www.fellesdatakatalog.brreg.no/datasets.rss\">\n\t<link rel=\"alternate\" type=\"application/atom+xml\" title=\"Atom\" href=\"https://www.fellesdatakatalog.brreg.no/datasets.atom\">\n\t<script src=\"/config.js\"></script>\n<link href=\"/main.styles.css\" rel=\"stylesheet\"></head>\n\n<body>\n\t<div id=\"root\"></div>\n\t<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>\n<script type=\"text/javascript\" src=\"/main.js\"></script></body>\n\n</html>\n",
+    "headers" : {
+      "Server" : "nginx/1.17.9",
+      "Date" : "Sun, 29 Mar 2020 10:03:13 GMT",
+      "Content-Type" : "text/html",
+      "Vary" : [ "Accept-Encoding", "Accept, Accept-Encoding" ],
+      "Last-Modified" : "Wed, 25 Mar 2020 11:57:46 GMT",
+      "ETag" : "W/\"5e7b473a-721\"",
+      "Via" : "1.1 google",
+      "Alt-Svc" : "clear"
+    }
+  },
+  "uuid" : "fbf46748-57cc-4ecf-9a03-07e1bc5c8d31",
+  "persistent" : true,
+  "insertionIndex" : 6
+}

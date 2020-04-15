@@ -1,0 +1,4 @@
+/instance/
+!/tests/
+/.pytest_cache/
+/docker-compose.yml

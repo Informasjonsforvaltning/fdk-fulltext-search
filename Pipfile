@@ -4,9 +4,38 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+mock = "*"
+elasticmock = "*"
+v = {editable = true,version = "*"}
+
+[pytest]
+mock_use_standalone_module = true
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["fdk-fulltext-search"]
+
+[tool.coverage.report]
+show_missing = true
 
 [packages]
 flask = "*"
+python-dotenv = "*"
+flask-restful = "*"
+elasticsearch = "*"
+elasticsearch-dsl = "*"
+requests = "*"
+gunicorn = "*"
+flask-cors = "*"
+jsonpath-ng = "*"
+gevent = "*"
+pika = "*"
 
 [requires]
 python_version = "3.7"

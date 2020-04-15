@@ -1,0 +1,45 @@
+version: "3"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=elasticsearch
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - discovery.type=single-node
+  servicesmock:
+    image: rodolpheche/wiremock
+    ports:
+      - "8080:8080"
+    volumes:
+      - $MOCK_DIR/mock_mappings/mappings:/home/wiremock/mappings
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+  fdk-fulltext-search:
+      image: $TEST_IMAGE
+      ports:
+        - "8000:8000"
+      depends_on:
+        - elasticsearch
+        - servicesmock
+        - rabbitmq
+      environment:
+        - HOST_URL=http://localhost
+        - HOST_PORT=8000
+        - ELASTIC_HOST=elasticsearch
+        - ELASTIC_PORT=9200
+        - ELASTIC_TCP_PORT=9300
+        - API_URL=http://servicesmock:8080/
+        - RABBIT_USERNAME=admin
+        - RABBIT_PASSWORD=admin
+        - RABBIT_HOST=rabbitmq

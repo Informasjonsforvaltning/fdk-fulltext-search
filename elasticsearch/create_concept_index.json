@@ -1,0 +1,268 @@
+{
+    "mappings": {
+        "properties": {
+            "contactPoint": {
+                "properties": {
+                    "email": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "definition": {
+                "properties": {
+                    "source": {
+                        "properties": {
+                            "prefLabel": {
+                                "properties": {
+                                    "nb": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "sourceRelationship": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "sources": {
+                        "properties": {
+                            "text": {
+                                "properties": {
+                                    "nb": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "uri": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "text": {
+                        "properties": {
+                            "nb": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "nn": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "harvest": {
+                "properties": {
+                    "firstHarvested": {
+                        "type": "date"
+                    },
+                    "lastHarvested": {
+                        "type": "date"
+                    }
+                }
+            },
+            "id": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "identifier": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "prefLabel": {
+                "properties": {
+                    "nb": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
+                            }
+                        }
+                    },
+                    "nn": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
+                            }
+                        }
+                    },
+                    "no": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
+                            }
+                        }
+                    },
+                    "en": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
+                            }
+                        }
+                    }
+                }
+            },
+            "publisher": {
+                "properties": {
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "orgPath": {
+                        "type": "text",
+                        "analyzer": "path-analyzer",
+                        "fielddata": true,
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "prefLabel": {
+                        "properties": {
+                            "no": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "uri": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "subject": {
+                "properties": {
+                    "nb": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "uri": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            }
+        }
+    },
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "path-analyzer": {
+                    "type": "custom",
+                    "tokenizer": "path-tokenizer"
+                }
+            },
+            "tokenizer": {
+                    "path-tokenizer": {
+                        "type": "path_hierarchy",
+                        "delimiter": "/"
+                    }
+                },
+            "normalizer" : {
+                "exact_normalizer":{
+                    "type": "custom",
+                    "char_filter": [],
+                    "filter": ["lowercase"]
+                }
+            }
+        }
+    }
+}
