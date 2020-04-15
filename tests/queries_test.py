@@ -32,64 +32,144 @@ def test_recent_query_should_have_size_18():
 
 
 @pytest.mark.unit
-def test_all_indices_query_should_return_query_with_constant_score():
+def test_all_indices_query_should_return_query_with_dis_max():
+    search_str = "stønad"
     expected = {
-        "indices_boost": {
-            "datasets": 1.1
-        },
         "query": {
             "dis_max": {
                 "queries": [
                     {
                         "bool": {
-                            "must": [
+                            "must": {
+                                "multi_match": {
+                                    "query": search_str,
+                                    "fields": [
+                                        "prefLabel.*.raw",
+                                        "title.*.raw",
+                                        "title.raw"
+                                    ]
+                                }
+                            },
+                            "should": [
                                 {
-                                    "constant_score": {
-                                        "filter": {
-                                            "simple_query_string": {
-                                                "query": "stønad stønad*",
-                                                "boost": 1,
-                                                "default_operator": "or"
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
                                             }
-                                        },
-                                        "boost": 1.2
+                                        ]
                                     }
                                 }
                             ],
+                            "boost": 5
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
+                                "multi_match": {
+                                    "query": search_str,
+                                    "type": "phrase_prefix",
+                                    "fields": [
+                                        "title.*.ngrams",
+                                        "title.*.ngrams.2_gram",
+                                        "title.*.ngrams.3_gram",
+                                        "title.ngrams",
+                                        "title.ngrams.2_gram",
+                                        "title.ngrams.3_gram",
+                                        "prefLabel.*.ngrams",
+                                        "prefLabel.*.ngrams.2_gram",
+                                        "prefLabel.*.ngrams.3_gram"
+                                    ]
+                                }
+                            },
                             "should": [
                                 {
-                                    "match": {
-                                        "provenance.code": "NASJONAL"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "nationalComponent": "true"
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
-                            ]
+                            ],
+                            "boost": 2
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "stønad stønad*",
-                            "boost": 0.01,
-                            "default_operator": "or"
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "{0} {0}*".format(search_str.replace(" ", "+")),
+                                    "fields": [
+                                        "description",
+                                        "definition.text.*",
+                                        "schema"
+                                    ]
+                                }
+                            },
+                            "should": [
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "boost": 1.5
                         }
                     },
                     {
-                        "term": {
-                            "title.nb.raw": "stønad"
-                        }
-                    },
-                    {
-                        "term": {
-                            "title.raw": "stønad"
-                        }
-                    },
-                    {
-                        "term": {
-                            "prefLabel.nb.raw": "stønad"
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                }
+                            },
+                            "should": [
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "boost": 0.001
                         }
                     }
                 ]
@@ -145,10 +225,8 @@ def test_all_indices_query_should_return_query_with_constant_score():
 
 @pytest.mark.unit
 def test_all_indices_should_return_query_with_filter():
+    search_str = "barnehage"
     expected = {
-        "indices_boost": {
-            "datasets": 1.1
-        },
         "query": {
             "bool": {
                 "must": [{
@@ -156,54 +234,136 @@ def test_all_indices_should_return_query_with_filter():
                         "queries": [
                             {
                                 "bool": {
-                                    "must": [
+                                    "must": {
+                                        "multi_match": {
+                                            "query": search_str,
+                                            "fields": [
+                                                "prefLabel.*.raw",
+                                                "title.*.raw",
+                                                "title.raw"
+                                            ]
+                                        }
+                                    },
+                                    "should": [
                                         {
-                                            "constant_score": {
-                                                "filter": {
-                                                    "simple_query_string": {
-                                                        "query": "barnehage barnehage*",
-                                                        "boost": 1,
-                                                        "default_operator": "or"
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
                                                     }
-                                                },
-                                                "boost": 1.2
+                                                ]
                                             }
                                         }
                                     ],
+                                    "boost": 5
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": search_str,
+                                            "type": "phrase_prefix",
+                                            "fields": [
+                                                "title.*.ngrams",
+                                                "title.*.ngrams.2_gram",
+                                                "title.*.ngrams.3_gram",
+                                                "title.ngrams",
+                                                "title.ngrams.2_gram",
+                                                "title.ngrams.3_gram",
+                                                "prefLabel.*.ngrams",
+                                                "prefLabel.*.ngrams.2_gram",
+                                                "prefLabel.*.ngrams.3_gram"
+                                            ]
+                                        }
+                                    },
                                     "should": [
                                         {
-                                            "match": {
-                                                "provenance.code": "NASJONAL"
-                                            }
-                                        },
-                                        {
-                                            "term": {
-                                                "nationalComponent": "true"
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         }
-                                    ]
+                                    ],
+                                    "boost": 2
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "barnehage barnehage*",
-                                    "boost": 0.01,
-                                    "default_operator": "or"
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "{0} {0}*".format(search_str.replace(" ", "+")),
+                                            "fields": [
+                                                "description",
+                                                "definition.text.*",
+                                                "schema"
+                                            ]
+                                        }
+                                    },
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "boost": 1.5
                                 }
                             },
                             {
-                                "term": {
-                                    "title.nb.raw": "barnehage"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "title.raw": "barnehage"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "prefLabel.nb.raw": "barnehage"
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                        }
+                                    },
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "boost": 0.001
                                 }
                             }
                         ]
@@ -267,10 +427,8 @@ def test_all_indices_should_return_query_with_filter():
 
 @pytest.mark.unit
 def test_all_indices_should_return_query_with_must_not():
+    search_str = "barnehage"
     expected = {
-        "indices_boost": {
-            "datasets": 1.1
-        },
         "query": {
             "bool": {
                 "must": [
@@ -279,54 +437,136 @@ def test_all_indices_should_return_query_with_must_not():
                             "queries": [
                                 {
                                     "bool": {
-                                        "must": [
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "fields": [
+                                                    "prefLabel.*.raw",
+                                                    "title.*.raw",
+                                                    "title.raw"
+                                                ]
+                                            }
+                                        },
+                                        "should": [
                                             {
-                                                "constant_score": {
-                                                    "filter": {
-                                                        "simple_query_string": {
-                                                            "query": "barnehage barnehage*",
-                                                            "boost": 1,
-                                                            "default_operator": "or"
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
                                                         }
-                                                    },
-                                                    "boost": 1.2
+                                                    ]
                                                 }
                                             }
                                         ],
+                                        "boost": 5
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "type": "phrase_prefix",
+                                                "fields": [
+                                                    "title.*.ngrams",
+                                                    "title.*.ngrams.2_gram",
+                                                    "title.*.ngrams.3_gram",
+                                                    "title.ngrams",
+                                                    "title.ngrams.2_gram",
+                                                    "title.ngrams.3_gram",
+                                                    "prefLabel.*.ngrams",
+                                                    "prefLabel.*.ngrams.2_gram",
+                                                    "prefLabel.*.ngrams.3_gram"
+                                                ]
+                                            }
+                                        },
                                         "should": [
                                             {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
                                                 }
                                             }
-                                        ]
+                                        ],
+                                        "boost": 2
                                     }
                                 },
                                 {
-                                    "simple_query_string": {
-                                        "query": "barnehage barnehage*",
-                                        "boost": 0.01,
-                                        "default_operator": "or"
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "{0} {0}*".format(search_str.replace(" ", "+")),
+                                                "fields": [
+                                                    "description",
+                                                    "definition.text.*",
+                                                    "schema"
+                                                ]
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 1.5
                                     }
                                 },
                                 {
-                                    "term": {
-                                        "title.nb.raw": "barnehage"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "title.raw": "barnehage"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "prefLabel.nb.raw": "barnehage"
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 0.001
                                     }
                                 }
                             ]
@@ -391,3 +631,145 @@ def test_all_indices_should_return_query_with_must_not():
     }
     result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
     assert json.dumps(result.query) == json.dumps(expected)
+
+
+correct = {
+    "dis_max": {
+        "queries": [
+            {
+                "bool": {
+                    "must": {
+                        "multi_match": {
+                            "query": "åpne data",
+                            "fields": [
+                                "prefLabel.*.raw",
+                                "title.*.raw",
+                                "title.raw"
+                            ]
+                        }
+                    },
+                    "should": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "provenance.code": "NASJONAL"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "nationalComponent": "true"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "boost": 5
+                }
+            },
+            {
+                "bool": {
+                    "must": {
+                        "multi_match": {
+                            "query": "åpne data",
+                            "type": "phrase_prefix",
+                            "fields": [
+                                "title.*.ngrams",
+                                "title.*.ngrams.2_gram",
+                                "title.*.ngrams.3_gram",
+                                "title.ngrams",
+                                "title.ngrams.2_gram",
+                                "title.ngrams.3_gram",
+                                "prefLabel.*.ngrams",
+                                "prefLabel.*.ngrams.2_gram",
+                                "prefLabel.*.ngrams.3_gram"
+                            ]
+                        }
+                    },
+                    "should": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "provenance.code": "NASJONAL"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "nationalComponent": "true"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "boost": 2
+                }
+            },
+            {
+                "bool": {
+                    "must": {
+                        "simple_query_string": {
+                            "query": "åpne+data åpne+data*",
+                            "fields": [
+                                "description",
+                                "definition.text.*",
+                                "schema"
+                            ]
+                        }
+                    },
+                    "should": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "provenance.code": "NASJONAL"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "nationalComponent": "true"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "boost": 1.5
+                }
+            },
+            {
+                "bool": {
+                    "must": {
+                        "simple_query_string": {
+                            "query": "åpne+data åpne+data*"
+                        }
+                    },
+                    "should": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "provenance.code": "NASJONAL"
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "nationalComponent": "true"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "boost": 0.001
+                }
+            }
+        ]
+    }
+}

@@ -1,7 +1,7 @@
 from enum import Enum
 
-from src.search.query_utils import simple_query_string, constant_simple_query, get_filter, get_filter_key, \
-    must_not_query, query_template, default_dismax, default_aggs, title_term_query
+from src.search.query_utils import get_filter, must_not_query, query_template, default_dismax, default_aggs, \
+    exact_match_in_title_query, word_in_title_query, word_in_description_query, simple_query_string
 
 
 class Direction(Enum):
@@ -13,10 +13,13 @@ class AllIndicesQuery:
 
     def __init__(self, search_string=None, aggs=None, filters=None):
         self.query = query_template()
-        self.dismax = default_dismax()
-        self.add_indices_boost()
         if search_string:
+            self.dismax = {"dis_max": {
+                "queries": []
+            }}
             self.add_search_string(search_string)
+        else:
+            self.dismax = default_dismax()
         if aggs is None:
             self.add_aggs()
         if filters:
@@ -39,23 +42,22 @@ class AllIndicesQuery:
         if page is not None:
             self.query['from'] = page * size
 
-    def add_indices_boost(self):
-        self.query["indices_boost"]: {
-            "datasets": 1.2
-        }
-
     def add_aggs(self, fields=None):
         if fields is None:
             self.query["aggs"] = default_aggs()
         # TODO: self defined aggs
 
-    def add_search_string(self, param):
-        self.dismax["dis_max"]["queries"][0] = constant_simple_query(param)
-        self.dismax["dis_max"]["queries"][1] = simple_query_string(search_string=param, boost=0.01)
-        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="title.nb.raw"))
-        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="title.raw"))
-        self.dismax["dis_max"]["queries"].append(title_term_query(search_string=param, field="prefLabel.nb.raw"))
-
+    def add_search_string(self, param: str):
+        self.dismax["dis_max"]["queries"].append(exact_match_in_title_query(
+            title_field_names=["prefLabel.*", "title.*", "title"],
+            search_string=param))
+        self.dismax["dis_max"]["queries"].append(
+            word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
+                                search_string=param))
+        self.dismax["dis_max"]["queries"].append(
+            word_in_description_query(description_field_names=["description", "definition.text.*", "schema"],
+                                      search_string=param))
+        self.dismax["dis_max"]["queries"].append(simple_query_string(search_string=param))
 
     def add_filters(self, filters):
         self.query["query"]["bool"]["filter"] = []
