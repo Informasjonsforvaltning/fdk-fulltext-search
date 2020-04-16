@@ -8,7 +8,7 @@ import requests
 import os
 from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
-from requests import HTTPError, RequestException
+from requests import HTTPError, RequestException, Timeout
 
 from .utils import Indexes
 from jsonpath_ng import parse
@@ -64,15 +64,15 @@ def fetch_information_models():
     logging.info("fetching information models")
     info_url = API_URL + "informationmodels"
     try:
-        size = requests.get(url=info_url)
+        size = requests.get(url=info_url, timeout=5)
         size.raise_for_status()
         totalElements = size.json()["page"]["totalElements"]
-        r = requests.get(url=info_url, params={"size": totalElements})
+        r = requests.get(url=info_url, params={"size": totalElements}, timeout=5)
         r.raise_for_status()
         documents = r.json()["_embedded"]["informationmodels"]
         result = elasticsearch_ingest(documents, Indexes.INFO_MODEL, Indexes.INFO_MODEL_ID_KEY)
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
         result = error_msg(f"fetch informationmodels from {info_url}", err)
         logging.error(result["message"])
         return result
@@ -82,7 +82,7 @@ def fetch_concepts():
     logging.info("fetching concepts")
     concept_url = API_URL + "concepts"
     try:
-        size = requests.get(url=concept_url)
+        size = requests.get(url=concept_url, timeout=5)
         size.raise_for_status()
 
         totalElements = size.json()["page"]["totalElements"]
@@ -91,17 +91,17 @@ def fetch_concepts():
         concepts = []
         if doRequest > 1:
             for x in range(doRequest):
-                r = requests.get(url=concept_url, params={"size": "1000", "page": str(x)})
+                r = requests.get(url=concept_url, params={"size": "1000", "page": str(x)}, timeout=5)
                 r.raise_for_status()
                 concepts.extend(r.json()["_embedded"]["concepts"])
         else:
-            r = requests.get(url=concept_url, params={"size": "1000", "page": str(totalElements)})
+            r = requests.get(url=concept_url, params={"size": "1000", "page": str(totalElements)}, timeout=5)
             concepts = r.json()["_embedded"]["concepts"]
 
         result = elasticsearch_ingest(concepts, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
         return result_msg(result[0])
 
-    except (HTTPError, RequestException, JSONDecodeError) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
         result = error_msg(f"fetch concepts from {concept_url}", err)
         logging.error(result["message"])
         return result
@@ -111,22 +111,22 @@ def fetch_data_sets():
     logging.info("fetching datasets")
     dataset_url = API_URL + "datasets"
     try:
-        initial_req = requests.get(url=dataset_url, headers={"Accept": "application/json"})
+        initial_req = requests.get(url=dataset_url, headers={"Accept": "application/json"}, timeout=5)
         initial_req.raise_for_status()
         size = initial_req.json()["hits"]["total"]
-        r = requests.get(url=dataset_url, params={"size": size}, headers={"Accept": "application/json"})
+        r = requests.get(url=dataset_url, params={"size": size}, headers={"Accept": "application/json"}, timeout=5)
         r.raise_for_status()
         documents = r.json()["hits"]["hits"]
         doRequest = math.ceil(size / len(documents))
         if doRequest > 1:
             for x in range(1, doRequest):
                 r = requests.get(url=dataset_url, params={"size": 100, "page": str(x)},
-                                 headers={"Accept": "application/json"})
+                                 headers={"Accept": "application/json"}, timeout=5)
                 r.raise_for_status()
                 documents = documents + r.json()["hits"]["hits"]
         result = elasticsearch_ingest_from_source(documents, Indexes.DATA_SETS, Indexes.DATA_SETS_ID_KEY)
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
         logging.error(result["message"])
         return result
@@ -136,8 +136,9 @@ def fetch_data_services():
     logging.info("fetching services")
     data_service_url = API_URL + "apis"
     try:
-        size = requests.get(url=data_service_url, headers={"Accept": "application/json"}).json()["total"]
-        r = requests.get(url=data_service_url, params={"size": size}, headers={"Accept": "application/json"})
+        size = requests.get(url=data_service_url, headers={"Accept": "application/json"}, timeout=5).json()["total"]
+        r = requests.get(url=data_service_url, params={"size": size}, headers={"Accept": "application/json"}, timeout=5)
+        r.raise_for_status()
         documents = r.json()
         id_path = parse('hits[*].id')
         id_list = [match.value for match in id_path.find(documents)]
@@ -145,18 +146,20 @@ def fetch_data_services():
         if len(id_list) < size:
             doRequest = math.ceil(size / 100)
             for x in range(1, doRequest):
-                r = requests.request(url=data_service_url + "?size=100&page=" + str(x), method="GET")
+                r = requests.get(url=data_service_url, params={"size": 100, "page": str(x)}, timeout=5)
+                r.raise_for_status()
                 id_list = id_list + [match.value for match in id_path.find(r.json())]
         hits = []
         # get full documents
         for api_id in id_list:
-            r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"})
+            r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"}, timeout=5)
+            r.raise_for_status()
             doc = r.json()
             hits.append(doc)
 
         result = elasticsearch_ingest(hits, "dataservices", "id")
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
         result = error_msg(f"fetch dataservices from {data_service_url}", err)
         logging.error(result["message"])
         return result
