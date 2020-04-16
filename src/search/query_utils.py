@@ -1,17 +1,96 @@
-def simple_query_string(search_string: str, boost=0.5):
-    return {
-        "simple_query_string": {
-            "query": "{0} {0}*".format(search_string),
-            "boost": boost,
-            "default_operator": "or"
-        }
-    }
-
-
 def title_term_query(field, search_string):
     return {
         "term": {
             field: search_string
+        }
+    }
+
+
+def autorativ_boost_clause():
+    return {
+        "bool": {
+            "should": [
+                {
+                    "match": {
+                        "provenance.code": "NASJONAL"
+                    }
+                },
+                {
+                    "term": {
+                        "nationalComponent": "true"
+                    }
+                }
+            ]
+        }
+    }
+
+
+def simple_query_string(search_string: str, boost=0.001):
+    query_string = search_string.replace(" ", "+")
+    return {
+        "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "{0} {0}*".format(query_string),
+                }
+            },
+            "should": [autorativ_boost_clause()],
+            "boost": boost
+        }
+    }
+
+
+def exact_match_in_title_query(title_field_names: list, search_string: str):
+    fields_list = []
+    for field in title_field_names:
+        fields_list.append(field + ".raw")
+    return {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": search_string,
+                    "fields": fields_list
+                }
+            },
+            "should": [autorativ_boost_clause()],
+            "boost": 5
+
+        }
+    }
+
+
+def word_in_title_query(title_field_names: list, search_string: str):
+    fields_list = []
+    for field in title_field_names:
+        fields_list.append(field + ".ngrams")
+        fields_list.append(field + ".ngrams.2_gram")
+        fields_list.append(field + ".ngrams.3_gram")
+    return {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": search_string,
+                    "type": "phrase_prefix",
+                    "fields": fields_list
+                }
+            },
+            "should": [autorativ_boost_clause()],
+            "boost": 2
+        }
+    }
+
+
+def word_in_description_query(description_field_names_with_boost: list, search_string: str):
+    query_string = search_string.replace(" ", "+")
+    return {
+        "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "{0} {0}*".format(query_string),
+                    "fields": description_field_names_with_boost
+                }
+            },
+            "should": [autorativ_boost_clause()],
         }
     }
 
@@ -151,9 +230,6 @@ def default_dismax():
 
 def query_template():
     return {
-        "indices_boost": {
-            "datasets": 1.1
-        },
         "query": {
         }
     }

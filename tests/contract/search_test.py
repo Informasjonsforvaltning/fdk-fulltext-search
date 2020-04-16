@@ -241,9 +241,60 @@ class TestSearchAll:
                 assert current_date >= last_date
             last_date = current_date
 
+    @pytest.mark.contract
+    def test_words_in_title_after_exact_match(self, api):
+        body = {
+            "q": "barnehage",
+            "size": 300
+        }
+        result = post(url=service_url + "/search", json=body)
+        last_was_in_title = False
+        last_not_in_title = False
+        for hit in result.json()["hits"]:
+            is_exact = is_exact_match_in_title(hit, "barnehage")
+            if is_exact:
+                assert last_was_in_title is False
+                assert last_not_in_title is False
+            elif is_word_title(hit, "barnehage"):
+                assert last_not_in_title is False
+                last_was_in_title = True
+            else:
+                last_not_in_title = True
+                last_was_in_title = False
+
 
 def is_exact_match(keys, hit, search):
     for key in keys:
         if hit[key].lower() == search:
+            return True
+    return False
+
+
+def is_exact_match_in_title(hit, srch_string):
+    if "prefLabel" in hit:
+        prefLabels = hit["prefLabel"]
+        if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
+            return True
+    elif "title" in hit:
+        title = hit["title"]
+        if isinstance(title, dict):
+            if is_exact_match(title.keys(), title, srch_string):
+                return True
+        else:
+            if title.lower() == srch_string:
+                return True
+    return False
+
+
+def is_word_title(hit, srch_string):
+    if "prefLabel" in hit:
+        prefLabels = hit["prefLabel"]
+        prt1 = re.findall(srch_string.lower(), json.dumps(prefLabels).lower())
+        if len(prt1) > 0:
+            return True
+    elif "title" in hit:
+        title = hit["title"]
+        prt1 = re.findall(srch_string.lower(), json.dumps(title).lower())
+        if len(prt1) > 0:
             return True
     return False
