@@ -72,7 +72,7 @@ def fetch_information_models():
         documents = r.json()["_embedded"]["informationmodels"]
         result = elasticsearch_ingest(documents, Indexes.INFO_MODEL, Indexes.INFO_MODEL_ID_KEY)
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch informationmodels from {info_url}", err)
         logging.error(result["message"])
         return result
@@ -95,13 +95,14 @@ def fetch_concepts():
                 r.raise_for_status()
                 concepts.extend(r.json()["_embedded"]["concepts"])
         else:
-            r = requests.get(url=concept_url, params={"size": "1000", "page": str(totalElements)}, timeout=5)
+            r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
+            r.raise_for_status()
             concepts = r.json()["_embedded"]["concepts"]
 
         result = elasticsearch_ingest(concepts, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
         return result_msg(result[0])
 
-    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout,KeyError) as err:
         result = error_msg(f"fetch concepts from {concept_url}", err)
         logging.error(result["message"])
         return result
@@ -126,7 +127,7 @@ def fetch_data_sets():
                 documents = documents + r.json()["hits"]["hits"]
         result = elasticsearch_ingest_from_source(documents, Indexes.DATA_SETS, Indexes.DATA_SETS_ID_KEY)
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout,KeyError) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
         logging.error(result["message"])
         return result
@@ -159,7 +160,7 @@ def fetch_data_services():
 
         result = elasticsearch_ingest(hits, "dataservices", "id")
         return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout) as err:
+    except (HTTPError, RequestException, JSONDecodeError, Timeout,KeyError) as err:
         result = error_msg(f"fetch dataservices from {data_service_url}", err)
         logging.error(result["message"])
         return result
