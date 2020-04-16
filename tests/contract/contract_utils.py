@@ -15,7 +15,7 @@ host = os.getenv("RABBIT_HOST") or "localhost"
 
 
 def wait_for_es():
-    # wait 1 minute for elasticsearch to be ready
+    # wait  for elasticsearch to be ready
     retry_strategy = Retry(connect=5, read=5, backoff_factor=2)
     adapter = HTTPAdapter(max_retries=retry_strategy)
     http = requests.Session()

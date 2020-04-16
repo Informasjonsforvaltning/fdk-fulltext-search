@@ -1,5 +1,4 @@
 import os
-import time
 from invoke import task
 
 pipenv_install = "pipenv install --dev"
@@ -46,7 +45,6 @@ def start_docker_attach(ctx, image="digdir/fulltext-search:latest"):
 def start_docker_local(ctx, image="digdir/fulltext-search:latest"):
     print("starting docker network..")
     host_dir = os.getcwd()
-    print(host_dir)
     start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose up".format(image,host_dir)
     ctx.run(start_compose)
 
@@ -54,8 +52,8 @@ def start_docker_local(ctx, image="digdir/fulltext-search:latest"):
 @task
 def stop_docker(ctx):
     print("stopping docker network..")
-    down_and_clean = "docker-compose -f tests/docker-compose.contract.yml down --remove-orphans -v"
-    ctx.run(down_and_clean)
+    kill = "docker-compose -f tests/docker-compose.contract.yml kill"
+    ctx.run(kill)
 
 
 @task

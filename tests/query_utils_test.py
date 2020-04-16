@@ -113,7 +113,7 @@ def test_word_in_description_one_word():
                     "fields": [
                         "description",
                         "definition.text.*",
-                        "schema"
+                        "schema^0.5"
                     ]
                 }
             },
@@ -134,11 +134,10 @@ def test_word_in_description_one_word():
                         ]
                     }
                 }
-            ],
-            "boost": 1.5
+            ]
         }
     }
-    result = word_in_description_query(description_field_names=["description", "definition.text.*", "schema"],
+    result = word_in_description_query(description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
                                        search_string="heimevernet")
     assert json.dumps(result) == json.dumps(expected)
 
@@ -153,7 +152,7 @@ def test_word_in_description_several_words():
                     "fields": [
                         "description",
                         "defintion.text.*",
-                        "schema"
+                        "schema^0.5"
                     ]
                 }
             },
@@ -174,11 +173,10 @@ def test_word_in_description_several_words():
                         ]
                     }
                 }
-            ],
-            "boost": 1.5
+            ]
         }
     }
-    result = word_in_description_query(description_field_names=["description", "defintion.text.*", "schema"],
+    result = word_in_description_query(description_field_names_with_boost=["description", "defintion.text.*", "schema^0.5"],
                                        search_string="åpne data")
     assert json.dumps(result) == json.dumps(expected)
 

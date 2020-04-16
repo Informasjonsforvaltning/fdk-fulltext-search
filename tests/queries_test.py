@@ -119,7 +119,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     "fields": [
                                         "description",
                                         "definition.text.*",
-                                        "schema"
+                                        "schema^0.5"
                                     ]
                                 }
                             },
@@ -140,8 +140,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         ]
                                     }
                                 }
-                            ],
-                            "boost": 1.5
+                            ]
                         }
                     },
                     {
@@ -313,7 +312,7 @@ def test_all_indices_should_return_query_with_filter():
                                             "fields": [
                                                 "description",
                                                 "definition.text.*",
-                                                "schema"
+                                                "schema^0.5"
                                             ]
                                         }
                                     },
@@ -334,8 +333,7 @@ def test_all_indices_should_return_query_with_filter():
                                                 ]
                                             }
                                         }
-                                    ],
-                                    "boost": 1.5
+                                    ]
                                 }
                             },
                             {
@@ -516,7 +514,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 "fields": [
                                                     "description",
                                                     "definition.text.*",
-                                                    "schema"
+                                                    "schema^0.5"
                                                 ]
                                             }
                                         },
@@ -537,8 +535,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     ]
                                                 }
                                             }
-                                        ],
-                                        "boost": 1.5
+                                        ]
                                     }
                                 },
                                 {

@@ -55,7 +55,7 @@ class AllIndicesQuery:
             word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
                                 search_string=param))
         self.dismax["dis_max"]["queries"].append(
-            word_in_description_query(description_field_names=["description", "definition.text.*", "schema"],
+            word_in_description_query(description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
                                       search_string=param))
         self.dismax["dis_max"]["queries"].append(simple_query_string(search_string=param))
 

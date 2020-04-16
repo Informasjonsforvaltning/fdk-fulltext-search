@@ -44,7 +44,6 @@ class UpdateConsumer:
         except KeyError:
             logging.error("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
         except JSONDecodeError:
-            logging.error("[rabbitmq]Error: invalid json")
             logging.error("[rabbitmq]Error: Received invalid JSON :\n {0}".format(body))
 
     def start_listener(self):

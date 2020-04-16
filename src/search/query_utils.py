@@ -80,18 +80,17 @@ def word_in_title_query(title_field_names: list, search_string: str):
     }
 
 
-def word_in_description_query(description_field_names: list, search_string: str):
+def word_in_description_query(description_field_names_with_boost: list, search_string: str):
     query_string = search_string.replace(" ", "+")
     return {
         "bool": {
             "must": {
                 "simple_query_string": {
                     "query": "{0} {0}*".format(query_string),
-                    "fields": description_field_names
+                    "fields": description_field_names_with_boost
                 }
             },
             "should": [autorativ_boost_clause()],
-            "boost": 1.5
         }
     }
 

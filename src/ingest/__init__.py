@@ -1,11 +1,15 @@
-# TODO : setup rabbit listeners; "update_es": [informationmodels,concepts,datasets,dataservices]
 import json
+import logging
 import math
 import time
+from json import JSONDecodeError
 
 import requests
 import os
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch.helpers import BulkIndexError
+from requests import HTTPError, RequestException
+
 from .utils import Indexes
 from jsonpath_ng import parse
 
@@ -14,9 +18,27 @@ ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL')
 
+
+def error_msg(exec_point, reason):
+    return {
+        "count": 0,
+        "status": "error",
+        "message": f"Exception when attempting to {exec_point}: \n: {reason}"
+    }
+
+
+def result_msg(count):
+    return {
+        "staus": "OK",
+        "count": count
+    }
+
+
 def reindex():
     create_indices()
-    fetch_all_content()
+    result = fetch_all_content()
+    return result
+
 
 def fetch_all_content():
     start = time.time()
@@ -25,10 +47,7 @@ def fetch_all_content():
     service_status = fetch_dataservices()
     datasets_status = fetch_datasets()
     total_time = time.time() - start
-    total_concepts = 0
-    for iteration in concept_status:
-        total_concepts = total_concepts + iteration[0]
-    totalElements = info_status[0]+total_concepts+service_status[0]+datasets_status[0]
+    totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
     result = {
         "took": total_time,
         "total": totalElements,
@@ -37,90 +56,130 @@ def fetch_all_content():
         "dataservice": service_status,
         "datasets": datasets_status
     }
+    logging.info("update of all services completed\n {}".format(result))
     return result
 
 
 def fetch_information_models():
-    print("fetching information models")
+    logging.info("fetching information models")
     info_url = API_URL + "informationmodels"
-    size = requests.request(url=info_url, method="GET")
-    totalElements = size.json()["page"]["totalElements"]
-    r = requests.request(url=info_url + "?size=" + str(totalElements), method="GET")
-    documents = r.json()["_embedded"]["informationmodels"]
-    result = elasticsearch_ingest(documents, Indexes.INFO_MODEL, Indexes.INFO_MODEL_ID_KEY)
-    return result
+    try:
+        size = requests.get(url=info_url)
+        size.raise_for_status()
+        totalElements = size.json()["page"]["totalElements"]
+        r = requests.get(url=info_url + "?size=" + str(totalElements))
+        r.raise_for_status()
+        documents = r.json()["_embedded"]["informationmodels"]
+        result = elasticsearch_ingest(documents, Indexes.INFO_MODEL, Indexes.INFO_MODEL_ID_KEY)
+        return result_msg(result[0])
+    except (HTTPError, RequestException, JSONDecodeError) as err:
+        result = error_msg(f"fetch informationmodels from {info_url}", err)
+        logging.error(result["message"])
+        return result
 
 
 def fetch_concepts():
-    print("fetching concepts")
+    logging.info("fetching concepts")
     concept_url = API_URL + "concepts"
-    size = requests.request(url=concept_url, method="GET")
-    totalElements = size.json()["page"]["totalElements"]
-    doRequest = math.ceil(totalElements / 1000)
-    # repeat request if totalElements exceeds max size of response
-    if doRequest > 1:
-        results = []
-        for x in range(doRequest):
-            r = requests.request(url=concept_url + "?size=1000&page=" + str(x), method="GET")
-            documents = r.json()["_embedded"]["concepts"]
-            result = elasticsearch_ingest(documents, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
-            results.append(result)
-        return results
-    else:
-        r = requests.request(url=concept_url + "?size" + str(totalElements), method="GET")
-        documents = r.json()["_embedded"]["concepts"]
-        result = elasticsearch_ingest(documents, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
+    try:
+        size = requests.get(url=concept_url)
+        size.raise_for_status()
+
+        totalElements = size.json()["page"]["totalElements"]
+        doRequest = math.ceil(totalElements / 1000)
+        # repeat request if totalElements exceeds max size of response
+        concepts = []
+        if doRequest > 1:
+            for x in range(doRequest):
+                r = requests.get(url=concept_url + "?size=1000&page=" + str(x))
+                r.raise_for_status()
+                concepts.extend(r.json()["_embedded"]["concepts"])
+        else:
+            r = requests.request(url=concept_url + "?size" + str(totalElements), method="GET")
+            concepts = r.json()["_embedded"]["concepts"]
+
+        result = elasticsearch_ingest(concepts, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
+        return result_msg(result[0])
+
+    except (HTTPError, RequestException, JSONDecodeError) as err:
+        result = error_msg(f"fetch concepts from {concept_url}", err)
+        logging.error(result["message"])
         return result
 
 
 def fetch_datasets():
-    print("fetching datasets")
+    logging.info("fetching datasets")
     dataset_url = API_URL + "datasets"
-    size = requests.get(url=dataset_url, headers={"Accept": "application/json"}).json()["hits"]["total"]
-    r = requests.get(url=dataset_url + "?size=" + str(size), headers={"Accept": "application/json"})
-    documents = r.json()["hits"]["hits"]
-    doRequest = math.ceil(size / len(documents))
-    if doRequest > 1:
-        for x in range(1, doRequest):
-            r = requests.get(url=dataset_url + "?size=100" + "&page=" + str(x), headers={"Accept": "application/json"})
-            documents = documents + r.json()["hits"]["hits"]
-    result = elasticsearch_ingest_from_source(documents, Indexes.DATA_SETS, Indexes.DATA_SETS_ID_KEY)
-    return result
+    try:
+        initial_req = requests.get(url=dataset_url, headers={"Accept": "application/json"})
+        initial_req.raise_for_status()
+        size = initial_req.json()["hits"]["total"]
+        r = requests.get(url=dataset_url + "?size=" + str(size), headers={"Accept": "application/json"})
+        r.raise_for_status()
+        documents = r.json()["hits"]["hits"]
+        doRequest = math.ceil(size / len(documents))
+        if doRequest > 1:
+            for x in range(1, doRequest):
+                r = requests.get(url=dataset_url + "?size=100" + "&page=" + str(x),
+                                 headers={"Accept": "application/json"})
+                r.raise_for_status()
+                documents = documents + r.json()["hits"]["hits"]
+        result = elasticsearch_ingest_from_source(documents, Indexes.DATA_SETS, Indexes.DATA_SETS_ID_KEY)
+        return result_msg(result[0])
+    except (HTTPError, RequestException, JSONDecodeError) as err:
+        result = error_msg(f"fetch datasets from {dataset_url}", err)
+        logging.error(result["message"])
+        return result
 
 
 def fetch_dataservices():
-    print("fetching services")
+    logging.info("fetching services")
     data_service_url = API_URL + "apis"
-    size = requests.get(url=data_service_url, headers={"Accept": "application/json"}).json()["total"]
-    r = requests.get(url=data_service_url + "?size=" + str(size), headers={"Accept": "application/json"})
-    documents = r.json()
-    id_path = parse('hits[*].id')
-    id_list = [match.value for match in id_path.find(documents)]
-    # repeat request if size exceeds max size of response
-    if len(id_list) < size:
-        doRequest = math.ceil(size / 100)
-        for x in range(1, doRequest):
-            r = requests.request(url=data_service_url + "?size=100&page=" + str(x), method="GET")
-            id_list = id_list + [match.value for match in id_path.find(r.json())]
-    hits = []
-    # get full documents
-    for api_id in id_list:
-        r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"})
-        doc = r.json()
-        hits.append(doc)
+    try:
+        size = requests.get(url=data_service_url, headers={"Accept": "application/json"}).json()["total"]
+        r = requests.get(url=data_service_url + "?size=" + str(size), headers={"Accept": "application/json"})
+        documents = r.json()
+        id_path = parse('hits[*].id')
+        id_list = [match.value for match in id_path.find(documents)]
+        # repeat request if size exceeds max size of response
+        if len(id_list) < size:
+            doRequest = math.ceil(size / 100)
+            for x in range(1, doRequest):
+                r = requests.request(url=data_service_url + "?size=100&page=" + str(x), method="GET")
+                id_list = id_list + [match.value for match in id_path.find(r.json())]
+        hits = []
+        # get full documents
+        for api_id in id_list:
+            r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"})
+            doc = r.json()
+            hits.append(doc)
 
-    result = elasticsearch_ingest(hits, "dataservices", "id")
-    return result
+        result = elasticsearch_ingest(hits, "dataservices", "id")
+        return result_msg(result[0])
+    except (HTTPError, RequestException, JSONDecodeError) as err:
+        result = error_msg(f"fetch dataservices from {data_service_url}", err)
+        logging.error(result["message"])
+        return result
 
 
 def elasticsearch_ingest(documents, index, id_key):
-    result = helpers.bulk(client=client, actions=yield_documents(documents, index, id_key))
-    return result
+    try:
+        result = helpers.bulk(client=client, actions=yield_documents(documents, index, id_key))
+        return result
+    except BulkIndexError as err:
+        result = error_msg(f"ingest {index}", err.errors)
+        logging.error(result)
+        return result
 
 
 def elasticsearch_ingest_from_source(documents, index, id_key):
-    result = helpers.bulk(client=client, actions=yield_documents_from_source(documents, index, id_key))
-    return result
+    try:
+        result = helpers.bulk(client=client, actions=yield_documents_from_source(documents, index, id_key))
+        return result
+    except BulkIndexError as err:
+        result = error_msg(f"ingest {index}", err.errors)
+        logging.error(result)
+        return result
 
 
 def yield_documents(documents, index, id_key):
@@ -148,6 +207,7 @@ def create_indices():
         except:
             print("indices concept does not exist")
         finally:
+
             client.indices.create(index="concepts", body=json.load(concept_mapping))
     with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
         try:
