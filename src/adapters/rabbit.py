@@ -8,7 +8,7 @@ import pika
 from multiprocessing import Process
 from pika.adapters.utils.connection_workflow import AMQPConnectorSocketConnectError
 from pika.exceptions import AMQPError, StreamLostError, AMQPConnectionError
-from src.ingest import fetch_information_models, fetch_datasets, fetch_dataservices, fetch_concepts, \
+from src.ingest import fetch_information_models, fetch_data_sets, fetch_data_services, fetch_concepts, \
     fetch_all_content, reindex
 
 queue = "harvester.UpdateSearchTrigger"
@@ -18,9 +18,9 @@ password = os.getenv("RABBIT_PASSWORD") or "admin"
 host = os.getenv("RABBIT_HOST") or "localhost"
 
 update_fun = {
-    'datasets': fetch_datasets,
+    'datasets': fetch_data_sets,
     'informationmodels': fetch_information_models,
-    'dataservices': fetch_dataservices,
+    'dataservices': fetch_data_services,
     'concepts': fetch_concepts,
     'all': fetch_all_content,
     'reindex': reindex

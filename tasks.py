@@ -50,10 +50,17 @@ def start_docker_local(ctx, image="digdir/fulltext-search:latest"):
 
 
 @task
-def stop_docker(ctx):
+def stop_docker(ctx,clean=False,all=False):
     print("stopping docker network..")
     kill = "docker-compose -f tests/docker-compose.contract.yml kill"
+    docker_clean = "docker system prune"
     ctx.run(kill)
+    if clean:
+        if all:
+            ctx.run(f"{docker_clean} -a")
+        else:
+            ctx.run(docker_clean)
+
 
 
 @task

@@ -29,7 +29,7 @@ def error_msg(exec_point, reason):
 
 def result_msg(count):
     return {
-        "staus": "OK",
+        "status": "OK",
         "count": count
     }
 
@@ -44,8 +44,8 @@ def fetch_all_content():
     start = time.time()
     info_status = fetch_information_models()
     concept_status = fetch_concepts()
-    service_status = fetch_dataservices()
-    datasets_status = fetch_datasets()
+    service_status = fetch_data_services()
+    datasets_status = fetch_data_sets()
     total_time = time.time() - start
     totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
     result = {
@@ -67,7 +67,7 @@ def fetch_information_models():
         size = requests.get(url=info_url)
         size.raise_for_status()
         totalElements = size.json()["page"]["totalElements"]
-        r = requests.get(url=info_url + "?size=" + str(totalElements))
+        r = requests.get(url=info_url, params={"size": totalElements})
         r.raise_for_status()
         documents = r.json()["_embedded"]["informationmodels"]
         result = elasticsearch_ingest(documents, Indexes.INFO_MODEL, Indexes.INFO_MODEL_ID_KEY)
@@ -91,11 +91,11 @@ def fetch_concepts():
         concepts = []
         if doRequest > 1:
             for x in range(doRequest):
-                r = requests.get(url=concept_url + "?size=1000&page=" + str(x))
+                r = requests.get(url=concept_url, params={"size": "1000", "page": str(x)})
                 r.raise_for_status()
                 concepts.extend(r.json()["_embedded"]["concepts"])
         else:
-            r = requests.request(url=concept_url + "?size" + str(totalElements), method="GET")
+            r = requests.get(url=concept_url, params={"size": "1000", "page": str(totalElements)})
             concepts = r.json()["_embedded"]["concepts"]
 
         result = elasticsearch_ingest(concepts, Indexes.CONCEPTS, Indexes.CONCEPTS_ID_KEY)
@@ -107,20 +107,20 @@ def fetch_concepts():
         return result
 
 
-def fetch_datasets():
+def fetch_data_sets():
     logging.info("fetching datasets")
     dataset_url = API_URL + "datasets"
     try:
         initial_req = requests.get(url=dataset_url, headers={"Accept": "application/json"})
         initial_req.raise_for_status()
         size = initial_req.json()["hits"]["total"]
-        r = requests.get(url=dataset_url + "?size=" + str(size), headers={"Accept": "application/json"})
+        r = requests.get(url=dataset_url, params={"size": size}, headers={"Accept": "application/json"})
         r.raise_for_status()
         documents = r.json()["hits"]["hits"]
         doRequest = math.ceil(size / len(documents))
         if doRequest > 1:
             for x in range(1, doRequest):
-                r = requests.get(url=dataset_url + "?size=100" + "&page=" + str(x),
+                r = requests.get(url=dataset_url, params={"size": 100, "page": str(x)},
                                  headers={"Accept": "application/json"})
                 r.raise_for_status()
                 documents = documents + r.json()["hits"]["hits"]
@@ -132,12 +132,12 @@ def fetch_datasets():
         return result
 
 
-def fetch_dataservices():
+def fetch_data_services():
     logging.info("fetching services")
     data_service_url = API_URL + "apis"
     try:
         size = requests.get(url=data_service_url, headers={"Accept": "application/json"}).json()["total"]
-        r = requests.get(url=data_service_url + "?size=" + str(size), headers={"Accept": "application/json"})
+        r = requests.get(url=data_service_url, params={"size": size}, headers={"Accept": "application/json"})
         documents = r.json()
         id_path = parse('hits[*].id')
         id_list = [match.value for match in id_path.find(documents)]
@@ -175,6 +175,7 @@ def elasticsearch_ingest(documents, index, id_key):
 def elasticsearch_ingest_from_source(documents, index, id_key):
     try:
         result = helpers.bulk(client=client, actions=yield_documents_from_source(documents, index, id_key))
+
         return result
     except BulkIndexError as err:
         result = error_msg(f"ingest {index}", err.errors)
