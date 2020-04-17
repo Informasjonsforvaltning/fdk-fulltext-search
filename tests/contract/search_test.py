@@ -242,6 +242,21 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
+    def test_trailing_white_space_should_not_affect_result(self):
+        body_no_white_space = {
+            "q": "landbruk"
+        }
+        body_white_space = {
+            "q": "landbruk  "
+        }
+
+        no_white_space_result = post(url=service_url + "/search", json=body_no_white_space).json()
+        white_space_result = post(url=service_url + "/search", json=body_white_space).json()
+        assert json.dumps(no_white_space_result["page"]) == json.dumps(no_white_space_result["page"])
+        assert json.dumps(no_white_space_result["aggregations"]) == json.dumps(white_space_result["aggregations"])
+        assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
+
+    @pytest.mark.contract
     def test_words_in_title_after_exact_match(self, api):
         body = {
             "q": "barnehage",
