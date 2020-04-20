@@ -1,7 +1,7 @@
 fdk-fulltext-search
 ---------------------
 
-##Developing
+## Developing
 ### Set up virtual environment
 ```
 % pyenv install 3.8.2
@@ -14,21 +14,35 @@ fdk-fulltext-search
 % pip install pipenv    # package management tool
 % pip install invoke    # a task execution tool & library
 % pip install pytest    # test framework
-% pipenv install --dev  # install packages form Pipfile including dev
+% pipenv install --dev  # install packages from Pipfile including dev
 ```
+#### Env variables:
+```
+ELASTIC_HOST=localhost
+ELASTIC_PORT=9200
+ELASTIC_TCP_PORT=9300
+RABBIT_HOST=localhost
+RABBIT_USERNAME=admin
+RABBIT_PASSWORD=admin
+API_URL=http://localhost:8080/                  
+```
+
 ### Running the service locally
+
 ```
-% FLASK_APP=src FLASK_ENV=development flask run
+% docker-comopose up -d                             # start es, rabbitmq and mockserver containers
+% pipenv shell                                      # open a session in the virtual environment
+% FLASK_APP=src FLASK_ENV=development flask run     # run application
 ```
 ### Running the service in a wsgi-server (gunicorn)
 ```
-% gunicorn "src:create_app()"  --config=dataservicecatalog/gunicorn_config.py
+pipenv shell 
+% gunicorn "src:create_app()"  --config=src/gunicorn_config.py --worker-class gevent
 ```
-
-### Run tests
+## Testing
+### Running tests
 ```
 % invoke unit-test
-
 options:
 --install: install pip-dependencies, used by github actions
 ```
@@ -37,16 +51,31 @@ options:
 options:
 --build: build image for testing before run
 --compose: start docker compose for testing before run
+--image: name of the image that should be tested. Defaults to digdir/fulltext-search:latest
 ```
-
 #### Updating mock data
 1. Set API_URL env variable to the url you want to collect mock data from
 2. Start a wiremock instance start [record and playback](http://wiremock.org/docs/record-playback/) with target url 
 3. Start the application and run an http request to PUT /update
-4. copy files from the wirmock instance's /mappings directory into mock_mappings/mappings
+4. copy files from the wiremock instance's /mappings directory into mock_mappings/mappings
+
+### Other invoke tasks
+```
+build-image                 # build docker image
+options:
+--tags                      # commaseperated list of tags for image        
+```
+
+```
+stop-docker        #shut down containers used in contracttests
+options:
+--clean                      #remove associated containers and networks
+--remove                     #remove associated containers, networks and images   
+```
  
-### Troubleshooting
-#### Mac: unknown locale: UTF-8 in Python
+ 
+## Troubleshooting
+### Mac: unknown locale: UTF-8 in Python
 `open ~/.bash_profile:`
 
 ```

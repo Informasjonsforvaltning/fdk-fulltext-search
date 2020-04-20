@@ -27,40 +27,31 @@ def build_image(ctx, tags="digdir/fulltext-search:latest", staging=False):
     ctx.run(build_cmd)
 
 
+# start docker-compose for contract-tests
 @task
-def start_docker(ctx, image="digdir/fulltext-search:latest"):
+def start_docker(ctx, image="digdir/fulltext-search:latest", attach=False):
     print("starting docker network..")
     host_dir = os.getcwd()
-    start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose -f  tests/docker-compose.contract.yml up -d".format(image,host_dir)
-    ctx.run(start_compose)
-
-@task
-def start_docker_attach(ctx, image="digdir/fulltext-search:latest"):
-    print("starting docker network..")
-    host_dir = os.getcwd()
-    start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose -f  tests/docker-compose.contract.yml up".format(image,host_dir)
-    ctx.run(start_compose)
-
-@task
-def start_docker_local(ctx, image="digdir/fulltext-search:latest"):
-    print("starting docker network..")
-    host_dir = os.getcwd()
-    start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose up".format(image,host_dir)
+    if attach:
+        start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose -f  tests/docker-compose.contract.yml up".format(
+            image, host_dir)
+    else:
+        start_compose = "TEST_IMAGE={0} MOCK_DIR={1} docker-compose -f  tests/docker-compose.contract.yml up -d".format(
+            image, host_dir)
     ctx.run(start_compose)
 
 
+# stop docker-compose for contract-tests
 @task
-def stop_docker(ctx,clean=False,all=False):
+def stop_docker(ctx, clean=False, remove=False):
     print("stopping docker network..")
     kill = "docker-compose -f tests/docker-compose.contract.yml kill"
     docker_clean = "docker system prune"
     ctx.run(kill)
-    if clean:
-        if all:
-            ctx.run(f"{docker_clean} -a")
-        else:
+    if remove:
+        ctx.run(f"{docker_clean} -a")
+    elif clean:
             ctx.run(docker_clean)
-
 
 
 @task
