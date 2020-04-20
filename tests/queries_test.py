@@ -214,6 +214,24 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     "field": "accessRights.code.keyword",
                     "size": 10
                 }
+            },
+            "opendata": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
+                }
             }
         }
 
@@ -415,6 +433,24 @@ def test_all_indices_should_return_query_with_filter():
                 "terms": {
                     "field": "accessRights.code.keyword",
                     "size": 10
+                }
+            },
+            "opendata": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
                 }
             }
         }
@@ -622,6 +658,24 @@ def test_all_indices_should_return_query_with_must_not():
                 "terms": {
                     "field": "accessRights.code.keyword",
                     "size": 10
+                }
+            },
+            "opendata": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
                 }
             }
         }

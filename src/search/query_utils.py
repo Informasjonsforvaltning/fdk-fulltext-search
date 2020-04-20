@@ -192,6 +192,24 @@ def default_aggs():
                 "field": "accessRights.code.keyword",
                 "size": 10
             }
+        },
+        "opendata": {
+            "filter": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "accessRights.code.keyword": "PUBLIC"
+                            }
+                        },
+                        {
+                            "term": {
+                                "distribution.openLicense": "true"
+                            }
+                        }
+                    ]
+                }
+            }
         }
     }
 

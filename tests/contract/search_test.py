@@ -69,6 +69,7 @@ class TestSearchAll:
         assert "orgPath" in keys
         assert "availability" in keys
         assert "accessRights" in keys
+        assert "opendata" in keys
         assert len(result["los"]["buckets"]) > 0
         assert len(result["orgPath"]["buckets"]) > 0
         assert len(result["availability"]["buckets"]) == 3
