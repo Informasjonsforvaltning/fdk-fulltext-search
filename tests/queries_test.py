@@ -209,10 +209,20 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     }
                 }
             },
-            "accessRights": {
-                "terms": {
-                    "field": "accessRights.code.keyword",
-                    "size": 10
+            "dataset_access": {
+                "filter": {
+                    "term": {
+                        "_index": "datasets"
+                    }
+                },
+                "aggs": {
+                    "accessRights": {
+                        "terms": {
+                            "field": "accessRights.code.keyword",
+                            "missing": "Ukjent",
+                            "size": 10
+                        }
+                    }
                 }
             },
             "opendata": {
@@ -429,10 +439,20 @@ def test_all_indices_should_return_query_with_filter():
                     }
                 }
             },
-            "accessRights": {
-                "terms": {
-                    "field": "accessRights.code.keyword",
-                    "size": 10
+            "dataset_access": {
+                "filter": {
+                    "term": {
+                        "_index": "datasets"
+                    }
+                },
+                "aggs": {
+                    "accessRights": {
+                        "terms": {
+                            "field": "accessRights.code.keyword",
+                            "missing": "Ukjent",
+                            "size": 10
+                        }
+                    }
                 }
             },
             "opendata": {
@@ -654,10 +674,20 @@ def test_all_indices_should_return_query_with_must_not():
                     }
                 }
             },
-            "accessRights": {
-                "terms": {
-                    "field": "accessRights.code.keyword",
-                    "size": 10
+            "dataset_access": {
+                "filter": {
+                    "term": {
+                        "_index": "datasets"
+                    }
+                },
+                "aggs": {
+                    "accessRights": {
+                        "terms": {
+                            "field": "accessRights.code.keyword",
+                            "missing": "Ukjent",
+                            "size": 10
+                        }
+                    }
                 }
             },
             "opendata": {
@@ -684,7 +714,7 @@ def test_all_indices_should_return_query_with_must_not():
     assert json.dumps(result.query) == json.dumps(expected)
 
 
-correct = {
+correct_query_clause = {
     "dis_max": {
         "queries": [
             {

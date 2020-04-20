@@ -2402,19 +2402,31 @@ test_hits = {"hits":
                     }
                 ]
             },
-            "accessRights": {
-                "doc_count_error_upper_bound": 0,
-                "sum_other_doc_count": 0,
-                "buckets": [
-                    {
-                        "key": "PUBLIC",
-                        "doc_count": 9
-                    },
-                    {
-                        "key": "RESTRICTED",
-                        "doc_count": 1
-                    }
-                ]
+            "dataset_access": {
+                "meta": {},
+                "doc_count": 1309,
+                "accessRights": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0,
+                    "buckets": [
+                        {
+                            "key": "PUBLIC",
+                            "doc_count": 1198
+                        },
+                        {
+                            "key": "RESTRICTED",
+                            "doc_count": 99
+                        },
+                        {
+                            "key": "NON_PUBLIC",
+                            "doc_count": 11
+                        },
+                        {
+                            "key": "Ukjent",
+                            "doc_count": 1
+                        }
+                    ]
+                }
             },
             "isOpenAccess": {
                 "doc_count_error_upper_bound": 0,
