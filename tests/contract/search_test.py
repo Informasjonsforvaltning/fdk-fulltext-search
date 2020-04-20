@@ -278,6 +278,28 @@ class TestSearchAll:
                 last_not_in_title = True
                 last_was_in_title = False
 
+    @pytest.mark.contract
+    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api):
+        body = {
+            "filters": [
+                {"los": "helse-og-omsorg"}
+            ],
+            "size": 100
+        }
+        result = post(url=service_url + "/search", json=body)
+        has_info_models = False
+        has_datasets = False
+        for hit in result.json()["hits"]:
+            if hit["type"] == "informationmodel":
+                has_info_models = True
+            elif hit["type"] == "dataset":
+                has_datasets = True
+            if has_info_models and has_datasets:
+                break
+
+        assert has_datasets is True
+        assert has_info_models is True
+
 
 def is_exact_match(keys, hit, search):
     for key in keys:

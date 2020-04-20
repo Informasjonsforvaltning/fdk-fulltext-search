@@ -31,8 +31,6 @@ def populate():
     timeout = time.time() + 90
     while True:
         response = requests.get("http://localhost:8000/count")
-        if response.status_code != 200:
-            raise Exception('Test containers: request to service returned {0}'.format(response.status_code))
         if response.json()['count'] == 5622:
             break
         if time.time() > timeout:
