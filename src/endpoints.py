@@ -11,7 +11,10 @@ class Search(Resource):
             result = client.search_all()
         else:
             result = client.search_all(request=request.get_json())
-        return SearchResponse().map_response(result)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(result)
 
 
 class Count(Resource):
