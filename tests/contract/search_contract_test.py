@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 import pytest
-from requests import post, get, put
+from requests import post
 
 from tests.contract.contract_utils import wait_for_es, populate
 
@@ -299,6 +299,36 @@ class TestSearchAll:
 
         assert has_datasets is True
         assert has_info_models is True
+
+    @pytest.mark.contract
+    def test_filter_on_open_access(self, api):
+        body = {
+            "filters": [
+                {"opendata": "true"}
+            ]
+        }
+        result = post(url=service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+        assert result["page"]["totalElements"] == result["aggregations"]["opendata"]["doc_count"]
+        hasOpenLicenceDistribution = False
+        for hits in result["hits"]:
+            assert hits["accessRights"]["code"] == "PUBLIC"
+            for dists in hits["distribution"]:
+                if "openLicense" in dists.keys() and dists["openLicense"]:
+                    hasOpenLicenceDistribution = True
+                    break
+        assert hasOpenLicenceDistribution is True
+
+    @pytest.mark.contract
+    def test_filter_on_unknown_access_datasets(self,api):
+        body = {
+            "filters": [{"accessRights": "Ukjent"}]
+        }
+        result = post(url=service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+        assert result['page']['totalElements'] == result['aggregations']['accessRights']['buckets'][0]['doc_count']
+        for hits in result["hits"]:
+            assert "accessRights" not in hits.keys()
 
 
 def is_exact_match(keys, hit, search):

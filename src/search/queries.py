@@ -1,7 +1,7 @@
 from enum import Enum
 
-from src.search.query_utils import get_filter, must_not_query, query_template, default_dismax, default_aggs, \
-    exact_match_in_title_query, word_in_title_query, word_in_description_query, simple_query_string
+from src.search.query_utils import get_term_filter, must_not_filter, query_template, default_dismax, default_aggs, \
+    exact_match_in_title_query, word_in_title_query, word_in_description_query, simple_query_string, open_data_filter
 
 
 class Direction(Enum):
@@ -45,7 +45,6 @@ class AllIndicesQuery:
     def add_aggs(self, fields=None):
         if fields is None:
             self.query["aggs"] = default_aggs()
-        # TODO: self defined aggs
 
     def add_search_string(self, param: str):
         self.dismax["dis_max"]["queries"].append(exact_match_in_title_query(
@@ -63,10 +62,12 @@ class AllIndicesQuery:
         self.query["query"]["bool"]["filter"] = []
         for f in filters:
             key = list(f.keys())[0]
-            if (f[key]) == 'MISSING':
-                self.query["query"]["bool"]["filter"].append(must_not_query(key))
+            if (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
+                self.query["query"]["bool"]["filter"].append(must_not_filter(key))
+            elif key == 'opendata':
+                self.query["query"]["bool"]["filter"].append(open_data_filter())
             else:
-                self.query["query"]["bool"]["filter"].append({"term": get_filter(f)})
+                self.query["query"]["bool"]["filter"].append({"term": get_term_filter(f)})
 
     def add_sorting(self, param):
         self.query["sort"] = {

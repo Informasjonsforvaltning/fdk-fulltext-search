@@ -122,12 +122,32 @@ def constant_simple_query(search_string: str):
     }
 
 
-def get_filter(filter_object):
-    key = list(filter_object.keys())[0]
-    return {get_filter_key(key): filter_object[key]}
+def get_term_filter(request_item):
+    key = list(request_item.keys())[0]
+    return {get_filter_key(key): request_item[key]}
 
 
-def get_filter_key(filter_key):
+def open_data_filter():
+    return {
+        "bool": {
+            "must": [
+                {
+                    "term": {
+                        "accessRights.code.keyword": "PUBLIC"
+                    }
+                },
+                {
+                    "term": {
+                        "distribution.openLicense": "true"
+                    }
+                }
+            ]
+        }
+    }
+
+
+def get_filter_key(filter_key: str):
+    """ Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":
         return "publisher.orgPath"
     elif filter_key == "accessRights":
@@ -138,8 +158,15 @@ def get_filter_key(filter_key):
         return filter_key
 
 
-def must_not_query(filter_key):
-    return {
+def get_filter_index(filter_key):
+    """get indexes containing filter_key """
+    if filter_key == "accessRights":
+        return "datasets"
+    else:
+        return False
+
+def must_not_filter(filter_key: str):
+    missing_filter = {
         "bool": {
             "must_not":
                 {
@@ -149,9 +176,14 @@ def must_not_query(filter_key):
                 }
         }
     }
+    index = get_filter_index(filter_key)
+    if index:
+        missing_filter["bool"]["must"] = {"term": {"_index": get_filter_index(filter_key)}}
+    return missing_filter
 
 
 def default_aggs():
+    """ Return a dict with default aggregation for all indices search"""
     return {
         "los": {
             "terms": {

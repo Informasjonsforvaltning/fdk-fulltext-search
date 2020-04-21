@@ -1,21 +1,21 @@
 import json
 import pytest
 
-from src.search.query_utils import get_filter, exact_match_in_title_query, word_in_title_query, \
+from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string
 
 
 @pytest.mark.unit
 def test_should_return_filter_with_modified_key():
     expected = {"publisher.orgPath": "KOMMUNE/678687"}
-    result = get_filter({"orgPath": "KOMMUNE/678687"})
+    result = get_term_filter({"orgPath": "KOMMUNE/678687"})
     assert result == expected
 
 
 @pytest.mark.unit
 def test_should_return_filter_with_unmodified_key():
     expected = {"openLicence": "KOMMUNE/678687"}
-    result = get_filter(expected)
+    result = get_term_filter(expected)
     assert result == expected
 
 
