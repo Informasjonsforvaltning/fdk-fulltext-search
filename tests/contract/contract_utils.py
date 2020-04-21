@@ -16,7 +16,7 @@ host = os.getenv("RABBIT_HOST") or "localhost"
 
 def wait_for_es():
     # wait  for elasticsearch to be ready
-    retry_strategy = Retry(connect=5, read=5, backoff_factor=2)
+    retry_strategy = Retry(connect=6, read=5, backoff_factor=2)
     adapter = HTTPAdapter(max_retries=retry_strategy)
     http = requests.Session()
     http.mount("http://", adapter)
@@ -31,13 +31,10 @@ def populate():
     timeout = time.time() + 90
     while True:
         response = requests.get("http://localhost:8000/count")
-        if response.status_code != 200:
-            raise Exception('Test containers: request to service returned {0}'.format(response.status_code))
         if response.json()['count'] == 5622:
             break
         if time.time() > timeout:
-            raise Exception('Test containers: timed out while waiting for count response, last response was'.format(
-                response.content))
+            raise Exception('Test containers: timed out while waiting for count response, last response was'.format(response.json()["count"]))
         time.sleep(1)
 
 

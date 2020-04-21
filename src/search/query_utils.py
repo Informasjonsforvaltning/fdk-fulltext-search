@@ -187,10 +187,38 @@ def default_aggs():
                 }
             }
         },
-        "accessRights": {
-            "terms": {
-                "field": "accessRights.code.keyword",
-                "size": 10
+        "dataset_access": {
+            "filter": {
+                "term": {
+                    "_index": "datasets"
+                }
+            },
+            "aggs": {
+                "accessRights": {
+                    "terms": {
+                        "field": "accessRights.code.keyword",
+                        "missing": "Ukjent",
+                        "size": 10
+                    }
+                }
+            }
+        },
+        "opendata": {
+            "filter": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "accessRights.code.keyword": "PUBLIC"
+                            }
+                        },
+                        {
+                            "term": {
+                                "distribution.openLicense": "true"
+                            }
+                        }
+                    ]
+                }
             }
         }
     }

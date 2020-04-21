@@ -27,7 +27,13 @@ class SearchResponse:
         self.response["page"] = page
 
     def map_aggregations(self, aggregations_result):
-        self.response["aggregations"] = aggregations_result
+        response_aggregations = {}
+        for agg_key in aggregations_result.keys():
+            if agg_key == "dataset_access":
+                response_aggregations["accessRights"] = aggregations_result["dataset_access"]["accessRights"]
+            else:
+                response_aggregations[agg_key] = aggregations_result[agg_key]
+        self.response["aggregations"] = response_aggregations
 
     def map_hits(self, hits_result):
         hits = []

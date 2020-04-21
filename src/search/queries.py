@@ -17,7 +17,7 @@ class AllIndicesQuery:
             self.dismax = {"dis_max": {
                 "queries": []
             }}
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
             self.dismax = default_dismax()
         if aggs is None:

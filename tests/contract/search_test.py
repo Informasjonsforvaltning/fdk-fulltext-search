@@ -69,6 +69,7 @@ class TestSearchAll:
         assert "orgPath" in keys
         assert "availability" in keys
         assert "accessRights" in keys
+        assert "opendata" in keys
         assert len(result["los"]["buckets"]) > 0
         assert len(result["orgPath"]["buckets"]) > 0
         assert len(result["availability"]["buckets"]) == 3
@@ -242,6 +243,21 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
+    def test_trailing_white_space_should_not_affect_result(self):
+        body_no_white_space = {
+            "q": "landbruk"
+        }
+        body_white_space = {
+            "q": "landbruk  "
+        }
+
+        no_white_space_result = post(url=service_url + "/search", json=body_no_white_space).json()
+        white_space_result = post(url=service_url + "/search", json=body_white_space).json()
+        assert json.dumps(no_white_space_result["page"]) == json.dumps(no_white_space_result["page"])
+        assert json.dumps(no_white_space_result["aggregations"]) == json.dumps(white_space_result["aggregations"])
+        assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
+
+    @pytest.mark.contract
     def test_words_in_title_after_exact_match(self, api):
         body = {
             "q": "barnehage",
@@ -261,6 +277,28 @@ class TestSearchAll:
             else:
                 last_not_in_title = True
                 last_was_in_title = False
+
+    @pytest.mark.contract
+    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api):
+        body = {
+            "filters": [
+                {"los": "helse-og-omsorg"}
+            ],
+            "size": 100
+        }
+        result = post(url=service_url + "/search", json=body)
+        has_info_models = False
+        has_datasets = False
+        for hit in result.json()["hits"]:
+            if hit["type"] == "informationmodel":
+                has_info_models = True
+            elif hit["type"] == "dataset":
+                has_datasets = True
+            if has_info_models and has_datasets:
+                break
+
+        assert has_datasets is True
+        assert has_info_models is True
 
 
 def is_exact_match(keys, hit, search):
