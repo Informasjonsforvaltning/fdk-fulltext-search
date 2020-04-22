@@ -123,8 +123,15 @@ def constant_simple_query(search_string: str):
 
 
 def get_term_filter(request_item):
+    """ map request filter for one key to ES term queries"""
+    filters = []
     key = list(request_item.keys())[0]
-    return {get_filter_key(key): request_item[key]}
+    # get all values in request filter
+    terms = request_item[key].split(',')
+    for term in terms:
+        q = {"term": {get_filter_key(key): term}}
+        filters.append(q)
+    return filters
 
 
 def open_data_filter():
@@ -164,6 +171,7 @@ def get_filter_index(filter_key):
         return "datasets"
     else:
         return False
+
 
 def must_not_filter(filter_key: str):
     missing_filter = {
