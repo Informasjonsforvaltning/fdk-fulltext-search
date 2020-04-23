@@ -1,5 +1,5 @@
 import pytest
-from tests.mock_data.test_data import test_hits
+from tests.mock_data.test_data import test_hits, empty_result
 from src.search.responses import SearchResponse
 
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
@@ -29,3 +29,11 @@ def test_should_map_data_access_to_accessRights():
     assert "los" in aggregation_keys
     assert "orgPath" in aggregation_keys
     assert "isOpenAccess" in aggregation_keys
+
+
+@pytest.mark.unit
+def test_should_empty_response_for_empty_search():
+    result = SearchResponse().map_response(empty_result)
+    assert "page" in result
+    assert "hits" in result
+    assert "aggregations" in result

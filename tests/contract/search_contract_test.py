@@ -371,6 +371,16 @@ class TestSearchAll:
         for hits in result["hits"]:
             assert "accessRights" not in hits.keys()
 
+    @pytest.mark.contract
+    def test_search_with_empty_result_should_return_empty_object(self):
+        body = {
+            "q": "very long query without results"
+        }
+
+        result = post(url=service_url + "/search", json=body).json()
+        assert len(result["hits"]) == 0
+
+
 
 def is_exact_match(keys, hit, search):
     for key in keys:
