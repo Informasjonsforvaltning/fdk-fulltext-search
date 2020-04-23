@@ -1,10 +1,50 @@
 import pytest
-from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery
+from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices
 
 
 @pytest.fixture
 def mock_elastic(mocker):
     return mocker.patch('elasticsearch.Elasticsearch.search')
+
+
+@pytest.fixture
+def mock_index_false_exists(mocker):
+    return mocker.patch('src.ingest.es_client.indices.exists', return_value=False)
+
+
+@pytest.fixture
+def mock_index_true_exists(mocker):
+    return mocker.patch('src.ingest.es_client.indices.exists', return_value=True)
+
+
+@pytest.mark.unit
+def test_get_indices_should_have_terms_query(mock_elastic, mock_index_true_exists):
+    expected_query = {
+        "query": {
+            "term": {
+                "name": "informationmodels"
+            }
+        }
+    }
+    get_indices(index_name="informationmodels")
+    mock_elastic.assert_called_once_with(body=expected_query, index='info')
+
+
+@pytest.mark.unit
+def test_get_indices_should_have_match_all_query(mock_elastic, mock_index_true_exists):
+    expected_query = {
+        "query": {
+            "match_all": {}
+        }
+    }
+    get_indices()
+    mock_elastic.assert_called_once_with(body=expected_query, index='info')
+
+
+@pytest.mark.unit
+def test_get_indices_should_return_none(mock_elastic, mock_index_false_exists):
+    result = get_indices("datsets")
+    assert result is None
 
 
 @pytest.mark.unit

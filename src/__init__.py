@@ -35,6 +35,7 @@ def create_app(test_config=None):
     api.add_resource(Ping, '/ping')
     api.add_resource(Ready, '/ready')
     api.add_resource(Recent, '/recent')
+    api.add_resource(Indices, '/indices')
 
     # start rabbitmq consumer
     UpdateConsumer()

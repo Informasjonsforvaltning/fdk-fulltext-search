@@ -22,8 +22,7 @@ update_fun = {
     'informationmodels': fetch_information_models,
     'dataservices': fetch_data_services,
     'concepts': fetch_concepts,
-    'all': fetch_all_content,
-    'reindex': reindex
+    'all': fetch_all_content
 }
 
 
@@ -39,7 +38,7 @@ class UpdateConsumer:
             update_type = json.loads(body)["updatesearch"]
             update_with = update_fun[update_type]
             if update_with:
-                result = update_with()
+                result = update_with(re_index=True)
                 logging.info("[rabbitmq]Result: {0}".format(result))
         except KeyError:
             logging.error("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))

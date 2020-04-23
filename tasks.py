@@ -2,6 +2,7 @@ import os
 from invoke import task
 
 pipenv_install = "pipenv install --dev"
+root_dir = os.path
 
 
 @task
@@ -51,7 +52,7 @@ def stop_docker(ctx, clean=False, remove=False):
     if remove:
         ctx.run(f"{docker_clean} -a")
     elif clean:
-            ctx.run(docker_clean)
+        ctx.run(docker_clean)
 
 
 @task
@@ -61,5 +62,5 @@ def contract_test(ctx, image="digdir/fulltext-search:latest", compose=False, bui
         build_image(ctx, image)
     if compose:
         start_docker(ctx, image)
-    pipenv_run_test = "pipenv run pytest -m contract"
+    pipenv_run_test = "pipenv run pytest -m contract --tb=line"
     ctx.run(pipenv_run_test)
