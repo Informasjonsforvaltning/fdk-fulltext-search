@@ -49,4 +49,4 @@ class Recent(Resource):
         if "size" in args:
             size = args["size"]
         result = client.get_recent(size=size)
-        return SearchResponse().map_response(es_result=result, size=size)
+        return SearchResponse().map_response(es_result=result)

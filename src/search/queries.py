@@ -38,7 +38,7 @@ class AllIndicesQuery:
     def add_page(self, size=10, page=None) -> dict:
         if size is None:
             size = 10
-            self.query['size'] = size
+        self.query['size'] = size
         if page is not None:
             self.query['from'] = page * size
 
@@ -54,8 +54,9 @@ class AllIndicesQuery:
             word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
                                 search_string=param))
         self.dismax["dis_max"]["queries"].append(
-            word_in_description_query(description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
-                                      search_string=param))
+            word_in_description_query(
+                description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
+                search_string=param))
         self.dismax["dis_max"]["queries"].append(simple_query_string(search_string=param))
 
     def add_filters(self, filters):
@@ -67,7 +68,7 @@ class AllIndicesQuery:
             elif key == 'opendata':
                 self.query["query"]["bool"]["filter"].append(open_data_filter())
             else:
-                self.query["query"]["bool"]["filter"].append({"term": get_term_filter(f)})
+                self.query["query"]["bool"]["filter"].extend(get_term_filter(f))
 
     def add_sorting(self, param):
         self.query["sort"] = {
