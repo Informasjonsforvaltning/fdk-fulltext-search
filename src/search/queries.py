@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.search.query_utils import get_term_filter, must_not_filter, query_template, default_dismax, default_aggs, \
+from src.search.query_utils import get_term_filter, must_not_filter, query_template, all_indices_default_query, default_aggs, \
     exact_match_in_title_query, word_in_title_query, word_in_description_query, simple_query_string, open_data_filter
 
 
@@ -12,66 +12,67 @@ class Direction(Enum):
 class AllIndicesQuery:
 
     def __init__(self, search_string=None, aggs=None, filters=None):
-        self.query = query_template()
         if search_string:
-            self.dismax = {"dis_max": {
+            self.body = query_template()
+            self.query = {"dis_max": {
                 "queries": []
             }}
             self.add_search_string(search_string.strip())
         else:
-            self.dismax = default_dismax()
+            self.body = query_template(dataset_boost=1.2)
+            self.query = all_indices_default_query()
         if aggs is None:
             self.add_aggs()
         if filters:
-            self.query["query"] = {
+            self.body["query"] = {
                 "bool":
                     {
                         "must": [
-                            self.dismax
+                            self.query
                         ]
                     }
             }
             self.add_filters(filters)
         else:
-            self.query["query"] = self.dismax
+            self.body["query"] = self.query
 
     def add_page(self, size=10, page=None) -> dict:
         if size is None:
             size = 10
-        self.query['size'] = size
+        self.body['size'] = size
         if page is not None:
-            self.query['from'] = page * size
+            self.body['from'] = page * size
 
     def add_aggs(self, fields=None):
         if fields is None:
-            self.query["aggs"] = default_aggs()
+            self.body["aggs"] = default_aggs()
 
     def add_search_string(self, param: str):
-        self.dismax["dis_max"]["queries"].append(exact_match_in_title_query(
+        self.query["dis_max"]["queries"].append(exact_match_in_title_query(
             title_field_names=["prefLabel.*", "title.*", "title"],
             search_string=param))
-        self.dismax["dis_max"]["queries"].append(
+        self.query["dis_max"]["queries"].append(
             word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
                                 search_string=param))
-        self.dismax["dis_max"]["queries"].append(
+        self.query["dis_max"]["queries"].append(
             word_in_description_query(
                 description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
                 search_string=param))
-        self.dismax["dis_max"]["queries"].append(simple_query_string(search_string=param))
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param))
 
     def add_filters(self, filters):
-        self.query["query"]["bool"]["filter"] = []
+        self.body["query"]["bool"]["filter"] = []
         for f in filters:
             key = list(f.keys())[0]
             if (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
-                self.query["query"]["bool"]["filter"].append(must_not_filter(key))
+                self.body["query"]["bool"]["filter"].append(must_not_filter(key))
             elif key == 'opendata':
-                self.query["query"]["bool"]["filter"].append(open_data_filter())
+                self.body["query"]["bool"]["filter"].append(open_data_filter())
             else:
-                self.query["query"]["bool"]["filter"].extend(get_term_filter(f))
+                self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 
     def add_sorting(self, param):
-        self.query["sort"] = {
+        self.body["sort"] = {
             param.get("field"): {
                 "order": param.get("direction")
             }

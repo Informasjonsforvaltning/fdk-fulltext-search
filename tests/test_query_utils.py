@@ -2,7 +2,7 @@ import json
 import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
-    word_in_description_query, autorativ_boost_clause, simple_query_string
+    word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query
 
 
 @pytest.mark.unit
@@ -283,4 +283,55 @@ def test_simple_query_string_query_boost_1():
 
     result = simple_query_string(search_string="åpne data", boost=1)
 
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_query_template_should_return_empty_query():
+    expected = {
+        "query": {}
+    }
+    result = query_template()
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_query_template_should_return_empty_query_with_boost():
+    expected = {
+        "query": {},
+        "indices_boost": [{"datasets": 1.2}]
+    }
+    result = query_template(dataset_boost=1.2)
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_all_indices_default_query():
+    expected = {
+        "bool": {
+            "must": {
+                "match_all": {}
+            },
+            "should": [
+                {
+                    "term": {
+                        "provenance.code.keyword": {
+                            "value": "NASJONAL",
+                            "boost": 2
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "nationalComponent": {
+                            "value": "true",
+                            "boost": 1
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    result = all_indices_default_query()
     assert json.dumps(result) == json.dumps(expected)

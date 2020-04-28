@@ -264,40 +264,39 @@ def default_aggs():
     }
 
 
-def default_dismax():
-    return {"dis_max": {
-        "queries": [
-            {
-                "constant_score": {
-                    "filter": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "match": {
-                                        "provenance.code": "NASJONAL"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "nationalComponent": "true"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "boost": 1.2
-                }
-            },
-            {
-                "match_all": {}
-            }
-
-        ]
-    }}
-
-
-def query_template():
+def all_indices_default_query():
     return {
+        "bool": {
+            "must": {
+                "match_all": {}
+            },
+            "should": [
+                {
+                    "term": {
+                        "provenance.code.keyword": {
+                            "value": "NASJONAL",
+                            "boost": 2
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "nationalComponent": {
+                            "value": "true",
+                            "boost": 1
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+
+def query_template(dataset_boost=0):
+    template = {
         "query": {
         }
     }
+    if dataset_boost > 0:
+        template["indices_boost"] = [{"datasets": dataset_boost}]
+    return template

@@ -41,25 +41,32 @@ class TestSearchAll:
         assert len(unknownItems) is 0
 
     @pytest.mark.contract
-    def test_search_without_body_should_return_list_of_content_with_authority_boost(self, api):
-        result = post(service_url + "/search").json()["hits"]
+    def test_search_without_query_should_prioritize_authority_and_datasets(self):
+        opts = {
+            "size": 200
+        }
+        result = post(url=service_url + "/search", json=opts).json()["hits"]
+
+        assert len(result) > 0
+        previous_was_dataservice = False
         previous_was_authority = True
         for hits in result:
             if "nationalComponent" in hits:
                 if hits["nationalComponent"]:
                     assert previous_was_authority is True
                     previous_was_authority = True
+                    previous_was_dataservice = True
                 else:
                     previous_was_authority = False
             elif "provenance" in hits:
                 if hits["provenance"]["code"] == "NASJONAL":
                     assert previous_was_authority is True
+                    assert previous_was_dataservice is False
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
             else:
                 previous_was_authority = False
-        assert len(hits) > 0
 
     @pytest.mark.contract
     def test_search_without_body_should_contain_default_aggs(self, api):
@@ -379,7 +386,6 @@ class TestSearchAll:
 
         result = post(url=service_url + "/search", json=body).json()
         assert len(result["hits"]) == 0
-
 
 
 def is_exact_match(keys, hit, search):
