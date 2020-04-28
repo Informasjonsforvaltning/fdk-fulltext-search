@@ -2,7 +2,8 @@ import json
 import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
-    word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query
+    word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
+    default_aggs
 
 
 @pytest.mark.unit
@@ -334,4 +335,85 @@ def test_all_indices_default_query():
     }
 
     result = all_indices_default_query()
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_default_aggs():
+    expected = {
+        "los": {
+            "terms": {
+                "field": "losTheme.losPaths.keyword",
+                "size": 1000000000
+            }
+        },
+        "orgPath": {
+            "terms": {
+                "field": "publisher.orgPath",
+                "missing": "MISSING",
+                "size": 1000000000
+            }
+        },
+        "availability": {
+            "filters": {
+                "filters": {
+                    "isOpenAccess": {
+                        "term": {
+                            "isOpenAccess": "true"
+                        }
+                    },
+                    "isOpenLicense": {
+                        "term": {
+                            "isOpenLicense": "true"
+                        }
+                    },
+                    "isFree": {
+                        "term": {
+                            "isFree": "true"
+                        }
+                    }
+                }
+            }
+        },
+        "dataset_access": {
+            "filter": {
+                "term": {
+                    "_index": "datasets"
+                }
+            },
+            "aggs": {
+                "accessRights": {
+                    "terms": {
+                        "field": "accessRights.code.keyword",
+                        "missing": "Ukjent",
+                        "size": 10
+                    }
+                }
+            }
+        },
+        "opendata": {
+            "filter": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "accessRights.code.keyword": "PUBLIC"
+                            }
+                        },
+                        {
+                            "term": {
+                                "distribution.openLicense": "true"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "theme": {
+            "terms": {
+                "field": "theme.code.keyword"
+            }
+        }
+    }
+    result = default_aggs()
     assert json.dumps(result) == json.dumps(expected)

@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 import pytest
+from jsonpath_ng import parse
 from requests import post
 
 from tests.contract.contract_utils import wait_for_es, populate
@@ -77,10 +78,12 @@ class TestSearchAll:
         assert "availability" in keys
         assert "accessRights" in keys
         assert "opendata" in keys
+        assert "theme" in keys
         assert len(result["los"]["buckets"]) > 0
         assert len(result["orgPath"]["buckets"]) > 0
         assert len(result["availability"]["buckets"]) == 3
         assert len(result["accessRights"]["buckets"]) > 0
+        assert len(result)["theme"]["buckets"] > 0
 
     @pytest.mark.contract
     def test_all_hits_should_have_type(self, api):
@@ -347,6 +350,57 @@ class TestSearchAll:
                 result_themes.append(path)
 
         assert json.dumps(expected_themes) == json.dumps(result_themes)
+
+    @pytest.mark.contract
+    def test_result_should_have_theme_aggregations(self):
+        result = post(url=service_url + "/search")
+        assert "theme" in result.json()["aggregations"]
+
+    @pytest.mark.contract
+    def test_filter_on_eu_theme(self):
+        body = {
+            "filters": [
+                {"theme": "GOVE"}
+            ],
+            "size": 100
+        }
+        result = post(url=service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+        for hit in result["hits"]:
+            assert "theme" in hit.keys()
+            id_path = parse('theme[*].id')
+            assert "GOVE" in [match.value for match in id_path.find()]
+
+    @pytest.mark.contract
+    def test_filter_on_eu_theme_should_handle_filters_on_multiple_themes(self):
+        body = {
+            "filters": [
+                {"theme": "GOVE,ENVI"}
+            ],
+            "size": 100
+        }
+
+        result = post(service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+        for hit in result["hits"]:
+            assert "theme" in hit.keys()
+            id_path = parse('theme[*].id')
+            assert "GOVE" in [match.value for match in id_path.find()]
+            assert "ENVI" in [match.value for match in id_path.find()]
+
+    @pytest.mark.contract
+    def test_filter_on_eu_theme_ukjent(self):
+        body = {
+            "filters": [
+                {"theme": "Ukjent"}
+            ],
+            "size": 100
+        }
+        result = post(service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+        for hit in result["hits"]:
+            assert hit['type'] == 'dataset'
+            assert "theme" not in hit.keys
 
     @pytest.mark.contract
     def test_filter_on_open_access(self, api):

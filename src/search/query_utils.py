@@ -260,6 +260,11 @@ def default_aggs():
                     ]
                 }
             }
+        },
+        "theme": {
+            "terms": {
+                "field": "theme.code.keyword"
+            }
         }
     }
 
