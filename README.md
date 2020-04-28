@@ -37,7 +37,7 @@ API_URL=http://localhost:8080/
 ### Running the service in a wsgi-server (gunicorn)
 ```
 pipenv shell 
-% gunicorn "src:create_app()"  --config=src/gunicorn_config.py --worker-class gevent
+% gunicorn "src:create_app()"  --config=src/gunicorn_config.py 
 ```
 ## Testing
 ### Running tests

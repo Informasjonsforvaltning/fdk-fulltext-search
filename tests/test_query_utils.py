@@ -438,5 +438,5 @@ def test_get_filter_index():
     result_theme = get_index_filter_for_key("theme")
     result_orgPath = get_index_filter_for_key("orgPath")
     assert result_access == 'datasets'
-    assert result_access == 'datasets'
+    assert result_theme == 'datasets'
     assert not result_orgPath

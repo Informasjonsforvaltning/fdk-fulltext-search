@@ -6,17 +6,8 @@ import pytest
 from jsonpath_ng import parse
 from requests import post
 
-from tests.contract.contract_utils import wait_for_es, populate
-
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
-
-
-@pytest.fixture(scope="module")
-def api():
-    wait_for_es()
-    populate()
-    yield
 
 
 class TestSearchAll:
@@ -49,25 +40,25 @@ class TestSearchAll:
         result = post(url=service_url + "/search", json=opts).json()["hits"]
 
         assert len(result) > 0
-        previous_was_dataservice = False
+        previous_was_dataset = True
         previous_was_authority = True
         for hits in result:
             if "nationalComponent" in hits:
                 if hits["nationalComponent"]:
                     assert previous_was_authority is True
                     previous_was_authority = True
-                    previous_was_dataservice = True
                 else:
                     previous_was_authority = False
             elif "provenance" in hits:
                 if hits["provenance"]["code"] == "NASJONAL":
                     assert previous_was_authority is True
-                    assert previous_was_dataservice is False
+                    assert previous_was_dataset is True
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
             else:
                 previous_was_authority = False
+            previous_was_dataset = hits['type'] == 'dataset'
 
     @pytest.mark.contract
     def test_search_without_body_should_contain_default_aggs(self, api):
@@ -253,7 +244,7 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
-    def test_trailing_white_space_should_not_affect_result(self,api):
+    def test_trailing_white_space_should_not_affect_result(self, api):
         body_no_white_space = {
             "q": "landbruk"
         }

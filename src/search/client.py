@@ -1,7 +1,7 @@
 import json
 
 from .queries import *
-from ..ingest import client
+from ..ingest import es_client, IndicesKey
 from elasticsearch.exceptions import ConnectionError
 
 
@@ -32,7 +32,8 @@ def search_all(request: dict = None):
         if sorting:
             q.add_sorting(sorting)
         print(json.dumps(q.body))
-        return client.search(body=q.body, search_type='dfs_query_then_fetch')
+        return es_client.search(body=q.body, search_type='dfs_query_then_fetch')
+
     except ConnectionError:
         return {
             "count": -1,
@@ -43,7 +44,7 @@ def search_all(request: dict = None):
 
 def count():
     try:
-        return client.count()
+        return es_client.count()
 
     except ConnectionError:
         return {
@@ -56,4 +57,20 @@ def count():
 def get_recent(size=None):
     q = RecentQuery(size).query
     print(json.dumps(q))
-    return client.search(body=q)
+    return es_client.search(body=q)
+
+
+def get_indices(index_name=None):
+    req_body = {"query": {}}
+    if index_name:
+        req_body["query"]["term"] = {
+            "name": index_name
+        }
+    else:
+        req_body["query"] = {
+            "match_all": {}
+        }
+    if es_client.indices.exists(index=IndicesKey.INDICES_INFO):
+        return es_client.search(index=IndicesKey.INDICES_INFO, body=req_body)
+    else:
+        return None
