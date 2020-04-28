@@ -61,7 +61,7 @@ paths:
       operationId: get-count
   /recent:
     get:
-      summary: Your GET endpoint
+      summary: Get recent endpoint
       tags: []
       operationId: get-recent
       responses:
@@ -71,6 +71,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
+  /indices:
+    get:
+      summary: get status of existing indices
+      operationId: get-indices
+      parameters:
+        - in: query
+          name: name
+          description: name of indices to get information about, defaults to all indices
+          required: false
+          type: string
+          enum: ['informationmodels','datasets','dataservices','concepts']
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexResponse"
+        '400':
+          description: Bad request. Most probably caused by an error in the name parameter
+    post:
+      summary: triggers a reindexing
+      operationId: post-indices
+      parameters:
+        - in: query
+          name: name
+          description: name of indices to be reindexed, defaults to all indices
+          required: false
+          type: string
+          enum: ['informationmodels','datasets','dataservices','concepts']
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexResponse"
+        '400':
+          description: Bad request. Most probably caused by an error in the name parameter
+
 components:
   schemas:
     SearchRequest:
@@ -385,7 +425,7 @@ components:
         targetGroup:
           type: string
           description: Target group
-        lastUpdated:
+        lastUpdate:
           type: string
           description: Date when the definition was last updated
     Subject:
@@ -543,3 +583,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Buckets'
+    IndexResponse:
+            type: array
+            properties:
+              name:
+                type: string
+                description: name of index
+              lastUpdated:
+                type: string
+                format: date-time
+                description: date and time for the last performed reindex

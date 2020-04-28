@@ -34,7 +34,6 @@ requests = "*"
 gunicorn = "*"
 flask-cors = "*"
 jsonpath-ng = "*"
-gevent = "*"
 pika = "*"
 
 [requires]

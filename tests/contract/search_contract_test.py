@@ -5,17 +5,8 @@ from datetime import datetime
 import pytest
 from requests import post
 
-from tests.contract.contract_utils import wait_for_es, populate
-
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
-
-
-@pytest.fixture(scope="module")
-def api():
-    wait_for_es()
-    populate()
-    yield
 
 
 class TestSearchAll:

@@ -50,3 +50,15 @@ class SearchResponse:
         mapped_item = item["_source"]
         mapped_item["type"] = item["_index"].rstrip('s')
         return mapped_item
+
+
+class IndicesInfoResponse:
+    def __init__(self, es_result):
+        self.es_result = es_result["hits"]["hits"]
+
+    def map_response(self):
+        response = []
+        for hit in self.es_result:
+            source = hit["_source"]
+            response.append(source)
+        return response
