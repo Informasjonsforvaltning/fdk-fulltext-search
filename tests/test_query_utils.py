@@ -3,7 +3,7 @@ import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_aggs
+    default_aggs, get_filter_key, get_index_filter_for_key
 
 
 @pytest.mark.unit
@@ -411,9 +411,32 @@ def test_default_aggs():
         },
         "theme": {
             "terms": {
-                "field": "theme.code.keyword"
+                "field": "euTheme"
             }
         }
     }
     result = default_aggs()
     assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_get_filter_key():
+    result_orgPath = get_filter_key("orgPath")
+    assert result_orgPath == "publisher.orgPath"
+    result_access = get_filter_key("accessRights")
+    assert result_access == "accessRights.code.keyword"
+    result_los = get_filter_key("los")
+    assert result_los == "losTheme.losPaths.keyword"
+    result_theme = get_filter_key("theme")
+    assert result_theme == "euTheme"
+    result_random_key = get_filter_key("random")
+    assert result_random_key == "random"
+
+
+def test_get_filter_index():
+    result_access = get_index_filter_for_key("accessRights")
+    result_theme = get_index_filter_for_key("theme")
+    result_orgPath = get_index_filter_for_key("orgPath")
+    assert result_access == 'datasets'
+    assert result_access == 'datasets'
+    assert not result_orgPath

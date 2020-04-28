@@ -42,7 +42,7 @@ class TestSearchAll:
         assert len(unknownItems) is 0
 
     @pytest.mark.contract
-    def test_search_without_query_should_prioritize_authority_and_datasets(self):
+    def test_search_without_query_should_prioritize_authority_and_datasets(self, api):
         opts = {
             "size": 200
         }
@@ -83,7 +83,7 @@ class TestSearchAll:
         assert len(result["orgPath"]["buckets"]) > 0
         assert len(result["availability"]["buckets"]) == 3
         assert len(result["accessRights"]["buckets"]) > 0
-        assert len(result)["theme"]["buckets"] > 0
+        assert len(result["theme"]["buckets"]) > 0
 
     @pytest.mark.contract
     def test_all_hits_should_have_type(self, api):
@@ -253,7 +253,7 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
-    def test_trailing_white_space_should_not_affect_result(self):
+    def test_trailing_white_space_should_not_affect_result(self,api):
         body_no_white_space = {
             "q": "landbruk"
         }
@@ -289,7 +289,7 @@ class TestSearchAll:
                 last_was_in_title = False
 
     @pytest.mark.contract
-    def test_filter_on_los_should_have_informationmodels_and_datasets(self):
+    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg"}
@@ -311,7 +311,7 @@ class TestSearchAll:
         assert has_info_models is True
 
     @pytest.mark.contract
-    def test_filter_on_los_should_handle_filters_on_different_themes(self):
+    def test_filter_on_los_should_handle_filters_on_different_themes(self, api):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg,naring"},
@@ -321,7 +321,7 @@ class TestSearchAll:
         assert len(result.json()["hits"]) > 0
 
     @pytest.mark.contract
-    def test_filter_on_los_should_handle_filters_om_sub_themes(self):
+    def test_filter_on_los_should_handle_filters_om_sub_themes(self, api):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg,helse-og-omsorg/svangerskap"},
@@ -331,7 +331,7 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
 
     @pytest.mark.contract
-    def test_filter_on_los_themes_should_not_change_subtheme_content(self):
+    def test_filter_on_los_themes_should_not_change_subtheme_content(self, api):
         empty_search = post(service_url + "/search").json()
         expected_themes = []
         for path in empty_search["aggregations"]["los"]["buckets"]:
@@ -352,12 +352,12 @@ class TestSearchAll:
         assert json.dumps(expected_themes) == json.dumps(result_themes)
 
     @pytest.mark.contract
-    def test_result_should_have_theme_aggregations(self):
+    def test_result_should_have_theme_aggregations(self, api):
         result = post(url=service_url + "/search")
         assert "theme" in result.json()["aggregations"]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme(self):
+    def test_filter_on_eu_theme(self, api):
         body = {
             "filters": [
                 {"theme": "GOVE"}
@@ -368,11 +368,11 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
         for hit in result["hits"]:
             assert "theme" in hit.keys()
-            id_path = parse('theme[*].id')
-            assert "GOVE" in [match.value for match in id_path.find()]
+            id_path = parse('theme[*].code')
+            assert "GOVE" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme_should_handle_filters_on_multiple_themes(self):
+    def test_filter_on_eu_theme_should_handle_filters_on_multiple_themes(self, api):
         body = {
             "filters": [
                 {"theme": "GOVE,ENVI"}
@@ -384,12 +384,12 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
         for hit in result["hits"]:
             assert "theme" in hit.keys()
-            id_path = parse('theme[*].id')
-            assert "GOVE" in [match.value for match in id_path.find()]
-            assert "ENVI" in [match.value for match in id_path.find()]
+            id_path = parse('theme[*].code')
+            assert "GOVE" in [match.value for match in id_path.find(hit)]
+            assert "ENVI" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme_ukjent(self):
+    def test_filter_on_eu_theme_ukjent(self, api):
         body = {
             "filters": [
                 {"theme": "Ukjent"}
@@ -400,7 +400,10 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
         for hit in result["hits"]:
             assert hit['type'] == 'dataset'
-            assert "theme" not in hit.keys
+            for key in hit.keys():
+                if key == "theme":
+                    for entry in hit[key]:
+                        assert "code" not in entry.keys()
 
     @pytest.mark.contract
     def test_filter_on_open_access(self, api):
@@ -433,7 +436,7 @@ class TestSearchAll:
             assert "accessRights" not in hits.keys()
 
     @pytest.mark.contract
-    def test_search_with_empty_result_should_return_empty_object(self):
+    def test_search_with_empty_result_should_return_empty_object(self, api):
         body = {
             "q": "very long query without results"
         }

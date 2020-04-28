@@ -246,7 +246,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
             },
             "theme": {
                 "terms": {
-                    "field": "theme.code.keyword"
+                    "field": "euTheme"
                 }
             }
         }
@@ -515,7 +515,7 @@ def test_all_indices_should_return_query_with_filter():
             },
             "theme": {
                 "terms": {
-                    "field": "theme.code.keyword"
+                    "field": "euTheme"
                 }
             }
         }
@@ -755,7 +755,7 @@ def test_all_indices_should_return_query_with_must_not():
             },
             "theme": {
                 "terms": {
-                    "field": "theme.code.keyword"
+                    "field": "euTheme"
                 }
             }
         }
