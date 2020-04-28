@@ -270,7 +270,7 @@ class TestSearchAll:
                 last_was_in_title = False
 
     @pytest.mark.contract
-    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api):
+    def test_filter_on_los_should_have_informationmodels_and_datasets(self):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg"}
@@ -290,6 +290,47 @@ class TestSearchAll:
 
         assert has_datasets is True
         assert has_info_models is True
+
+    @pytest.mark.contract
+    def test_filter_on_los_should_handle_filters_on_different_themes(self):
+        body = {
+            "filters": [
+                {"los": "helse-og-omsorg,naring"},
+            ],
+        }
+        result = post(service_url + "/search", json=body)
+        assert len(result.json()["hits"]) > 0
+
+    @pytest.mark.contract
+    def test_filter_on_los_should_handle_filters_om_sub_themes(self):
+        body = {
+            "filters": [
+                {"los": "helse-og-omsorg,helse-og-omsorg/svangerskap"},
+            ],
+        }
+        result = post(service_url + "/search", json=body).json()
+        assert len(result["hits"]) > 0
+
+    @pytest.mark.contract
+    def test_filter_on_los_themes_should_not_change_subtheme_content(self):
+        empty_search = post(service_url + "/search").json()
+        expected_themes = []
+        for path in empty_search["aggregations"]["los"]["buckets"]:
+            if len(re.findall("trafikk-og-transport", path["key"])) > 0:
+                expected_themes.append(path)
+
+        body = {
+            "filters": [
+                {"los": "trafikk-og-transport"},
+            ],
+        }
+        result = post(service_url + "/search", json=body).json()
+        result_themes = []
+        for path in result["aggregations"]["los"]["buckets"]:
+            if len(re.findall("trafikk-og-transport", path["key"])) > 0:
+                result_themes.append(path)
+
+        assert json.dumps(expected_themes) == json.dumps(result_themes)
 
     @pytest.mark.contract
     def test_filter_on_open_access(self, api):
@@ -320,6 +361,16 @@ class TestSearchAll:
         assert result['page']['totalElements'] == result['aggregations']['accessRights']['buckets'][0]['doc_count']
         for hits in result["hits"]:
             assert "accessRights" not in hits.keys()
+
+    @pytest.mark.contract
+    def test_search_with_empty_result_should_return_empty_object(self):
+        body = {
+            "q": "very long query without results"
+        }
+
+        result = post(url=service_url + "/search", json=body).json()
+        assert len(result["hits"]) == 0
+
 
 
 def is_exact_match(keys, hit, search):

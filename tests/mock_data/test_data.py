@@ -2447,3 +2447,21 @@ test_hits = {"hits":
         }
     }
 }
+empty_result = {
+    "took": 5,
+    "timed_out": "false",
+    "_shards": {
+        "total": 4,
+        "successful": 4,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 0,
+            "relation": "eq"
+        },
+        "max_score": "null",
+        "hits": []
+    }
+}

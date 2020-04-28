@@ -60,7 +60,6 @@ class Indices(Resource):
             abort(http_status_code=404,
                   description="Index '{0}' has been removed. Perform request to recreate indices: POST "
                               "/indices?name={0}".format(index_name))
-        print(es_result)
         return IndicesInfoResponse(es_result).map_response()
 
     def post(self):
@@ -97,4 +96,4 @@ class Recent(Resource):
         if "size" in args:
             size = args["size"]
         result = client.get_recent(size=size)
-        return SearchResponse().map_response(es_result=result, size=size)
+        return SearchResponse().map_response(es_result=result)

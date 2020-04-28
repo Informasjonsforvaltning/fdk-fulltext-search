@@ -727,12 +727,23 @@ def test_add_filter_should_add_opendata_filter():
 
 
 @pytest.mark.unit
+def test_add_filter_should_add_multiple_los_filters():
+    builder = AllIndicesQuery(filters=[{"los": "helse-og-omsorg,naring"}, {"other": "filter"}],
+                              search_string="something")
+    los_count = 0
+    for f in builder.query["query"]["bool"]["filter"]:
+        if "term" in f.keys() and "losTheme.losPaths.keyword" in f["term"].keys():
+            los_count += 1
+    assert los_count == 2
+
+
+@pytest.mark.unit
 def test_add_filter_should_add_must_not_filter_for_Ukjent():
     must_no_access_rights = {'exists': {'field': 'accessRights.code.keyword'}}
     index_filter = {
-            "term": {
-                "_index": "datasets"
-            }
+        "term": {
+            "_index": "datasets"
+        }
     }
     builder = AllIndicesQuery(filters=[{"accessRights": "Ukjent"}, {"other": "filter"}], search_string="something")
     has_must_not = False

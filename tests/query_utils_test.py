@@ -6,16 +6,26 @@ from src.search.query_utils import get_term_filter, exact_match_in_title_query, 
 
 
 @pytest.mark.unit
-def test_should_return_filter_with_modified_key():
-    expected = {"publisher.orgPath": "KOMMUNE/678687"}
+def test_should_return_filter_array_with_modified_key():
+    expected = [{"term": {"publisher.orgPath": "KOMMUNE/678687"}}]
     result = get_term_filter({"orgPath": "KOMMUNE/678687"})
     assert result == expected
 
 
 @pytest.mark.unit
-def test_should_return_filter_with_unmodified_key():
-    expected = {"openLicence": "KOMMUNE/678687"}
-    result = get_term_filter(expected)
+def test_should_return_filter_array_with_unmodified_key():
+    request_filter = {"openLicence": "true"}
+    expected = [{"term": {"openLicence": "true"}}]
+    result = get_term_filter(request_filter)
+    assert result == expected
+
+
+@pytest.mark.unit
+def test_should_return_filter_array_with_two_entiries():
+    request_filter = {"los": "kjoretøy,trafikk-og-transport"}
+    expected = [{"term": {"losTheme.losPaths.keyword": "kjoretøy"}},
+                {"term": {"losTheme.losPaths.keyword": "trafikk-og-transport"}}]
+    result = get_term_filter(request_filter)
     assert result == expected
 
 
@@ -137,8 +147,9 @@ def test_word_in_description_one_word():
             ]
         }
     }
-    result = word_in_description_query(description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
-                                       search_string="heimevernet")
+    result = word_in_description_query(
+        description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
+        search_string="heimevernet")
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -176,8 +187,9 @@ def test_word_in_description_several_words():
             ]
         }
     }
-    result = word_in_description_query(description_field_names_with_boost=["description", "defintion.text.*", "schema^0.5"],
-                                       search_string="åpne data")
+    result = word_in_description_query(
+        description_field_names_with_boost=["description", "defintion.text.*", "schema^0.5"],
+        search_string="åpne data")
     assert json.dumps(result) == json.dumps(expected)
 
 
