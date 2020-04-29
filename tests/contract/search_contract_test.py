@@ -1,18 +1,41 @@
 import json
 import re
+import time
 from datetime import datetime
 
 import pytest
+import requests
 from jsonpath_ng import parse
-from requests import post
+from requests import post, get
+from urllib3.exceptions import MaxRetryError, NewConnectionError
+
+
+@pytest.fixture(scope="function")
+def wait_for_ready():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = get("http://localhost:8000/count")
+            if response.json()['count'] >= 5610:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
+                    'was {0}'.format(response.json()["count"]))
+            time.sleep(1)
+    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
+        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    yield
+
 
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
 
 
 class TestSearchAll:
+
     @pytest.mark.contract
-    def test_search_without_body_should_return_response_with_hits_aggregations_and_page(self, api):
+    def test_search_without_body_should_return_response_with_hits_aggregations_and_page(self, api, wait_for_ready):
         result = post(service_url + "/search").json()
         hasHits = False
         hasAggregation = False
@@ -33,35 +56,46 @@ class TestSearchAll:
         assert len(unknownItems) is 0
 
     @pytest.mark.contract
-    def test_search_without_query_should_prioritize_authority_and_datasets(self, api):
+    def test_search_without_query_should_prioritize_authority_and_datasets(self, api, wait_for_ready):
         opts = {
             "size": 200
         }
         result = post(url=service_url + "/search", json=opts).json()["hits"]
 
         assert len(result) > 0
+        debug_values = {
+            "authority": [],
+            "previous_dataset": [],
+            "datatype": []
+        }
         previous_was_dataset = True
         previous_was_authority = True
         for hits in result:
             if "nationalComponent" in hits:
                 if hits["nationalComponent"]:
-                    assert previous_was_authority is True
+                    assert previous_was_authority is True, "nationalCompoent dataservice encountered after " \
+                                                           "non-authoritative hit {0}".format(json.dumps(debug_values))
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
             elif "provenance" in hits:
                 if hits["provenance"]["code"] == "NASJONAL":
-                    assert previous_was_authority is True
-                    assert previous_was_dataset is True
+                    assert previous_was_authority is True, "dataset with NASJONAL provenance with encountered after " \
+                                                           "non-authoritative hit {0}".format(json.dumps(debug_values))
+                    assert previous_was_dataset is True, "dataset with NASJONAL provenance encountered after other " \
+                                                         "data types {0}".format(json.dumps(debug_values))
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
             else:
                 previous_was_authority = False
             previous_was_dataset = hits['type'] == 'dataset'
+            debug_values["authority"].append(previous_was_authority)
+            debug_values["previous_dataset"].append(previous_was_dataset)
+            debug_values["datatype"].append(hits['type'])
 
     @pytest.mark.contract
-    def test_search_without_body_should_contain_default_aggs(self, api):
+    def test_search_without_body_should_contain_default_aggs(self, api, wait_for_ready):
         result = post(service_url + "/search").json()["aggregations"]
         keys = result.keys()
         assert "los" in keys
@@ -84,14 +118,14 @@ class TestSearchAll:
             assert hit["type"] in data_types
 
     @pytest.mark.contract
-    def test_hits_should_have_object_without_es_data(self, api):
+    def test_hits_should_have_object_without_es_data(self, api, wait_for_ready):
         result = post(service_url + "/search").json()["hits"]
         for hit in result:
             assert "_type" not in hit.keys()
             assert "_source" not in hit.keys()
 
     @pytest.mark.contract
-    def test_hits_should_start_with_exact_matches_in_title(self, api):
+    def test_hits_should_start_with_exact_matches_in_title(self, api, wait_for_ready):
         srch_string = "enhetsregisteret"
         body = {
             "q": "enhetsregisteret",
@@ -125,7 +159,7 @@ class TestSearchAll:
         assert exact_matches > 0
 
     @pytest.mark.contract
-    def test_hits_should_contain_search_string(self, api):
+    def test_hits_should_contain_search_string(self, api, wait_for_ready):
         body = {
             "q": "barnehage"
         }
@@ -138,7 +172,7 @@ class TestSearchAll:
             assert (len(arr)) > 0
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_orgPath(self, api):
+    def test_hits_should_be_filtered_on_orgPath(self, api, wait_for_ready):
         body = {
             "filters": [{"orgPath": "/PRIVAT"}]
         }
@@ -147,7 +181,7 @@ class TestSearchAll:
             assert "PRIVAT" in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_hits_should_have_word_and_be_filtered_on_orgPath(self, api):
+    def test_hits_should_have_word_and_be_filtered_on_orgPath(self, api, wait_for_ready):
         body = {
             "q": "barnehage",
             "filters": [{"orgPath": "/KOMMUNE/840029212"}]
@@ -162,7 +196,7 @@ class TestSearchAll:
             assert "/KOMMUNE/840029212" in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_is_open_Access(self, api):
+    def test_hits_should_be_filtered_on_is_open_Access(self, api, wait_for_ready):
         body = {
             "filters": [{"isOpenAccess": "true"}]
         }
@@ -171,7 +205,7 @@ class TestSearchAll:
             assert hit["isOpenAccess"] is True
 
     @pytest.mark.contract
-    def test_hits_should_have_word_and_be_filtered_on_is_not_open_Access(self, api):
+    def test_hits_should_have_word_and_be_filtered_on_is_not_open_Access(self, api, wait_for_ready):
         body = {
             "filters": [{"isOpenAccess": "false"}]
         }
@@ -180,7 +214,7 @@ class TestSearchAll:
             assert hit["isOpenAccess"] is False
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_accessRights_PUBLIC(self, api):
+    def test_hits_should_be_filtered_on_accessRights_PUBLIC(self, api, wait_for_ready):
         body = {
             "filters": [{"accessRights": "PUBLIC"}]
         }
@@ -189,7 +223,7 @@ class TestSearchAll:
             assert hit["accessRights"]["code"] == "PUBLIC"
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_accessRights_NON_PUBLIC(self, api):
+    def test_hits_should_be_filtered_on_accessRights_NON_PUBLIC(self, api, wait_for_ready):
         body = {
             "filters": [{"accessRights": "NON_PUBLIC"}]
         }
@@ -198,7 +232,7 @@ class TestSearchAll:
             assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
     @pytest.mark.contract
-    def test_empty_request_after_request_with_q_should_return_default(self, api):
+    def test_empty_request_after_request_with_q_should_return_default(self, api, wait_for_ready):
         body = {
             "q": "barn"
         }
@@ -210,7 +244,7 @@ class TestSearchAll:
         assert json.dumps(pre_request.json()) != json.dumps(result.json())
 
     @pytest.mark.contract
-    def test_sort_should_returns_the_most_recent_hits(self, api):
+    def test_sort_should_returns_the_most_recent_hits(self, api, wait_for_ready):
         body = {
             "sorting": {
                 "field": "harvest.firstHarvested",
@@ -227,7 +261,7 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
-    def test_sort_should_returns_the_most_recent_hits(self, api):
+    def test_sort_should_returns_the_most_recent_hits(self, api, wait_for_ready):
         body = {
             "sorting": {
                 "field": "harvest.firstHarvested",
@@ -244,7 +278,7 @@ class TestSearchAll:
             last_date = current_date
 
     @pytest.mark.contract
-    def test_trailing_white_space_should_not_affect_result(self, api):
+    def test_trailing_white_space_should_not_affect_result(self, api, wait_for_ready):
         body_no_white_space = {
             "q": "landbruk"
         }
@@ -259,7 +293,7 @@ class TestSearchAll:
         assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
 
     @pytest.mark.contract
-    def test_words_in_title_after_exact_match(self, api):
+    def test_words_in_title_after_exact_match(self, api, wait_for_ready):
         body = {
             "q": "barnehage",
             "size": 300
@@ -280,7 +314,7 @@ class TestSearchAll:
                 last_was_in_title = False
 
     @pytest.mark.contract
-    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api):
+    def test_filter_on_los_should_have_informationmodels_and_datasets(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg"}
@@ -302,7 +336,7 @@ class TestSearchAll:
         assert has_info_models is True
 
     @pytest.mark.contract
-    def test_filter_on_los_should_handle_filters_on_different_themes(self, api):
+    def test_filter_on_los_should_handle_filters_on_different_themes(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg,naring"},
@@ -312,7 +346,7 @@ class TestSearchAll:
         assert len(result.json()["hits"]) > 0
 
     @pytest.mark.contract
-    def test_filter_on_los_should_handle_filters_om_sub_themes(self, api):
+    def test_filter_on_los_should_handle_filters_om_sub_themes(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"los": "helse-og-omsorg,helse-og-omsorg/svangerskap"},
@@ -322,7 +356,7 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
 
     @pytest.mark.contract
-    def test_filter_on_los_themes_should_not_change_subtheme_content(self, api):
+    def test_filter_on_los_themes_should_not_change_subtheme_content(self, api, wait_for_ready):
         empty_search = post(service_url + "/search").json()
         expected_themes = []
         for path in empty_search["aggregations"]["los"]["buckets"]:
@@ -343,12 +377,12 @@ class TestSearchAll:
         assert json.dumps(expected_themes) == json.dumps(result_themes)
 
     @pytest.mark.contract
-    def test_result_should_have_theme_aggregations(self, api):
+    def test_result_should_have_theme_aggregations(self, api, wait_for_ready):
         result = post(url=service_url + "/search")
         assert "theme" in result.json()["aggregations"]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme(self, api):
+    def test_filter_on_eu_theme(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"theme": "GOVE"}
@@ -363,7 +397,7 @@ class TestSearchAll:
             assert "GOVE" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme_should_handle_filters_on_multiple_themes(self, api):
+    def test_filter_on_eu_theme_should_handle_filters_on_multiple_themes(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"theme": "GOVE,ENVI"}
@@ -380,7 +414,7 @@ class TestSearchAll:
             assert "ENVI" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme_ukjent(self, api):
+    def test_filter_on_eu_theme_ukjent(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"theme": "Ukjent"}
@@ -397,7 +431,7 @@ class TestSearchAll:
                         assert "code" not in entry.keys()
 
     @pytest.mark.contract
-    def test_filter_on_open_access(self, api):
+    def test_filter_on_open_access(self, api, wait_for_ready):
         body = {
             "filters": [
                 {"opendata": "true"}
@@ -416,7 +450,7 @@ class TestSearchAll:
         assert hasOpenLicenceDistribution is True
 
     @pytest.mark.contract
-    def test_filter_on_unknown_access_datasets(self, api):
+    def test_filter_on_unknown_access_datasets(self, api, wait_for_ready):
         body = {
             "filters": [{"accessRights": "Ukjent"}]
         }
@@ -427,7 +461,7 @@ class TestSearchAll:
             assert "accessRights" not in hits.keys()
 
     @pytest.mark.contract
-    def test_search_with_empty_result_should_return_empty_object(self, api):
+    def test_search_with_empty_result_should_return_empty_object(self, api, wait_for_ready):
         body = {
             "q": "very long query without results"
         }
