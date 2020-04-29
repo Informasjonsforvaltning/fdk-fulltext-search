@@ -1,6 +1,10 @@
 {
     "mappings": {
         "properties": {
+            "euTheme": {
+                "type": "alias",
+                "path": "theme.code.keyword"
+                    },
             "accessRights": {
                 "properties": {
                     "code": {

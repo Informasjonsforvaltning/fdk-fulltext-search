@@ -161,13 +161,15 @@ def get_filter_key(filter_key: str):
         return "accessRights.code.keyword"
     elif filter_key == "los":
         return "losTheme.losPaths.keyword"
+    elif filter_key == "theme":
+        return "euTheme"
     else:
         return filter_key
 
 
-def get_filter_index(filter_key):
+def get_index_filter_for_key(filter_key):
     """get indexes containing filter_key """
-    if filter_key == "accessRights":
+    if filter_key == "accessRights" or filter_key == "theme":
         return "datasets"
     else:
         return False
@@ -184,9 +186,9 @@ def must_not_filter(filter_key: str):
                 }
         }
     }
-    index = get_filter_index(filter_key)
+    index = get_index_filter_for_key(filter_key)
     if index:
-        missing_filter["bool"]["must"] = {"term": {"_index": get_filter_index(filter_key)}}
+        missing_filter["bool"]["must"] = {"term": {"_index": get_index_filter_for_key(filter_key)}}
     return missing_filter
 
 
@@ -260,44 +262,48 @@ def default_aggs():
                     ]
                 }
             }
+        },
+        "theme": {
+            "terms": {
+                "field": "euTheme"
+            }
         }
     }
 
 
-def default_dismax():
-    return {"dis_max": {
-        "queries": [
-            {
-                "constant_score": {
-                    "filter": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "match": {
-                                        "provenance.code": "NASJONAL"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "nationalComponent": "true"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "boost": 1.2
-                }
-            },
-            {
-                "match_all": {}
-            }
-
-        ]
-    }}
-
-
-def query_template():
+def all_indices_default_query():
     return {
+        "bool": {
+            "must": {
+                "match_all": {}
+            },
+            "should": [
+                {
+                    "term": {
+                        "provenance.code.keyword": {
+                            "value": "NASJONAL",
+                            "boost": 2
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "nationalComponent": {
+                            "value": "true",
+                            "boost": 1
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+
+def query_template(dataset_boost=0):
+    template = {
         "query": {
         }
     }
+    if dataset_boost > 0:
+        template["indices_boost"] = [{"datasets": dataset_boost}]
+    return template

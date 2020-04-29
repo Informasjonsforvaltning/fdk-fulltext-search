@@ -243,12 +243,51 @@ def test_all_indices_query_should_return_query_with_dis_max():
                         ]
                     }
                 }
+            },
+            "theme": {
+                "terms": {
+                    "field": "euTheme"
+                }
             }
         }
 
     }
     result = AllIndicesQuery(search_string="stønad")
-    assert json.dumps(result.query) == json.dumps(expected)
+    assert json.dumps(result.body) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_empty_all_indices_query():
+    """Should return query with high boost on authority and datasets and lower boost for authority and dataservices"""
+    expected_query = {
+            "bool": {
+                "must": {
+                    "match_all": {}
+                },
+                "should": [
+                    {
+                        "term": {
+                            "provenance.code.keyword": {
+                                "value": "NASJONAL",
+                                "boost": 2
+                            }
+                        }
+                    },
+                    {
+                        "term": {
+                            "nationalComponent": {
+                                "value": "true",
+                                "boost": 1
+                            }
+                        }
+                    }
+                ]
+            }
+    }
+    expected_indices_boost = [{"datasets": 1.2}]
+    result = AllIndicesQuery().body
+    assert json.dumps(result["indices_boost"]) == json.dumps(expected_indices_boost)
+    assert json.dumps(result["query"]) == json.dumps(expected_query)
 
 
 @pytest.mark.unit
@@ -473,11 +512,16 @@ def test_all_indices_should_return_query_with_filter():
                         ]
                     }
                 }
+            },
+            "theme": {
+                "terms": {
+                    "field": "euTheme"
+                }
             }
         }
     }
     result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': '/KOMMUNE/840029212'}])
-    assert json.dumps(result.query) == json.dumps(expected)
+    assert json.dumps(result.body) == json.dumps(expected)
 
 
 @pytest.mark.unit
@@ -708,18 +752,23 @@ def test_all_indices_should_return_query_with_must_not():
                         ]
                     }
                 }
+            },
+            "theme": {
+                "terms": {
+                    "field": "euTheme"
+                }
             }
         }
     }
     result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
-    assert json.dumps(result.query) == json.dumps(expected)
+    assert json.dumps(result.body) == json.dumps(expected)
 
 
 @pytest.mark.unit
 def test_add_filter_should_add_opendata_filter():
     builder = AllIndicesQuery(filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something")
     has_open_data = False
-    for f in builder.query["query"]["bool"]["filter"]:
+    for f in builder.body["query"]["bool"]["filter"]:
         if f == open_data_filter():
             has_open_data = True
             break
@@ -731,7 +780,7 @@ def test_add_filter_should_add_multiple_los_filters():
     builder = AllIndicesQuery(filters=[{"los": "helse-og-omsorg,naring"}, {"other": "filter"}],
                               search_string="something")
     los_count = 0
-    for f in builder.query["query"]["bool"]["filter"]:
+    for f in builder.body["query"]["bool"]["filter"]:
         if "term" in f.keys() and "losTheme.losPaths.keyword" in f["term"].keys():
             los_count += 1
     assert los_count == 2
@@ -748,7 +797,7 @@ def test_add_filter_should_add_must_not_filter_for_Ukjent():
     builder = AllIndicesQuery(filters=[{"accessRights": "Ukjent"}, {"other": "filter"}], search_string="something")
     has_must_not = False
     has_index_filter = False
-    for f in builder.query['query']['bool']['filter']:
+    for f in builder.body['query']['bool']['filter']:
         if 'bool' in f.keys():
             if 'must_not' in f['bool'].keys() and f['bool']['must_not'] == must_no_access_rights:
                 has_must_not = True
@@ -759,145 +808,3 @@ def test_add_filter_should_add_must_not_filter_for_Ukjent():
 
     assert has_must_not is True
     assert has_index_filter is True
-
-
-correct_query_clause = {
-    "dis_max": {
-        "queries": [
-            {
-                "bool": {
-                    "must": {
-                        "multi_match": {
-                            "query": "åpne data",
-                            "fields": [
-                                "prefLabel.*.raw",
-                                "title.*.raw",
-                                "title.raw"
-                            ]
-                        }
-                    },
-                    "should": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "provenance.code": "NASJONAL"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "nationalComponent": "true"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "boost": 5
-                }
-            },
-            {
-                "bool": {
-                    "must": {
-                        "multi_match": {
-                            "query": "åpne data",
-                            "type": "phrase_prefix",
-                            "fields": [
-                                "title.*.ngrams",
-                                "title.*.ngrams.2_gram",
-                                "title.*.ngrams.3_gram",
-                                "title.ngrams",
-                                "title.ngrams.2_gram",
-                                "title.ngrams.3_gram",
-                                "prefLabel.*.ngrams",
-                                "prefLabel.*.ngrams.2_gram",
-                                "prefLabel.*.ngrams.3_gram"
-                            ]
-                        }
-                    },
-                    "should": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "provenance.code": "NASJONAL"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "nationalComponent": "true"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "boost": 2
-                }
-            },
-            {
-                "bool": {
-                    "must": {
-                        "simple_query_string": {
-                            "query": "åpne+data åpne+data*",
-                            "fields": [
-                                "description",
-                                "definition.text.*",
-                                "schema"
-                            ]
-                        }
-                    },
-                    "should": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "provenance.code": "NASJONAL"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "nationalComponent": "true"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "boost": 1.5
-                }
-            },
-            {
-                "bool": {
-                    "must": {
-                        "simple_query_string": {
-                            "query": "åpne+data åpne+data*"
-                        }
-                    },
-                    "should": [
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "provenance.code": "NASJONAL"
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "nationalComponent": "true"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "boost": 0.001
-                }
-            }
-        ]
-    }
-}
