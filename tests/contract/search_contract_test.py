@@ -125,20 +125,21 @@ class TestSearchAll:
             assert "_source" not in hit.keys()
 
     @pytest.mark.contract
-    def test_hits_should_start_with_exact_matches_in_title(self, api, wait_for_ready):
-        srch_string = "enhetsregisteret"
+    def test_hits_should_start_with_exact_matches_in_title(self,api,wait_for_ready):
+        srch_string = "dokument"
         body = {
-            "q": "enhetsregisteret",
+            "q": "dokument",
             "size": 1000
         }
         last_was_exact = True
         exact_matches = 0
+        position = 0
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             if "prefLabel" in hit:
                 prefLabels = hit["prefLabel"]
                 if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
-                    assert last_was_exact
+                    assert last_was_exact, "exact match found at position {0}".format(position)
                     exact_matches += 1
                 else:
                     last_was_exact = False
@@ -146,16 +147,17 @@ class TestSearchAll:
                 title = hit["title"]
                 if isinstance(title, dict):
                     if is_exact_match(title.keys(), title, srch_string):
-                        assert last_was_exact
+                        assert last_was_exact, "exact match found at position {0}".format(position)
                         exact_matches += 1
                     else:
                         last_was_exact = False
                 else:
                     if title.lower() == srch_string:
-                        assert last_was_exact
+                        assert last_was_exact, "exact match found at position {0}".format(position)
                         exact_matches += 1
                     else:
                         last_was_exact = False
+            position += 1
         assert exact_matches > 0
 
     @pytest.mark.contract

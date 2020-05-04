@@ -70,7 +70,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     }
                                 }
                             ],
-                            "boost": 5
+                            "boost": 10
                         }
                     },
                     {
@@ -358,7 +358,7 @@ def test_all_indices_should_return_query_with_filter():
                                             }
                                         }
                                     ],
-                                    "boost": 5
+                                    "boost": 10
                                 }
                             },
                             {
@@ -621,7 +621,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
-                                        "boost": 5
+                                        "boost": 10
                                     }
                                 },
                                 {
