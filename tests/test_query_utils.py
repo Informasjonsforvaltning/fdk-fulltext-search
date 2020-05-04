@@ -3,7 +3,7 @@ import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_aggs, get_filter_key, get_index_filter_for_key
+    default_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query
 
 
 @pytest.mark.unit
@@ -433,6 +433,7 @@ def test_get_filter_key():
     assert result_random_key == "random"
 
 
+@pytest.mark.unit
 def test_get_filter_index():
     result_access = get_index_filter_for_key("accessRights")
     result_theme = get_index_filter_for_key("theme")
@@ -440,3 +441,74 @@ def test_get_filter_index():
     assert result_access == 'datasets'
     assert result_theme == 'datasets'
     assert not result_orgPath
+
+
+@pytest.mark.unit
+def test_words_only_string():
+    string_with_special_char = "]some - thing ["
+    string_with_special_char1 = "some 9 - ( thing"
+    string_with_special_char2 = "some - thing()"
+    string_with_special_char3 = "+some +9 + thing !    "
+    string_with_special_char4 = "+some +9 + -thing !    "
+    string_with_special_char_only = "("
+    string_with_four_words = "some thing must happen"
+    string_with_one_word = "nothing"
+    string_with_one_word_and_special_char = "nothing-"
+
+    assert words_only_string(string_with_special_char) == "some thing"
+    assert words_only_string(string_with_special_char1) == "some 9 thing"
+    assert words_only_string(string_with_special_char2) == "some thing"
+    assert words_only_string(string_with_special_char3) == "some 9 thing"
+    assert words_only_string(string_with_special_char4) == "some 9 thing"
+    assert words_only_string(string_with_special_char_only) is None
+    assert words_only_string(string_with_four_words) == string_with_four_words
+    assert words_only_string(string_with_one_word) is None
+    assert words_only_string(string_with_one_word_and_special_char) == string_with_one_word
+
+
+@pytest.mark.unit
+def test_some_words_in_title_query():
+    expected = {
+            "simple_query_string": {
+                "query": "some query to be queried",
+                "fields": [
+                    "title",
+                    "title.*",
+                    "prefLabel.*"
+                ]
+            }
+    }
+    expected_one_word = {
+            "simple_query_string": {
+                "query": "nothing",
+                "fields": [
+                    "title",
+                    "title.*",
+                    "prefLabel.*"
+                ]
+            }
+    }
+
+    title_fields = ["title", "title.*", "prefLabel.*"]
+
+    string_with_special_char = some_words_in_title_query(title_fields_list=title_fields,
+                                                         search_string="]some query to be queried [")
+    string_with_special_char2 = some_words_in_title_query(title_fields_list=title_fields,
+                                                          search_string="some - query to be ()queried")
+    string_with_special_char3 = some_words_in_title_query(title_fields_list=title_fields,
+                                                          search_string="+some + + query to be ! queried?   ")
+    string_with_special_char4 = some_words_in_title_query(title_fields_list=title_fields,
+                                                          search_string="+some + + -query to be queried !    ")
+    string_with_four_words = some_words_in_title_query(title_fields_list=title_fields,
+                                                       search_string="some query to be queried")
+    string_with_one_word = some_words_in_title_query(title_fields_list=title_fields,
+                                                     search_string="nothing")
+    string_with_one_word_and_special_char = some_words_in_title_query(title_fields_list=title_fields,
+                                                                      search_string="nothing-")
+    assert json.dumps(string_with_special_char["bool"]["must"]) == json.dumps(expected)
+    assert json.dumps(string_with_special_char2["bool"]["must"]) == json.dumps(expected)
+    assert json.dumps(string_with_special_char3["bool"]["must"]) == json.dumps(expected)
+    assert json.dumps(string_with_special_char4["bool"]["must"]) == json.dumps(expected)
+    assert json.dumps(string_with_four_words["bool"]["must"]) == json.dumps(expected)
+    assert string_with_one_word is None
+    assert json.dumps(string_with_one_word_and_special_char["bool"]["must"]) == json.dumps(expected_one_word)

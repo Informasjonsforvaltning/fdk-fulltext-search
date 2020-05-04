@@ -172,6 +172,42 @@ class TestSearchAll:
             assert (len(arr)) > 0
 
     @pytest.mark.contract
+    def test_search_on_several_words_should_include_partial_matches_in_title(self):
+        search_str = "Test for los"
+        body = {
+            "q": search_str,
+            "size": "100"
+        }
+        result = post(url=service_url + "/search", json=body).json()
+        assert result['page']['totalElements'] > 1
+        data_type_count = {
+            "dataservice": 0,
+            "dataset": 0,
+            "informationmodel": 0,
+            "concept": 0
+        }
+        match_type_count = {
+            "complete": 0,
+            "one_word": 0,
+            "two_words": 0
+        }
+
+        for hit in result["hits"]:
+            data_type = hit["type"]
+            data_type_count[data_type] += 1
+            words_in_title = re.findall(r'\w+', get_title_values(hit).lower())
+            matches = list(set(words_in_title) & set(search_str.lower().split())).__len__()
+            if matches == 3:
+                match_type_count["complete"] += 1
+            elif matches == 2:
+                match_type_count["two_words"] += 1
+            elif matches == 1:
+                match_type_count["one_word"] += 1
+
+        assert match_type_count["one_word"] > 0, "No one word matches for {0}".format(search_str)
+        assert match_type_count["two_words"] > 0, "No two word matches for {0}".format(search_str)
+
+    @pytest.mark.contract
     def test_hits_should_be_filtered_on_orgPath(self, api, wait_for_ready):
         body = {
             "filters": [{"orgPath": "/PRIVAT"}]
@@ -293,25 +329,31 @@ class TestSearchAll:
         assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
 
     @pytest.mark.contract
-    def test_words_in_title_after_exact_match(self, api, wait_for_ready):
+    def test_words_in_title_after_exact_match(self):
         body = {
             "q": "barnehage",
             "size": 300
         }
         result = post(url=service_url + "/search", json=body)
-        last_was_in_title = False
-        last_not_in_title = False
+        last_was_word_in_title = False
+        last_was_not_word_in_title = False
+        last_title = {}
         for hit in result.json()["hits"]:
             is_exact = is_exact_match_in_title(hit, "barnehage")
             if is_exact:
-                assert last_was_in_title is False
-                assert last_not_in_title is False
+                assert last_was_word_in_title is False, "{0}: word in title encountered before exact " \
+                                                        "matches in title".format(get_title_values(hit))
+                assert last_was_not_word_in_title is False, "{0}: word not in title encountered before exact " \
+                                                            "matches in title".format(get_title_values(hit))
             elif is_word_title(hit, "barnehage"):
-                assert last_not_in_title is False
-                last_was_in_title = True
+                assert last_was_not_word_in_title is False, "{0}: word not in title encountered before word in title." \
+                                                            "Last title was: {1}".format(get_title_values(hit),
+                                                                                         last_title)
+                last_was_word_in_title = True
             else:
-                last_not_in_title = True
-                last_was_in_title = False
+                last_was_not_word_in_title = True
+                last_was_word_in_title = False
+            last_title = get_title_values(hit)
 
     @pytest.mark.contract
     def test_filter_on_los_should_have_informationmodels_and_datasets(self, api, wait_for_ready):
@@ -505,3 +547,11 @@ def is_word_title(hit, srch_string):
         if len(prt1) > 0:
             return True
     return False
+
+
+def get_title_values(hit):
+    """get values of all title fields for hit"""
+    if "prefLabel" in hit:
+        return json.dumps(hit['prefLabel'])
+    elif "title" in hit:
+        return json.dumps(hit['title'])

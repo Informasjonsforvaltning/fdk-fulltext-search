@@ -1,7 +1,6 @@
 from enum import Enum
 
-from src.search.query_utils import get_term_filter, must_not_filter, query_template, all_indices_default_query, default_aggs, \
-    exact_match_in_title_query, word_in_title_query, word_in_description_query, simple_query_string, open_data_filter
+from src.search.query_utils import *
 
 
 class Direction(Enum):
@@ -58,6 +57,10 @@ class AllIndicesQuery:
             word_in_description_query(
                 description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
                 search_string=param))
+        some_words_in_title = some_words_in_title_query(title_fields_list=["title.*", "title", "prefLabel.*"],
+                                                        search_string=param)
+        if some_words_in_title:
+            self.query["dis_max"]["queries"].append(some_words_in_title)
         self.query["dis_max"]["queries"].append(simple_query_string(search_string=param))
 
     def add_filters(self, filters):

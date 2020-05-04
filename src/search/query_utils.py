@@ -1,3 +1,6 @@
+import re
+
+
 def title_term_query(field, search_string):
     return {
         "term": {
@@ -93,6 +96,27 @@ def word_in_description_query(description_field_names_with_boost: list, search_s
             "should": [autorativ_boost_clause()],
         }
     }
+
+
+def some_words_in_title_query(title_fields_list, search_string):
+    """Get words excluding special chars in title query if search string has more than one word"""
+    sanitized_string = words_only_string(search_string)
+    if sanitized_string is None:
+        return None
+    if sanitized_string:
+        return {
+            "bool": {
+                "must": {
+                    "simple_query_string": {
+                        "query": sanitized_string,
+                        "fields": title_fields_list
+                    }
+                },
+                "should": [autorativ_boost_clause()],
+            }
+        }
+    else:
+        return None
 
 
 def constant_simple_query(search_string: str):
@@ -307,3 +331,14 @@ def query_template(dataset_boost=0):
     if dataset_boost > 0:
         template["indices_boost"] = [{"datasets": dataset_boost}]
     return template
+
+
+def words_only_string(query_string):
+    """ Returns a string with words only, where words are defined as any sequence of digits or letters """
+    non_words = re.findall(r'[^a-z@øåA-ZÆØÅ\d]', query_string)
+    if non_words.__len__() > 0:
+        words = re.findall(r'\w+', query_string)
+        if words.__len__() > 0:
+            return ' '.join(words)
+
+    return None
