@@ -111,7 +111,7 @@ class TestSearchAll:
         assert len(result["theme"]["buckets"]) > 0
 
     @pytest.mark.contract
-    def test_all_hits_should_have_type(self, api):
+    def test_all_hits_should_have_type(self, api, wait_for_ready):
         result = post(service_url + "/search").json()["hits"]
         for hit in result:
             assert "type" in hit.keys()
@@ -172,7 +172,7 @@ class TestSearchAll:
             assert (len(arr)) > 0
 
     @pytest.mark.contract
-    def test_search_on_several_words_should_include_partial_matches_in_title(self):
+    def test_search_on_several_words_should_include_partial_matches_in_title(self, api, wait_for_ready):
         search_str = "Test for los"
         body = {
             "q": search_str,
@@ -503,13 +503,25 @@ class TestSearchAll:
             assert "accessRights" not in hits.keys()
 
     @pytest.mark.contract
-    def test_search_with_empty_result_should_return_empty_object(self, api, wait_for_ready):
+    def test_search_with_empty_result_should_return_empty_object(self):
         body = {
-            "q": "very long query without results"
+            "q": "Ainjgulu"
         }
 
         result = post(url=service_url + "/search", json=body).json()
         assert len(result["hits"]) == 0
+
+    @pytest.mark.contract
+    def test_specialchars_should_not_affect_result_length(self):
+        body = {
+            "q": "Regnskapsregisteret jm"
+        }
+        body_special_char = {
+            "q": "Regnskapsregisteret - jm"
+        }
+        expected = post(url=service_url + "/search", json=body).json()["page"]["totalElements"]
+        result = post(url=service_url + "/search", json=body_special_char).json()
+        assert result["page"]["totalElements"] == expected
 
 
 def is_exact_match(keys, hit, search):

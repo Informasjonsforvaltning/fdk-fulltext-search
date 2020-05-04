@@ -170,6 +170,34 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     }
                                 }
                             ],
+                            "boost": 0.0015
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "*{0} {0} {0}*".format(search_str)
+                                }
+                            },
+                            "should": [
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
                             "boost": 0.001
                         }
                     }
@@ -430,6 +458,34 @@ def test_all_indices_should_return_query_with_filter():
                                             }
                                         }
                                     ],
+                                    "boost": 0.0015
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "*{0} {0} {0}*".format(search_str)
+                                        }
+                                    },
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
                                     "boost": 0.001
                                 }
                             }
@@ -665,9 +721,38 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
+                                        "boost": 0.0015
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "*{0} {0} {0}*".format(search_str)
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
                                         "boost": 0.001
                                     }
                                 }
+
                             ]
                         }
                     }

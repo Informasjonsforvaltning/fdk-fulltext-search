@@ -61,7 +61,9 @@ class AllIndicesQuery:
                                                         search_string=param)
         if some_words_in_title:
             self.query["dis_max"]["queries"].append(some_words_in_title)
-        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param))
+
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param, boost=0.0015))
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param, boost=0.001, lenient=True))
 
     def add_filters(self, filters):
         self.body["query"]["bool"]["filter"] = []

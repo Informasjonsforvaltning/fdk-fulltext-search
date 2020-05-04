@@ -3,7 +3,8 @@ import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query
+    default_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
+    get_catch_all_query_string
 
 
 @pytest.mark.unit
@@ -252,6 +253,76 @@ def test_simple_query_string_query():
 
 
 @pytest.mark.unit
+def test_simple_query_string_query_special_chars():
+    expected = {
+        "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "åpne+data åpne+data*"
+                }
+            },
+            "should": [
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "provenance.code": "NASJONAL"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "nationalComponent": "true"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "boost": 0.001
+        }
+    }
+    result = simple_query_string(search_string="åpne - !! (data)")
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_simple_query_lenient():
+    expected = {
+        "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "*mange mange mange* *bekker bekker bekker*"
+                }
+            },
+            "should": [
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "provenance.code": "NASJONAL"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "nationalComponent": "true"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "boost": 1
+        }
+    }
+
+    result = simple_query_string(search_string="mange bekker", boost=1, lenient=True)
+
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
 def test_simple_query_string_query_boost_1():
     expected = {
         "bool": {
@@ -469,24 +540,24 @@ def test_words_only_string():
 @pytest.mark.unit
 def test_some_words_in_title_query():
     expected = {
-            "simple_query_string": {
-                "query": "some query to be queried",
-                "fields": [
-                    "title",
-                    "title.*",
-                    "prefLabel.*"
-                ]
-            }
+        "simple_query_string": {
+            "query": "some query to be queried",
+            "fields": [
+                "title",
+                "title.*",
+                "prefLabel.*"
+            ]
+        }
     }
     expected_one_word = {
-            "simple_query_string": {
-                "query": "nothing",
-                "fields": [
-                    "title",
-                    "title.*",
-                    "prefLabel.*"
-                ]
-            }
+        "simple_query_string": {
+            "query": "nothing",
+            "fields": [
+                "title",
+                "title.*",
+                "prefLabel.*"
+            ]
+        }
     }
 
     title_fields = ["title", "title.*", "prefLabel.*"]
@@ -512,3 +583,10 @@ def test_some_words_in_title_query():
     assert json.dumps(string_with_four_words["bool"]["must"]) == json.dumps(expected)
     assert string_with_one_word is None
     assert json.dumps(string_with_one_word_and_special_char["bool"]["must"]) == json.dumps(expected_one_word)
+
+
+def test_get_catch_all_query_string():
+    result = get_catch_all_query_string("oneword")
+    result2 = get_catch_all_query_string("two words")
+    assert result == "*oneword oneword oneword*"
+    assert result2 == "*two two two* *words words words*"

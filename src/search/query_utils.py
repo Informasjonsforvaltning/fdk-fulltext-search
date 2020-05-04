@@ -28,19 +28,33 @@ def autorativ_boost_clause():
     }
 
 
-def simple_query_string(search_string: str, boost=0.001):
-    query_string = search_string.replace(" ", "+")
+def simple_query_string(search_string: str, boost=0.001, lenient=False):
+    replace_special_chars = words_only_string(search_string)
+    final_string = replace_special_chars or search_string
+
+    query_string = get_catch_all_query_string(final_string) if lenient else \
+        "{0} {0}*".format(final_string.replace(" ", "+"))
+
     return {
         "bool": {
             "must": {
                 "simple_query_string": {
-                    "query": "{0} {0}*".format(query_string),
+                    "query": query_string,
                 }
             },
             "should": [autorativ_boost_clause()],
             "boost": boost
         }
     }
+
+
+def get_catch_all_query_string(original_string):
+    new_string_list = []
+    for word in original_string.split():
+        new_string_list.append("*{0} ".format(word))
+        new_string_list.append("{0} ".format(word))
+        new_string_list.append("{0}* ".format(word))
+    return ''.join(new_string_list).strip()
 
 
 def exact_match_in_title_query(title_field_names: list, search_string: str):
