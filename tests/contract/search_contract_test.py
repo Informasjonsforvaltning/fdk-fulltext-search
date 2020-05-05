@@ -111,7 +111,7 @@ class TestSearchAll:
         assert len(result["theme"]["buckets"]) > 0
 
     @pytest.mark.contract
-    def test_all_hits_should_have_type(self, api):
+    def test_all_hits_should_have_type(self, api, wait_for_ready):
         result = post(service_url + "/search").json()["hits"]
         for hit in result:
             assert "type" in hit.keys()
@@ -125,20 +125,21 @@ class TestSearchAll:
             assert "_source" not in hit.keys()
 
     @pytest.mark.contract
-    def test_hits_should_start_with_exact_matches_in_title(self, api, wait_for_ready):
-        srch_string = "enhetsregisteret"
+    def test_hits_should_start_with_exact_matches_in_title(self,api,wait_for_ready):
+        srch_string = "dokument"
         body = {
-            "q": "enhetsregisteret",
+            "q": "dokument",
             "size": 1000
         }
         last_was_exact = True
         exact_matches = 0
+        position = 0
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             if "prefLabel" in hit:
                 prefLabels = hit["prefLabel"]
                 if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
-                    assert last_was_exact
+                    assert last_was_exact, "exact match found at position {0}".format(position)
                     exact_matches += 1
                 else:
                     last_was_exact = False
@@ -146,16 +147,17 @@ class TestSearchAll:
                 title = hit["title"]
                 if isinstance(title, dict):
                     if is_exact_match(title.keys(), title, srch_string):
-                        assert last_was_exact
+                        assert last_was_exact, "exact match found at position {0}".format(position)
                         exact_matches += 1
                     else:
                         last_was_exact = False
                 else:
                     if title.lower() == srch_string:
-                        assert last_was_exact
+                        assert last_was_exact, "exact match found at position {0}".format(position)
                         exact_matches += 1
                     else:
                         last_was_exact = False
+            position += 1
         assert exact_matches > 0
 
     @pytest.mark.contract
@@ -170,6 +172,42 @@ class TestSearchAll:
             prt2 = re.findall("Barnehage", values)
             arr = prt1 + prt2
             assert (len(arr)) > 0
+
+    @pytest.mark.contract
+    def test_search_on_several_words_should_include_partial_matches_in_title(self, api, wait_for_ready):
+        search_str = "Test for los"
+        body = {
+            "q": search_str,
+            "size": "100"
+        }
+        result = post(url=service_url + "/search", json=body).json()
+        assert result['page']['totalElements'] > 1
+        data_type_count = {
+            "dataservice": 0,
+            "dataset": 0,
+            "informationmodel": 0,
+            "concept": 0
+        }
+        match_type_count = {
+            "complete": 0,
+            "one_word": 0,
+            "two_words": 0
+        }
+
+        for hit in result["hits"]:
+            data_type = hit["type"]
+            data_type_count[data_type] += 1
+            words_in_title = re.findall(r'\w+', get_title_values(hit).lower())
+            matches = list(set(words_in_title) & set(search_str.lower().split())).__len__()
+            if matches == 3:
+                match_type_count["complete"] += 1
+            elif matches == 2:
+                match_type_count["two_words"] += 1
+            elif matches == 1:
+                match_type_count["one_word"] += 1
+
+        assert match_type_count["one_word"] > 0, "No one word matches for {0}".format(search_str)
+        assert match_type_count["two_words"] > 0, "No two word matches for {0}".format(search_str)
 
     @pytest.mark.contract
     def test_hits_should_be_filtered_on_orgPath(self, api, wait_for_ready):
@@ -293,25 +331,31 @@ class TestSearchAll:
         assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
 
     @pytest.mark.contract
-    def test_words_in_title_after_exact_match(self, api, wait_for_ready):
+    def test_words_in_title_after_exact_match(self):
         body = {
             "q": "barnehage",
             "size": 300
         }
         result = post(url=service_url + "/search", json=body)
-        last_was_in_title = False
-        last_not_in_title = False
+        last_was_word_in_title = False
+        last_was_not_word_in_title = False
+        last_title = {}
         for hit in result.json()["hits"]:
             is_exact = is_exact_match_in_title(hit, "barnehage")
             if is_exact:
-                assert last_was_in_title is False
-                assert last_not_in_title is False
+                assert last_was_word_in_title is False, "{0}: word in title encountered before exact " \
+                                                        "matches in title".format(get_title_values(hit))
+                assert last_was_not_word_in_title is False, "{0}: word not in title encountered before exact " \
+                                                            "matches in title".format(get_title_values(hit))
             elif is_word_title(hit, "barnehage"):
-                assert last_not_in_title is False
-                last_was_in_title = True
+                assert last_was_not_word_in_title is False, "{0}: word not in title encountered before word in title." \
+                                                            "Last title was: {1}".format(get_title_values(hit),
+                                                                                         last_title)
+                last_was_word_in_title = True
             else:
-                last_not_in_title = True
-                last_was_in_title = False
+                last_was_not_word_in_title = True
+                last_was_word_in_title = False
+            last_title = get_title_values(hit)
 
     @pytest.mark.contract
     def test_filter_on_los_should_have_informationmodels_and_datasets(self, api, wait_for_ready):
@@ -461,13 +505,25 @@ class TestSearchAll:
             assert "accessRights" not in hits.keys()
 
     @pytest.mark.contract
-    def test_search_with_empty_result_should_return_empty_object(self, api, wait_for_ready):
+    def test_search_with_empty_result_should_return_empty_object(self):
         body = {
-            "q": "very long query without results"
+            "q": "Ainjgulu"
         }
 
         result = post(url=service_url + "/search", json=body).json()
         assert len(result["hits"]) == 0
+
+    @pytest.mark.contract
+    def test_specialchars_should_not_affect_result_length(self):
+        body = {
+            "q": "Regnskapsregisteret jm"
+        }
+        body_special_char = {
+            "q": "Regnskapsregisteret - jm"
+        }
+        expected = post(url=service_url + "/search", json=body).json()["page"]["totalElements"]
+        result = post(url=service_url + "/search", json=body_special_char).json()
+        assert result["page"]["totalElements"] == expected
 
 
 def is_exact_match(keys, hit, search):
@@ -505,3 +561,11 @@ def is_word_title(hit, srch_string):
         if len(prt1) > 0:
             return True
     return False
+
+
+def get_title_values(hit):
+    """get values of all title fields for hit"""
+    if "prefLabel" in hit:
+        return json.dumps(hit['prefLabel'])
+    elif "title" in hit:
+        return json.dumps(hit['title'])

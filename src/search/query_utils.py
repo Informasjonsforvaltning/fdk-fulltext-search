@@ -1,3 +1,6 @@
+import re
+
+
 def title_term_query(field, search_string):
     return {
         "term": {
@@ -25,19 +28,33 @@ def autorativ_boost_clause():
     }
 
 
-def simple_query_string(search_string: str, boost=0.001):
-    query_string = search_string.replace(" ", "+")
+def simple_query_string(search_string: str, boost=0.001, lenient=False):
+    replace_special_chars = words_only_string(search_string)
+    final_string = replace_special_chars or search_string
+
+    query_string = get_catch_all_query_string(final_string) if lenient else \
+        "{0} {0}*".format(final_string.replace(" ", "+"))
+
     return {
         "bool": {
             "must": {
                 "simple_query_string": {
-                    "query": "{0} {0}*".format(query_string),
+                    "query": query_string,
                 }
             },
             "should": [autorativ_boost_clause()],
             "boost": boost
         }
     }
+
+
+def get_catch_all_query_string(original_string):
+    new_string_list = []
+    for word in original_string.split():
+        new_string_list.append("*{0} ".format(word))
+        new_string_list.append("{0} ".format(word))
+        new_string_list.append("{0}* ".format(word))
+    return ''.join(new_string_list).strip()
 
 
 def exact_match_in_title_query(title_field_names: list, search_string: str):
@@ -53,7 +70,7 @@ def exact_match_in_title_query(title_field_names: list, search_string: str):
                 }
             },
             "should": [autorativ_boost_clause()],
-            "boost": 5
+            "boost": 10
 
         }
     }
@@ -93,6 +110,27 @@ def word_in_description_query(description_field_names_with_boost: list, search_s
             "should": [autorativ_boost_clause()],
         }
     }
+
+
+def some_words_in_title_query(title_fields_list, search_string):
+    """Get words excluding special chars in title query if search string has more than one word"""
+    sanitized_string = words_only_string(search_string)
+    if sanitized_string is None:
+        return None
+    if sanitized_string:
+        return {
+            "bool": {
+                "must": {
+                    "simple_query_string": {
+                        "query": sanitized_string,
+                        "fields": title_fields_list
+                    }
+                },
+                "should": [autorativ_boost_clause()],
+            }
+        }
+    else:
+        return None
 
 
 def constant_simple_query(search_string: str):
@@ -307,3 +345,14 @@ def query_template(dataset_boost=0):
     if dataset_boost > 0:
         template["indices_boost"] = [{"datasets": dataset_boost}]
     return template
+
+
+def words_only_string(query_string):
+    """ Returns a string with words only, where words are defined as any sequence of digits or letters """
+    non_words = re.findall(r'[^a-z@øåA-ZÆØÅ\d]', query_string)
+    if non_words.__len__() > 0:
+        words = re.findall(r'\w+', query_string)
+        if words.__len__() > 0:
+            return ' '.join(words)
+
+    return None

@@ -40,10 +40,11 @@ def populate():
                 break
             if time.time() > timeout:
                 pytest.fail('Test containers: timed out while waiting for poupulation of ElasticSearch, last response '
-                                'was'.format(response.json()["count"]))
+                            'was {0}'.format(response.json()["count"]))
             time.sleep(1)
     except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
         pytest.fail('Test containers: could not contact fdk-fulltext-search container')
+
 
 def send_rabbitmq_message(data_type):
     msg = json.dumps({

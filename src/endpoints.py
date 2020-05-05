@@ -1,23 +1,27 @@
 import json
 
-from flask_restful import Resource, reqparse, abort
-from flask import request, Response, jsonify
+from flask_restful import Resource, abort
+from flask import request, Response
 from .search import client
 from .ingest import fetch_all_content, reindex_all_indices, IndicesKey, fetch_data_sets, fetch_information_models, \
-    fetch_data_services, fetch_concepts, reindex
+    fetch_data_services, fetch_concepts
 from .search.responses import SearchResponse, IndicesInfoResponse
 
 
 class Search(Resource):
     def post(self):
+        page = 0
         if len(request.data) == 0:
             result = client.search_all()
         else:
-            result = client.search_all(request=request.get_json())
+            body = request.get_json()
+            if "page" in body:
+                page = body["page"]
+            result = client.search_all(request=body)
         if "error" in result.keys():
             return result
         else:
-            return SearchResponse().map_response(result)
+            return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
 class Count(Resource):
@@ -51,7 +55,8 @@ class Indices(Resource):
                                   IndicesKey.CONCEPTS]:
                 abort(http_status_code=400,
                       description={"bad request": "indices '{0}' is not a valid index. Valid indices values are ["
-                                                  "datasets,dataservices,informationmodels,concepts]".format(index_name)})
+                                                  "datasets,dataservices,informationmodels,concepts]".format(
+                          index_name)})
         es_result = client.get_indices(index_name)
         if not es_result:
             abort(http_status_code=404,

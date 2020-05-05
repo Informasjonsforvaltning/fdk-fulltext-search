@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from jsonpath_ng import parse
 
 from src.search.queries import RecentQuery, AllIndicesQuery
 from src.search.query_utils import open_data_filter
@@ -69,7 +70,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     }
                                 }
                             ],
-                            "boost": 5
+                            "boost": 10
                         }
                     },
                     {
@@ -149,6 +150,34 @@ def test_all_indices_query_should_return_query_with_dis_max():
                             "must": {
                                 "simple_query_string": {
                                     "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                }
+                            },
+                            "should": [
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "boost": 0.0015
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "*{0} {0} {0}*".format(search_str)
                                 }
                             },
                             "should": [
@@ -260,29 +289,29 @@ def test_all_indices_query_should_return_query_with_dis_max():
 def test_empty_all_indices_query():
     """Should return query with high boost on authority and datasets and lower boost for authority and dataservices"""
     expected_query = {
-            "bool": {
-                "must": {
-                    "match_all": {}
-                },
-                "should": [
-                    {
-                        "term": {
-                            "provenance.code.keyword": {
-                                "value": "NASJONAL",
-                                "boost": 2
-                            }
-                        }
-                    },
-                    {
-                        "term": {
-                            "nationalComponent": {
-                                "value": "true",
-                                "boost": 1
-                            }
+        "bool": {
+            "must": {
+                "match_all": {}
+            },
+            "should": [
+                {
+                    "term": {
+                        "provenance.code.keyword": {
+                            "value": "NASJONAL",
+                            "boost": 2
                         }
                     }
-                ]
-            }
+                },
+                {
+                    "term": {
+                        "nationalComponent": {
+                            "value": "true",
+                            "boost": 1
+                        }
+                    }
+                }
+            ]
+        }
     }
     expected_indices_boost = [{"datasets": 1.2}]
     result = AllIndicesQuery().body
@@ -329,7 +358,7 @@ def test_all_indices_should_return_query_with_filter():
                                             }
                                         }
                                     ],
-                                    "boost": 5
+                                    "boost": 10
                                 }
                             },
                             {
@@ -409,6 +438,34 @@ def test_all_indices_should_return_query_with_filter():
                                     "must": {
                                         "simple_query_string": {
                                             "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                        }
+                                    },
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "boost": 0.0015
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "*{0} {0} {0}*".format(search_str)
                                         }
                                     },
                                     "should": [
@@ -564,7 +621,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
-                                        "boost": 5
+                                        "boost": 10
                                     }
                                 },
                                 {
@@ -664,9 +721,38 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
+                                        "boost": 0.0015
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "*{0} {0} {0}*".format(search_str)
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
                                         "boost": 0.001
                                     }
                                 }
+
                             ]
                         }
                     }
@@ -763,6 +849,15 @@ def test_all_indices_should_return_query_with_must_not():
     result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
     assert json.dumps(result.body) == json.dumps(expected)
 
+
+@pytest.mark.unit
+def test_all_indices_with_several_words():
+    """ should return query with simple query string query for title"""
+    search_string = "some string"
+    result = AllIndicesQuery(search_string=search_string)
+    result_query = result.body["query"]
+    simple_queries_fields = parse('$..simple_query_string[*].fields')
+    assert ['title.*', 'title', 'prefLabel.*'] in [match.value for match in simple_queries_fields.find(result_query)]
 
 @pytest.mark.unit
 def test_add_filter_should_add_opendata_filter():
