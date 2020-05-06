@@ -4,7 +4,7 @@ import pytest
 from jsonpath_ng import parse
 
 from src.search.queries import RecentQuery, AllIndicesQuery
-from src.search.query_utils import open_data_filter
+from src.search.query_utils import open_data_query
 
 
 @pytest.mark.unit
@@ -308,6 +308,22 @@ def test_empty_all_indices_query():
                             "value": "true",
                             "boost": 1
                         }
+                    }
+                },
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
                     }
                 }
             ]
@@ -864,7 +880,7 @@ def test_add_filter_should_add_opendata_filter():
     builder = AllIndicesQuery(filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something")
     has_open_data = False
     for f in builder.body["query"]["bool"]["filter"]:
-        if f == open_data_filter():
+        if f == open_data_query():
             has_open_data = True
             break
     assert has_open_data is True

@@ -72,7 +72,7 @@ class AllIndicesQuery:
             if (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
                 self.body["query"]["bool"]["filter"].append(must_not_filter(key))
             elif key == 'opendata':
-                self.body["query"]["bool"]["filter"].append(open_data_filter())
+                self.body["query"]["bool"]["filter"].append(open_data_query())
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 

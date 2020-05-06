@@ -56,7 +56,12 @@ class TestSearchAll:
         assert len(unknownItems) is 0
 
     @pytest.mark.contract
-    def test_search_without_query_should_prioritize_authority_and_datasets(self, api, wait_for_ready):
+    def test_search_without_query_should_have_correct_sorting(self, api, wait_for_ready):
+        """ 
+            1. open authoritative datasets
+            2. authoritative datasets
+            3. authoritative dataservices
+        """
         opts = {
             "size": 200
         }
@@ -69,6 +74,7 @@ class TestSearchAll:
             "datatype": []
         }
         previous_was_dataset = True
+        previous_was_open_data = True
         previous_was_authority = True
         for hits in result:
             if "nationalComponent" in hits:
@@ -80,10 +86,17 @@ class TestSearchAll:
                     previous_was_authority = False
             elif "provenance" in hits:
                 if hits["provenance"]["code"] == "NASJONAL":
-                    assert previous_was_authority is True, "dataset with NASJONAL provenance with encountered after " \
-                                                           "non-authoritative hit {0}".format(json.dumps(debug_values))
                     assert previous_was_dataset is True, "dataset with NASJONAL provenance encountered after other " \
                                                          "data types {0}".format(json.dumps(debug_values))
+                    assert previous_was_authority is True, "dataset with NASJONAL provenance encountered after " \
+                                                           "non-authoritative hit {0}".format(json.dumps(debug_values))
+                    if hits["accessRights"]["code"] == "PUBLIC":
+                        openLicence = [match.value for match in parse("distribution[*].openLicense").find(hits)]
+                        if True in openLicence:
+                            assert previous_was_open_data, "open dataset encountered after non-open dataset dataset"
+                            previous_was_open_data = True
+                        else:
+                            previous_was_open_data = False
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
@@ -125,7 +138,7 @@ class TestSearchAll:
             assert "_source" not in hit.keys()
 
     @pytest.mark.contract
-    def test_hits_should_start_with_exact_matches_in_title(self,api,wait_for_ready):
+    def test_hits_should_start_with_exact_matches_in_title(self, api, wait_for_ready):
         srch_string = "dokument"
         body = {
             "q": "dokument",
