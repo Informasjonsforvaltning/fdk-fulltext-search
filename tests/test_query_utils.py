@@ -400,6 +400,22 @@ def test_all_indices_default_query():
                             "boost": 1
                         }
                     }
+                },
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
         }

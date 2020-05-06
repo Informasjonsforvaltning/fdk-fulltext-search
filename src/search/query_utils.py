@@ -172,7 +172,7 @@ def get_term_filter(request_item):
     return filters
 
 
-def open_data_filter():
+def open_data_query():
     return {
         "bool": {
             "must": [
@@ -331,7 +331,8 @@ def all_indices_default_query():
                             "boost": 1
                         }
                     }
-                }
+                },
+                open_data_query()
             ]
         }
     }
