@@ -42,9 +42,12 @@ def search_all(request: dict = None):
         }
 
 
-def count():
+def count(index=None):
     try:
-        return es_client.count()
+        if index:
+            return es_client.count(index=index)
+        else:
+            return es_client.count()
 
     except ConnectionError:
         return {

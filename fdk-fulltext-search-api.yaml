@@ -29,21 +29,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-  /update:
-    put:
-      summary: ''
-      operationId: put-update
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-      description: triggers a new data collection from felles datakatalogs harvesters
   /count:
     get:
       summary: Your GET endpoint
@@ -110,7 +95,23 @@ paths:
                 $ref: "#/components/schemas/IndexResponse"
         '400':
           description: Bad request. Most probably caused by an error in the name parameter
-
+  /informationmodels
+    post:
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's informationmodels"
+      operationId: searchInformationModels
+      description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
 components:
   schemas:
     SearchRequest:
@@ -144,7 +145,7 @@ components:
               $ref: '#/components/schemas/Page'
             aggregations:
               type: string
-    "Filter":
+    Filter:
       type: object
       additionalProperties:
         type:string
@@ -157,7 +158,7 @@ components:
           description: 'which field the sort should be performed on, defaults to relevance'
           type: string
         direction:
-          description: 'the direction of the sort. avaiable values are asc, desc'
+          description: 'the direction of the sort. available values are asc, desc'
           type: string
           enum:
             - asc
@@ -593,3 +594,6 @@ components:
                 type: string
                 format: date-time
                 description: date and time for the last performed reindex
+              count:
+                type: integer
+                description: the current number of elements in the index/indices

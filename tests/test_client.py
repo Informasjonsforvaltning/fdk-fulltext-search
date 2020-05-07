@@ -1,5 +1,7 @@
 import pytest
-from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices
+
+from src import IndicesKey
+from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices, count
 
 
 @pytest.fixture
@@ -94,3 +96,15 @@ def test_should_call_search_with_recent_query_and_size_10(mock_elastic):
     get_recent(size=10)
     expectedQuery = RecentQuery(10).query
     mock_elastic.assert_called_once_with(body=expectedQuery)
+
+
+@pytest.mark.unit
+def test_count_should_call_count_for_all_indices(mock_count_elastic):
+    count()
+    mock_count_elastic.assert_called_once()
+    assert mock_count_elastic.call_args_list[0][1].__len__() == 0
+
+
+def test_count_should_call_count_for_specific_index(mock_count_elastic):
+    count(index=IndicesKey.INFO_MODEL)
+    mock_count_elastic.assert_called_once_with(index=IndicesKey.INFO_MODEL)
