@@ -3,7 +3,7 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery
+from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery
 from src.search.query_utils import open_data_query
 
 
@@ -875,6 +875,7 @@ def test_all_indices_with_several_words():
     simple_queries_fields = parse('$..simple_query_string[*].fields')
     assert ['title.*', 'title', 'prefLabel.*'] in [match.value for match in simple_queries_fields.find(result_query)]
 
+
 @pytest.mark.unit
 def test_add_filter_should_add_opendata_filter():
     builder = AllIndicesQuery(filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something")
@@ -919,3 +920,30 @@ def test_add_filter_should_add_must_not_filter_for_Ukjent():
 
     assert has_must_not is True
     assert has_index_filter is True
+
+
+@pytest.mark.unit
+def test_information_model_empty_query():
+    expected_body = {
+        "query": {
+            "match_all": {}
+        },
+        "aggs": {
+            "los": {
+                "terms": {
+                    "field": "losTheme.losPaths.keyword",
+                    "size": 1000000000
+                }
+            },
+            "orgPath": {
+                "terms": {
+                    "field": "publisher.orgPath",
+                    "missing": "MISSING",
+                    "size": 1000000000
+                }
+            }
+        }
+    }
+
+    result_body = InformationModelQuery().body
+    assert result_body == expected_body

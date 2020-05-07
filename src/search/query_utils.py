@@ -230,22 +230,30 @@ def must_not_filter(filter_key: str):
     return missing_filter
 
 
-def default_aggs():
-    """ Return a dict with default aggregation for all indices search"""
+def los_aggregation():
     return {
-        "los": {
-            "terms": {
-                "field": "losTheme.losPaths.keyword",
-                "size": 1000000000
-            }
-        },
-        "orgPath": {
+        "terms": {
+            "field": "losTheme.losPaths.keyword",
+            "size": 1000000000
+        }
+    }
+
+
+def org_path_aggregation():
+    return {
             "terms": {
                 "field": "publisher.orgPath",
                 "missing": "MISSING",
                 "size": 1000000000
             }
-        },
+        }
+
+
+def default_all_indices_aggs():
+    """ Return a dict with default aggregation for all indices search"""
+    return {
+        "los": los_aggregation(),
+        "orgPath": org_path_aggregation(),
         "availability": {
             "filters": {
                 "filters": {
@@ -338,14 +346,31 @@ def all_indices_default_query():
     }
 
 
+def information_model_default_query():
+    return {
+        "match_all": {
+
+        }
+    }
+
+
 def query_template(dataset_boost=0):
     template = {
         "query": {
-        }
+        },
+        "aggs": {}
     }
     if dataset_boost > 0:
         template["indices_boost"] = [{"datasets": dataset_boost}]
     return template
+
+
+def dismax_template():
+    return {
+        "dis_max": {
+            "queries": []
+        }
+    }
 
 
 def words_only_string(query_string):

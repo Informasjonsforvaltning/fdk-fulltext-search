@@ -3,7 +3,7 @@ import pytest
 
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
+    default_all_indices_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
     get_catch_all_query_string
 
 
@@ -361,7 +361,8 @@ def test_simple_query_string_query_boost_1():
 @pytest.mark.unit
 def test_query_template_should_return_empty_query():
     expected = {
-        "query": {}
+        "query": {},
+        "aggs": {}
     }
     result = query_template()
     assert json.dumps(result) == json.dumps(expected)
@@ -371,6 +372,7 @@ def test_query_template_should_return_empty_query():
 def test_query_template_should_return_empty_query_with_boost():
     expected = {
         "query": {},
+        "aggs": {},
         "indices_boost": [{"datasets": 1.2}]
     }
     result = query_template(dataset_boost=1.2)
@@ -502,7 +504,7 @@ def test_default_aggs():
             }
         }
     }
-    result = default_aggs()
+    result = default_all_indices_aggs()
     assert json.dumps(result) == json.dumps(expected)
 
 
