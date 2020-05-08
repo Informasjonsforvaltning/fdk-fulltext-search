@@ -390,11 +390,21 @@ def all_indices_default_query():
     }
 
 
-def information_model_default_query():
+def information_model_default_query() -> dict:
     return {
         "match_all": {
 
         }
+    }
+
+
+def query_with_filter_template(must_clause: list) -> dict:
+    return {
+        "bool":
+            {
+                "must": must_clause,
+                "filter": []
+            }
     }
 
 

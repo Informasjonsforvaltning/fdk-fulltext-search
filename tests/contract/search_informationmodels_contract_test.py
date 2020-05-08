@@ -1,3 +1,4 @@
+import json
 import re
 import time
 
@@ -82,6 +83,93 @@ class TestInformationModelSearch:
                 last_was_exact_match = False
                 last_was_partial_match_in_title = False
 
+    @pytest.mark.contract
+    def test_should_filter_on_orgPath(self):
+        org_path = "PRIVAT/910244132"
+        body = {
+            "filters": {
+                [{"orgPath": org_path}]
+            }
+        }
+        result = requests.post(url=informationmodel_url, json=body)
+        assert result.status_code == 200
+        result_json_hits = result.json()["hits"]
+        assert len(result_json_hits) > 0
+        for hit in result_json_hits:
+            assert org_path in hit["publisher"]["orgPath"]
+
+    @pytest.mark.contract
+    def test_should_filter_on_orgPath(self):
+        org_path = "PRIVAT/910244132"
+        body = {
+            "filters": {
+                [{"orgPath": org_path}]
+            }
+        }
+        result = requests.post(url=informationmodel_url, json=body)
+        result_json = result.json()
+        assert result.status_code == 200
+        assert len(result_json["hits"]) > 0
+        for hit in result_json["hits"]:
+            assert org_path in hit["publisher"]["orgPath"]
+
+    @pytest.mark.contract
+    def test_should_filter_on_los(self):
+        los_path = "los"
+        body = {
+            "filters": [{"los": los_path}]
+        }
+        result = requests.post(url=informationmodel_url, json=body)
+        assert result.status_code == 200
+        los_json_path = parse('themes[*].losPaths')
+        for hit in result.json()["hits"]:
+            assert los_path in [match.value for match in los_json_path.find(hit)]
+
+    @pytest.mark.contract
+    def test_should_filter_on_los_and_orgPath(self):
+        los_path_1 = "demokrati-og-innbyggerrettigheter"
+        los_path_2 = "naring"
+        body = {
+            "filters": [{"los": f"{los_path_1},{los_path_2}"}]
+        }
+
+        result = requests.post(url=informationmodel_url, json=body)
+        assert result.status_code == 200
+        los_json_path = parse('themes[*].losPaths')
+        for hit in result.json()["hits"]:
+            has_los_path_1 = False,
+            has_los_path_2 = False
+            los_paths = [match.value for match in los_json_path.find(hit)]
+            for path in los_paths:
+                if re.findall(los_path_1, path[0]).__len__() > 0:
+                    has_los_path_1 = True
+                if re.findall(los_path_2, path[0]).__len__() > 0:
+                    has_los_path_2 = True
+            assert has_los_path_1
+            assert has_los_path_2
+
+    @pytest.mark.contract
+    def test_should_filter_on_orgPath(self):
+        org_path = "PRIVAT"
+        los_path = "demokrati-og-innbyggerrettigheter"
+        body = {
+            "filters": [{"orgPath": org_path}, {"los": los_path}]
+        }
+        result = requests.post(url=informationmodel_url, json=body)
+        result_json = result.json()
+        assert result.status_code == 200
+        assert len(result_json["hits"]) > 0
+        for hit in result_json["hits"]:
+            assert org_path in hit["publisher"]["orgPath"]
+
+    @pytest.mark.contract
+    def test_should_have_correct_size_and_page(self):
+        pass
+
+    @pytest.mark.contract
+    def test_should_sort_on_date(self):
+        pass
+
 
 def has_exact_match_in_title(hit, search_str):
     title = hit["title"]
@@ -100,23 +188,9 @@ def has_exact_match_in_title(hit, search_str):
 
 def has_partial_match_in_title(hit, search_str):
     title = hit["title"]
-    keys = title.keys()
-    has_exact_match = False
-    if "nb" in keys:
-        if find_all(title, "nb").__len__() > 0:
-            has_exact_match = True
+    prt1 = re.findall(search_str.lower(), json.dumps(title).lower())
+    if len(prt1) > 0:
+        return True
+    else:
+        return False
 
-    if "nn" in keys:
-        if find_all(title, "nn").__len__() > 0:
-            has_exact_match = True
-    if "no" in keys:
-        if find_all(title, "no").__len__() > 0:
-            has_exact_match = True
-    if "en" in keys:
-        if find_all(title, "nn").__len__() > 0:
-            has_exact_match = True
-    return has_exact_match
-
-
-def find_all(title_json, key):
-    return re.findall(r'\w+', title_json[key])
