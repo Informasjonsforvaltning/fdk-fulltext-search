@@ -1,6 +1,7 @@
 import json
 import re
 import time
+from datetime import datetime
 
 import pytest
 import requests
@@ -164,11 +165,32 @@ class TestInformationModelSearch:
 
     @pytest.mark.contract
     def test_should_have_correct_size_and_page(self):
-        pass
+        default_result = requests.post(informationmodel_url).json()
+        assert default_result["page"]["size"] == 10
+        assert default_result["page"]["currentPage"] == 0
+
+        page_request_body = {
+            "page": 5
+        }
+        page_result = requests.post(url=informationmodel_url, json=page_request_body).json()
+        assert page_result["page"]["size"] == 10
+        assert page_result["page"]["currentPage"] == 5
+
+        assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
 
     @pytest.mark.contract
     def test_should_sort_on_date(self):
-        pass
+        body = {
+            "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
+        }
+        result = requests.post(url=informationmodel_url, json=body)
+        assert result.status_code == 200
+        last_date = None
+        for hit in result.json()["hits"]:
+            date = hit["harvest"]["firstHarvested"]
+            if last_date:
+                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%S") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%S")
+            last_date = date
 
 
 def has_exact_match_in_title(hit, search_str):
@@ -193,4 +215,3 @@ def has_partial_match_in_title(hit, search_str):
         return True
     else:
         return False
-
