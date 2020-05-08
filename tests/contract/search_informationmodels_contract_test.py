@@ -1,3 +1,4 @@
+import re
 import time
 
 import pytest
@@ -30,19 +31,19 @@ def wait_for_information_models():
 
 indices_name = "informationmodels"
 data_type = "informationmodel"
-informationmodel_url = service_url + indices_name
+informationmodel_url = service_url + f"/{indices_name}"
 
 
 class TestInformationModelSearch:
 
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, api, wait_for_information_models):
+    def test_response_should_have_correct_content(self):
         result = requests.post(informationmodel_url)
         result_json = result.json()
         content_keys = result_json.keys()
-        assert result_json.status_code == 200
+        assert result.status_code == 200
         assert "hits" in content_keys
-        result_data_types = [match.value for match in parse("type").find(result_json["hits"])]
+        result_data_types = [match.value for match in parse("hits[*].type").find(result_json["hits"])]
         for dt in result_data_types:
             assert dt == data_type
         assert "page" in content_keys
@@ -51,7 +52,7 @@ class TestInformationModelSearch:
         assert "aggregations" in content_keys
         agg_keys = result_json["aggregations"].keys()
         assert "los" in agg_keys
-        assert "orPath" in agg_keys
+        assert "orgPath" in agg_keys
 
     @pytest.mark.contract
     def test_hits_should_be_correctly_sorted_on_title(self):
@@ -64,16 +65,16 @@ class TestInformationModelSearch:
             "q": search_str,
             "size": 300
         }
-        result = requests.post(url=informationmodel_url, body=body)
+        result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
         result_json = result.json()
         last_was_exact_match = True
         last_was_partial_match_in_title = False
         for hit in result_json["hits"]:
-            if is_exact_match_in_title(hit, search_str):
+            if has_exact_match_in_title(hit, search_str):
                 assert last_was_exact_match
                 last_was_exact_match = True
-            elif is_partial_match_in_title(hit, search_str):
+            elif has_partial_match_in_title(hit, search_str):
                 assert last_was_exact_match or last_was_partial_match_in_title
                 last_was_exact_match = False
                 last_was_partial_match_in_title = True
@@ -82,7 +83,7 @@ class TestInformationModelSearch:
                 last_was_partial_match_in_title = False
 
 
-def is_exact_match_in_title(hit, search_str):
+def has_exact_match_in_title(hit, search_str):
     title = hit["title"]
     keys = title.keys()
     has_exact_match = False
@@ -97,24 +98,25 @@ def is_exact_match_in_title(hit, search_str):
     return has_exact_match
 
 
-def is_partial_match_in_title(hit, search_str):
+def has_partial_match_in_title(hit, search_str):
     title = hit["title"]
     keys = title.keys()
     has_exact_match = False
     if "nb" in keys:
-        for word in title["nb"].split():
-            if word in search_str:
-                has_exact_match = True
+        if find_all(title, "nb").__len__() > 0:
+            has_exact_match = True
+
     if "nn" in keys:
-        for word in title["nn"].split():
-            if word in search_str:
-                has_exact_match = True
+        if find_all(title, "nn").__len__() > 0:
+            has_exact_match = True
     if "no" in keys:
-        for word in title["no"].split():
-            if word in search_str:
-                has_exact_match = True
+        if find_all(title, "no").__len__() > 0:
+            has_exact_match = True
     if "en" in keys:
-        for word in title["en"].split():
-            if word in search_str:
-                has_exact_match = True
+        if find_all(title, "nn").__len__() > 0:
+            has_exact_match = True
     return has_exact_match
+
+
+def find_all(title_json, key):
+    return re.findall(r'\w+', title_json[key])

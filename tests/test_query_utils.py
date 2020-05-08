@@ -1,10 +1,11 @@
 import json
 import pytest
 
+from src.ingest.utils import IndicesKey
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
     default_all_indices_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string
+    get_catch_all_query_string, index_match_in_title_query
 
 
 @pytest.mark.unit
@@ -150,7 +151,7 @@ def test_word_in_description_one_word():
         }
     }
     result = word_in_description_query(
-        description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
+        index_key=IndicesKey.ALL,
         search_string="heimevernet")
     assert json.dumps(result) == json.dumps(expected)
 
@@ -164,7 +165,7 @@ def test_word_in_description_several_words():
                     "query": "åpne+data åpne+data*",
                     "fields": [
                         "description",
-                        "defintion.text.*",
+                        "definition.text.*",
                         "schema^0.5"
                     ]
                 }
@@ -190,8 +191,27 @@ def test_word_in_description_several_words():
         }
     }
     result = word_in_description_query(
-        description_field_names_with_boost=["description", "defintion.text.*", "schema^0.5"],
+        index_key=IndicesKey.ALL,
         search_string="åpne data")
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_word_in_description_several_words_without_aut_clause():
+    expected = {
+                "simple_query_string": {
+                    "query": "åpne+data åpne+data*",
+                    "fields": [
+                        "schema^0.5"
+                    ]
+                }
+            }
+
+    result = word_in_description_query(
+        index_key=IndicesKey.INFO_MODEL,
+        search_string="åpne data",
+        autorativ_boost=False
+    )
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -603,8 +623,66 @@ def test_some_words_in_title_query():
     assert json.dumps(string_with_one_word_and_special_char["bool"]["must"]) == json.dumps(expected_one_word)
 
 
+@pytest.mark.unit
 def test_get_catch_all_query_string():
     result = get_catch_all_query_string("oneword")
     result2 = get_catch_all_query_string("two words")
     assert result == "*oneword oneword oneword*"
     assert result2 == "*two two two* *words words words*"
+
+
+@pytest.mark.unit
+def test_match_in_index_title_info_model():
+    expected = {
+        "dis_max": {
+            "queries": [
+                {
+                    "multi_match": {
+                        "query": "RA-05 string",
+                        "type": "bool_prefix",
+                        "fields": [
+                            "title.nb.ngrams",
+                            "title.nb.ngrams.2_gram",
+                            "title.nb.ngrams.3_gram"
+                        ]
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "RA-05 string",
+                        "type": "bool_prefix",
+                        "fields": [
+                            "title.nn.ngrams",
+                            "title.nn.ngrams.2_gram",
+                            "title.nn.ngrams.3_gram"
+                        ]
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "RA-05 string",
+                        "type": "bool_prefix",
+                        "fields": [
+                            "title.no.ngrams",
+                            "title.no.ngrams.2_gram",
+                            "title.no.ngrams.3_gram"
+                        ]
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "RA-05 string",
+                        "type": "bool_prefix",
+                        "fields": [
+                            "title.en.ngrams",
+                            "title.en.ngrams.2_gram",
+                            "title.en.ngrams.3_gram"
+                        ]
+                    }
+                }
+            ],
+            "boost": 2
+        }
+    }
+    result = index_match_in_title_query(index_key=IndicesKey.INFO_MODEL, search_string="RA-05 string")
+    assert json.dumps(result) == json.dumps(expected)

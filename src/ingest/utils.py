@@ -9,3 +9,4 @@ class IndicesKey:
     DATA_SERVICES = "dataservices"
     DATA_SERVICES_ID_KEY = "id"
     INDICES_INFO = "info"
+    ALL = "all"

@@ -80,7 +80,7 @@ class AllIndicesQuery(AbstractSearchQuery):
                                 search_string=param))
         self.query["dis_max"]["queries"].append(
             word_in_description_query(
-                description_field_names_with_boost=["description", "definition.text.*", "schema^0.5"],
+                index_key=IndicesKey.ALL,
                 search_string=param))
         some_words_in_title = some_words_in_title_query(title_fields_list=["title.*", "title", "prefLabel.*"],
                                                         search_string=param)
@@ -125,7 +125,19 @@ class InformationModelQuery(AbstractSearchQuery):
             self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        pass
+        dismax_queries = []
+        dismax_queries.append(index_match_in_title_query(index_key=IndicesKey.INFO_MODEL,
+                                                         search_string=search_string))
+        dismax_queries.append(word_in_description_query(index_key=IndicesKey.INFO_MODEL,
+                                                        search_string=search_string,
+                                                        autorativ_boost=False))
+        dismax_queries.append(simple_query_string(search_string=search_string,
+                                                  autorativ_boost=False,
+                                                  boost=0.02))
+        dismax_queries.append(simple_query_string(search_string=search_string,
+                                                  autorativ_boost=False,
+                                                  lenient=True))
+        self.query["dis_max"]["queries"] = dismax_queries
 
     def add_aggs(self, fields: list):
         if fields is None:
