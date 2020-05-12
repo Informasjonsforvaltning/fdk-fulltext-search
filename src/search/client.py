@@ -4,6 +4,10 @@ from .queries import *
 from ..ingest import es_client, IndicesKey
 from elasticsearch.exceptions import ConnectionError
 
+query_builder = {
+    'informationmodels': InformationModelQuery
+}
+
 
 def search_all(request: dict = None):
     try:
@@ -42,9 +46,49 @@ def search_all(request: dict = None):
         }
 
 
-def count():
+def search_in_index(index: str, request: dict = None):
     try:
-        return es_client.count()
+        aggs = None
+        search_str = None
+        f = None
+        size = None
+        page = None
+        sorting = None
+        if request:
+            if "aggregations" in request:
+                aggs = request.get("aggregations")
+            if "q" in request:
+                search_str = request.get("q")
+            if "filters" in request:
+                f = request.get("filters")
+            if "page" in request:
+                page = request.get("page")
+            if "size" in request:
+                size = request.get("size")
+            if "sorting" in request:
+                sorting = request.get("sorting")
+        q = query_builder[index](search_string=search_str, aggs=aggs, filters=f)
+        if size or page:
+            q.add_page(size=size, page=page)
+        if sorting:
+            q.add_sorting(sorting)
+        print(json.dumps(q.body))
+        return es_client.search(index=index, body=q.body)
+    except ConnectionError:
+        return {
+            "count": -1,
+            "operation": "search",
+            "index": index,
+            "error": "could not connect to elasticsearch"
+        }
+
+
+def count(index=None):
+    try:
+        if index:
+            return es_client.count(index=index)
+        else:
+            return es_client.count()
 
     except ConnectionError:
         return {

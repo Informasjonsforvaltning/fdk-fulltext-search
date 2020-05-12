@@ -1,5 +1,8 @@
 import re
 
+from src.ingest.utils import IndicesKey
+from src.search.fields import index_description_fields, index_title_fields
+
 
 def title_term_query(field, search_string):
     return {
@@ -9,7 +12,33 @@ def title_term_query(field, search_string):
     }
 
 
-def autorativ_boost_clause():
+def index_match_in_title_query(index_key: IndicesKey, search_string: str, boost: int = 2):
+    title_fields = index_title_fields[index_key]
+    ngram_queries = []
+
+    for field in title_fields:
+        title_match_query = {
+            "multi_match": {
+                "query": search_string,
+                "type": "bool_prefix",
+                "fields": [
+                    f"{field}.ngrams",
+                    f"{field}.ngrams.2_gram",
+                    f"{field}.ngrams.3_gram"
+                ]
+            }
+        }
+        ngram_queries.append(title_match_query)
+
+    return {
+        "dis_max": {
+            "queries": ngram_queries,
+            "boost": boost
+        }
+    }
+
+
+def autorativ_boost_clause() -> dict:
     return {
         "bool": {
             "should": [
@@ -28,27 +57,34 @@ def autorativ_boost_clause():
     }
 
 
-def simple_query_string(search_string: str, boost=0.001, lenient=False):
+def simple_query_string(search_string: str, boost=0.001, lenient=False, autorativ_boost=True) -> dict:
     replace_special_chars = words_only_string(search_string)
     final_string = replace_special_chars or search_string
 
     query_string = get_catch_all_query_string(final_string) if lenient else \
         "{0} {0}*".format(final_string.replace(" ", "+"))
-
-    return {
-        "bool": {
-            "must": {
-                "simple_query_string": {
-                    "query": query_string,
-                }
-            },
-            "should": [autorativ_boost_clause()],
-            "boost": boost
+    if autorativ_boost:
+        return {
+            "bool": {
+                "must": {
+                    "simple_query_string": {
+                        "query": query_string,
+                    }
+                },
+                "should": [autorativ_boost_clause()],
+                "boost": boost
+            }
         }
-    }
+    else:
+        return {
+            "simple_query_string": {
+                "query": query_string,
+                "boost": boost
+            }
+        }
 
 
-def get_catch_all_query_string(original_string):
+def get_catch_all_query_string(original_string) -> str:
     new_string_list = []
     for word in original_string.split():
         new_string_list.append("*{0} ".format(word))
@@ -97,17 +133,25 @@ def word_in_title_query(title_field_names: list, search_string: str):
     }
 
 
-def word_in_description_query(description_field_names_with_boost: list, search_string: str):
+def word_in_description_query(index_key: IndicesKey, search_string: str,
+                              autorativ_boost=True) -> dict:
     query_string = search_string.replace(" ", "+")
+    if autorativ_boost:
+        return {
+            "bool": {
+                "must": simple_query_string_for_description(index_key, query_string),
+                "should": [autorativ_boost_clause()]
+            }
+        }
+    else:
+        return simple_query_string_for_description(index_key, query_string)
+
+
+def simple_query_string_for_description(index_key: IndicesKey, search_string) -> dict:
     return {
-        "bool": {
-            "must": {
-                "simple_query_string": {
-                    "query": "{0} {0}*".format(query_string),
-                    "fields": description_field_names_with_boost
-                }
-            },
-            "should": [autorativ_boost_clause()],
+        "simple_query_string": {
+            "query": "{0} {0}*".format(search_string),
+            "fields": index_description_fields[index_key]
         }
     }
 
@@ -230,22 +274,30 @@ def must_not_filter(filter_key: str):
     return missing_filter
 
 
-def default_aggs():
+def los_aggregation():
+    return {
+        "terms": {
+            "field": "losTheme.losPaths.keyword",
+            "size": 1000000000
+        }
+    }
+
+
+def org_path_aggregation():
+    return {
+        "terms": {
+            "field": "publisher.orgPath",
+            "missing": "MISSING",
+            "size": 1000000000
+        }
+    }
+
+
+def default_all_indices_aggs():
     """ Return a dict with default aggregation for all indices search"""
     return {
-        "los": {
-            "terms": {
-                "field": "losTheme.losPaths.keyword",
-                "size": 1000000000
-            }
-        },
-        "orgPath": {
-            "terms": {
-                "field": "publisher.orgPath",
-                "missing": "MISSING",
-                "size": 1000000000
-            }
-        },
+        "los": los_aggregation(),
+        "orgPath": org_path_aggregation(),
         "availability": {
             "filters": {
                 "filters": {
@@ -338,14 +390,41 @@ def all_indices_default_query():
     }
 
 
+def information_model_default_query() -> dict:
+    return {
+        "match_all": {
+
+        }
+    }
+
+
+def query_with_filter_template(must_clause: list) -> dict:
+    return {
+        "bool":
+            {
+                "must": must_clause,
+                "filter": []
+            }
+    }
+
+
 def query_template(dataset_boost=0):
     template = {
         "query": {
-        }
+        },
+        "aggs": {}
     }
     if dataset_boost > 0:
         template["indices_boost"] = [{"datasets": dataset_boost}]
     return template
+
+
+def dismax_template():
+    return {
+        "dis_max": {
+            "queries": []
+        }
+    }
 
 
 def words_only_string(query_string):

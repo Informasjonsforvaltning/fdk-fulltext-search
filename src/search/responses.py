@@ -1,5 +1,7 @@
 from math import ceil
 
+from src.search.client import count
+
 
 class SearchResponse:
     response: dict = {
@@ -60,5 +62,7 @@ class IndicesInfoResponse:
         response = []
         for hit in self.es_result:
             source = hit["_source"]
+            doc_count = count(index=hit["_source"]["name"])
+            source["count"] = doc_count["count"]
             response.append(source)
         return response

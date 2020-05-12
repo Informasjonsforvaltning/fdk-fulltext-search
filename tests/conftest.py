@@ -86,7 +86,6 @@ def mocked_requests_get(*args, **kwargs):
                         status_code=200)
 
 
-
 @pytest.fixture
 def mock_ingest(mocker):
     return mocker.patch('src.ingest.elasticsearch_ingest')
@@ -120,6 +119,20 @@ def mock_single_reindex(mocker):
 @pytest.fixture
 def mock_env(monkeypatch):
     return monkeypatch.setattr(os, 'getcwd', mock_getcwd)
+
+
+@pytest.fixture
+def mock_count_elastic(mocker):
+    return mocker.patch('elasticsearch.Elasticsearch.count',
+                        return_value={
+                            "count": 1090,
+                            "_shards": {
+                                "total": 1,
+                                "successful": 1,
+                                "skipped": 0,
+                                "failed": 0
+                            }
+                        })
 
 
 def mock_getcwd():

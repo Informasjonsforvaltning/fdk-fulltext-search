@@ -14,6 +14,9 @@ user_name = os.getenv("RABBIT_USERNAME") or "admin"
 password = os.getenv("RABBIT_PASSWORD") or "admin"
 host = os.getenv("RABBIT_HOST") or "localhost"
 
+expected_content_keys = ["hits", "page", "aggregations"]
+expected_page_keys = ["totalElements", "totalPages", "currentPage", "size"]
+
 
 def wait_for_es():
     # wait  for elasticsearch to be ready
