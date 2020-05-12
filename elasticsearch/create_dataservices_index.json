@@ -127,6 +127,11 @@
                                         "normalizer": "exact_normalizer"
                                     }
                                 }
+                },
+                "apiSpecification": {
+                    "type": "object",
+                    "enabled": "false"
+
                 }
             }
         },
