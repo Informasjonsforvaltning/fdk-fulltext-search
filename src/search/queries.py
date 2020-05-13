@@ -100,6 +100,19 @@ class AllIndicesQuery(AbstractSearchQuery):
         }
 
 
+class RecentQuery:
+    def __init__(self, size=None):
+        self.query = {
+            "size": 5,
+            "sort": {"harvest.firstHarvested": {
+                "order": Direction.DESC.value}
+            }
+        }
+
+        if size is not None:
+            self.query["size"] = size
+
+
 class InformationModelQuery(AbstractSearchQuery):
 
     def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
@@ -137,14 +150,24 @@ class InformationModelQuery(AbstractSearchQuery):
         # TODO implement user defined aggregations?
 
 
-class RecentQuery:
-    def __init__(self, size=None):
-        self.query = {
-            "size": 5,
-            "sort": {"harvest.firstHarvested": {
-                "order": Direction.DESC.value}
-            }
-        }
+class DataSettQuery(AbstractSearchQuery):
 
-        if size is not None:
-            self.query["size"] = size
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.query = information_model_default_query()
+        self.add_aggs(aggs)
+        if filters:
+            if filters:
+                self.body["query"] = query_with_filter_template(must_clause=[self.query])
+                self.add_filters(filters)
+        else:
+            self.body["query"] = self.query
+
+        def add_aggs(self, fields: list):
+            pass
+
+        def add_search_string(self, search_string: str):
+            pass

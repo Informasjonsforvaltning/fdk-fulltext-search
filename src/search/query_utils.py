@@ -42,17 +42,22 @@ def autorativ_boost_clause() -> dict:
     return {
         "bool": {
             "should": [
-                {
-                    "match": {
-                        "provenance.code": "NASJONAL"
-                    }
-                },
+                autorativ_dataset_query()
+                ,
                 {
                     "term": {
                         "nationalComponent": "true"
                     }
                 }
             ]
+        }
+    }
+
+
+def autorativ_dataset_query() -> dict:
+    return {
+        "match": {
+            "provenance.code": "NASJONAL"
         }
     }
 
@@ -394,6 +399,22 @@ def information_model_default_query() -> dict:
     return {
         "match_all": {
 
+        }
+    }
+
+
+def data_sett_default_query() -> dict:
+    return {
+        "bool": {
+            "must": [
+                {
+                    "match_all": {}
+                }
+            ],
+            "should": [
+                autorativ_dataset_query(),
+                open_data_query()
+            ]
         }
     }
 

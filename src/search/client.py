@@ -118,3 +118,7 @@ def get_indices(index_name=None):
         return es_client.search(index=IndicesKey.INDICES_INFO, body=req_body)
     else:
         return None
+
+
+def get_suggestions(query, indices=None):
+    return None

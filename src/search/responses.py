@@ -66,3 +66,20 @@ class IndicesInfoResponse:
             source["count"] = doc_count["count"]
             response.append(source)
         return response
+
+
+class SuggestionResponse:
+
+    def __init__(self, es_result):
+        self.es_result = es_result["hits"]["hits"]
+
+    def map_response(self, language=None) -> dict:
+        if language:
+            print("Not implemented")
+            return {}
+        else:
+            return {"suggestions": self.es_result}
+
+    @classmethod
+    def empty_response(cls):
+        return {"suggestion": {}}

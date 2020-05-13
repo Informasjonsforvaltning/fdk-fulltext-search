@@ -14,6 +14,7 @@ def create_app(test_config=None):
     # Create and configure the app
     load_dotenv(override=True)
     app = Flask(__name__, instance_relative_config=True)
+
     CORS(app)
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -31,13 +32,14 @@ def create_app(test_config=None):
     api = Api(app)
     api.add_resource(Search, '/search')
     api.add_resource(Count, '/count')
-    api.add_resource(Update, '/update')
     api.add_resource(Ping, '/ping')
     api.add_resource(Ready, '/ready')
     api.add_resource(Recent, '/recent')
     api.add_resource(Indices, '/indices')
     api.add_resource(SearchInformationModels, '/informationmodels')
     api.add_resource(SearchDataSet, '/datasets')
+    api.add_resource(Suggestion, '/suggestion/<string:content_type>')
+    api.add_resource(SuggestionAllIndices, '/suggestion')
 
     # start rabbitmq consumer
     UpdateConsumer()

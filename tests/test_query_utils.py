@@ -5,7 +5,7 @@ from src.ingest.utils import IndicesKey
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
     default_all_indices_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string, index_match_in_title_query
+    get_catch_all_query_string, index_match_in_title_query, data_sett_default_query
 
 
 @pytest.mark.unit
@@ -199,13 +199,13 @@ def test_word_in_description_several_words():
 @pytest.mark.unit
 def test_word_in_description_several_words_without_aut_clause():
     expected = {
-                "simple_query_string": {
-                    "query": "åpne+data åpne+data*",
-                    "fields": [
-                        "schema^0.5"
-                    ]
-                }
-            }
+        "simple_query_string": {
+            "query": "åpne+data åpne+data*",
+            "fields": [
+                "schema^0.5"
+            ]
+        }
+    }
 
     result = word_in_description_query(
         index_key=IndicesKey.INFO_MODEL,
@@ -686,3 +686,40 @@ def test_match_in_index_title_info_model():
     }
     result = index_match_in_title_query(index_key=IndicesKey.INFO_MODEL, search_string="RA-05 string")
     assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_data_sett_default_query():
+    expected_query = {
+        "bool": {
+            "must": [
+                {
+                    "match_all": {}
+                }
+            ],
+            "should": [
+                {
+                    "match": {
+                        "provenance.code": "NASJONAL"
+                    }
+                },
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+    assert json.dumps(data_sett_default_query()) == json.dumps(expected_query)
