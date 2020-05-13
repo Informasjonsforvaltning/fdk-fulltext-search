@@ -5,7 +5,8 @@ from ..ingest import es_client, IndicesKey
 from elasticsearch.exceptions import ConnectionError
 
 query_builder = {
-    'informationmodels': InformationModelQuery
+    IndicesKey.INFO_MODEL: InformationModelQuery,
+    IndicesKey.DATA_SETS: DataSetQuery
 }
 
 

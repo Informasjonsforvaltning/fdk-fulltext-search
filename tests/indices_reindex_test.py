@@ -1,7 +1,4 @@
-import os
 from datetime import datetime
-from unittest.mock import mock_open
-
 import pytest
 
 from src.ingest import update_index_info, init_info_doc, reindex_specific_index

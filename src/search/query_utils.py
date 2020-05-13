@@ -1,6 +1,7 @@
 import re
 
 from src.ingest.utils import IndicesKey
+from src.search.query_utils_dataset import autorativ_dataset_query, open_data_query
 from src.search.fields import index_description_fields, index_title_fields
 
 
@@ -50,14 +51,6 @@ def autorativ_boost_clause() -> dict:
                     }
                 }
             ]
-        }
-    }
-
-
-def autorativ_dataset_query() -> dict:
-    return {
-        "match": {
-            "provenance.code": "NASJONAL"
         }
     }
 
@@ -216,31 +209,12 @@ def get_term_filter(request_item):
     # get all values in request filter
     terms = request_item[key].split(',')
     for term in terms:
-        q = {"term": {get_filter_key(key): term}}
+        q = {"term": {get_field_key(key): term}}
         filters.append(q)
     return filters
 
 
-def open_data_query():
-    return {
-        "bool": {
-            "must": [
-                {
-                    "term": {
-                        "accessRights.code.keyword": "PUBLIC"
-                    }
-                },
-                {
-                    "term": {
-                        "distribution.openLicense": "true"
-                    }
-                }
-            ]
-        }
-    }
-
-
-def get_filter_key(filter_key: str):
+def get_field_key(filter_key: str):
     """ Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":
         return "publisher.orgPath"
@@ -250,6 +224,10 @@ def get_filter_key(filter_key: str):
         return "losTheme.losPaths.keyword"
     elif filter_key == "theme":
         return "euTheme"
+    elif filter_key == "provenance":
+        return "provenance.code.keyword"
+    elif filter_key == "spatial":
+        return "spatial.prefLabel.no.keyword"
     else:
         return filter_key
 
@@ -268,7 +246,7 @@ def must_not_filter(filter_key: str):
             "must_not":
                 {
                     "exists": {
-                        "field": get_filter_key(filter_key)
+                        "field": get_field_key(filter_key)
                     }
                 }
         }
@@ -277,6 +255,19 @@ def must_not_filter(filter_key: str):
     if index:
         missing_filter["bool"]["must"] = {"term": {"_index": get_index_filter_for_key(filter_key)}}
     return missing_filter
+
+
+def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
+    query = {
+        "terms": {
+            "field": get_field_key(aggregation_key)
+        }
+    }
+    if missing:
+        query["terms"]["missing"] = missing
+    if size:
+        query["terms"]["size"] = size
+    return query
 
 
 def los_aggregation():
@@ -399,22 +390,6 @@ def information_model_default_query() -> dict:
     return {
         "match_all": {
 
-        }
-    }
-
-
-def data_sett_default_query() -> dict:
-    return {
-        "bool": {
-            "must": [
-                {
-                    "match_all": {}
-                }
-            ],
-            "should": [
-                autorativ_dataset_query(),
-                open_data_query()
-            ]
         }
     }
 

@@ -2,7 +2,7 @@ import pytest
 
 from src import IndicesKey
 from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices, count, search_in_index, \
-    InformationModelQuery
+    InformationModelQuery, DataSetQuery
 
 
 @pytest.fixture
@@ -113,7 +113,22 @@ def test_count_should_call_count_for_specific_index(mock_count_elastic):
 
 
 @pytest.mark.unit
-def test_search_in_should_search_in_information_models_with_information_model_query(mock_elastic):
+def test_search_in_index_information_models(mock_elastic):
+    """
+        1. should search in informationmodel index
+        2. should search with InformationModelQuery
+    """
     search_in_index(index="informationmodels")
     info_query_body = InformationModelQuery().body
     mock_elastic.assert_called_once_with(index=IndicesKey.INFO_MODEL, body=info_query_body)
+
+
+@pytest.mark.unit
+def test_search_in_dataset(mock_elastic):
+    """
+        1. should search in datasets index
+        2. should search with DataSetQuery
+    """
+    search_in_index(index="datasets")
+    dataset_query_body = DataSetQuery().body
+    mock_elastic.assert_called_once_with(index=IndicesKey.DATA_SETS, body=dataset_query_body)

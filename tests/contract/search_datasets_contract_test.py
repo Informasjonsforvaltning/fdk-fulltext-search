@@ -1,17 +1,12 @@
 import json
 import re
-import time
 from datetime import datetime
-
 import pytest
 import requests
 from jsonpath_ng import parse
-from requests import get
-from urllib3.exceptions import MaxRetryError, NewConnectionError
 
 from tests.contract.contract_utils import expected_page_keys
 from tests.contract.search_all_contract_test import service_url
-
 
 indices_name = "datasets"
 data_type = "dataset"
@@ -43,7 +38,7 @@ class TestDataSetSearch:
         assert "orgPath" in agg_keys
         assert len(aggregations["orgPath"]["buckets"]) > 0
         assert "opendata" in agg_keys
-        assert len(aggregations["opendata"]["buckets"]) > 0
+        assert aggregations["opendata"]["doc_count"] > 0
         # EU-themes
         assert "theme" in agg_keys
         assert len(aggregations["theme"]["buckets"]) > 0
@@ -62,14 +57,13 @@ class TestDataSetSearch:
         page_request_body = {
             "page": 5
         }
-        page_result = requests.post(url=datasets_url, json=page_request_body).json()
+        page_result = requests.post(url=datasets_url, json=page_request_body)
         assert page_result.status_code == 200
         page_result_json = page_result.json()
 
         assert page_result_json["page"]["size"] == 10
         assert page_result_json["page"]["currentPage"] == 5
-
-        assert json.dumps(default_result_json["hits"][0]) != json.dumps(page_result["hits"][0])
+        assert json.dumps(default_result_json["hits"][0]) != json.dumps(page_result_json["hits"][0])
 
     @pytest.mark.contract
     def test_should_sort_on_date(self, wait_for_datasets_ready):

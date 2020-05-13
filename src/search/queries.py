@@ -2,6 +2,7 @@ import abc
 from enum import Enum
 
 from src.search.query_utils import *
+from src.search.query_utils_dataset import data_sets_default_query
 
 
 class Direction(Enum):
@@ -150,14 +151,17 @@ class InformationModelQuery(AbstractSearchQuery):
         # TODO implement user defined aggregations?
 
 
-class DataSettQuery(AbstractSearchQuery):
+class DataSetQuery(AbstractSearchQuery):
+
+    def add_search_string(self, search_string: str):
+        pass
 
     def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
         super().__init__(search_string)
         if search_string:
             self.add_search_string(search_string)
         else:
-            self.query = information_model_default_query()
+            self.query = data_sets_default_query()
         self.add_aggs(aggs)
         if filters:
             if filters:
@@ -166,8 +170,17 @@ class DataSettQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-        def add_aggs(self, fields: list):
-            pass
-
-        def add_search_string(self, search_string: str):
-            pass
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["los"] = los_aggregation()
+            self.body["aggs"]["provenance"] = get_aggregation_term_for_key(aggregation_key="provenance")
+            self.body["aggs"]["orgPath"] = org_path_aggregation()
+            self.body["aggs"]["opendata"] = {
+                "filter": open_data_query()
+            }
+            self.body["aggs"]["theme"] = get_aggregation_term_for_key(aggregation_key="theme")
+            self.body["aggs"]["accessRights"] = get_aggregation_term_for_key(aggregation_key="accessRights",
+                                                                             missing="Ukjent",
+                                                                             size=10)
+            self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
+        # TODO implement user defined aggregations?

@@ -4,8 +4,8 @@ import pytest
 from src.ingest.utils import IndicesKey
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_all_indices_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string, index_match_in_title_query, data_sett_default_query
+    default_all_indices_aggs, get_field_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
+    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key
 
 
 @pytest.mark.unit
@@ -530,16 +530,20 @@ def test_default_aggs():
 
 @pytest.mark.unit
 def test_get_filter_key():
-    result_orgPath = get_filter_key("orgPath")
+    result_orgPath = get_field_key("orgPath")
     assert result_orgPath == "publisher.orgPath"
-    result_access = get_filter_key("accessRights")
+    result_access = get_field_key("accessRights")
     assert result_access == "accessRights.code.keyword"
-    result_los = get_filter_key("los")
+    result_los = get_field_key("los")
     assert result_los == "losTheme.losPaths.keyword"
-    result_theme = get_filter_key("theme")
+    result_theme = get_field_key("theme")
     assert result_theme == "euTheme"
-    result_random_key = get_filter_key("random")
+    result_random_key = get_field_key("random")
     assert result_random_key == "random"
+    result_spatial = get_field_key("spatial")
+    assert result_spatial == "spatial.prefLabel.no.keyword"
+    result_provenance = get_field_key("provenance")
+    assert result_provenance == "provenance.code.keyword"
 
 
 @pytest.mark.unit
@@ -689,37 +693,20 @@ def test_match_in_index_title_info_model():
 
 
 @pytest.mark.unit
-def test_data_sett_default_query():
-    expected_query = {
-        "bool": {
-            "must": [
-                {
-                    "match_all": {}
-                }
-            ],
-            "should": [
-                {
-                    "match": {
-                        "provenance.code": "NASJONAL"
-                    }
-                },
-                {
-                    "bool": {
-                        "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
+def test_get_aggregation_term_for_key():
+    expected_spatial = {
+        "terms": {
+            "field": "spatial.prefLabel.no.keyword"
         }
     }
-    assert json.dumps(data_sett_default_query()) == json.dumps(expected_query)
+
+    expected_access = {
+        "terms": {
+            "field": "accessRights.code.keyword",
+            "missing": "Ukjent",
+            "size": 10
+        }
+    }
+
+    assert get_aggregation_term_for_key("spatial") == expected_spatial
+    assert get_aggregation_term_for_key(aggregation_key="accessRights", missing="Ukjent", size=10) == expected_access
