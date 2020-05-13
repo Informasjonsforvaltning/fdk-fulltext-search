@@ -37,6 +37,7 @@ def create_app(test_config=None):
     api.add_resource(Recent, '/recent')
     api.add_resource(Indices, '/indices')
     api.add_resource(SearchInformationModels, '/informationmodels')
+    api.add_resource(SearchDataSet, '/datasets')
 
     # start rabbitmq consumer
     UpdateConsumer()

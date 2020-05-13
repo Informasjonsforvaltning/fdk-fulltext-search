@@ -40,6 +40,22 @@ class SearchInformationModels(Resource):
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
+class SearchDataSet(Resource):
+    def post(self):
+        page = 0
+        if len(request.data) == 0:
+            result = client.search_in_index(index=IndicesKey.DATA_SETS)
+        else:
+            body = request.get_json()
+            if "page" in body:
+                page = body["page"]
+            result = client.search_in_index(index=IndicesKey.DATA_SETS, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)
+
+
 class Count(Resource):
     def get(self):
         return client.count()

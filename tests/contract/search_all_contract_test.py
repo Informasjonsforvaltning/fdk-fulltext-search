@@ -1,31 +1,10 @@
 import json
 import re
-import time
 from datetime import datetime
 
 import pytest
-import requests
 from jsonpath_ng import parse
-from requests import post, get
-from urllib3.exceptions import MaxRetryError, NewConnectionError
-
-
-@pytest.fixture(scope="function")
-def wait_for_ready():
-    timeout = time.time() + 90
-    try:
-        while True:
-            response = get("http://localhost:8000/count")
-            if response.json()['count'] >= 5610:
-                break
-            if time.time() > timeout:
-                pytest.fail(
-                    'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
-                    'was {0}'.format(response.json()["count"]))
-            time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
-    yield
+from requests import post
 
 
 service_url = "http://localhost:8000"
