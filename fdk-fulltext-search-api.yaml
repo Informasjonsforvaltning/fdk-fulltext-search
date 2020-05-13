@@ -95,7 +95,13 @@ paths:
                 $ref: "#/components/schemas/IndexResponse"
         '400':
           description: Bad request. Most probably caused by an error in the name parameter
-  /informationmodels
+        '500':
+          'description': Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexErrorMessage'
+  /informationmodels:
     post:
       summary: "Returns a list of hits from full text searches in Felles Datakatalog's informationmodels"
       operationId: searchInformationModels
@@ -112,6 +118,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: $ref '#/components/schemas/ErrorMessage'
+  /datasets:
+    post:
+      summary: Returns a list of hits from full text searches in Felles Datakatalog's datasets
+      operationId: searchDataSets
+      description: An ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: $ref '#/components/schemas/ErrorMessage'
+  /suggestion/{type}:
+    get:
+      summary: Returns a list of auto complete suggestions for the specified content type in FDKs content. TODO-> Default to all content types, [dataservices,concepts,informationmodels]
+      operationId: autoComplete
+      parmeters:
+        - in: path
+          name: type
+          description: content type
+          required: false
+          schema:
+            type: string
+            enum: [datasets]
+        - in: query
+          name: q
+          description: string to perform asuggestion search on
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              $ref: '#/components/schemas/SuggestionResult'
+        '400':
+          description: Bad request. Most likely caused by an urecognized type in path parameter
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              $ref: '#/components/schemas/ErrorMessage'
+        '501':
+          description: Not implemented. Most likely caused by an unimplemented type in path parameter
+          content:
+            application/json:
+              $ref: '#/components/schemas/ErrorMessage'
+
 components:
   schemas:
     SearchRequest:
@@ -120,7 +188,7 @@ components:
       properties:
         size:
           type: integer
-          description: 'how many elements that should be returned, defaults to 10'
+          description: 'how many hits that should be returned, defaults to 10'
         sorting:
           $ref: '#/components/schemas/Sort'
         filters:
@@ -145,6 +213,21 @@ components:
               $ref: '#/components/schemas/Page'
             aggregations:
               type: string
+    SuggestionResult:
+      type: object
+      properties:
+        suggestions:
+          type: array
+          items:
+            anyOf:
+             - $ref: '#/components/schemas/DataSetSuggestion'
+    DataSetSuggestion:
+      type: object
+      properties:
+        title:
+          type: string
+        uri:
+          type: string
     Filter:
       type: object
       additionalProperties:
@@ -568,8 +651,13 @@ components:
       properties:
         status:
           type: integer
-        reason:
+        message:
           type: string
+    IndexErrorMessage:
+      allOf:
+        - $ref: '#/components/schemas/ErrorMessage'
+        - type: int
+          name: count
     Buckets:
       type: object
       properties:
