@@ -451,6 +451,7 @@ def test_dataset_empty_query():
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)
 
 
+@pytest.mark.unit
 def test_dataset_with_query_string_query():
     expected = {
         "bool": {
@@ -574,5 +575,159 @@ def test_dataset_with_query_string_query():
     assert parse('bool.must[*].dis_max.queries[*].dis_max.queries[*].multi_match').find(result).__len__() == 4, \
         "clauses missing from dis_max title queries "
     # has fulltext clauses
-    assert parse('bool.must[*].dis_max.queries[*].simple_query_string').find(result).__len__() == 3, "missing fulltext_queries"
+    assert parse('bool.must[*].dis_max.queries[*].simple_query_string').find(
+        result).__len__() == 3, "missing fulltext_queries"
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_dataset_with_spatial_filter():
+    expected = {
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            "queries": [
+                                {
+                                    "dis_max": {
+                                        "queries": [
+                                            {
+                                                "multi_match": {
+                                                    "query": "Ad",
+                                                    "type": "bool_prefix",
+                                                    "fields": [
+                                                        "title.nb.ngrams",
+                                                        "title.nb.ngrams.2_gram",
+                                                        "title.nb.ngrams.3_gram"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "multi_match": {
+                                                    "query": "Ad",
+                                                    "type": "bool_prefix",
+                                                    "fields": [
+                                                        "title.nn.ngrams",
+                                                        "title.nn.ngrams.2_gram",
+                                                        "title.nn.ngrams.3_gram"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "multi_match": {
+                                                    "query": "Ad",
+                                                    "type": "bool_prefix",
+                                                    "fields": [
+                                                        "title.no.ngrams",
+                                                        "title.no.ngrams.2_gram",
+                                                        "title.no.ngrams.3_gram"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "multi_match": {
+                                                    "query": "Ad",
+                                                    "type": "bool_prefix",
+                                                    "fields": [
+                                                        "title.en.ngrams",
+                                                        "title.en.ngrams.2_gram",
+                                                        "title.en.ngrams.3_gram"
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 5
+                                    }
+                                },
+                                {
+                                    "simple_query_string": {
+                                        "query": "Ad Ad*",
+                                        "fields": [
+                                            "description.nb",
+                                            "description.nn",
+                                            "description.no",
+                                            "description.en"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "simple_query_string": {
+                                        "query": "Ad Ad*",
+                                        "fields": [
+                                            "title.*^3",
+                                            "objective.*",
+                                            "keyword.*^2",
+                                            "theme.title.*",
+                                            "expandedLosTema.*",
+                                            "description.*",
+                                            "publisher.name^3",
+                                            "publisher.prefLabel^3",
+                                            "accessRights.prefLabel.*^3",
+                                            "accessRights.code",
+                                            "subject.prefLabel.*",
+                                            "subject.altLabel.*",
+                                            "subject.definition.*"
+                                        ],
+                                        "boost": 0.5
+                                    }
+                                },
+                                {
+                                    "simple_query_string": {
+                                        "query": "*Ad Ad Ad*",
+                                        "fields": [
+                                            "title.*^3",
+                                            "objective.*",
+                                            "keyword.*^2",
+                                            "theme.title.*",
+                                            "expandedLosTema.*",
+                                            "description.*",
+                                            "publisher.name^3",
+                                            "publisher.prefLabel^3",
+                                            "accessRights.prefLabel.*^3",
+                                            "accessRights.code",
+                                            "subject.prefLabel.*",
+                                            "subject.altLabel.*",
+                                            "subject.definition.*"
+                                        ],
+                                        "boost": 0.001
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "should": [
+                    {
+                        "match": {
+                            "provenance.code": "NASJONAL"
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "accessRights.code.keyword": "PUBLIC"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "distribution.openLicense": "true"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "filter": [
+                    {
+                        "term": {
+                            "spatial.prefLabel.no.keyword": "Norge"
+                        }
+                    }
+                ]
+            }
+    }
+    result = DataSetQuery(search_string="Ad", filters=[{"spatial": "Norge"}]).body["query"]
+
     assert json.dumps(result) == json.dumps(expected)

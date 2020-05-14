@@ -16,7 +16,7 @@ datasets_url = service_url + f"/{indices_name}"
 class TestDataSetSearch:
 
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, wait_for_datasets_ready):
+    def test_response_should_have_correct_content(self, api, wait_for_datasets_ready):
         result = requests.post(datasets_url)
         assert result.status_code == 200
         result_json = result.json()
@@ -48,7 +48,7 @@ class TestDataSetSearch:
         assert len(aggregations["spatial"]["buckets"]) > 0
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, wait_for_datasets_ready):
+    def test_should_have_correct_size_and_page(self, api, wait_for_datasets_ready):
         result = requests.post(datasets_url)
         assert result.status_code == 200
         default_result_json = result.json()
@@ -66,7 +66,7 @@ class TestDataSetSearch:
         assert json.dumps(default_result_json["hits"][0]) != json.dumps(page_result_json["hits"][0])
 
     @pytest.mark.contract
-    def test_should_sort_on_date(self, wait_for_datasets_ready):
+    def test_should_sort_on_date(self, api, wait_for_datasets_ready):
         body = {
             "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
         }
@@ -80,7 +80,7 @@ class TestDataSetSearch:
             last_date = date
 
     @pytest.mark.contract
-    def test_search_without_query_should_have_correct_sorting(self, wait_for_datasets_ready):
+    def test_search_without_query_should_have_correct_sorting(self, api, wait_for_datasets_ready):
         """
         1. open authoritative datasets
         2. authoritative datasets
@@ -89,7 +89,7 @@ class TestDataSetSearch:
         body = {
             "size": 500
         }
-        result = requests.post(datasets_url)
+        result = requests.post(datasets_url, json=body)
         assert result.status_code == 200
         previous_was_open_data = True
         previous_was_authoritative = True
@@ -97,7 +97,7 @@ class TestDataSetSearch:
             if "provenance" in hit.keys():
                 if hit["provenance"]["code"] == "NASJONAL":
                     assert previous_was_authoritative is True, "dataset with NASJONAL provenance encountered after " \
-                                                           "non-authoritative hit"
+                                                               "non-authoritative hit"
                 if hit["accessRights"]["code"] == "PUBLIC":
                     openLicence = [match.value for match in parse("distribution[*].openLicense").find(hit)]
                     if True in openLicence:
@@ -117,7 +117,7 @@ class TestDataSetSearch:
                 previous_was_authoritative = False
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, wait_for_datasets_ready):
+    def test_hits_should_be_correctly_sorted_on_title(self, api, wait_for_datasets_ready):
         """
             1. exact match
             2. word in title
@@ -145,8 +145,8 @@ class TestDataSetSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, wait_for_datasets_ready):
-        org_path = "PRIVAT/910244132"
+    def test_should_filter_on_orgPath(self, api, wait_for_datasets_ready):
+        org_path = "/PRIVAT/994686011"
         body = {
             "filters":
                 [{"orgPath": org_path}]
@@ -159,7 +159,7 @@ class TestDataSetSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_filter_on_spatial(self, wait_for_datasets_ready):
+    def test_should_filter_on_spatial(self, api, wait_for_datasets_ready):
         expected_spatial = "Norge"
         body = {
             "filters":
@@ -171,10 +171,11 @@ class TestDataSetSearch:
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
-            assert expected_spatial in json.dumps(hit["spatial"]["prefLabel"])
+            spatial_path = parse('spatial[*].prefLabel.nb')
+            assert expected_spatial in [match.value for match in spatial_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme(self, wait_for_datasets_ready):
+    def test_filter_on_eu_theme(self, api, wait_for_datasets_ready):
         body = {
             "filters": [
                 {"theme": "GOVE"}
@@ -189,7 +190,7 @@ class TestDataSetSearch:
             assert "GOVE" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
-    def test_filter_on_open_data(self, wait_for_datasets_ready):
+    def test_filter_on_open_data(self, api, wait_for_datasets_ready):
         body = {
             "filters": [
                 {"opendata": "true"}
@@ -208,7 +209,7 @@ class TestDataSetSearch:
         assert hasOpenLicenceDistribution is True
 
     @pytest.mark.contract
-    def test_filter_on_accessRights_NON_PUBLIC(self, wait_for_datasets_ready):
+    def test_filter_on_accessRights_NON_PUBLIC(self, api, wait_for_datasets_ready):
         body = {
             "filters": [{"accessRights": "NON_PUBLIC"}]
         }
@@ -217,7 +218,7 @@ class TestDataSetSearch:
             assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
     @pytest.mark.contract
-    def test_should_filter_on_provenance(self, wait_for_datasets_ready):
+    def test_should_filter_on_provenance(self, api, wait_for_datasets_ready):
         expected_provenance = "TREDJEPART"
         body = {
             "filters":
@@ -229,10 +230,11 @@ class TestDataSetSearch:
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
-            assert expected_provenance in json.dumps(hit["spatial"]["prefLabel"])
+            provenance_path = parse('provenance.code')
+            assert expected_provenance in [match.value for match in provenance_path.find(hit)]
 
     @pytest.mark.contract
-    def test_should_filter_on_los(self, wait_for_datasets_ready):
+    def test_should_filter_on_los(self, api, wait_for_datasets_ready):
         los_path = "los"
         body = {
             "filters": [{"los": los_path}]
@@ -244,11 +246,11 @@ class TestDataSetSearch:
             assert los_path in [match.value for match in los_json_path.find(hit)]
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath_and_spatial(self, wait_for_datasets_ready):
-        expected_org_path = "PRIVAT"
+    def test_should_filter_on_orgPath_and_spatial(self, api, wait_for_datasets_ready):
+        expected_org_path = "/STAT"
         expected_spatial = "Norge"
         body = {
-            "filters": [{"orgPath": expected_org_path}, {"spatial": expected_spatial}]
+            "filters": [{"orgPath": "/STAT"}, {"spatial": "Norge"}]
         }
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
@@ -256,10 +258,14 @@ class TestDataSetSearch:
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
             assert expected_org_path in hit["publisher"]["orgPath"]
-            assert expected_spatial in json.dumps(hit["spatial"]["prefLabel"])
+            spatial_nb_path = parse('spatial[*].prefLabel.nb')
+            spatial_no_path = parse('spatial[*].prefLabel.no')
+            has_correct_spatial = expected_spatial in [match.value for match in spatial_nb_path.find(hit)] \
+                                  or expected_spatial in [match.value for match in spatial_no_path.find(hit)]
+            assert has_correct_spatial
 
     @pytest.mark.contract
-    def test_filter_on_eu_theme(self, wait_for_datasets_ready):
+    def test_filter_on_eu_theme(self, api, wait_for_datasets_ready):
         body = {
             "filters": [
                 {"theme": "GOVE"}

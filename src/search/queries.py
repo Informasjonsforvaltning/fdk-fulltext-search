@@ -169,7 +169,8 @@ class DataSetQuery(AbstractSearchQuery):
         if filters:
             if filters:
                 self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
-                                                                     should_clause=[autorativ_dataset_query()],
+                                                                     should_clause=[autorativ_dataset_query(),
+                                                                                    open_data_query()],
                                                                      filter_clause=True)
                 self.add_filters(filters)
         else:

@@ -85,6 +85,7 @@ def simple_query_string(search_string: str,
         simple_query["simple_query_string"]["boost"] = boost
         return simple_query
 
+
 def get_catch_all_query_string(original_string) -> str:
     new_string_list = []
     for word in original_string.split():
@@ -416,7 +417,7 @@ def query_with_final_boost_template(must_clause: list, should_clause, filter_cla
             }
     }
     if filter_clause:
-        template["filter"] = []
+        template["bool"]["filter"] = []
     return template
 
 
