@@ -160,6 +160,7 @@
                     },
                     "en": {
                         "type": "text",
+                        "analyzer": "english",
                         "fields": {
                             "ngrams": {
                                 "type": "search_as_you_type"
@@ -245,6 +246,9 @@
     "settings": {
         "analysis": {
             "analyzer": {
+                "default": {
+                    "type": "norwegian"
+                },
                 "path-analyzer": {
                     "type": "custom",
                     "tokenizer": "path-tokenizer"
