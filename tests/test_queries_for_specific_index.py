@@ -1,8 +1,9 @@
 import json
 
 import pytest
+from jsonpath_ng import parse
 
-from src.search.queries import InformationModelQuery, DataSetQuery
+from src.search.queries import InformationModelQuery, DataSetQuery, index_fulltext_fields, IndicesKey
 
 
 @pytest.mark.unit
@@ -448,3 +449,130 @@ def test_dataset_empty_query():
         }
     }
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)
+
+
+def test_dataset_with_query_string_query():
+    expected = {
+        "bool": {
+            "must": [
+                {
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "dis_max": {
+                                    "queries": [
+                                        {
+                                            "multi_match": {
+                                                "query": "Elbiloversikt i",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nb.ngrams",
+                                                    "title.nb.ngrams.2_gram",
+                                                    "title.nb.ngrams.3_gram"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Elbiloversikt i",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nn.ngrams",
+                                                    "title.nn.ngrams.2_gram",
+                                                    "title.nn.ngrams.3_gram"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Elbiloversikt i",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.no.ngrams",
+                                                    "title.no.ngrams.2_gram",
+                                                    "title.no.ngrams.3_gram"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Elbiloversikt i",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.en.ngrams",
+                                                    "title.en.ngrams.2_gram",
+                                                    "title.en.ngrams.3_gram"
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "boost": 5
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Elbiloversikt+i Elbiloversikt+i*",
+                                    "fields": [
+                                        "description.nb",
+                                        "description.nn",
+                                        "description.no",
+                                        "description.en"
+                                    ]
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Elbiloversikt+i Elbiloversikt+i*",
+                                    "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+                                    "boost": 0.5
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "*Elbiloversikt Elbiloversikt Elbiloversikt* *i i i*",
+                                    "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+                                    "boost": 0.001,
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "should": [
+                {
+                    "match": {
+                        "provenance.code": "NASJONAL"
+                    }
+                },
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "accessRights.code.keyword": "PUBLIC"
+                                }
+                            },
+                            {
+                                "term": {
+                                    "distribution.openLicense": "true"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+    result = DataSetQuery("Elbiloversikt i").body["query"]
+    # has boolean root clause
+    assert parse('bool.must').find(result).__len__() > 0 and parse('bool.should').find(result).__len__() > 0, \
+        "No boolean root clause "
+    assert parse('bool.must[*].dis_max').find(result).__len__() == 1, "No dismax query in boolean must root clause"
+    # has title clause
+    assert parse('bool.must[*].dis_max.queries[*].dis_max').find(result).__len__() == 1, "No root query for " \
+                                                                                         "dismax_title "
+    assert parse('bool.must[*].dis_max.queries[*].dis_max.queries[*].multi_match').find(result).__len__() == 4, \
+        "clauses missing from dis_max title queries "
+    # has fulltext clauses
+    assert parse('bool.must[*].dis_max.queries[*].simple_query_string').find(result).__len__() == 3, "missing fulltext_queries"
+    assert json.dumps(result) == json.dumps(expected)

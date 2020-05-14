@@ -23,7 +23,7 @@ class TestSuggestions:
 
     @pytest.mark.contract
     def test_suggestion_bad_request(self, wait_for_ready):
-        result = requests.get(service_url + '/invalid')
+        result = requests.get(suggestions_endpoint + '/invalid')
         assert result.status_code == 400
 
     @pytest.mark.contract

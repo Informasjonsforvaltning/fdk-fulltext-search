@@ -2,6 +2,7 @@ import json
 import pytest
 
 from src.ingest.utils import IndicesKey
+from src.search.fields import index_fulltext_fields
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
     default_all_indices_aggs, get_field_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
@@ -268,7 +269,7 @@ def test_simple_query_string_query():
             "boost": 0.001
         }
     }
-    result = simple_query_string(search_string="åpne data")
+    result = simple_query_string(search_string="åpne data", all_indices_autorativ_boost=True)
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -302,7 +303,7 @@ def test_simple_query_string_query_special_chars():
             "boost": 0.001
         }
     }
-    result = simple_query_string(search_string="åpne - !! (data)")
+    result = simple_query_string(search_string="åpne - !! (data)", all_indices_autorativ_boost=True)
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -337,8 +338,30 @@ def test_simple_query_lenient():
         }
     }
 
-    result = simple_query_string(search_string="mange bekker", boost=1, lenient=True)
+    result = simple_query_string(search_string="mange bekker",
+                                 all_indices_autorativ_boost=True,
+                                 boost=1,
+                                 lenient=True)
 
+    assert json.dumps(result) == json.dumps(expected)
+
+
+def test_simple_query_with_fields():
+    expected = {
+        "simple_query_string": {
+            "query": "*mange mange mange* *bekker bekker bekker*",
+            "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+            "boost":0.001
+        }
+
+    }
+
+    result = simple_query_string(
+        search_string="mange bekker",
+        lenient=True,
+        all_indices_autorativ_boost=False,
+        fields_for_index=IndicesKey.DATA_SETS
+    )
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -373,7 +396,7 @@ def test_simple_query_string_query_boost_1():
         }
     }
 
-    result = simple_query_string(search_string="åpne data", boost=1)
+    result = simple_query_string(search_string="åpne data", boost=1, all_indices_autorativ_boost=True)
 
     assert json.dumps(result) == json.dumps(expected)
 

@@ -2,7 +2,7 @@ import re
 
 from src.ingest.utils import IndicesKey
 from src.search.query_utils_dataset import autorativ_dataset_query, open_data_query
-from src.search.fields import index_description_fields, index_title_fields
+from src.search.fields import index_description_fields, index_title_fields, index_fulltext_fields
 
 
 def title_term_query(field, search_string):
@@ -55,32 +55,35 @@ def autorativ_boost_clause() -> dict:
     }
 
 
-def simple_query_string(search_string: str, boost=0.001, lenient=False, autorativ_boost=True) -> dict:
+def simple_query_string(search_string: str,
+                        boost=0.001,
+                        lenient=False,
+                        all_indices_autorativ_boost=False,
+                        fields_for_index=None) -> dict:
     replace_special_chars = words_only_string(search_string)
     final_string = replace_special_chars or search_string
 
     query_string = get_catch_all_query_string(final_string) if lenient else \
         "{0} {0}*".format(final_string.replace(" ", "+"))
-    if autorativ_boost:
+    simple_query = {
+        "simple_query_string": {
+            "query": query_string
+        }
+    }
+    if fields_for_index:
+        simple_query["simple_query_string"]["fields"] = index_fulltext_fields[fields_for_index]
+
+    if all_indices_autorativ_boost:
         return {
             "bool": {
-                "must": {
-                    "simple_query_string": {
-                        "query": query_string,
-                    }
-                },
+                "must": simple_query,
                 "should": [autorativ_boost_clause()],
                 "boost": boost
             }
         }
     else:
-        return {
-            "simple_query_string": {
-                "query": query_string,
-                "boost": boost
-            }
-        }
-
+        simple_query["simple_query_string"]["boost"] = boost
+        return simple_query
 
 def get_catch_all_query_string(original_string) -> str:
     new_string_list = []
@@ -402,6 +405,19 @@ def query_with_filter_template(must_clause: list) -> dict:
                 "filter": []
             }
     }
+
+
+def query_with_final_boost_template(must_clause: list, should_clause, filter_clause: bool = False) -> dict:
+    template = {
+        "bool":
+            {
+                "must": must_clause,
+                "should": should_clause
+            }
+    }
+    if filter_clause:
+        template["filter"] = []
+    return template
 
 
 def query_template(dataset_boost=0):

@@ -6,22 +6,6 @@ def autorativ_dataset_query() -> dict:
     }
 
 
-def data_sets_default_query() -> dict:
-    return {
-        "bool": {
-            "must": [
-                {
-                    "match_all": {}
-                }
-            ],
-            "should": [
-                autorativ_dataset_query(),
-                open_data_query()
-            ]
-        }
-    }
-
-
 def open_data_query():
     return {
         "bool": {

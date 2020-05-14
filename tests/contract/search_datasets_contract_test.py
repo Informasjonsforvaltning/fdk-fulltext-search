@@ -74,7 +74,7 @@ class TestDataSetSearch:
         assert result.status_code == 200
         last_date = None
         for hit in result.json()["hits"]:
-            date = hit["harvest"]["firstHarvested"]
+            date = hit["harvest"]["firstHarvested"].split('+')[0]
             if last_date:
                 assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%S") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%S")
             last_date = date
@@ -94,8 +94,9 @@ class TestDataSetSearch:
         previous_was_open_data = True
         previous_was_authoritative = True
         for hit in result.json()["hits"]:
-            if hit["provenance"]["code"] == "NASJONAL":
-                assert previous_was_authoritative is True, "dataset with NASJONAL provenance encountered after " \
+            if "provenance" in hit.keys():
+                if hit["provenance"]["code"] == "NASJONAL":
+                    assert previous_was_authoritative is True, "dataset with NASJONAL provenance encountered after " \
                                                            "non-authoritative hit"
                 if hit["accessRights"]["code"] == "PUBLIC":
                     openLicence = [match.value for match in parse("distribution[*].openLicense").find(hit)]
@@ -124,7 +125,7 @@ class TestDataSetSearch:
         search_str = "Elbiloversikt i Norge"
         body = {
             "q": search_str,
-            "size": 300
+            "size": 1000
         }
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
