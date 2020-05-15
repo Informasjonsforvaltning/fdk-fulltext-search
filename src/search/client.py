@@ -101,7 +101,6 @@ def count(index=None):
 
 def get_recent(size=None):
     q = RecentQuery(size).query
-    print(json.dumps(q))
     return es_client.search(body=q)
 
 
@@ -121,5 +120,6 @@ def get_indices(index_name=None):
         return None
 
 
-def get_suggestions(query, indices=None):
-    return None
+def get_suggestions(search_string: str, index_key: IndicesKey.DATA_SETS):
+    query = SuggestionQuery(index_key=index_key, search_string=search_string)
+    return es_client.search(index=index_key, body=query.body)

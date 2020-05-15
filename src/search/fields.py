@@ -5,6 +5,10 @@ index_title_fields = {
     IndicesKey.DATA_SETS: ['title.nb', 'title.nn', 'title.no', 'title.en']
 }
 
+index_suggestion_fields = {
+    IndicesKey.DATA_SETS: ['title', 'uri']
+}
+
 index_description_fields = {
     IndicesKey.INFO_MODEL: ["schema^0.5"],
     IndicesKey.DATA_SETS: ["description.nb", "description.nn", "description.no", "description.en"],

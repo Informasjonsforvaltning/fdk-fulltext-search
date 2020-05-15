@@ -135,6 +135,24 @@ def word_in_title_query(title_field_names: list, search_string: str):
     }
 
 
+def suggestion_title_query(index_key: IndicesKey, search_string: str) -> dict:
+    query_list = []
+    for field in index_title_fields[index_key]:
+        fields_list = [field + ".ngrams", field + ".ngrams.2_gram", field + ".ngrams.3_gram"]
+        query_list.append({
+            "multi_match": {
+                    "query": search_string,
+                    "type": "bool_prefix",
+                    "fields": fields_list
+                }
+        })
+    return {
+        "dis_max": {
+            "queries": query_list
+        }
+    }
+
+
 def word_in_description_query(index_key: IndicesKey, search_string: str,
                               autorativ_boost=True) -> dict:
     query_string = search_string.replace(" ", "+")

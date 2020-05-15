@@ -27,19 +27,19 @@ class TestSuggestions:
         assert result.status_code == 400
 
     @pytest.mark.contract
-    def test_suggestion_datasets(self, wait_for_datasets_ready):
+    def test_suggestion_datasets(self, wait_for_ready):
         prefix = "Statisti"
-        result = requests.get(suggestions_endpoint + '/datasets?q='.format(prefix))
+        result = requests.get(suggestions_endpoint + '/datasets?q=Statisti'.format(prefix))
         assert result.status_code == 200
         previous_was_prefix = True
         was_prefix_count = 0
         was_partial_count = 0
-        for suggestion in result.json():
-            if has_prefix_in_title_all_languages(suggestion, prefix):
+        for hit in result.json()['suggestions']:
+            if has_prefix_in_title_all_languages(hit['title'], prefix):
                 assert previous_was_prefix, "Prefix match encountered after other suggestions"
                 was_prefix_count += 1
             else:
-                assert has_partial_match_in_title(suggestion, prefix), "Title without match on prefix encountered "
+                assert has_partial_match_in_title(hit['suggestion'], prefix), "Title without match on prefix encountered "
                 was_partial_count += 1
         assert was_prefix_count > 0
         assert was_partial_count > 0

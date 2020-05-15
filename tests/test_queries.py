@@ -3,7 +3,7 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery
+from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery, SuggestionQuery, IndicesKey
 from src.search.query_utils import open_data_query
 
 
@@ -1245,3 +1245,63 @@ def test_add_filter_should_add_must_not_filter_for_Ukjent():
 
     assert has_must_not is True
     assert has_index_filter is True
+
+
+@pytest.mark.unit
+def test_suggestion_query_data_sett():
+    expected_body = {
+        "_source": ["title", "uri"],
+        "query": {
+            "dis_max": {
+                "queries": [
+                    {
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.nb.ngrams",
+                                "title.nb.ngrams.2_gram",
+                                "title.nb.ngrams.3_gram"
+                            ]
+                        }
+                    },
+                    {
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.nn.ngrams",
+                                "title.nn.ngrams.2_gram",
+                                "title.nn.ngrams.3_gram"
+                            ]
+                        }
+                    },
+                    {
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.no.ngrams",
+                                "title.no.ngrams.2_gram",
+                                "title.no.ngrams.3_gram"
+                            ]
+                        }
+                    },
+                    {
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.en.ngrams",
+                                "title.en.ngrams.2_gram",
+                                "title.en.ngrams.3_gram"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+
+    }
+    result = SuggestionQuery(search_string="Giv", index_key=IndicesKey.DATA_SETS).body
+    assert json.dumps(result) == json.dumps(expected_body)

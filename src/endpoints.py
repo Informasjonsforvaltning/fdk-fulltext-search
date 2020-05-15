@@ -138,20 +138,17 @@ class Suggestion(Resource):
                   description="{0} is not a valid content type. Valid content types are [datasets, informationmodels, "
                               "dataservices, concepts]".format(content_type))
         args = request.args
-        if "q" in args and len(args["q"]) > 2:
-            breakpoint()
-            result = client.get_suggestions(query=args["q"], indices="placeholder")
+        if "q" in args and len(args["q"]) > 1:
             if "lang" in args:
-                breakpoint()
                 # TODO
                 # return response.map_response(language=args["lang"])
                 abort(http_status_code=501,
                       description="fulltext-search does not yet support autocomplete search for specific language")
             else:
+                result = client.get_suggestions(search_string=args["q"], index_key=content_type)
                 response = SuggestionResponse(es_result=result)
                 return response.map_response()
         else:
-            breakpoint()
             return SuggestionResponse.empty_response()
 
 

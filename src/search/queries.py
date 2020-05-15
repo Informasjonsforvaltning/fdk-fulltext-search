@@ -1,6 +1,7 @@
 import abc
 from enum import Enum
 
+from src.search.fields import index_suggestion_fields
 from src.search.query_utils import *
 
 
@@ -106,19 +107,6 @@ class AllIndicesQuery(AbstractSearchQuery):
         }
 
 
-class RecentQuery:
-    def __init__(self, size=None):
-        self.query = {
-            "size": 5,
-            "sort": {"harvest.firstHarvested": {
-                "order": Direction.DESC.value}
-            }
-        }
-
-        if size is not None:
-            self.query["size"] = size
-
-
 class InformationModelQuery(AbstractSearchQuery):
 
     def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
@@ -207,3 +195,24 @@ class DataSetQuery(AbstractSearchQuery):
                                                                              size=10)
             self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
         # TODO implement user defined aggregations?
+
+
+class RecentQuery:
+    def __init__(self, size=None):
+        self.query = {
+            "size": 5,
+            "sort": {"harvest.firstHarvested": {
+                "order": Direction.DESC.value}
+            }
+        }
+
+        if size is not None:
+            self.query["size"] = size
+
+
+class SuggestionQuery:
+    def __init__(self, index_key, search_string):
+        self.body = {
+            "_source": index_suggestion_fields[index_key],
+            "query": suggestion_title_query(index_key=index_key, search_string=search_string)
+        }
