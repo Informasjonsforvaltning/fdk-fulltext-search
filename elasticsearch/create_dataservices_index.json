@@ -138,6 +138,9 @@
     "settings": {
         "analysis": {
             "analyzer": {
+                "default": {
+                    "type": "norwegian"
+                },
                 "path-analyzer": {
                     "type": "custom",
                     "tokenizer": "path-tokenizer"

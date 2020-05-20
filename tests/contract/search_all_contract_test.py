@@ -1,32 +1,10 @@
 import json
 import re
-import time
 from datetime import datetime
 
 import pytest
-import requests
 from jsonpath_ng import parse
-from requests import post, get
-from urllib3.exceptions import MaxRetryError, NewConnectionError
-
-
-@pytest.fixture(scope="function")
-def wait_for_ready():
-    timeout = time.time() + 90
-    try:
-        while True:
-            response = get("http://localhost:8000/count")
-            if response.json()['count'] >= 5610:
-                break
-            if time.time() > timeout:
-                pytest.fail(
-                    'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
-                    'was {0}'.format(response.json()["count"]))
-            time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
-    yield
-
+from requests import post
 
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
@@ -344,7 +322,7 @@ class TestSearchAll:
         assert json.dumps(no_white_space_result["hits"][0]) == json.dumps(white_space_result["hits"][0])
 
     @pytest.mark.contract
-    def test_words_in_title_after_exact_match(self):
+    def test_words_in_title_after_exact_match(self, api, wait_for_ready):
         body = {
             "q": "barnehage",
             "size": 300
@@ -360,7 +338,7 @@ class TestSearchAll:
                                                         "matches in title".format(get_title_values(hit))
                 assert last_was_not_word_in_title is False, "{0}: word not in title encountered before exact " \
                                                             "matches in title".format(get_title_values(hit))
-            elif is_word_title(hit, "barnehage"):
+            elif has_word_in_title(hit, "barnehage", ["barne", "hage"]):
                 assert last_was_not_word_in_title is False, "{0}: word not in title encountered before word in title." \
                                                             "Last title was: {1}".format(get_title_values(hit),
                                                                                          last_title)
@@ -562,15 +540,22 @@ def is_exact_match_in_title(hit, srch_string):
     return False
 
 
-def is_word_title(hit, srch_string):
+def has_word_in_title(hit, search_string, search_string_parts=None):
+    if search_string_parts is None:
+        search_string_parts = []
     if "prefLabel" in hit:
         prefLabels = hit["prefLabel"]
-        prt1 = re.findall(srch_string.lower(), json.dumps(prefLabels).lower())
-        if len(prt1) > 0:
+        prt1 = re.findall(search_string.lower(), json.dumps(prefLabels).lower())
+        prt2 = 0
+        if search_string_parts:
+            for part in search_string_parts:
+                partial_matches = re.findall(part, json.dumps(prefLabels))
+                prt2 += partial_matches.__len__()
+        if len(prt1) > 0 or prt2 > 0:
             return True
     elif "title" in hit:
         title = hit["title"]
-        prt1 = re.findall(srch_string.lower(), json.dumps(title).lower())
+        prt1 = re.findall(search_string.lower(), json.dumps(title).lower())
         if len(prt1) > 0:
             return True
     return False

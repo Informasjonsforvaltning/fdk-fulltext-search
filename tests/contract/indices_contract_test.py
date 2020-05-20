@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from tests.contract.search_contract_test import service_url
+from tests.contract.search_all_contract_test import service_url
 
 indices_name = ["dataservices", "datasets", "concepts", "informationmodels"]
 

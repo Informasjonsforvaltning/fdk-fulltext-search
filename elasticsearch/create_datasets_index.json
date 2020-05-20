@@ -20,6 +20,7 @@
                         "properties": {
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -118,6 +119,7 @@
                             },
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -651,6 +653,7 @@
             "description": {
                 "properties": {
                     "en": {
+                        "analyzer": "english",
                         "type": "text",
                         "fields": {
                             "keyword": {
@@ -674,6 +677,7 @@
                 "properties": {
                     "en": {
                         "type": "text",
+                        "analyzer": "english",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
@@ -797,6 +801,7 @@
                                 "properties": {
                                     "en": {
                                         "type": "text",
+                                        "analyzer": "english",
                                         "fields": {
                                             "keyword": {
                                                 "type": "keyword",
@@ -1141,6 +1146,7 @@
                         "properties": {
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -1217,6 +1223,7 @@
                         "properties": {
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -1313,6 +1320,7 @@
                         "properties": {
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -1514,6 +1522,7 @@
                                 "properties": {
                                     "en": {
                                         "type": "text",
+                                        "analyzer": "english",
                                         "fields": {
                                             "keyword": {
                                                 "type": "keyword",
@@ -1742,6 +1751,7 @@
                                 "properties": {
                                     "en": {
                                         "type": "text",
+                                        "analyzer": "english",
                                         "fields": {
                                             "keyword": {
                                                 "type": "keyword",
@@ -1832,6 +1842,7 @@
                             },
                             "en": {
                                 "type": "text",
+                                "analyzer": "english",
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
@@ -2018,6 +2029,7 @@
                 "properties": {
                     "en": {
                         "type": "text",
+                        "analyzer": "english",
                         "fields": {
                             "ngrams": {
                                 "type": "search_as_you_type"
@@ -2077,6 +2089,9 @@
     "settings": {
         "analysis": {
             "analyzer": {
+                "default": {
+                    "type": "norwegian"
+                },
                 "path-analyzer": {
                     "type": "custom",
                     "tokenizer": "path-tokenizer"

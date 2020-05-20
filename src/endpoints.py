@@ -3,9 +3,9 @@ import json
 from flask_restful import Resource, abort
 from flask import request, Response
 from .search import client
-from .ingest import fetch_all_content, reindex_all_indices, IndicesKey, fetch_data_sets, fetch_information_models, \
+from .ingest import fetch_all_content, IndicesKey, fetch_data_sets, fetch_information_models, \
     fetch_data_services, fetch_concepts
-from .search.responses import SearchResponse, IndicesInfoResponse
+from .search.responses import SearchResponse, IndicesInfoResponse, SuggestionResponse
 
 
 class Search(Resource):
@@ -40,17 +40,25 @@ class SearchInformationModels(Resource):
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
+class SearchDataSet(Resource):
+    def post(self):
+        page = 0
+        if len(request.data) == 0:
+            result = client.search_in_index(index=IndicesKey.DATA_SETS)
+        else:
+            body = request.get_json()
+            if "page" in body:
+                page = body["page"]
+            result = client.search_in_index(index=IndicesKey.DATA_SETS, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)
+
+
 class Count(Resource):
     def get(self):
         return client.count()
-
-
-class Update(Resource):
-    def put(self):
-        return fetch_all_content()
-
-    def delete(self):
-        reindex_all_indices()
 
 
 class Indices(Resource):
@@ -118,3 +126,33 @@ class Recent(Resource):
             size = args["size"]
         result = client.get_recent(size=size)
         return SearchResponse().map_response(es_result=result)
+
+
+class Suggestion(Resource):
+    def get(self, content_type):
+        if content_type in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.CONCEPTS, None]:
+            abort(http_status_code=501,
+                  description="fulltext-search does not yet support autocomplete search for {0} ".format(content_type))
+        elif content_type != IndicesKey.DATA_SETS:
+            abort(http_status_code=400,
+                  description="{0} is not a valid content type. Valid content types are [datasets, informationmodels, "
+                              "dataservices, concepts]".format(content_type))
+        args = request.args
+        if "q" in args and len(args["q"]) > 1:
+            if "lang" in args:
+                # TODO
+                # return response.map_response(language=args["lang"])
+                abort(http_status_code=501,
+                      description="fulltext-search does not yet support autocomplete search for specific language")
+            else:
+                result = client.get_suggestions(search_string=args["q"], index_key=content_type)
+                response = SuggestionResponse(es_result=result)
+                return response.map_response()
+        else:
+            return SuggestionResponse.empty_response()
+
+
+class SuggestionAllIndices(Resource):
+    def get(self):
+        abort(http_status_code=501,
+              description="fulltext-search does not yet support autocomplete search for all content")

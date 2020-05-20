@@ -4,10 +4,7 @@ import pytest
 import requests
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 
-from tests.contract.search_contract_test import service_url
-
 indices_name = ["dataservices", "datasets", "concepts", "informationmodels"]
-
 es_dataservice_url = "http://localhost:9200/dataservices"
 
 

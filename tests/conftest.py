@@ -1,7 +1,11 @@
 import os
 import re
+import time
 
 import pytest
+import requests
+from requests import get
+from urllib3.exceptions import MaxRetryError, NewConnectionError
 
 from tests.contract.contract_utils import wait_for_es, populate
 
@@ -58,6 +62,24 @@ json_data_services = {
 def api():
     wait_for_es()
     populate()
+    yield
+
+
+@pytest.fixture(scope="function")
+def wait_for_datasets_ready():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = get("http://localhost:8000/indices?name=datasets")
+            if response.json()[0]['count'] >= 1300:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    'Test function setup: timed out while waiting for fulltext-search, last response '
+                    'was {0}'.format(response.json()["count"]))
+            time.sleep(1)
+    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
+        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
     yield
 
 
@@ -142,3 +164,21 @@ def mock_getcwd():
 
 def empty_mock():
     return
+
+
+@pytest.fixture(scope="function")
+def wait_for_ready():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = get("http://localhost:8000/count")
+            if response.json()['count'] >= 5610:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
+                    'was {0}'.format(response.json()["count"]))
+            time.sleep(1)
+    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
+        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    yield

@@ -2,10 +2,11 @@ import json
 import pytest
 
 from src.ingest.utils import IndicesKey
+from src.search.fields import index_fulltext_fields
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
-    default_all_indices_aggs, get_filter_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string, index_match_in_title_query
+    default_all_indices_aggs, get_field_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
+    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key
 
 
 @pytest.mark.unit
@@ -199,13 +200,13 @@ def test_word_in_description_several_words():
 @pytest.mark.unit
 def test_word_in_description_several_words_without_aut_clause():
     expected = {
-                "simple_query_string": {
-                    "query": "åpne+data åpne+data*",
-                    "fields": [
-                        "schema^0.5"
-                    ]
-                }
-            }
+        "simple_query_string": {
+            "query": "åpne+data åpne+data*",
+            "fields": [
+                "schema^0.5"
+            ]
+        }
+    }
 
     result = word_in_description_query(
         index_key=IndicesKey.INFO_MODEL,
@@ -268,7 +269,7 @@ def test_simple_query_string_query():
             "boost": 0.001
         }
     }
-    result = simple_query_string(search_string="åpne data")
+    result = simple_query_string(search_string="åpne data", all_indices_autorativ_boost=True)
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -302,7 +303,7 @@ def test_simple_query_string_query_special_chars():
             "boost": 0.001
         }
     }
-    result = simple_query_string(search_string="åpne - !! (data)")
+    result = simple_query_string(search_string="åpne - !! (data)", all_indices_autorativ_boost=True)
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -337,8 +338,30 @@ def test_simple_query_lenient():
         }
     }
 
-    result = simple_query_string(search_string="mange bekker", boost=1, lenient=True)
+    result = simple_query_string(search_string="mange bekker",
+                                 all_indices_autorativ_boost=True,
+                                 boost=1,
+                                 lenient=True)
 
+    assert json.dumps(result) == json.dumps(expected)
+
+
+def test_simple_query_with_fields():
+    expected = {
+        "simple_query_string": {
+            "query": "*mange mange mange* *bekker bekker bekker*",
+            "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+            "boost":0.001
+        }
+
+    }
+
+    result = simple_query_string(
+        search_string="mange bekker",
+        lenient=True,
+        all_indices_autorativ_boost=False,
+        fields_for_index=IndicesKey.DATA_SETS
+    )
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -373,7 +396,7 @@ def test_simple_query_string_query_boost_1():
         }
     }
 
-    result = simple_query_string(search_string="åpne data", boost=1)
+    result = simple_query_string(search_string="åpne data", boost=1, all_indices_autorativ_boost=True)
 
     assert json.dumps(result) == json.dumps(expected)
 
@@ -530,16 +553,20 @@ def test_default_aggs():
 
 @pytest.mark.unit
 def test_get_filter_key():
-    result_orgPath = get_filter_key("orgPath")
+    result_orgPath = get_field_key("orgPath")
     assert result_orgPath == "publisher.orgPath"
-    result_access = get_filter_key("accessRights")
+    result_access = get_field_key("accessRights")
     assert result_access == "accessRights.code.keyword"
-    result_los = get_filter_key("los")
+    result_los = get_field_key("los")
     assert result_los == "losTheme.losPaths.keyword"
-    result_theme = get_filter_key("theme")
+    result_theme = get_field_key("theme")
     assert result_theme == "euTheme"
-    result_random_key = get_filter_key("random")
+    result_random_key = get_field_key("random")
     assert result_random_key == "random"
+    result_spatial = get_field_key("spatial")
+    assert result_spatial == "spatial.prefLabel.no.keyword"
+    result_provenance = get_field_key("provenance")
+    assert result_provenance == "provenance.code.keyword"
 
 
 @pytest.mark.unit
@@ -686,3 +713,23 @@ def test_match_in_index_title_info_model():
     }
     result = index_match_in_title_query(index_key=IndicesKey.INFO_MODEL, search_string="RA-05 string")
     assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_get_aggregation_term_for_key():
+    expected_spatial = {
+        "terms": {
+            "field": "spatial.prefLabel.no.keyword"
+        }
+    }
+
+    expected_access = {
+        "terms": {
+            "field": "accessRights.code.keyword",
+            "missing": "Ukjent",
+            "size": 10
+        }
+    }
+
+    assert get_aggregation_term_for_key("spatial") == expected_spatial
+    assert get_aggregation_term_for_key(aggregation_key="accessRights", missing="Ukjent", size=10) == expected_access

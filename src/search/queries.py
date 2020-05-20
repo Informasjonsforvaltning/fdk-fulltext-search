@@ -1,6 +1,7 @@
 import abc
 from enum import Enum
 
+from src.search.fields import index_suggestion_fields
 from src.search.query_utils import *
 
 
@@ -89,8 +90,14 @@ class AllIndicesQuery(AbstractSearchQuery):
         if some_words_in_title:
             self.query["dis_max"]["queries"].append(some_words_in_title)
 
-        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param, boost=0.0015))
-        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param, boost=0.001, lenient=True))
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param,
+                                                                    boost=0.0015,
+                                                                    all_indices_autorativ_boost=True))
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param,
+                                                                    boost=0.001,
+                                                                    lenient=True,
+                                                                    all_indices_autorativ_boost=True
+                                                                    ))
 
     def add_sorting(self, param):
         self.body["sort"] = {
@@ -123,10 +130,10 @@ class InformationModelQuery(AbstractSearchQuery):
                                                     search_string=search_string,
                                                     autorativ_boost=False),
                           simple_query_string(search_string=search_string,
-                                              autorativ_boost=False,
+                                              all_indices_autorativ_boost=False,
                                               boost=0.02),
                           simple_query_string(search_string=search_string,
-                                              autorativ_boost=False,
+                                              all_indices_autorativ_boost=False,
                                               lenient=True)]
         self.query["dis_max"]["queries"] = dismax_queries
 
@@ -134,6 +141,59 @@ class InformationModelQuery(AbstractSearchQuery):
         if fields is None:
             self.body["aggs"]["los"] = los_aggregation()
             self.body["aggs"]["orgPath"] = org_path_aggregation()
+        # TODO implement user defined aggregations?
+
+
+class DataSetQuery(AbstractSearchQuery):
+
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.query = {"match_all": {}}
+        self.add_aggs(aggs)
+        if filters:
+            if filters:
+                self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                     should_clause=[autorativ_dataset_query(),
+                                                                                    open_data_query()],
+                                                                     filter_clause=True)
+                self.add_filters(filters)
+        else:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[autorativ_dataset_query(),
+                                                                                open_data_query()])
+        x = 0
+
+    def add_search_string(self, search_string: str):
+        dismax_queries = [
+            index_match_in_title_query(index_key=IndicesKey.DATA_SETS, search_string=search_string, boost=5),
+            word_in_description_query(index_key=IndicesKey.DATA_SETS,
+                                      search_string=search_string,
+                                      autorativ_boost=False),
+            simple_query_string(search_string=search_string, boost=0.5, fields_for_index=IndicesKey.DATA_SETS),
+            simple_query_string(search_string=search_string,
+                                all_indices_autorativ_boost=False,
+                                lenient=True,
+                                fields_for_index=IndicesKey.DATA_SETS)
+        ]
+        self.query["dis_max"]["queries"] = dismax_queries
+
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["los"] = los_aggregation()
+            self.body["aggs"]["provenance"] = get_aggregation_term_for_key(aggregation_key="provenance")
+            self.body["aggs"]["orgPath"] = org_path_aggregation()
+            self.body["aggs"]["opendata"] = {
+                "filter": open_data_query()
+            }
+            self.body["aggs"]["theme"] = get_aggregation_term_for_key(aggregation_key="theme")
+            self.body["aggs"]["accessRights"] = get_aggregation_term_for_key(aggregation_key="accessRights",
+                                                                             missing="Ukjent",
+                                                                             size=10)
+            self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
         # TODO implement user defined aggregations?
 
 
@@ -148,3 +208,11 @@ class RecentQuery:
 
         if size is not None:
             self.query["size"] = size
+
+
+class SuggestionQuery:
+    def __init__(self, index_key, search_string):
+        self.body = {
+            "_source": index_suggestion_fields[index_key],
+            "query": suggestion_title_query(index_key=index_key, search_string=search_string)
+        }

@@ -5,7 +5,8 @@ from ..ingest import es_client, IndicesKey
 from elasticsearch.exceptions import ConnectionError
 
 query_builder = {
-    'informationmodels': InformationModelQuery
+    IndicesKey.INFO_MODEL: InformationModelQuery,
+    IndicesKey.DATA_SETS: DataSetQuery
 }
 
 
@@ -100,7 +101,6 @@ def count(index=None):
 
 def get_recent(size=None):
     q = RecentQuery(size).query
-    print(json.dumps(q))
     return es_client.search(body=q)
 
 
@@ -118,3 +118,8 @@ def get_indices(index_name=None):
         return es_client.search(index=IndicesKey.INDICES_INFO, body=req_body)
     else:
         return None
+
+
+def get_suggestions(search_string: str, index_key: IndicesKey.DATA_SETS):
+    query = SuggestionQuery(index_key=index_key, search_string=search_string)
+    return es_client.search(index=index_key, body=query.body)

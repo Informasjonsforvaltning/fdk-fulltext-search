@@ -10,7 +10,7 @@ from requests import get
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 
 from tests.contract.contract_utils import expected_page_keys
-from tests.contract.search_contract_test import service_url
+from tests.contract.search_all_contract_test import service_url
 
 
 @pytest.fixture(scope="function")
@@ -39,7 +39,7 @@ informationmodel_url = service_url + f"/{indices_name}"
 class TestInformationModelSearch:
 
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self):
+    def test_response_should_have_correct_content(self, api, wait_for_information_models):
         result = requests.post(informationmodel_url)
         result_json = result.json()
         content_keys = result_json.keys()
@@ -57,7 +57,7 @@ class TestInformationModelSearch:
         assert "orgPath" in agg_keys
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self):
+    def test_hits_should_be_correctly_sorted_on_title(self, api, wait_for_information_models):
         """
             1. exact match
             2. word in title
@@ -85,7 +85,7 @@ class TestInformationModelSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self):
+    def test_should_filter_on_orgPath(self, api, wait_for_information_models):
         org_path = "PRIVAT/910244132"
         body = {
             "filters": {
@@ -100,22 +100,7 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self):
-        org_path = "PRIVAT/910244132"
-        body = {
-            "filters": {
-                [{"orgPath": org_path}]
-            }
-        }
-        result = requests.post(url=informationmodel_url, json=body)
-        result_json = result.json()
-        assert result.status_code == 200
-        assert len(result_json["hits"]) > 0
-        for hit in result_json["hits"]:
-            assert org_path in hit["publisher"]["orgPath"]
-
-    @pytest.mark.contract
-    def test_should_filter_on_los(self):
+    def test_should_filter_on_los(self, api, wait_for_information_models):
         los_path = "los"
         body = {
             "filters": [{"los": los_path}]
@@ -127,7 +112,7 @@ class TestInformationModelSearch:
             assert los_path in [match.value for match in los_json_path.find(hit)]
 
     @pytest.mark.contract
-    def test_should_filter_on_los_and_orgPath(self):
+    def test_should_filter_on_several_los_themes(self, api, wait_for_information_models):
         los_path_1 = "demokrati-og-innbyggerrettigheter"
         los_path_2 = "naring"
         body = {
@@ -150,7 +135,7 @@ class TestInformationModelSearch:
             assert has_los_path_2
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self):
+    def test_should_filter_on_orgPath(self, api, wait_for_information_models):
         org_path = "PRIVAT"
         los_path = "demokrati-og-innbyggerrettigheter"
         body = {
@@ -164,7 +149,7 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self):
+    def test_should_have_correct_size_and_page(self, api, wait_for_information_models):
         default_result = requests.post(informationmodel_url).json()
         assert default_result["page"]["size"] == 10
         assert default_result["page"]["currentPage"] == 0
@@ -179,7 +164,7 @@ class TestInformationModelSearch:
         assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
 
     @pytest.mark.contract
-    def test_should_sort_on_date(self):
+    def test_should_sort_on_date(self, api, wait_for_information_models):
         body = {
             "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
         }

@@ -3,7 +3,7 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery
+from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery, SuggestionQuery, IndicesKey
 from src.search.query_utils import open_data_query
 
 
@@ -1248,281 +1248,60 @@ def test_add_filter_should_add_must_not_filter_for_Ukjent():
 
 
 @pytest.mark.unit
-def test_information_model_empty_query():
+def test_suggestion_query_data_sett():
     expected_body = {
-        "query": {
-            "match_all": {}
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            }
-        }
-    }
-
-    result_body = InformationModelQuery().body
-    assert result_body == expected_body
-
-
-@pytest.mark.unit
-def test_information_model_with_search_string_query():
-    expected_body = {
+        "_source": ["title", "uri"],
         "query": {
             "dis_max": {
                 "queries": [
                     {
-                        "dis_max": {
-                            "queries": [
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.nb.ngrams",
-                                            "title.nb.ngrams.2_gram",
-                                            "title.nb.ngrams.3_gram"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.nn.ngrams",
-                                            "title.nn.ngrams.2_gram",
-                                            "title.nn.ngrams.3_gram"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.no.ngrams",
-                                            "title.no.ngrams.2_gram",
-                                            "title.no.ngrams.3_gram"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.en.ngrams",
-                                            "title.en.ngrams.2_gram",
-                                            "title.en.ngrams.3_gram"
-                                        ]
-                                    }
-                                }
-                            ],
-                            "boost": 2
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.nb.ngrams",
+                                "title.nb.ngrams.2_gram",
+                                "title.nb.ngrams.3_gram"
+                            ]
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "RA-0554+Pris RA-0554+Pris*",
-                            "fields": ["schema^0.5"],
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.nn.ngrams",
+                                "title.nn.ngrams.2_gram",
+                                "title.nn.ngrams.3_gram"
+                            ]
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "RA+0554+Pris RA+0554+Pris*",
-                            "boost": 0.02
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.no.ngrams",
+                                "title.no.ngrams.2_gram",
+                                "title.no.ngrams.3_gram"
+                            ]
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
-                            "boost": 0.001
-                        }
-                    }
-                ]
-            }
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            }
-        }
-    }
-    result_body = InformationModelQuery(search_string="RA-0554 Pris").body
-    assert result_body == expected_body
-
-
-@pytest.mark.unit
-def test_information_model_add_filter():
-    expected_body = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "dis_max": {
-                            "queries": [
-                                {
-                                    "dis_max": {
-                                        "queries": [
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nb.ngrams",
-                                                        "title.nb.ngrams.2_gram",
-                                                        "title.nb.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nn.ngrams",
-                                                        "title.nn.ngrams.2_gram",
-                                                        "title.nn.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.no.ngrams",
-                                                        "title.no.ngrams.2_gram",
-                                                        "title.no.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.en.ngrams",
-                                                        "title.en.ngrams.2_gram",
-                                                        "title.en.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "boost": 2
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "RA-0554+Pris RA-0554+Pris*",
-                                        "fields": [
-                                            "schema^0.5"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "RA+0554+Pris RA+0554+Pris*",
-                                        "boost": 0.02
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
-                                        "boost": 0.001
-                                    }
-                                }
+                        "multi_match": {
+                            "query": "Giv",
+                            "type": "bool_prefix",
+                            "fields": [
+                                "title.en.ngrams",
+                                "title.en.ngrams.2_gram",
+                                "title.en.ngrams.3_gram"
                             ]
                         }
                     }
-                ],
-                "filter": [
-                    {
-                        "term": {
-                            "losTheme.losPaths.keyword": "naring"
-                        }
-                    }
                 ]
             }
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            }
         }
-    }
-    result = InformationModelQuery(search_string="RA-0554 Pris", filters=[{"los": "naring"}]).body
-    assert json.dumps(result) == json.dumps(expected_body)
 
-
-@pytest.mark.unit
-def test_information_model_should_return_query_with_must_not_for_MISSING():
-    expected_body = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "match_all": {}
-                    }
-                ],
-                "filter": [
-                    {
-                        "bool": {
-                            "must_not": {
-                                "exists": {
-                                    "field": "publisher.orgPath"
-                                }
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            }
-        }
     }
-    result = InformationModelQuery(filters=[{"orgPath": "MISSING"}]).body
+    result = SuggestionQuery(search_string="Giv", index_key=IndicesKey.DATA_SETS).body
     assert json.dumps(result) == json.dumps(expected_body)
