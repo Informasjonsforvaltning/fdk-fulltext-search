@@ -148,7 +148,7 @@ paths:
   /suggestion/{type}:
     get:
       summary: Returns a list of auto complete suggestions for the specified content type in FDKs content. TODO-> Default to all content types, [dataservices,concepts,informationmodels]
-      operationId: autoComplete
+      operationId: getSuggestion
       parmeters:
         - in: path
           name: type

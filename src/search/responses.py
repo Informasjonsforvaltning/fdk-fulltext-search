@@ -78,7 +78,10 @@ class SuggestionResponse:
             print("Not implemented")
             return {}
         else:
-            return {"suggestions": self.es_result}
+            suggestion_objects = []
+            for hits in self.es_result:
+                suggestion_objects.append(hits["_source"])
+            return {"suggestions": suggestion_objects}
 
     @classmethod
     def empty_response(cls):
