@@ -39,7 +39,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
     def add_sorting(self, param: dict):
         self.body["sort"] = {
             param.get("field"): {
-                "order": param.get("direction")
+                "order": param.get("direction"),
+                "unmapped_type": "long"
             }
         }
 
@@ -98,13 +99,6 @@ class AllIndicesQuery(AbstractSearchQuery):
                                                                     lenient=True,
                                                                     all_indices_autorativ_boost=True
                                                                     ))
-
-    def add_sorting(self, param):
-        self.body["sort"] = {
-            param.get("field"): {
-                "order": param.get("direction")
-            }
-        }
 
 
 class InformationModelQuery(AbstractSearchQuery):
@@ -202,7 +196,9 @@ class RecentQuery:
         self.query = {
             "size": 5,
             "sort": {"harvest.firstHarvested": {
-                "order": Direction.DESC.value}
+                "order": Direction.DESC.value,
+                "unmapped_type": "long"
+                }
             }
         }
 
