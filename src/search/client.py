@@ -73,7 +73,6 @@ def search_in_index(index: str, request: dict = None):
             q.add_page(size=size, page=page)
         if sorting:
             q.add_sorting(sorting)
-        print(json.dumps(q.body))
         return es_client.search(index=index, body=q.body)
     except ConnectionError:
         return {
