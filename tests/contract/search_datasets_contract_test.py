@@ -279,6 +279,54 @@ class TestDataSetSearch:
             id_path = parse('theme[*].code')
             assert "GOVE" in [match.value for match in id_path.find(hit)]
 
+    @pytest.mark.contract
+    def test_filter_with_transport_profile(self, wait_for_datasets_ready):
+
+        default_profile_body = {
+            "filters": [
+                {"accessRights": "PUBLIC"},
+                {"los": "trafikk-og-transport/mobilitetstilbud,trafikk-og-transport/trafikkinformasjon,"
+                        "trafikk-og-transport/veg-og-vegregulering,trafikk-og-transport/yrkestransport"}
+            ]
+        }
+
+        default_profile_result = requests.post(url=service_url + "/datasets", json=default_profile_body)
+        transport_profile_body = {
+            "filters": [
+                {"accessRights": 'PUBLIC'},
+                {"themeprofile": 'transport'}
+            ]
+        }
+        transport_profile_result = requests.post(url=service_url + "/datasets", json=transport_profile_body)
+        assert transport_profile_result.status_code == 200
+        assert len(transport_profile_result.json()["hits"]) > len(default_profile_result.json()["hits"])
+
+        los_key_1 = "trafikk-og-transport/mobilitetstilbud"
+        los_key_2 = "trafikk-og-transport/trafikkinformasjon"
+        los_key_3 = "trafikk-og-transport/veg-og-vegregulering"
+        los_key_4 = "trafikk-og-transport/yrkestransport"
+        partial_hits = 0
+        for hit in transport_profile_result.json()["hits"]:
+            los_key_path = parse('losTheme[*].losPaths[*]')
+            los_keys = [match.value for match in los_key_path.find(hit)]
+            matches = union_los_lists(los_keys, [los_key_1, los_key_2, los_key_3, los_key_4])
+            if matches.__len__() == 4:
+                pass
+            elif matches.__len__() > 0:
+                partial_hits += 1
+            else:
+                assert False, "no occurrence of los themes for profile"
+        assert partial_hits > 0
+
+
+def union_los_lists(result_list: list, expected_list: list):
+    union = []
+    result_str = ' '.join(result_list)
+    for path in expected_list:
+        if re.findall(path, result_str).__len__() > 0:
+            union.append(path)
+    return union
+
 
 def has_exact_match_in_title(hit, search_str):
     title = hit["title"]

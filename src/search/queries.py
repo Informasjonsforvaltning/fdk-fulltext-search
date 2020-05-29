@@ -3,6 +3,7 @@ from enum import Enum
 
 from src.search.fields import index_suggestion_fields
 from src.search.query_utils import *
+from src.search.themeprofiles import theme_profile_filter, ThemeProfileKeys
 
 
 class Direction(Enum):
@@ -28,7 +29,9 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
         self.body["query"]["bool"]["filter"] = []
         for f in filters:
             key = list(f.keys())[0]
-            if (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
+            if key == 'themeprofile':
+                self.body["query"]["bool"]["filter"].append(theme_profile_filter(f[key]))
+            elif (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
                 self.body["query"]["bool"]["filter"].append(must_not_filter(key))
             elif key == 'opendata':
                 self.body["query"]["bool"]["filter"].append(open_data_query())
@@ -159,7 +162,6 @@ class DataSetQuery(AbstractSearchQuery):
             self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
                                                                  should_clause=[autorativ_dataset_query(),
                                                                                 open_data_query()])
-        x = 0
 
     def add_search_string(self, search_string: str):
         dismax_queries = [
@@ -188,7 +190,6 @@ class DataSetQuery(AbstractSearchQuery):
                                                                              missing="Ukjent",
                                                                              size=10)
             self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
-        # TODO implement user defined aggregations?
 
 
 class RecentQuery:
