@@ -3,7 +3,7 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery, SuggestionQuery, IndicesKey
+from src.search.queries import RecentQuery, AllIndicesQuery, SuggestionQuery, IndicesKey
 from src.search.query_utils import open_data_query
 
 
@@ -885,6 +885,7 @@ def test_add_filter_should_add_opendata_filter():
             has_open_data = True
             break
     assert has_open_data is True
+
 
 
 @pytest.mark.unit

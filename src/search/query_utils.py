@@ -141,10 +141,10 @@ def suggestion_title_query(index_key: IndicesKey, search_string: str) -> dict:
         fields_list = [field + ".ngrams", field + ".ngrams.2_gram", field + ".ngrams.3_gram"]
         query_list.append({
             "multi_match": {
-                    "query": search_string,
-                    "type": "bool_prefix",
-                    "fields": fields_list
-                }
+                "query": search_string,
+                "type": "bool_prefix",
+                "fields": fields_list
+            }
         })
     return {
         "dis_max": {
@@ -232,6 +232,18 @@ def get_term_filter(request_item):
     terms = request_item[key].split(',')
     for term in terms:
         q = {"term": {get_field_key(key): term}}
+        filters.append(q)
+    return filters
+
+
+def get_exists_filter(request_item):
+    """ map request filter for fields to ES exists queries"""
+    filters = []
+    key = list(request_item.keys())[0]
+    # get all values in request filter
+    fields = request_item[key].split(',')
+    for field in fields:
+        q = {"exists": {"field": field}}
         filters.append(q)
     return filters
 

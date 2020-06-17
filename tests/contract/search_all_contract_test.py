@@ -505,7 +505,23 @@ class TestSearchAll:
         assert len(result["hits"]) == 0
 
     @pytest.mark.contract
-    def test_specialchars_should_not_affect_result_length(self):
+    def test_exits_filter(self):
+        body = {
+            "filters": [{"exists": "subject,provenance.code"}],
+            "size": 200
+        }
+        result = post(url=service_url + "/search", json=body)
+        assert result.status_code == 200
+        hits = result.json()["hits"]
+        assert len(hits) > 0
+        for hit in hits:
+            keys = hit.keys()
+            assert "subject" in keys
+            assert "provenance" in keys
+            assert "code" in hit["provenance"].keys()
+
+    @pytest.mark.contract
+    def test_special_chars_should_not_affect_result_length(self):
         body = {
             "q": "Regnskapsregisteret jm"
         }
