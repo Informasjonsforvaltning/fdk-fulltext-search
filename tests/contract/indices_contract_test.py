@@ -39,16 +39,6 @@ class TestSearchAll:
         assert result.status_code == 400
 
     @pytest.mark.contract
-    def test_should_reindex_all_indices(self, api):
-        last_updates = requests.get(url=index_url).json()
-        result = requests.post(url=index_url)
-        assert result.status_code == 201
-        assert result.json()['status'] == "OK"
-        new_updates = requests.get(url=index_url).json()
-        for i in range(0, len(last_updates)):
-            assert new_updates[i]['lastUpdate'] > last_updates[i]["lastUpdate"]
-
-    @pytest.mark.contract
     def test_should_update_dataset_index(self, api):
         last_update = requests.get(url=index_url + "?name=datasets").json()
         result = requests.post(url=index_url + "?name=datasets")

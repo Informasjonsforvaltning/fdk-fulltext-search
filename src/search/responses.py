@@ -75,7 +75,6 @@ class SuggestionResponse:
 
     def map_response(self, language=None) -> dict:
         if language:
-            print("Not implemented")
             return {}
         else:
             suggestion_objects = []

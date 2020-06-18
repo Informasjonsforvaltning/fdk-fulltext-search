@@ -6,7 +6,7 @@ from src.search.fields import index_fulltext_fields
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
     default_all_indices_aggs, get_field_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key
+    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key, get_last_x_days_filter
 
 
 @pytest.mark.unit
@@ -351,7 +351,7 @@ def test_simple_query_with_fields():
         "simple_query_string": {
             "query": "*mange mange mange* *bekker bekker bekker*",
             "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
-            "boost":0.001
+            "boost": 0.001
         }
 
     }
@@ -733,3 +733,28 @@ def test_get_aggregation_term_for_key():
 
     assert get_aggregation_term_for_key("spatial") == expected_spatial
     assert get_aggregation_term_for_key(aggregation_key="accessRights", missing="Ukjent", size=10) == expected_access
+
+
+def test_get_last_x_days_filter():
+    expected_1 = {
+        "range": {
+            "harvest.firstHarvested": {
+                "gte": "now-3d/d",
+                "lt": "now/d"
+            }
+        }
+    }
+    result_1 = get_last_x_days_filter({"last_x_days": 3})
+    assert result_1 == expected_1
+
+    expected_2 = {
+        "range": {
+            "harvest.firstHarvested": {
+                "gte": "now-672d/d",
+                "lt": "now/d"
+            }
+        }
+    }
+    result_2 = get_last_x_days_filter({"last_x_days": "672"})
+    assert result_2 == expected_2
+

@@ -248,6 +248,18 @@ def get_exists_filter(request_item):
     return filters
 
 
+def get_last_x_days_filter(request_item):
+    range_str = f"now-{request_item['last_x_days']}d/d"
+    return {
+        "range": {
+            "harvest.firstHarvested": {
+                "gte": range_str,
+                "lt": "now/d"
+            }
+        }
+    }
+
+
 def get_field_key(filter_key: str):
     """ Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":

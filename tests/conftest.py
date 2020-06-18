@@ -71,7 +71,7 @@ def wait_for_datasets_ready():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=datasets")
-            if response.json()[0]['count'] >= 1300:
+            if response.json()[0]['count'] >= 1100:
                 break
             if time.time() > timeout:
                 pytest.fail(
