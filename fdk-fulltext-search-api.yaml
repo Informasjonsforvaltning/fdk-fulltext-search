@@ -18,21 +18,9 @@ servers:
 tags:
   - name: fdk-full-text-search
 paths:
-  /search:
-    post:
-      summary: "Returns a list of hits from full text searches in Felles Datakatalog's content"
-      operationId: searchAllContent
-      description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchResult'
   /count:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Returns the count for contenttypes
       responses:
         '200':
           description: OK
@@ -44,14 +32,20 @@ paths:
                   count:
                     type: integer
       operationId: get-count
-  /recent:
-    get:
-      summary: Get recent endpoint
-      tags: []
-      operationId: get-recent
+  /search:
+    post:
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's content"
+      operationId: searchAllContent
+      description: "Fulltext search for FDKs content"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
       responses:
         '200':
-          description: OK
+          description: OK. Returns an ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
           content:
             application/json:
               schema:
@@ -65,8 +59,9 @@ paths:
           name: name
           description: name of indices to get information about, defaults to all indices
           required: false
-          type: string
-          enum: ['informationmodels','datasets','dataservices','concepts']
+          schema:
+            type: string
+            enum: [informationmodels, datasets, dataservices, concepts]
       responses:
         '200':
           description: OK
@@ -74,38 +69,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IndexResponse"
-        '400':
-          description: Bad request. Most probably caused by an error in the name parameter
-    post:
-      summary: triggers a reindexing
-      operationId: post-indices
-      parameters:
-        - in: query
-          name: name
-          description: name of indices to be reindexed, defaults to all indices
-          required: false
-          type: string
-          enum: ['informationmodels','datasets','dataservices','concepts']
+  /recent:
+    get:
+      summary: Get recent endpoint
+      tags: []
+      operationId: get-recent
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IndexResponse"
-        '400':
-          description: Bad request. Most probably caused by an error in the name parameter
-        '500':
-          'description': Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IndexErrorMessage'
+                $ref: '#/components/schemas/SearchResult'
   /informationmodels:
     post:
       summary: "Returns a list of hits from full text searches in Felles Datakatalog's informationmodels"
       operationId: searchInformationModels
-      description: "A ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
+      description: "Fulltext search for FDKs informationmodels"
       requestBody:
         required: false
         content:
@@ -114,20 +94,16 @@ paths:
               $ref: '#/components/schemas/SearchRequest'
       responses:
         '200':
+          description: Returns an ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema: $ref '#/components/schemas/ErrorMessage'
   /datasets:
     post:
-      summary: Returns a list of hits from full text searches in Felles Datakatalog's datasets
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's datasets"
       operationId: searchDataSets
-      description: An ObjectArray containing relevant hits and metadata for words or sentences in FDK's content"
+      description: "Fulltext search for FDKs datasets"
       requestBody:
         required: false
         content:
@@ -136,50 +112,34 @@ paths:
               $ref: '#/components/schemas/SearchRequest'
       responses:
         '200':
+          description: Returns an ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema: $ref '#/components/schemas/ErrorMessage'
   /suggestion/{type}:
     get:
       summary: Returns a list of auto complete suggestions for the specified content type in FDKs content. TODO-> Default to all content types, [dataservices,concepts,informationmodels]
       operationId: getSuggestion
-      parmeters:
-        - in: path
-          name: type
-          description: content type
-          required: false
-          schema:
-            type: string
-            enum: [datasets]
-        - in: query
-          name: q
-          description: string to perform asuggestion search on
-          schema:
-            type: string
+      parameters:
+      - in: path
+        name: type
+        required: true
+        schema:
+          type: string
+          enum: [informationmodels,datasets,informationmodels,concepts]
+      - in: query
+        description: The string that suggestions should be based upon
+        name: q
+        schema:
+          type: string
       responses:
         '200':
+          description: OK. Returns a list of suggestions
           content:
             application/json:
-              $ref: '#/components/schemas/SuggestionResult'
-        '400':
-          description: Bad request. Most likely caused by an urecognized type in path parameter
-        '500':
-          description: Server Error
-          content:
-            application/json:
-              $ref: '#/components/schemas/ErrorMessage'
-        '501':
-          description: Not implemented. Most likely caused by an unimplemented type in path parameter
-          content:
-            application/json:
-              $ref: '#/components/schemas/ErrorMessage'
-
+              schema:
+                $ref: '#/components/schemas/SuggestionResult'
 components:
   schemas:
     SearchRequest:
@@ -194,7 +154,7 @@ components:
         filters:
           type: array
           items:
-            - $ref : "#/components"
+             $ref: '#/components/schemas/Filter'
         q:
           type: string
           description: string to perform a search on
@@ -220,7 +180,7 @@ components:
           type: array
           items:
             anyOf:
-             - $ref: '#/components/schemas/DataSetSuggestion'
+              - $ref: '#/components/schemas/DataSetSuggestion'
     DataSetSuggestion:
       type: object
       properties:
@@ -230,10 +190,9 @@ components:
           type: string
     Filter:
       type: object
-      additionalProperties:
-        type:string
+      description: key, value pair for filtering on the form {"field or filter to be filtered on","value for filtering"}. Defaults to filter on key as field, other valid keys are [orgPath, openData, exists, themeprofile, last_x_days]
       example:
-        {"orgPath": "/STAT"}
+        orgPath: /STAT
     Sort:
       type: object
       properties:
@@ -656,8 +615,6 @@ components:
     IndexErrorMessage:
       allOf:
         - $ref: '#/components/schemas/ErrorMessage'
-        - type: int
-          name: count
     Buckets:
       type: object
       properties:
@@ -673,15 +630,15 @@ components:
           items:
             $ref: '#/components/schemas/Buckets'
     IndexResponse:
-            type: array
-            properties:
-              name:
-                type: string
-                description: name of index
-              lastUpdated:
-                type: string
-                format: date-time
-                description: date and time for the last performed reindex
-              count:
-                type: integer
-                description: the current number of elements in the index/indices
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of index
+        lastUpdated:
+          type: string
+          format: date-time
+          description: date and time for the last performed reindex
+        count:
+          type: integer
+          description: the current number of elements in the index/indices
