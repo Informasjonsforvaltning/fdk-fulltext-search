@@ -108,7 +108,7 @@ def exact_match_in_title_query(title_field_names: list, search_string: str):
                 }
             },
             "should": [autorativ_boost_clause()],
-            "boost": 10
+            "boost": 20
 
         }
     }

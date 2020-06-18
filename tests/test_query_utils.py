@@ -64,7 +64,7 @@ def test_exact_match_title():
                 }
             }
         ],
-        "boost": 10
+        "boost": 20
     }}
     result = exact_match_in_title_query(["prefLabel.*", "title.*", "title"], "åpne data")
     assert json.dumps(result) == json.dumps(expected)
