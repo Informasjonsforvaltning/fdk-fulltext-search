@@ -76,7 +76,8 @@ class TestDataSetSearch:
         for hit in result.json()["hits"]:
             date = hit["harvest"]["firstHarvested"].split('+')[0]
             if last_date:
-                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%S") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%S")
+                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ") <= datetime.strptime(last_date,
+                                                                                          "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
     @pytest.mark.contract
@@ -95,10 +96,10 @@ class TestDataSetSearch:
         previous_was_authoritative = True
         for hit in result.json()["hits"]:
             if "provenance" in hit.keys():
-                if hit["provenance"]["code"] == "NASJONAL":
+                if hit.get("provenance") and hit["provenance"]["code"] == "NASJONAL":
                     assert previous_was_authoritative is True, "dataset with NASJONAL provenance encountered after " \
                                                                "non-authoritative hit"
-                if hit["accessRights"]["code"] == "PUBLIC":
+                elif hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC":
                     openLicence = [match.value for match in parse("distribution[*].openLicense").find(hit)]
                     if True in openLicence:
                         assert previous_was_open_data, "open authorative dataset encountered after non-open " \
@@ -107,7 +108,7 @@ class TestDataSetSearch:
                     else:
                         previous_was_open_data = False
                 previous_was_authoritative = True
-            elif hit["accessRights"]["code"] == "PUBLIC":
+            elif hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC":
                 assert previous_was_open_data or previous_was_authoritative, "non-authoritative open dataset, " \
                                                                              "encountered after non-open, " \
                                                                              "non authoritative dataset "
@@ -146,7 +147,7 @@ class TestDataSetSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_orgPath(self, api, wait_for_datasets_ready):
-        org_path = "/ANNET/910244132"
+        org_path = "STAT/972417858/971040238"
         body = {
             "filters":
                 [{"orgPath": org_path}]
@@ -171,8 +172,10 @@ class TestDataSetSearch:
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
-            spatial_path = parse('spatial[*].prefLabel.nb')
-            assert expected_spatial in [match.value for match in spatial_path.find(hit)]
+            spatial_path_nb = parse('spatial[*].prefLabel.nb')
+            spatial_path_no = parse('spatial[*].prefLabel.no')
+            assert (expected_spatial in [match.value for match in spatial_path_nb.find(hit)]
+                    or expected_spatial in [match.value for match in spatial_path_no.find(hit)])
 
     @pytest.mark.contract
     def test_filter_on_eu_theme(self, api, wait_for_datasets_ready):
@@ -247,10 +250,10 @@ class TestDataSetSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_orgPath_and_spatial(self, api, wait_for_datasets_ready):
-        expected_org_path = "/STAT"
+        expected_org_path = "PRIVAT"
         expected_spatial = "Norge"
         body = {
-            "filters": [{"orgPath": "/STAT"}, {"spatial": "Norge"}]
+            "filters": [{"orgPath": "PRIVAT"}, {"spatial": "Norge"}]
         }
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
@@ -351,11 +354,11 @@ def has_exact_match_in_title(hit, search_str):
     has_exact_match = False
     if "nb" in keys and title["nb"] == search_str:
         has_exact_match = True
-    if "nn" in keys and title["nb"] == search_str:
+    if "nn" in keys and title["nn"] == search_str:
         has_exact_match = True
-    if "no" in keys and title["nb"] == search_str:
+    if "no" in keys and title["no"] == search_str:
         has_exact_match = True
-    if "en" in keys and title["nb"] == search_str:
+    if "en" in keys and title["en"] == search_str:
         has_exact_match = True
     return has_exact_match
 

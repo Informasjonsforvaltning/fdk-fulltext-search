@@ -35,6 +35,7 @@ gunicorn = "*"
 flask-cors = "*"
 jsonpath-ng = "*"
 pika = "*"
+fdk-rdf-parser = "*"
 
 [requires]
 python_version = "3.7"

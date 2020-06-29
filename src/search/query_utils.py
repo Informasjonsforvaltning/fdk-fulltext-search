@@ -117,6 +117,12 @@ def exact_match_in_title_query(title_field_names: list, search_string: str):
 def word_in_title_query(title_field_names: list, search_string: str):
     fields_list = []
     for field in title_field_names:
+        is_single_field_part = len(field.split(".")) == 1
+        if is_single_field_part:
+            fields_list.append(field + ".nb")
+            fields_list.append(field + ".no")
+            fields_list.append(field + ".nn")
+            fields_list.append(field + ".en")
         fields_list.append(field + ".ngrams")
         fields_list.append(field + ".ngrams.2_gram")
         fields_list.append(field + ".ngrams.3_gram")
@@ -414,7 +420,7 @@ def all_indices_default_query():
                     "term": {
                         "provenance.code.keyword": {
                             "value": "NASJONAL",
-                            "boost": 2
+                            "boost": 3
                         }
                     }
                 },

@@ -83,6 +83,10 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         "title.*.ngrams",
                                         "title.*.ngrams.2_gram",
                                         "title.*.ngrams.3_gram",
+                                        "title.nb",
+                                        "title.no",
+                                        "title.nn",
+                                        "title.en",
                                         "title.ngrams",
                                         "title.ngrams.2_gram",
                                         "title.ngrams.3_gram",
@@ -298,7 +302,7 @@ def test_empty_all_indices_query():
                     "term": {
                         "provenance.code.keyword": {
                             "value": "NASJONAL",
-                            "boost": 2
+                            "boost": 3
                         }
                     }
                 },
@@ -387,6 +391,10 @@ def test_all_indices_should_return_query_with_filter():
                                                 "title.*.ngrams",
                                                 "title.*.ngrams.2_gram",
                                                 "title.*.ngrams.3_gram",
+                                                "title.nb",
+                                                "title.no",
+                                                "title.nn",
+                                                "title.en",
                                                 "title.ngrams",
                                                 "title.ngrams.2_gram",
                                                 "title.ngrams.3_gram",
@@ -637,7 +645,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
-                                        "boost": 10
+                                        "boost": 20
                                     }
                                 },
                                 {
@@ -650,6 +658,10 @@ def test_all_indices_should_return_query_with_must_not():
                                                     "title.*.ngrams",
                                                     "title.*.ngrams.2_gram",
                                                     "title.*.ngrams.3_gram",
+                                                    "title.nb",
+                                                    "title.no",
+                                                    "title.nn",
+                                                    "title.en",
                                                     "title.ngrams",
                                                     "title.ngrams.2_gram",
                                                     "title.ngrams.3_gram",
@@ -975,6 +987,10 @@ def test_all_indices_should_return_query_with_must_not():
                                                     "title.*.ngrams",
                                                     "title.*.ngrams.2_gram",
                                                     "title.*.ngrams.3_gram",
+                                                    "title.nb",
+                                                    "title.no",
+                                                    "title.nn",
+                                                    "title.en",
                                                     "title.ngrams",
                                                     "title.ngrams.2_gram",
                                                     "title.ngrams.3_gram",

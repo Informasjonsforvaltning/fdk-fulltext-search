@@ -3,14 +3,15 @@ import logging
 import math
 import time
 from datetime import datetime
+from dataclasses import asdict
 from json import JSONDecodeError
 
 import requests
 import os
-from elasticsearch import Elasticsearch, helpers, RequestError, ConnectionError
+from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
+import fdk_rdf_parser
 from requests import HTTPError, RequestException, Timeout
-from urllib3.exceptions import NewConnectionError
 
 from .utils import IndicesKey
 from jsonpath_ng import parse
@@ -19,6 +20,7 @@ ES_HOST = os.getenv('ELASTIC_HOST') or "localhost"
 ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 es_client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL') or "http://loclahost:8080"
+DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI') or "http://loclahost:8080/dataset"
 
 
 def error_msg(exec_point, reason, count=0):
@@ -123,25 +125,15 @@ def fetch_concepts(re_index=False):
 
 
 def fetch_data_sets(re_index=False):
-    dataset_url = API_URL + "datasets"
+    dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
     try:
         if re_index:
             reindex_specific_index(IndicesKey.DATA_SETS)
         logging.info("fetching datasets")
-        initial_req = requests.get(url=dataset_url, headers={"Accept": "application/json"}, timeout=5)
-        initial_req.raise_for_status()
-        size = initial_req.json()["hits"]["total"]
-        r = requests.get(url=dataset_url, params={"size": size}, headers={"Accept": "application/json"}, timeout=5)
-        r.raise_for_status()
-        documents = r.json()["hits"]["hits"]
-        doRequest = math.ceil(size / len(documents))
-        if doRequest > 1:
-            for x in range(1, doRequest):
-                r = requests.get(url=dataset_url, params={"size": 100, "page": str(x)},
-                                 headers={"Accept": "application/json"}, timeout=5)
-                r.raise_for_status()
-                documents = documents + r.json()["hits"]["hits"]
-        result = elasticsearch_ingest_from_source(documents, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
+        req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=10)
+        req.raise_for_status()
+        documents = fdk_rdf_parser.parseDatasets(req.text)
+        result = elasticsearch_ingest_from_harvester(documents, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
         return result_msg(result[0])
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
@@ -195,6 +187,17 @@ def elasticsearch_ingest(documents, index, id_key):
         return result
 
 
+def elasticsearch_ingest_from_harvester(documents, index, id_key):
+    try:
+        result = helpers.bulk(client=es_client, actions=yield_documents_from_harvester(documents, index, id_key))
+
+        return result
+    except BulkIndexError as err:
+        result = error_msg(f"ingest {index}", err.errors)
+        logging.error(result)
+        return result
+
+
 def elasticsearch_ingest_from_source(documents, index, id_key):
     try:
         result = helpers.bulk(client=es_client, actions=yield_documents_from_source(documents, index, id_key))
@@ -213,6 +216,16 @@ def yield_documents(documents, index, id_key):
             "_index": index,
             "_id": doc[id_key],
             "_source": doc
+        }
+
+
+def yield_documents_from_harvester(documents, index, id_key):
+    """get docs from harvester responses"""
+    for doc_index in documents:
+        yield {
+            "_index": index,
+            "_id": documents[doc_index].id,
+            "_source": asdict(documents[doc_index])
         }
 
 

@@ -24,7 +24,10 @@ ELASTIC_TCP_PORT=9300
 RABBIT_HOST=localhost
 RABBIT_USERNAME=admin
 RABBIT_PASSWORD=admin
-API_URL=http://localhost:8080/                  
+API_URL=http://localhost:8080/
+DATASET_HARVESTER_BASE_URI=http://localhost:8080/dataset
+ORGANIZATION_CATALOGUE_BASE_URI=http://localhost:8080
+REFERENCE_DATA_BASE_URI=http://localhost:8080/reference-data
 ```
 
 ### Running the service locally

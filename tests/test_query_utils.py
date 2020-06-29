@@ -82,6 +82,10 @@ def test_word_in_title():
                         "title.*.ngrams",
                         "title.*.ngrams.2_gram",
                         "title.*.ngrams.3_gram",
+                        "title.nb",
+                        "title.no",
+                        "title.nn",
+                        "title.en",
                         "title.ngrams",
                         "title.ngrams.2_gram",
                         "title.ngrams.3_gram",
@@ -434,7 +438,7 @@ def test_all_indices_default_query():
                     "term": {
                         "provenance.code.keyword": {
                             "value": "NASJONAL",
-                            "boost": 2
+                            "boost": 3
                         }
                     }
                 },

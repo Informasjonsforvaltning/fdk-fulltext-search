@@ -1,0 +1,318 @@
+{
+  "id" : "99ae4e84-8d01-49d3-970c-4eed4d2e5297",
+  "name" : "reference-data_codes_location",
+  "request" : {
+    "url" : "/reference-data/codes/location",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "jsonBody" : [
+      {
+          "uri": "http://sws.geonames.org/3137400/",
+          "code": "http://sws.geonames.org/3137400/",
+          "prefLabel": {
+              "no": "Sør-Trøndelag"
+          }
+      },
+      {
+          "uri": "http://sws.geonames.org/3144096/",
+          "code": "http://sws.geonames.org/3144096/",
+          "prefLabel": {
+              "ff": "Norwees",
+              "nn": "Noreg",
+              "no": "Norge",
+              "ln": "Norivezɛ",
+              "lu": "Noriveje",
+              "bm": "Nɔriwɛzi",
+              "bn": "নরওয়ে",
+              "bo": "ནོར་ཝེ།",
+              "se": "Norgga",
+              "sg": "Nörvêzi",
+              "yo": "Orílẹ́ède Nọọwii",
+              "si": "නෝර්වේ",
+              "mg": "Nôrvezy",
+              "sn": "Norway",
+              "ur": "ناروے",
+              "ki": "Norwe",
+              "ml": "നോര്‍വെ",
+              "ee": "Norway nutome",
+              "kl": "Norge",
+              "sv": "Norge",
+              "or": "ନରୱେ",
+              "sw": "Norwe",
+              "mr": "नॉर्वे",
+              "gl": "Noruega",
+              "en": "Norway",
+              "ku": "نۆرویژ",
+              "ak": "Nɔɔwe",
+              "my": "နော်ဝေ",
+              "gu": "નૉર્વે",
+              "es": "Noruega",
+              "te": "నారవే",
+              "nb": "Norge",
+              "ti": "ኖርዌ",
+              "nd": "Noweyi",
+              "ja": "ノルウェー王国",
+              "ha": "Norwe",
+              "az": "Norvec",
+              "lg": "Nowe",
+              "zu": "i-Norway",
+              "to": "Noauē",
+              "rn": "Noruveji"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173157",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173157",
+          "prefLabel": {
+              "no": "Akershus"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173147",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173147",
+          "prefLabel": {
+              "no": "Møre og Romsdal"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173159",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173159",
+          "prefLabel": {
+              "no": "Oslo"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173068",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173068",
+          "prefLabel": {
+              "no": "Trondheim"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173056",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173056",
+          "prefLabel": {
+              "no": "Sør-Varanger"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173161",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173161",
+          "prefLabel": {
+              "no": "Østfold"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172896",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172896",
+          "prefLabel": {
+              "no": "Leikanger"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172874",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172874",
+          "prefLabel": {
+              "no": "Aurland"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172931",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172931",
+          "prefLabel": {
+              "no": "Steinkjer"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172967",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172967",
+          "prefLabel": {
+              "no": "Tromsø"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173155",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173155",
+          "prefLabel": {
+              "no": "Oppland"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172725",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172725",
+          "prefLabel": {
+              "no": "Lørenskog"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172772",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172772",
+          "prefLabel": {
+              "no": "Os"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172752",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172752",
+          "prefLabel": {
+              "no": "Førde"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173104",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173104",
+          "prefLabel": {
+              "no": "Sauda"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172807",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172807",
+          "prefLabel": {
+              "no": "Hárstták"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173089",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173089",
+          "prefLabel": {
+              "no": "Randaberg"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173055",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173055",
+          "prefLabel": {
+              "no": "Ringerike"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173150",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173150",
+          "prefLabel": {
+              "no": "Sogn og Fjordane"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172910",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172910",
+          "prefLabel": {
+              "no": "Lillehammer"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172778",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172778",
+          "prefLabel": {
+              "no": "Bergen"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173152",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173152",
+          "prefLabel": {
+              "no": "Rogaland"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172710",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172710",
+          "prefLabel": {
+              "no": "Aure"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173071",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173071",
+          "prefLabel": {
+              "no": "Gjesdal"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172754",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172754",
+          "prefLabel": {
+              "no": "Sogndal"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172865",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172865",
+          "prefLabel": {
+              "no": "Molde"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173142",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173142",
+          "prefLabel": {
+              "no": "Finnmárku"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173091",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173091",
+          "prefLabel": {
+              "no": "Stavanger"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172845",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172845",
+          "prefLabel": {
+              "no": "Fusa"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173144",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173144",
+          "prefLabel": {
+              "no": "Nordland"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173156",
+          "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173156",
+          "prefLabel": {
+              "no": "Buskerud"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172758",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172758",
+          "prefLabel": {
+              "no": "Ålesund"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/172793",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/172793",
+          "prefLabel": {
+              "no": "Askim"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/nasjon/id/173163",
+          "code": "https://data.geonorge.no/administrativeEnheter/nasjon/id/173163",
+          "prefLabel": {
+              "no": "Norge"
+          }
+      },
+      {
+          "uri": "https://data.geonorge.no/administrativeEnheter/kommune/id/173018",
+          "code": "https://data.geonorge.no/administrativeEnheter/kommune/id/173018",
+          "prefLabel": {
+              "no": "Oslo"
+          }
+      }
+  ],
+  "headers" : {
+        "Content-Type" : "application/json;charset=UTF-8" 
+    }
+  },
+  "uuid" : "99ae4e84-8d01-49d3-970c-4eed4d2e5297",
+  "persistent" : true,
+  "insertionIndex" : 148
+}
