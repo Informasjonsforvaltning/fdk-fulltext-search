@@ -521,23 +521,6 @@ class TestSearchAll:
             assert "code" in hit["provenance"].keys()
 
     @pytest.mark.contract
-    def test_last_x_days_filter(self, api, wait_for_ready):
-        last_mock_update_response = get(url=f"{service_url}/indices?name=datasets").json()[0]["lastUpdate"]
-        last_mock_update = get_time(last_mock_update_response)
-        body = {
-            "filters": [{"last_x_days": 7}],
-            "size": 200
-        }
-        result = post(url=service_url + "/search", json=body)
-        assert result.status_code == 200
-        hits = result.json()["hits"]
-        assert len(hits) > 0
-        for hit in hits:
-            firstHarvest = get_time(hit['harvest']['firstHarvested'])
-            assert firstHarvest <= last_mock_update
-            assert (last_mock_update - firstHarvest).days <= 7
-
-    @pytest.mark.contract
     def test_special_chars_should_not_affect_result_length(self, api, wait_for_ready):
         body = {
             "q": "Regnskapsregisteret jm"

@@ -318,23 +318,6 @@ class TestDataSetSearch:
                 assert False, "no occurrence of los themes for profile"
         assert partial_hits > 0
 
-    @pytest.mark.contract
-    def test_last_x_days_filter(self):
-        last_mock_update_response = requests.get(url=f"{service_url}/indices?name=datasets").json()[0]["lastUpdate"]
-        last_mock_update = get_time(last_mock_update_response)
-        body = {
-            "filters": [{"last_x_days": 14}],
-            "size": 200
-        }
-        result = requests.post(url=datasets_url , json=body)
-        assert result.status_code == 200
-        hits = result.json()["hits"]
-        assert len(hits) > 0
-        for hit in hits:
-            firstHarvest = get_time(hit['harvest']['firstHarvested'])
-            assert firstHarvest <= last_mock_update
-            assert (last_mock_update - firstHarvest).days <= 14
-
 
 def union_los_lists(result_list: list, expected_list: list):
     union = []
