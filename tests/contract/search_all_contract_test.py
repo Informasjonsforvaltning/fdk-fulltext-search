@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 from jsonpath_ng import parse
-from requests import post
+from requests import post, get
 
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
@@ -496,7 +496,7 @@ class TestSearchAll:
             assert "accessRights" not in hits.keys()
 
     @pytest.mark.contract
-    def test_search_with_empty_result_should_return_empty_object(self):
+    def test_search_with_empty_result_should_return_empty_object(self, api, wait_for_ready):
         body = {
             "q": "Ainjgulu"
         }
@@ -505,7 +505,40 @@ class TestSearchAll:
         assert len(result["hits"]) == 0
 
     @pytest.mark.contract
-    def test_specialchars_should_not_affect_result_length(self):
+    def test_exits_filter(self, api, wait_for_ready):
+        body = {
+            "filters": [{"exists": "subject,provenance.code"}],
+            "size": 200
+        }
+        result = post(url=service_url + "/search", json=body)
+        assert result.status_code == 200
+        hits = result.json()["hits"]
+        assert len(hits) > 0
+        for hit in hits:
+            keys = hit.keys()
+            assert "subject" in keys
+            assert "provenance" in keys
+            assert "code" in hit["provenance"].keys()
+
+    @pytest.mark.contract
+    def test_last_x_days_filter(self, api, wait_for_ready):
+        last_mock_update_response = get(url=f"{service_url}/indices?name=datasets").json()[0]["lastUpdate"]
+        last_mock_update = get_time(last_mock_update_response)
+        body = {
+            "filters": [{"last_x_days": 7}],
+            "size": 200
+        }
+        result = post(url=service_url + "/search", json=body)
+        assert result.status_code == 200
+        hits = result.json()["hits"]
+        assert len(hits) > 0
+        for hit in hits:
+            firstHarvest = get_time(hit['harvest']['firstHarvested'])
+            assert firstHarvest <= last_mock_update
+            assert (last_mock_update - firstHarvest).days <= 7
+
+    @pytest.mark.contract
+    def test_special_chars_should_not_affect_result_length(self, api, wait_for_ready):
         body = {
             "q": "Regnskapsregisteret jm"
         }
@@ -567,3 +600,7 @@ def get_title_values(hit):
         return json.dumps(hit['prefLabel'])
     elif "title" in hit:
         return json.dumps(hit['title'])
+
+
+def get_time(timestamp: str):
+    return datetime.strptime(timestamp.split("T")[0], '%Y-%M-%d')

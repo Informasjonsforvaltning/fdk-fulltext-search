@@ -55,9 +55,10 @@ options:
 ```
 #### Updating mock data
 1. Set API_URL env variable to the url you want to collect mock data from
-2. Start a wiremock instance start [record and playback](http://wiremock.org/docs/record-playback/) with target url 
-3. Start the application and run an http request to PUT /update
-4. copy files from the wiremock instance's /mappings directory into mock_mappings/mappings
+2. `invoke start-docker --attach`
+2. Go to `http://0.0.0.0:8080/__admin/recorder/` and start recording with target url 
+3. Start the application and run an http request to POST /indices
+4. Stop recording
 
 ### Other invoke tasks
 ```

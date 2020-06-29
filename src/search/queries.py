@@ -35,9 +35,13 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(must_not_filter(key))
             elif key == 'opendata':
                 self.body["query"]["bool"]["filter"].append(open_data_query())
+            elif key == 'exists':
+                self.body["query"]["bool"]["filter"].extend(get_exists_filter(f))
+            elif key == 'last_x_days':
+                x_days_query = get_last_x_days_filter(f)
+                self.body["query"]["bool"]["filter"].append(x_days_query)
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
-        # TODO implement user defined filters?
 
     def add_sorting(self, param: dict):
         self.body["sort"] = {

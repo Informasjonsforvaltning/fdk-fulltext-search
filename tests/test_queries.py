@@ -3,7 +3,7 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery, InformationModelQuery, SuggestionQuery, IndicesKey
+from src.search.queries import RecentQuery, AllIndicesQuery, SuggestionQuery, IndicesKey
 from src.search.query_utils import open_data_query
 
 
@@ -70,7 +70,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     }
                                 }
                             ],
-                            "boost": 10
+                            "boost": 20
                         }
                     },
                     {
@@ -374,7 +374,7 @@ def test_all_indices_should_return_query_with_filter():
                                             }
                                         }
                                     ],
-                                    "boost": 10
+                                    "boost": 20
                                 }
                             },
                             {
@@ -962,7 +962,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 }
                                             }
                                         ],
-                                        "boost": 10
+                                        "boost": 20
                                     }
                                 },
                                 {
@@ -1210,6 +1210,24 @@ def test_add_filter_should_add_opendata_filter():
             has_open_data = True
             break
     assert has_open_data is True
+
+
+@pytest.mark.unit
+def test_add_filter_should_add_x_last_days_filter():
+    builder = AllIndicesQuery(filters=[{"last_x_days": 6}])
+    has_x_last_days = False
+    for f in builder.body["query"]["bool"]["filter"]:
+        if f == {
+            "range": {
+                "harvest.firstHarvested": {
+                    "gte": "now-6d/d",
+                    "lt": "now/d"
+                }
+            }
+        }:
+            has_x_last_days = True
+            break
+    assert has_x_last_days is True
 
 
 @pytest.mark.unit
