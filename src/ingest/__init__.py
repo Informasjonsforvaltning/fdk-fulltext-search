@@ -19,8 +19,8 @@ from jsonpath_ng import parse
 ES_HOST = os.getenv('ELASTIC_HOST') or "localhost"
 ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 es_client = Elasticsearch([ES_HOST + ':' + ES_PORT])
-API_URL = os.getenv('API_URL') or "http://loclahost:8080"
-DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI') or "http://loclahost:8080/dataset"
+API_URL = os.getenv('API_URL') or "http://localhost:8080/"
+DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI') or "http://localhost:8080/dataset"
 
 
 def error_msg(exec_point, reason, count=0):

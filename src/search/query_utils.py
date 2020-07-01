@@ -280,6 +280,8 @@ def get_field_key(filter_key: str):
         return "provenance.code.keyword"
     elif filter_key == "spatial":
         return "spatial.prefLabel.no.keyword"
+    elif filter_key == "uri":
+        return "uri.keyword"
     else:
         return filter_key
 
