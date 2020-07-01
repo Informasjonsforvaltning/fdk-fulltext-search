@@ -242,6 +242,15 @@ def get_term_filter(request_item):
     return filters
 
 
+def get_term_filter_from_collection(key: str, collection: list):
+    """ map request filter for one key to ES term queries"""
+    filters = []
+    for term in collection:
+        q = {"term": {get_field_key(key): term}}
+        filters.append(q)
+    return filters
+
+
 def get_exists_filter(request_item):
     """ map request filter for fields to ES exists queries"""
     filters = []
@@ -309,6 +318,16 @@ def must_not_filter(filter_key: str):
     if index:
         missing_filter["bool"]["must"] = {"term": {"_index": get_index_filter_for_key(filter_key)}}
     return missing_filter
+
+
+def collection_filter(filter_obj: dict):
+    collection = get_term_filter_from_collection(key=filter_obj["field"],
+                                                 collection=filter_obj["values"])
+    return {
+        "bool": {
+            "should": collection
+        }
+    }
 
 
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:

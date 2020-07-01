@@ -190,7 +190,10 @@ components:
           type: string
     Filter:
       type: object
-      description: key, value pair for filtering on the form {"field or filter to be filtered on","value for filtering"}. Defaults to filter on key as field, other valid keys are [orgPath, openData, exists, themeprofile, last_x_days]
+      description: key, value pair for filtering on the form {"field or filter to be filtered on","value for filtering"}.
+                   Defaults to filter on key as field, other valid keys are [orgPath, openData, exists, themeprofile, last_x_days, collection*]
+                   * {"collection":{ "field":"field_to_filter_on", "values": [values to include in filter]}}
+
       example:
         orgPath: /STAT
     Sort:

@@ -532,6 +532,25 @@ class TestSearchAll:
         result = post(url=service_url + "/search", json=body_special_char).json()
         assert result["page"]["totalElements"] == expected
 
+    @pytest.mark.contract
+    def test_collection_filter(self, api, wait_for_ready):
+        body = {
+            "filters": [
+                {
+                    "collection": {"field": "uri", "values": [
+                        "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f",
+                        "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"]}
+                }
+            ]
+        }
+
+        result = post(url=service_url + "/search", json=body)
+        assert result.status_code == 200
+        assert len(result.json()["hits"]) == 2
+        uris = [x["uri"] for x in result.json()["hits"]]
+        assert "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f" in uris
+        assert "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2" in uris
+
 
 def is_exact_match(keys, hit, search):
     for key in keys:

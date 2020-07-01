@@ -6,7 +6,8 @@ from src.search.fields import index_fulltext_fields
 from src.search.query_utils import get_term_filter, exact_match_in_title_query, word_in_title_query, \
     word_in_description_query, autorativ_boost_clause, simple_query_string, query_template, all_indices_default_query, \
     default_all_indices_aggs, get_field_key, get_index_filter_for_key, words_only_string, some_words_in_title_query, \
-    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key, get_last_x_days_filter
+    get_catch_all_query_string, index_match_in_title_query, get_aggregation_term_for_key, get_last_x_days_filter, \
+    collection_filter
 
 
 @pytest.mark.unit
@@ -762,3 +763,29 @@ def test_get_last_x_days_filter():
     result_2 = get_last_x_days_filter({"last_x_days": "672"})
     assert result_2 == expected_2
 
+
+def test_collection_filter():
+    expected = {
+        "bool": {
+            "should": [
+                {
+                    "term": {
+                        "uri.keyword": "https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc"
+                    }
+                },
+                {
+                    "term": {
+                        "uri.keyword": "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
+                    }
+                }
+
+            ]
+        }
+    }
+
+    filter_obj = {"field": "uri",
+                  "values": ["https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc",
+                             "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"]}
+
+    result = collection_filter(filter_obj)
+    assert result == expected
