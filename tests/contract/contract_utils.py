@@ -39,7 +39,7 @@ def populate():
     try:
         while True:
             response = requests.get("http://localhost:8000/count")
-            if response.json()['count'] >= 5610:
+            if response.json()['count'] >= 5569:
                 break
             if time.time() > timeout:
                 pytest.fail('Test containers: timed out while waiting for poupulation of ElasticSearch, last response '

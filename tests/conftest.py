@@ -27,16 +27,6 @@ json_concepts = {"page": {"totalElements": 2},
                      ]
                  }
                  }
-json_data_sets = {
-    "hits": {
-        "total": 2,
-        "hits": [
-            {
-                "id": 1234566
-            }
-        ]
-    }
-}
 json_data_services = {
     "total": 2,
     "hits": [
@@ -71,7 +61,7 @@ def wait_for_datasets_ready():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=datasets")
-            if response.json()[0]['count'] >= 1100:
+            if response.json()[0]['count'] >= 1252:
                 break
             if time.time() > timeout:
                 pytest.fail(
@@ -85,9 +75,10 @@ def wait_for_datasets_ready():
 
 def mocked_requests_get(*args, **kwargs):
     class MockResponse:
-        def __init__(self, json_data, status_code):
+        def __init__(self, json_data, status_code, text = None):
             self.json_data = json_data
             self.status_code = status_code
+            self.text = text
 
         def json(self):
             return self.json_data
@@ -96,16 +87,17 @@ def mocked_requests_get(*args, **kwargs):
             print("status check")
 
     response_json = {}
+    response_text = ""
     if re.findall("informationmodels", kwargs['url']).__len__() > 0:
         response_json = json_info_models
     elif re.findall("concept", kwargs['url']).__len__() > 0:
         response_json = json_concepts
     elif re.findall("dataset", kwargs['url']).__len__() > 0:
-        response_json = json_data_sets
+        response_text = "@prefix dcat:  <http://www.w3.org/ns/dcat#> .\n\n<https://example.com/dataset/1234566>\n a dcat:Dataset ."
     elif re.findall("api", kwargs['url']).__len__() > 0:
         response_json = json_data_services
     return MockResponse(json_data=response_json,
-                        status_code=200)
+                        status_code=200, text=response_text)
 
 
 @pytest.fixture
@@ -116,6 +108,11 @@ def mock_ingest(mocker):
 @pytest.fixture
 def mock_ingest_from_source(mocker):
     return mocker.patch('src.ingest.elasticsearch_ingest_from_source')
+
+
+@pytest.fixture
+def mock_ingest_from_harvester(mocker):
+    return mocker.patch('src.ingest.elasticsearch_ingest_from_harvester')
 
 
 @pytest.fixture
@@ -136,6 +133,11 @@ def mock_single_create(mocker):
 @pytest.fixture
 def mock_single_reindex(mocker):
     return mocker.patch('src.ingest.reindex_specific_index', return_value=None)
+
+
+@pytest.fixture
+def mock_dataset_parser(mocker):
+    return mocker.patch('fdk_rdf_parser.parseDatasets', return_value={})
 
 
 @pytest.fixture
@@ -172,7 +174,7 @@ def wait_for_ready():
     try:
         while True:
             response = get("http://localhost:8000/count")
-            if response.json()['count'] >= 5610:
+            if response.json()['count'] >= 5569:
                 break
             if time.time() > timeout:
                 pytest.fail(

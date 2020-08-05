@@ -40,6 +40,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
             elif key == 'last_x_days':
                 x_days_query = get_last_x_days_filter(f)
                 self.body["query"]["bool"]["filter"].append(x_days_query)
+            elif key == 'collection':
+                self.body["query"]["bool"]["filter"].append(collection_filter(f[key]))
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 

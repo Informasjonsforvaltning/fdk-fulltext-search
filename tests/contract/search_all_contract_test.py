@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 from jsonpath_ng import parse
-from requests import post, get
+from requests import post
 
 service_url = "http://localhost:8000"
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
@@ -55,14 +55,14 @@ class TestSearchAll:
         previous_was_open_data = True
         previous_was_authority = True
         for hits in result:
-            if "nationalComponent" in hits:
+            if hits.get("nationalComponent"):
                 if hits["nationalComponent"]:
                     assert previous_was_authority is True, "nationalCompoent dataservice encountered after " \
                                                            "non-authoritative hit {0}".format(json.dumps(debug_values))
                     previous_was_authority = True
                 else:
                     previous_was_authority = False
-            elif "provenance" in hits:
+            elif hits.get("provenance"):
                 if hits["provenance"]["code"] == "NASJONAL":
                     assert previous_was_dataset is True, "dataset with NASJONAL provenance encountered after other " \
                                                          "data types {0}".format(json.dumps(debug_values))
@@ -461,9 +461,9 @@ class TestSearchAll:
         for hit in result["hits"]:
             assert hit['type'] == 'dataset'
             for key in hit.keys():
-                if key == "theme":
+                if key == "theme" and hit[key]:
                     for entry in hit[key]:
-                        assert "code" not in entry.keys()
+                        assert not entry.get("code")
 
     @pytest.mark.contract
     def test_filter_on_open_access(self, api, wait_for_ready):
@@ -493,7 +493,7 @@ class TestSearchAll:
         assert len(result["hits"]) > 0
         assert result['page']['totalElements'] == result['aggregations']['accessRights']['buckets'][0]['doc_count']
         for hits in result["hits"]:
-            assert "accessRights" not in hits.keys()
+            assert not hits.get("accessRights")
 
     @pytest.mark.contract
     def test_search_with_empty_result_should_return_empty_object(self, api, wait_for_ready):
@@ -531,6 +531,25 @@ class TestSearchAll:
         expected = post(url=service_url + "/search", json=body).json()["page"]["totalElements"]
         result = post(url=service_url + "/search", json=body_special_char).json()
         assert result["page"]["totalElements"] == expected
+
+    @pytest.mark.contract
+    def test_collection_filter(self, api, wait_for_ready):
+        body = {
+            "filters": [
+                {
+                    "collection": {"field": "uri", "values": [
+                        "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f",
+                        "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"]}
+                }
+            ]
+        }
+
+        result = post(url=service_url + "/search", json=body)
+        assert result.status_code == 200
+        assert len(result.json()["hits"]) == 2
+        uris = [x["uri"] for x in result.json()["hits"]]
+        assert "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f" in uris
+        assert "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2" in uris
 
 
 def is_exact_match(keys, hit, search):

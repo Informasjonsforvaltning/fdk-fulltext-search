@@ -69,10 +69,14 @@ def test_fetch_data_services_should_not_initiate_reindex(mock_env, mock_get, moc
 
 
 @pytest.mark.unit
-def test_fetch_datasets_should_initiate_reindex(mock_env, mock_ingest_from_source, mock_get, mock_single_reindex):
+def test_fetch_datasets_should_initiate_reindex(mock_env,
+                                                mock_ingest_from_harvester,
+                                                mock_get,
+                                                mock_single_reindex,
+                                                mock_dataset_parser):
     fetch_data_sets(re_index=True)
-    assert mock_ingest_from_source.call_count == 1
-    ingest_calls = mock_ingest_from_source.call_args_list[0][0]
+    assert mock_ingest_from_harvester.call_count == 1
+    ingest_calls = mock_ingest_from_harvester.call_args_list[0][0]
     assert ingest_calls[1] == 'datasets'
     assert ingest_calls[2] == '_id'
     assert mock_single_reindex.call_count == 1
@@ -80,14 +84,14 @@ def test_fetch_datasets_should_initiate_reindex(mock_env, mock_ingest_from_sourc
 
 
 @pytest.mark.unit
-def test_fetch_datasets_should_not_initiate_reindex(mock_env, mock_get, mock_ingest_from_source, mock_single_reindex):
+def test_fetch_datasets_should_not_initiate_reindex(mock_env,
+                                                    mock_get,
+                                                    mock_ingest_from_harvester,
+                                                    mock_single_reindex,
+                                                    mock_dataset_parser):
     fetch_data_sets()
-    assert mock_ingest_from_source.call_count == 1
-    ingest_calls = mock_ingest_from_source.call_args_list[0][0]
+    assert mock_ingest_from_harvester.call_count == 1
+    ingest_calls = mock_ingest_from_harvester.call_args_list[0][0]
     assert ingest_calls[1] == 'datasets'
     assert ingest_calls[2] == '_id'
     assert mock_single_reindex.call_count == 0
-
-
-
-

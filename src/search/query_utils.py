@@ -117,6 +117,12 @@ def exact_match_in_title_query(title_field_names: list, search_string: str):
 def word_in_title_query(title_field_names: list, search_string: str):
     fields_list = []
     for field in title_field_names:
+        is_single_field_part = len(field.split(".")) == 1
+        if is_single_field_part:
+            fields_list.append(field + ".nb")
+            fields_list.append(field + ".no")
+            fields_list.append(field + ".nn")
+            fields_list.append(field + ".en")
         fields_list.append(field + ".ngrams")
         fields_list.append(field + ".ngrams.2_gram")
         fields_list.append(field + ".ngrams.3_gram")
@@ -236,6 +242,15 @@ def get_term_filter(request_item):
     return filters
 
 
+def get_term_filter_from_collection(key: str, collection: list):
+    """ map request filter for one key to ES term queries"""
+    filters = []
+    for term in collection:
+        q = {"term": {get_field_key(key): term}}
+        filters.append(q)
+    return filters
+
+
 def get_exists_filter(request_item):
     """ map request filter for fields to ES exists queries"""
     filters = []
@@ -274,6 +289,8 @@ def get_field_key(filter_key: str):
         return "provenance.code.keyword"
     elif filter_key == "spatial":
         return "spatial.prefLabel.no.keyword"
+    elif filter_key == "uri":
+        return "uri.keyword"
     else:
         return filter_key
 
@@ -301,6 +318,16 @@ def must_not_filter(filter_key: str):
     if index:
         missing_filter["bool"]["must"] = {"term": {"_index": get_index_filter_for_key(filter_key)}}
     return missing_filter
+
+
+def collection_filter(filter_obj: dict):
+    collection = get_term_filter_from_collection(key=filter_obj["field"],
+                                                 collection=filter_obj["values"])
+    return {
+        "bool": {
+            "should": collection
+        }
+    }
 
 
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
@@ -414,7 +441,7 @@ def all_indices_default_query():
                     "term": {
                         "provenance.code.keyword": {
                             "value": "NASJONAL",
-                            "boost": 2
+                            "boost": 3
                         }
                     }
                 },

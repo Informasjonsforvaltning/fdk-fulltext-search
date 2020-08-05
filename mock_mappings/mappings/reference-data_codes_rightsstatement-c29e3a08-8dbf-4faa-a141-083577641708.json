@@ -1,0 +1,52 @@
+{
+  "id" : "c29e3a08-8dbf-4faa-a141-083577641708",
+  "name" : "reference-data_codes_rightsstatement",
+  "request" : {
+    "url" : "/reference-data/codes/rightsstatement",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "jsonBody" : [
+      {
+          "uri": "http://publications.europa.eu/resource/authority/access-right",
+          "prefLabel": {
+              "en": "Access right Named Authority List"
+          }
+      },
+      {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC",
+          "code": "NON_PUBLIC",
+          "prefLabel": {
+              "nn": "Ikke-offentlig",
+              "nb": "Ikke-offentlig",
+              "en": "Non-public"
+          }
+      },
+      {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/PUBLIC",
+          "code": "PUBLIC",
+          "prefLabel": {
+              "en": "Public",
+              "nb": "Offentlig",
+              "nn": "Offentlig"
+          }
+      },
+      {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/RESTRICTED",
+          "code": "RESTRICTED",
+          "prefLabel": {
+              "nb": "Begrenset",
+              "nn": "Begrenset",
+              "en": "Restricted"
+          }
+      }
+  ],
+  "headers" : {
+        "Content-Type" : "application/json;charset=UTF-8" 
+    }
+  },
+  "uuid" : "c29e3a08-8dbf-4faa-a141-083577641708",
+  "persistent" : true,
+  "insertionIndex" : 153
+}

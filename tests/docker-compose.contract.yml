@@ -43,3 +43,6 @@ services:
         - RABBIT_USERNAME=admin
         - RABBIT_PASSWORD=admin
         - RABBIT_HOST=rabbitmq
+        - DATASET_HARVESTER_BASE_URI=http://servicesmock:8080/dataset
+        - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
+        - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data

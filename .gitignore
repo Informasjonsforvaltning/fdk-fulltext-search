@@ -3,3 +3,4 @@ __pycache__/
 requirements.txt
 .pytest_cache
 .env
+.python-version
