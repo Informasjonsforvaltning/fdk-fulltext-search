@@ -1,18 +1,17 @@
 import json
 import os
+import time
+
 import pika
 import pytest
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.exceptions import NewConnectionError, MaxRetryError
 from urllib3.util.retry import Retry
-import time
 
-queue = "harvester.UpdateSearchTrigger"
-
-user_name = os.getenv("RABBIT_USERNAME") or "admin"
-password = os.getenv("RABBIT_PASSWORD") or "admin"
-host = os.getenv("RABBIT_HOST") or "localhost"
+user_name = os.getenv("RABBIT_USERNAME", "admin")
+password = os.getenv("RABBIT_PASSWORD", "admin")
+host = os.getenv("RABBIT_HOST", "localhost")
 
 expected_content_keys = ["hits", "page", "aggregations"]
 expected_page_keys = ["totalElements", "totalPages", "currentPage", "size"]
@@ -35,6 +34,7 @@ def wait_for_es():
 
 def populate():
     send_rabbitmq_message("all")
+    time.sleep(2)
     timeout = time.time() + 90
     try:
         while True:
@@ -50,19 +50,17 @@ def populate():
 
 
 def send_rabbitmq_message(data_type):
-    msg = json.dumps({
-        "updatesearch": data_type
-    })
     credentials = pika.PlainCredentials(username=user_name,
                                         password=password)
 
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host=host, credentials=credentials)
     )
+
+    routing_key = f'{data_type}.harvester.UpdateSearchTrigger'
+
     channel = connection.channel()
-    channel.queue_declare(queue=queue)
-    channel.basic_publish(exchange='',
-                          routing_key=queue,
-                          body=msg)
+    channel.exchange_declare(exchange='harvests', exchange_type='topic')
+    channel.basic_publish(exchange='harvests', routing_key=routing_key, body=json.dumps({}))
+
     connection.close()
-    time.sleep(2)

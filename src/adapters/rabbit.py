@@ -3,26 +3,30 @@ import logging
 import os
 import time
 from json import JSONDecodeError
+from multiprocessing import Process
 
 import pika
-from multiprocessing import Process
 from pika.adapters.utils.connection_workflow import AMQPConnectorSocketConnectError
 from pika.exceptions import AMQPError, StreamLostError, AMQPConnectionError
-from src.ingest import fetch_information_models, fetch_data_sets, fetch_data_services, fetch_concepts, \
-    fetch_all_content, reindex
 
-queue = "harvester.UpdateSearchTrigger"
+from src.ingest import (
+    fetch_information_models,
+    fetch_data_sets,
+    fetch_data_services,
+    fetch_concepts,
+    fetch_all_content
+)
 
-user_name = os.getenv("RABBIT_USERNAME") or "admin"
-password = os.getenv("RABBIT_PASSWORD") or "admin"
-host = os.getenv("RABBIT_HOST") or "localhost"
+user_name = os.getenv("RABBIT_USERNAME", "admin")
+password = os.getenv("RABBIT_PASSWORD", "admin")
+host = os.getenv("RABBIT_HOST", "localhost")
 
 update_fun = {
-    'datasets': fetch_data_sets,
-    'informationmodels': fetch_information_models,
-    'dataservices': fetch_data_services,
-    'concepts': fetch_concepts,
-    'all': fetch_all_content
+    'dataset': fetch_data_sets,
+    'informationmodel': fetch_information_models,
+    'dataservice': fetch_data_services,
+    'concept': fetch_concepts,
+    'all': fetch_all_content,
 }
 
 
@@ -32,18 +36,30 @@ class UpdateConsumer:
         consumer_process = Process(target=self.start_listener)
         consumer_process.start()
 
-    def callback(self, ch, method, properties, body):
-        logging.info("[rabbitmq]Received msg from queue:\n {0}".format(body))
+    @staticmethod
+    def callback(ch, method, properties, body):
+        routing_key = method.routing_key
+        logging.info(f"[rabbitmq]Received msg from {routing_key}:\n {body}")
         try:
-            update_type = json.loads(body)["updatesearch"]
+            update_type = routing_key.split('.')[0]
             update_with = update_fun[update_type]
+
             if update_with:
-                result = update_with(re_index=True)
-                logging.info("[rabbitmq]Result: {0}".format(result))
+                body = json.loads(body)
+                identifier = body['identifier'] if 'identifier' in body else None
+
+                if update_type == 'all':
+                    result = update_with(re_index=True)
+                else:
+                    result = update_with(identifier=identifier, re_index=True)
+
+                logging.info(f"[rabbitmq]Result: {result}")
+                return result
+
         except KeyError:
-            logging.error("[rabbitmq]Error: Received invalid operation type:\n {0}".format(update_type))
+            logging.error(f"[rabbitmq]Error: Received invalid operation type: {routing_key}")
         except JSONDecodeError:
-            logging.error("[rabbitmq]Error: Received invalid JSON :\n {0}".format(body))
+            logging.error(f"[rabbitmq]Error: Received invalid JSON :\n {body}")
 
     def start_listener(self):
         channel = None
@@ -59,7 +75,15 @@ class UpdateConsumer:
                 )
 
                 channel = connection.channel()
-                channel.basic_consume(queue=queue,
+
+                channel.exchange_declare(exchange='harvests', exchange_type='topic')
+
+                result = channel.queue_declare('', exclusive=True, auto_delete=True)
+                queue_name = result.method.queue
+
+                channel.queue_bind(exchange='harvests', queue=queue_name, routing_key='*.harvester.UpdateSearchTrigger')
+
+                channel.basic_consume(queue=queue_name,
                                       auto_ack=True,
                                       on_message_callback=self.callback)
                 connected = True

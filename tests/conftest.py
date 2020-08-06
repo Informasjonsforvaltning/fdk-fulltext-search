@@ -83,7 +83,8 @@ def mocked_requests_get(*args, **kwargs):
         def json(self):
             return self.json_data
 
-        def raise_for_status(self):
+        @staticmethod
+        def raise_for_status():
             print("status check")
 
     response_json = {}
@@ -103,6 +104,11 @@ def mocked_requests_get(*args, **kwargs):
 @pytest.fixture
 def mock_ingest(mocker):
     return mocker.patch('src.ingest.elasticsearch_ingest')
+
+
+@pytest.fixture
+def mock_data_service_ingest(mocker):
+    return mocker.patch('src.ingest.elasticsearch_ingest_data_service')
 
 
 @pytest.fixture

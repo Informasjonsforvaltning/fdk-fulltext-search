@@ -6,7 +6,8 @@ from elasticsearch.exceptions import ConnectionError
 
 query_builder = {
     IndicesKey.INFO_MODEL: InformationModelQuery,
-    IndicesKey.DATA_SETS: DataSetQuery
+    IndicesKey.DATA_SETS: DataSetQuery,
+    IndicesKey.DATA_SERVIES: DataServiceQuery
 }
 
 
@@ -68,6 +69,7 @@ def search_in_index(index: str, request: dict = None):
             if "sorting" in request:
                 sorting = request.get("sorting")
         q = query_builder[index](search_string=search_str, aggs=aggs, filters=f)
+        print(q)
         if size or page:
             q.add_page(size=size, page=page)
         if sorting:

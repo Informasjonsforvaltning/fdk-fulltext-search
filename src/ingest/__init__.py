@@ -14,13 +14,14 @@ import fdk_rdf_parser
 from requests import HTTPError, RequestException, Timeout
 
 from .utils import IndicesKey
-from jsonpath_ng import parse
 
 ES_HOST = os.getenv('ELASTIC_HOST') or "localhost"
 ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
 es_client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL') or "http://localhost:8080/"
 DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI') or "http://localhost:8080/dataset"
+FDK_DATASERVICE_HARVESTER_URI = os.getenv(
+    'FDK_DATASERVICE_HARVESTER_URI', 'https://dataservices.staging.fellesdatakatalog.digdir.no')
 
 
 def error_msg(exec_point, reason, count=0):
@@ -46,10 +47,10 @@ def reindex():
 
 def fetch_all_content(re_index=False):
     start = time.time()
-    info_status = fetch_information_models(re_index)
-    concept_status = fetch_concepts(re_index)
-    service_status = fetch_data_services(re_index)
-    datasets_status = fetch_data_sets(re_index)
+    info_status = fetch_information_models(re_index=re_index)
+    concept_status = fetch_concepts(re_index=re_index)
+    service_status = fetch_data_services(re_index=re_index)
+    datasets_status = fetch_data_sets(re_index=re_index)
     total_time = time.time() - start
     totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
     status = "erros occured"
@@ -141,39 +142,37 @@ def fetch_data_sets(re_index=False):
         return result
 
 
-def fetch_data_services(re_index=False):
-    logging.info("fetching services")
-    data_service_url = API_URL + "apis"
-    try:
-        if re_index:
-            reindex_specific_index(IndicesKey.DATA_SERVICES)
-        logging.info("fetching dataseervices")
-        size = requests.get(url=data_service_url, headers={"Accept": "application/json"}, timeout=5).json()["total"]
-        r = requests.get(url=data_service_url, params={"size": size}, headers={"Accept": "application/json"}, timeout=5)
-        r.raise_for_status()
-        documents = r.json()
-        id_path = parse('hits[*].id')
-        id_list = [match.value for match in id_path.find(documents)]
-        # repeat request if size exceeds max size of response
-        if len(id_list) < size:
-            doRequest = math.ceil(size / 100)
-            for x in range(1, doRequest):
-                r = requests.get(url=data_service_url, params={"size": 100, "page": str(x)}, timeout=5)
-                r.raise_for_status()
-                id_list = id_list + [match.value for match in id_path.find(r.json())]
-        hits = []
-        # get full documents
-        for api_id in id_list:
-            r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"}, timeout=5)
-            r.raise_for_status()
-            doc = r.json()
-            hits.append(doc)
+def fetch_data_services(identifier=None, re_index=False):
+    if re_index:
+        reindex_specific_index(IndicesKey.DATA_SERVIES)
 
-        result = elasticsearch_ingest(hits, IndicesKey.DATA_SERVICES, "id")
-        return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
-        result = error_msg(f"fetch dataservices from {data_service_url}", err)
+    dataservice_url = f'{FDK_DATASERVICE_HARVESTER_URI}/catalogs'
+    if identifier:
+        dataservice_url = f'{dataservice_url}/{identifier}'
+
+    logging.info(f"fetching data services from {dataservice_url}")
+    try:
+        response = requests.get(timeout=5, url=dataservice_url, headers={'Accept': 'text/turtle'})
+        response.raise_for_status()
+
+        parsed_rdf = fdk_rdf_parser.parseDataServices(response.text)
+        if parsed_rdf is not None:
+            result = elasticsearch_ingest_data_service(parsed_rdf, IndicesKey.DATA_SERVIES,
+                                                     IndicesKey.DATA_SERVIES_ID_KEY)
+            return result_msg(result[0])
+    except Exception as err:
+        result = error_msg(f"fetch dataservices from {dataservice_url}", err)
         logging.error(result["message"])
+        return result
+
+
+def elasticsearch_ingest_data_service(documents, index, id_key):
+    try:
+        result = helpers.bulk(client=es_client, actions=yield_data_service(documents, index, id_key))
+        return result
+    except BulkIndexError as err:
+        result = error_msg(f"ingest {index}", err.errors)
+        logging.error(result)
         return result
 
 
@@ -207,6 +206,15 @@ def elasticsearch_ingest_from_source(documents, index, id_key):
         result = error_msg(f"ingest {index}", err.errors)
         logging.error(result)
         return result
+
+
+def yield_data_service(documents, index, id_key):
+    for key, value in documents.items():
+        yield {
+            "_index": index,
+            "_id": key,
+            "_source": asdict(value)
+        }
 
 
 def yield_documents(documents, index, id_key):
@@ -255,6 +263,13 @@ def reindex_specific_index(index_name):
 
 
 def reindex_all_indices():
+    with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as new_data_service_mapping:
+        try:
+            es_client.indices.delete(index="newdataservices")
+        except:
+            print("indices concept does not exist")
+        finally:
+            es_client.indices.create(index="newdataservices", body=json.load(new_data_service_mapping))
     with open(os.getcwd() + "/elasticsearch/create_concepts_index.json") as concept_mapping:
         try:
             es_client.indices.delete(index="concepts")
@@ -262,7 +277,7 @@ def reindex_all_indices():
             print("indices concept does not exist")
         finally:
             es_client.indices.create(index="concepts", body=json.load(concept_mapping))
-    with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
+    with open(os.getcwd() + "/elasticsearch/_old_create_dataservices_index.json") as dataservice_mapping:
         try:
             es_client.indices.delete(index="dataservices")
         except:
@@ -295,7 +310,7 @@ def update_index_info(index_name):
                 }
             },
             "script": {
-                "inline": f"ctx._source.lastUpdate='{now}'",
+                "source": f"ctx._source.lastUpdate='{now}'",
                 "lang": "painless"
             }
         }

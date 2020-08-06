@@ -1,4 +1,6 @@
 class IndicesKey:
+    DATA_SERVIES = "dataservices"
+    DATA_SERVIES_ID_KEY = "uri"
     INFO_MODEL = "informationmodels"
     INFO_MODEL_ID_KEY = "id"
     CONCEPTS = "concepts"
@@ -6,7 +8,7 @@ class IndicesKey:
     DATA_SETS = "datasets"
     DATA_SETS_ID_KEY = "_id"
     DATA_SETS_SOURCE_KEY = "_source"
-    DATA_SERVICES = "dataservices"
-    DATA_SERVICES_ID_KEY = "id"
+    OLD_DATA_SERVICES = "dataservices"
+    OLD_DATA_SERVICES_ID_KEY = "id"
     INDICES_INFO = "info"
     ALL = "all"

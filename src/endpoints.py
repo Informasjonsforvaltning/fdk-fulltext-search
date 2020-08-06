@@ -24,6 +24,21 @@ class Search(Resource):
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
+class SearchDataServices(Resource):
+    def post(self):
+        body = request.get_json()
+
+        page = 0
+        if body and "page" in body:
+            page = body["page"]
+
+        result = client.search_in_index(index=IndicesKey.DATA_SERVIES, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)
+
+
 class SearchInformationModels(Resource):
     def post(self):
         page = 0
@@ -75,7 +90,7 @@ class Indices(Resource):
 
         index_name = request.args.get('name')
         if index_name:
-            if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.DATA_SETS,
+            if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.OLD_DATA_SERVICES, IndicesKey.DATA_SETS,
                                   IndicesKey.CONCEPTS]:
                 abort(http_status_code=400,
                       description={"bad request": "indices '{0}' is not a valid index. Valid indices values are ["
@@ -94,7 +109,7 @@ class Indices(Resource):
     def post(self):
         index_name = request.args.get('name')
         if index_name:
-            if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.DATA_SETS,
+            if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.OLD_DATA_SERVICES, IndicesKey.DATA_SETS,
                                   IndicesKey.CONCEPTS]:
                 abort(http_status_code=400, description="bad request: indices {0} does not exist".format(index_name))
         else:
@@ -130,7 +145,7 @@ class Recent(Resource):
 
 class Suggestion(Resource):
     def get(self, content_type):
-        if content_type in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.CONCEPTS, None]:
+        if content_type in [IndicesKey.INFO_MODEL, IndicesKey.OLD_DATA_SERVICES, IndicesKey.CONCEPTS, None]:
             abort(http_status_code=501,
                   description="fulltext-search does not yet support autocomplete search for {0} ".format(content_type))
         elif content_type != IndicesKey.DATA_SETS:
