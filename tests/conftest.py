@@ -83,7 +83,8 @@ def mocked_requests_get(*args, **kwargs):
         def json(self):
             return self.json_data
 
-        def raise_for_status(self):
+        @staticmethod
+        def raise_for_status():
             print("status check")
 
     response_json = {}

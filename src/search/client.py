@@ -6,7 +6,8 @@ from elasticsearch.exceptions import ConnectionError
 
 query_builder = {
     IndicesKey.INFO_MODEL: InformationModelQuery,
-    IndicesKey.DATA_SETS: DataSetQuery
+    IndicesKey.DATA_SETS: DataSetQuery,
+    IndicesKey.DATA_SERVICES: DataServiceQuery
 }
 
 

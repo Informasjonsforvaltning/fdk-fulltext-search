@@ -10,6 +10,7 @@ pytest-mock = "*"
 mock = "*"
 elasticmock = "*"
 v = {editable = true,version = "*"}
+invoke = "*"
 
 [pytest]
 mock_use_standalone_module = true

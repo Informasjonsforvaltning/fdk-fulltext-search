@@ -2,7 +2,8 @@ from src.ingest import IndicesKey
 
 index_title_fields = {
     IndicesKey.INFO_MODEL: ['title.nb', 'title.nn', 'title.no', 'title.en'],
-    IndicesKey.DATA_SETS: ['title.nb', 'title.nn', 'title.no', 'title.en']
+    IndicesKey.DATA_SETS: ['title.nb', 'title.nn', 'title.no', 'title.en'],
+    IndicesKey.DATA_SERVICES: ['title.nb', 'title.nn', 'title.en']
 }
 
 index_suggestion_fields = {
@@ -12,6 +13,7 @@ index_suggestion_fields = {
 index_description_fields = {
     IndicesKey.INFO_MODEL: ["schema^0.5"],
     IndicesKey.DATA_SETS: ["description.nb", "description.nn", "description.no", "description.en"],
+    IndicesKey.DATA_SERVICES: ["description.nb", "description.nn", "description.en"],
     IndicesKey.ALL: ["description", "definition.text.*", "schema^0.5"]
 }
 

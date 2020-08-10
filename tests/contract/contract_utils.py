@@ -1,18 +1,19 @@
 import json
 import os
+import time
+
 import pika
 import pytest
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.exceptions import NewConnectionError, MaxRetryError
 from urllib3.util.retry import Retry
-import time
 
 queue = "harvester.UpdateSearchTrigger"
 
-user_name = os.getenv("RABBIT_USERNAME") or "admin"
-password = os.getenv("RABBIT_PASSWORD") or "admin"
-host = os.getenv("RABBIT_HOST") or "localhost"
+user_name = os.getenv("RABBIT_USERNAME", "admin")
+password = os.getenv("RABBIT_PASSWORD", "admin")
+host = os.getenv("RABBIT_HOST", "localhost")
 
 expected_content_keys = ["hits", "page", "aggregations"]
 expected_page_keys = ["totalElements", "totalPages", "currentPage", "size"]

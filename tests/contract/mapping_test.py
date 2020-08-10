@@ -14,7 +14,7 @@ def wait_for_dataservice_ready():
     try:
         while True:
             response = requests.get(es_dataservice_url + "/_count")
-            if response.json()['count'] >= 126:
+            if response.json()['count'] >= 13:
                 break
             if time.time() > timeout:
                 pytest.fail(
@@ -27,7 +27,7 @@ def wait_for_dataservice_ready():
 
 
 class TestMapping:
-    @pytest.mark.contract
+    # @pytest.mark.contract
     def test_json_in_apiSpecification_should_not_be_indexed(self, wait_for_dataservice_ready):
         result_mapping = requests.get(es_dataservice_url + "/_mapping")
         api_spec_mapping = result_mapping.json()["dataservices"]["mappings"]["properties"]["apiSpecification"].keys()
