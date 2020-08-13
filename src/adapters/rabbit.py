@@ -4,6 +4,7 @@ import os
 import time
 from json import JSONDecodeError
 from multiprocessing import Process
+from threading import Thread
 
 import pika
 from pika.adapters.utils.connection_workflow import AMQPConnectorSocketConnectError
@@ -33,28 +34,29 @@ update_fun = {
 class UpdateConsumer:
 
     def __init__(self):
-        consumer_process = Process(target=self.start_listener)
-        consumer_process.start()
+        self.start_listener()
+        # consumer_process = Process(target=self.start_listener)
+        # consumer_process.start()
 
     @staticmethod
     def callback(ch, method, properties, body):
+        logging.error(f"[rabbitmq]callback")
         routing_key = method.routing_key
-        logging.info(f"[rabbitmq]Received msg from {routing_key}:\n {body}")
+        logging.error(f"[rabbitmq]Received msg from {routing_key}:\n {body}")
         try:
             update_type = routing_key.split('.')[0]
-            update_with = update_fun[update_type]
+            fetch_function = update_fun[update_type]
 
-            if update_with:
-                body = json.loads(body)
+            logging.error(f"[rabbitmq]Updating {update_type}")
+
+            if fetch_function:
                 # TODO: implement identifier in a later PR
-                identifier = body['identifier'] if 'identifier' in body else None
+                # body = json.loads(body)
+                # identifier = body['identifier'] if 'identifier' in body else None
 
-                if update_type == 'all':
-                    result = update_with(re_index=True)
-                    logging.info(f"[rabbitmq]Result: {result}")
-                    return result
-                # else:
-                    # result = update_with(identifier=identifier, re_index=True)
+                result = fetch_function(re_index=True)
+                logging.error(f"[rabbitmq]Result: {result}")
+                return result
 
         except KeyError:
             logging.error(f"[rabbitmq]Error: Received invalid operation type: {routing_key}")
@@ -62,11 +64,12 @@ class UpdateConsumer:
             logging.error(f"[rabbitmq]Error: Received invalid JSON :\n {body}")
 
     def start_listener(self):
+        logging.error("[rabbitmq]Info: Attempting to start listener")
         channel = None
         connected = False
         while not connected:
             try:
-                logging.info("[rabbitmq] Connection established")
+                logging.error("[rabbitmq]Info: Establishing a connection")
                 credentials = pika.PlainCredentials(username=user_name,
                                                     password=password)
 
@@ -86,15 +89,21 @@ class UpdateConsumer:
                 channel.basic_consume(queue=queue_name,
                                       auto_ack=True,
                                       on_message_callback=self.callback)
+
+                logging.error("[rabbitmq]Info: Connection established")
                 connected = True
             except (AMQPError, AMQPConnectorSocketConnectError, AMQPConnectionError) as err:
                 logging.error("[rabbitmq]Error in consumer \n {0}".format(err.args))
                 # wait 60 seconds, then retry
                 time.sleep(60)
+            except Exception as e:
+                logging.error(f"[rabbitmq]Uncaught rabbitmq error: {e}")
+                exit(1)
 
         if channel:
             try:
-                channel.start_consuming()
+                thread = Thread(target=channel.start_consuming())
+                thread.start()
             except StreamLostError:
                 logging.error("[rabbitmq]AMPQ Stream lost, attempting to reconnect")
                 self.start_listener()

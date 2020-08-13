@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c78d04ef19b6f2fde772dccbcd3f238a36c6a4022dbbc600dc4ebd5f25cf6119"
+            "sha256": "85c74dac3715cd0b952ccf77fc1259966448777d487a809e9f19959dae1a8d76"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:42816852c7786d41701a0b52f4ac67a010ae524e1df29487bb197710a9833548",
-                "sha256:c5df6869ab4c861cce52895c055114e258872aae9bd2300bb6b6f6831e62cd05"
+                "sha256:2aa5aba6a5916d0d7c58741be4cface40a9173de52259a5fdec79cc1b1b26f76",
+                "sha256:d4efa315e7f62be86ea656e399a0542cd996b8d44ce50174c7e0d0d454efd2a9"
             ],
             "index": "pypi",
-            "version": "==0.1.10"
+            "version": "==0.1.8"
         },
         "flask": {
             "hashes": [

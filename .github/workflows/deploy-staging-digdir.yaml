@@ -39,9 +39,9 @@ jobs:
 
     - name: Run tests
       run: |
-        invoke unit-test
-        invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
-        invoke stop-docker
+      #  invoke unit-test
+      #  invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:staging_latest
+      #  invoke stop-docker
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search
