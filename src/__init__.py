@@ -5,9 +5,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 
-from .adapters.rabbit import UpdateConsumer
 from .endpoints import *
-from .adapters import rabbit
 
 
 def create_app(test_config=None):
@@ -40,8 +38,5 @@ def create_app(test_config=None):
     api.add_resource(SearchDataSet, '/datasets')
     api.add_resource(Suggestion, '/suggestion/<string:content_type>')
     api.add_resource(SuggestionAllIndices, '/suggestion')
-
-    # start rabbitmq consumer
-    UpdateConsumer()
 
     return app
