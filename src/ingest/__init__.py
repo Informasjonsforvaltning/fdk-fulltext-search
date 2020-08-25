@@ -130,7 +130,7 @@ def fetch_data_sets(re_index=False):
         if re_index:
             reindex_specific_index(IndicesKey.DATA_SETS)
         logging.info("fetching datasets")
-        req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=10)
+        req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=30)
         req.raise_for_status()
         documents = fdk_rdf_parser.parseDatasets(req.text)
         result = elasticsearch_ingest_from_harvester(documents, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
