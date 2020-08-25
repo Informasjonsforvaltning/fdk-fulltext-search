@@ -1,18 +1,9 @@
-import json
-import os
-import pika
 import pytest
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.exceptions import NewConnectionError, MaxRetryError
 from urllib3.util.retry import Retry
 import time
-
-queue = "harvester.UpdateSearchTrigger"
-
-user_name = os.getenv("RABBIT_USERNAME") or "admin"
-password = os.getenv("RABBIT_PASSWORD") or "admin"
-host = os.getenv("RABBIT_HOST") or "localhost"
 
 expected_content_keys = ["hits", "page", "aggregations"]
 expected_page_keys = ["totalElements", "totalPages", "currentPage", "size"]
@@ -34,7 +25,7 @@ def wait_for_es():
 
 
 def populate():
-    send_rabbitmq_message("all")
+    start_reindex("all")
     timeout = time.time() + 90
     try:
         while True:
@@ -49,20 +40,9 @@ def populate():
         pytest.fail('Test containers: could not contact fdk-fulltext-search container')
 
 
-def send_rabbitmq_message(data_type):
-    msg = json.dumps({
-        "updatesearch": data_type
-    })
-    credentials = pika.PlainCredentials(username=user_name,
-                                        password=password)
-
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=host, credentials=credentials)
-    )
-    channel = connection.channel()
-    channel.queue_declare(queue=queue)
-    channel.basic_publish(exchange='',
-                          routing_key=queue,
-                          body=msg)
-    connection.close()
-    time.sleep(2)
+def start_reindex(data_type):
+    url = "http://localhost:8000/indices"
+    if data_type is not "all":
+        url = url + f"?name={data_type}"
+    response = requests.post(url)
+    return response.json()
