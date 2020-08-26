@@ -47,6 +47,38 @@ json_data_services = {
     ]
 }
 
+turtle_datasets = """
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<https://testdirektoratet.no/datasets/123>
+        a                  dcat:CatalogRecord ;
+        dct:identifier     "123" ;
+        dct:issued         "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        dct:modified       "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        foaf:primaryTopic  <https://testutgiver.no/datasets/987654321> .
+
+<https://testutgiver.no/datasets/987654321>
+        a                  dcat:Dataset ."""
+
+turtle_dataservices = """
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<https://testdirektoratet.no/dataservices/321>
+        a                  dcat:CatalogRecord ;
+        dct:identifier     "321" ;
+        dct:issued         "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        dct:modified       "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        foaf:primaryTopic  <https://testutgiver.no/dataservices/987654321> .
+
+<https://testutgiver.no/dataservices/987654321>
+        a                  dcat:DataService ."""
+
 
 @pytest.fixture(scope="session")
 def api():
@@ -83,7 +115,8 @@ def mocked_requests_get(*args, **kwargs):
         def json(self):
             return self.json_data
 
-        def raise_for_status(self):
+        @staticmethod
+        def raise_for_status():
             print("status check")
 
     response_json = {}
@@ -93,9 +126,9 @@ def mocked_requests_get(*args, **kwargs):
     elif re.findall("concept", kwargs['url']).__len__() > 0:
         response_json = json_concepts
     elif re.findall("dataset", kwargs['url']).__len__() > 0:
-        response_text = "@prefix dcat:  <http://www.w3.org/ns/dcat#> .\n\n<https://example.com/dataset/1234566>\n a dcat:Dataset ."
-    elif re.findall("api", kwargs['url']).__len__() > 0:
-        response_json = json_data_services
+        response_text = turtle_datasets
+    elif re.findall("dataservice", kwargs['url']).__len__() > 0:
+        response_text = turtle_dataservices
     return MockResponse(json_data=response_json,
                         status_code=200, text=response_text)
 
@@ -138,6 +171,11 @@ def mock_single_reindex(mocker):
 @pytest.fixture
 def mock_dataset_parser(mocker):
     return mocker.patch('fdk_rdf_parser.parseDatasets', return_value={})
+
+
+@pytest.fixture
+def mock_data_service_parser(mocker):
+    return mocker.patch('fdk_rdf_parser.parseDataServices', return_value={})
 
 
 @pytest.fixture

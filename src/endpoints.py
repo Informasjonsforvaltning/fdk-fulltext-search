@@ -24,6 +24,21 @@ class Search(Resource):
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
+class SearchDataServices(Resource):
+    def post(self):
+        body = request.get_json()
+
+        page = 0
+        if body and "page" in body:
+            page = body["page"]
+
+        result = client.search_in_index(index=IndicesKey.DATA_SERVICES, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)
+
+
 class SearchInformationModels(Resource):
     def post(self):
         page = 0
