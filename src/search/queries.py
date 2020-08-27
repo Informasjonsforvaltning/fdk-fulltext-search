@@ -169,7 +169,7 @@ class DataServiceQuery(AbstractSearchQuery):
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"]["orgPath"] = org_path_aggregation()
-            self.body["aggs"]["formats"] = get_aggregation_term_for_key(aggregation_key="mediaType.prefLabel.nb")
+            self.body["aggs"]["formats"] = get_aggregation_term_for_key(aggregation_key="mediaType.code.keyword")
 
     def add_search_string(self, search_string: str):
         dismax_queries = [

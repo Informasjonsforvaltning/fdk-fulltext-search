@@ -24,5 +24,5 @@ index_fulltext_fields = {
                            "accessRights.code", "subject.prefLabel.*", "subject.altLabel.*",
                            "subject.definition.*"],
     IndicesKey.DATA_SERVICES: ["title.*^3", "description.*", "publisher.name^3",
-                               "publisher.prefLabel^3", "mediaType.prefLabel.nb"],
+                               "publisher.prefLabel^3", "mediaType.code"],
 }

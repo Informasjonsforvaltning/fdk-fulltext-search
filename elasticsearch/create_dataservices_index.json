@@ -816,7 +816,6 @@
             "properties": {
               "nb": {
                 "type": "text",
-                "fielddata": true,
                 "fields": {
                   "keyword": {
                     "type": "keyword",
