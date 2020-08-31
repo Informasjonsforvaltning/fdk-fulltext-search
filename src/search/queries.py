@@ -3,7 +3,7 @@ from enum import Enum
 
 from src.search.fields import index_suggestion_fields
 from src.search.query_utils import *
-from src.search.themeprofiles import theme_profile_filter, ThemeProfileKeys
+from src.search.themeprofiles import theme_profile_filter
 
 
 class Direction(Enum):
@@ -147,6 +147,49 @@ class InformationModelQuery(AbstractSearchQuery):
         # TODO implement user defined aggregations?
 
 
+class DataServiceQuery(AbstractSearchQuery):
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.query = {"match_all": {}}
+
+        self.add_aggs(aggs)
+        if filters:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[],
+                                                                 filter_clause=True)
+            self.add_filters(filters)
+        else:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[])
+
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["orgPath"] = org_path_aggregation()
+            self.body["aggs"]["formats"] = get_aggregation_term_for_key(aggregation_key="mediaType.code.keyword")
+
+    def add_search_string(self, search_string: str):
+        dismax_queries = [
+            index_match_in_title_query(index_key=IndicesKey.DATA_SERVICES,
+                                       search_string=search_string),
+            word_in_description_query(index_key=IndicesKey.DATA_SERVICES,
+                                      search_string=search_string,
+                                      autorativ_boost=False),
+            simple_query_string(search_string=search_string,
+                                all_indices_autorativ_boost=False,
+                                boost=0.02,
+                                fields_for_index=IndicesKey.DATA_SERVICES),
+            simple_query_string(search_string=search_string,
+                                all_indices_autorativ_boost=False,
+                                lenient=True,
+                                fields_for_index=IndicesKey.DATA_SERVICES)
+        ]
+        self.query["dis_max"]["queries"] = dismax_queries
+
+
 class DataSetQuery(AbstractSearchQuery):
 
     def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
@@ -205,7 +248,7 @@ class RecentQuery:
             "sort": {"harvest.firstHarvested": {
                 "order": Direction.DESC.value,
                 "unmapped_type": "long"
-                }
+            }
             }
         }
 

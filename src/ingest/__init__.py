@@ -14,13 +14,13 @@ import fdk_rdf_parser
 from requests import HTTPError, RequestException, Timeout
 
 from .utils import IndicesKey
-from jsonpath_ng import parse
 
-ES_HOST = os.getenv('ELASTIC_HOST') or "localhost"
-ES_PORT = os.getenv('ELASTIC_PORT') or "9200"
+ES_HOST = os.getenv('ELASTIC_HOST', 'localhost')
+ES_PORT = os.getenv('ELASTIC_PORT', '9200')
 es_client = Elasticsearch([ES_HOST + ':' + ES_PORT])
-API_URL = os.getenv('API_URL') or "http://localhost:8080/"
-DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI') or "http://localhost:8080/dataset"
+API_URL = os.getenv('API_URL', 'http://localhost:8080/')
+DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI', 'http://localhost:8080/dataset')
+FDK_DATASERVICE_HARVESTER_URI = os.getenv('FDK_DATASERVICE_HARVESTER_URI', 'http://localhost:8080/dataservice')
 
 
 def error_msg(exec_point, reason, count=0):
@@ -46,10 +46,10 @@ def reindex():
 
 def fetch_all_content(re_index=False):
     start = time.time()
-    info_status = fetch_information_models(re_index)
-    concept_status = fetch_concepts(re_index)
-    service_status = fetch_data_services(re_index)
-    datasets_status = fetch_data_sets(re_index)
+    info_status = fetch_information_models(re_index=re_index)
+    concept_status = fetch_concepts(re_index=re_index)
+    service_status = fetch_data_services(re_index=re_index)
+    datasets_status = fetch_data_sets(re_index=re_index)
     total_time = time.time() - start
     totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
     status = "erros occured"
@@ -132,9 +132,13 @@ def fetch_data_sets(re_index=False):
         logging.info("fetching datasets")
         req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=30)
         req.raise_for_status()
-        documents = fdk_rdf_parser.parseDatasets(req.text)
-        result = elasticsearch_ingest_from_harvester(documents, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
-        return result_msg(result[0])
+        parsed_rdf = fdk_rdf_parser.parseDatasets(req.text)
+        if parsed_rdf is not None:
+            logging.info(f"ingesting parsed datasets")
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse datasets")
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
         logging.error(result["message"])
@@ -142,37 +146,26 @@ def fetch_data_sets(re_index=False):
 
 
 def fetch_data_services(re_index=False):
-    logging.info("fetching services")
-    data_service_url = API_URL + "apis"
-    try:
-        if re_index:
-            reindex_specific_index(IndicesKey.DATA_SERVICES)
-        logging.info("fetching dataseervices")
-        size = requests.get(url=data_service_url, headers={"Accept": "application/json"}, timeout=5).json()["total"]
-        r = requests.get(url=data_service_url, params={"size": size}, headers={"Accept": "application/json"}, timeout=5)
-        r.raise_for_status()
-        documents = r.json()
-        id_path = parse('hits[*].id')
-        id_list = [match.value for match in id_path.find(documents)]
-        # repeat request if size exceeds max size of response
-        if len(id_list) < size:
-            doRequest = math.ceil(size / 100)
-            for x in range(1, doRequest):
-                r = requests.get(url=data_service_url, params={"size": 100, "page": str(x)}, timeout=5)
-                r.raise_for_status()
-                id_list = id_list + [match.value for match in id_path.find(r.json())]
-        hits = []
-        # get full documents
-        for api_id in id_list:
-            r = requests.get(url=data_service_url + "/" + api_id, headers={"Accept": "application/json"}, timeout=5)
-            r.raise_for_status()
-            doc = r.json()
-            hits.append(doc)
+    if re_index:
+        reindex_specific_index(IndicesKey.DATA_SERVICES)
 
-        result = elasticsearch_ingest(hits, IndicesKey.DATA_SERVICES, "id")
-        return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
-        result = error_msg(f"fetch dataservices from {data_service_url}", err)
+    dataservice_url = f'{FDK_DATASERVICE_HARVESTER_URI}/catalogs'
+
+    logging.info(f"fetching data services from {dataservice_url}")
+    try:
+        response = requests.get(url=dataservice_url, headers={'Accept': 'text/turtle'}, timeout=10)
+        response.raise_for_status()
+
+        parsed_rdf = fdk_rdf_parser.parseDataServices(response.text)
+        if parsed_rdf is not None:
+            logging.info(f"ingesting parsed data services")
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SERVICES,
+                                                     IndicesKey.DATA_SERVICES_ID_KEY)
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse data services")
+    except Exception as err:
+        result = error_msg(f"fetch dataservices from {dataservice_url}", err)
         logging.error(result["message"])
         return result
 

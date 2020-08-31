@@ -1,0 +1,29 @@
+{
+  "id" : "27b8f962-f510-4fc6-a4dd-e3aa19af1a22",
+  "name" : "reference-data_codes_mediatypes",
+  "request" : {
+    "url" : "/reference-data/codes/mediatypes",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"code\":\"text/csv\",\"name\":\"CSV\"},{\"code\":\"application/gml+xml\",\"name\":\"GML\"},{\"code\":\"text/html\",\"name\":\"HTML\"},{\"code\":\"application/json\",\"name\":\"JSON\"},{\"code\":\"application/javascript\",\"name\":\"JSONP\"},{\"code\":\"application/vnd.geo+json\",\"name\":\"geoJSON\"},{\"code\":\"application/vnd.google-earth.kml+xml\",\"name\":\"KML\"},{\"code\":\"application/vnd.oasis.opendocument.spreadsheet\",\"name\":\"ODS\"},{\"code\":\"application/rdf+xml\",\"name\":\"RDF/XML\"},{\"code\":\"text/xml\",\"name\":\"RSS\"},{\"code\":\"application/x-­ogc-sosi\",\"name\":\"SOSI\"},{\"code\":\"image/tiff\",\"name\":\"TIFF\"},{\"code\":\"text/tab-separated-values\",\"name\":\"TSV\"},{\"code\":\"text/plain\",\"name\":\"TXT\"},{\"code\":\"application/x.wfs\",\"name\":\"WFS\"},{\"code\":\"application/x.wms\",\"name\":\"WMS\"},{\"code\":\"application/vnd.sealed-xls\",\"name\":\"XLS\"},{\"code\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"name\":\"XLSX\"},{\"code\":\"application/xml\",\"name\":\"XML\"},{\"code\":\"application/x.yaml\",\"name\":\"YAML\"},{\"code\":\"application/octet-stream\",\"name\":\"SHAPE\"},{\"code\":\"application/ld+json\",\"name\":\"JSON-LD\"},{\"code\":\"text/turtle\",\"name\":\"Turtle\"},{\"code\":\"application/n-triples\",\"name\":\"N-Triples\"},{\"code\":\"application/gpx+xml\",\"name\":\"GPX\"},{\"code\":\"application/x.siri\",\"name\":\"SIRI\"},{\"code\":\"application/x.gtfs\",\"name\":\"GTFS\"},{\"code\":\"application/x.gtfsrt\",\"name\":\"GTFSRT\"},{\"code\":\"application/x.netex\",\"name\":\"NeTEx\"},{\"code\":\"application/x.ualf\",\"name\":\"UALF\"},{\"code\":\"application/zip\",\"name\":\"ZIP\"},{\"code\":\"application/pdf\",\"name\":\"PDF\"},{\"code\":\"application/sql\",\"name\":\"SQL\"},{\"code\":\"application/geopackage+sqlite3\",\"name\":\"GPKG\"},{\"code\":\"application/vnd.sqlite3\",\"name\":\"SQLite\"}]",
+    "headers" : {
+      "Server" : "nginx/1.19.0",
+      "Date" : "Fri, 21 Aug 2020 07:57:46 GMT",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "X-Frame-Options" : "DENY",
+      "Vary" : [ "Accept-Encoding", "Accept, Accept-Encoding" ],
+      "Via" : "1.1 google",
+      "Alt-Svc" : "clear"
+    }
+  },
+  "uuid" : "27b8f962-f510-4fc6-a4dd-e3aa19af1a22",
+  "persistent" : true,
+  "insertionIndex" : 22
+}

@@ -9,6 +9,7 @@ from .endpoints import *
 
 
 def create_app(test_config=None):
+
     # Create and configure the app
     load_dotenv(override=True)
     app = Flask(__name__, instance_relative_config=True)
@@ -36,6 +37,7 @@ def create_app(test_config=None):
     api.add_resource(Indices, '/indices')
     api.add_resource(SearchInformationModels, '/informationmodels')
     api.add_resource(SearchDataSet, '/datasets')
+    api.add_resource(SearchDataServices, '/dataservices')
     api.add_resource(Suggestion, '/suggestion/<string:content_type>')
     api.add_resource(SuggestionAllIndices, '/suggestion')
 

@@ -291,6 +291,8 @@ def get_field_key(filter_key: str):
         return "spatial.prefLabel.no.keyword"
     elif filter_key == "uri":
         return "uri.keyword"
+    elif filter_key == "formats":
+        return "mediaType.keyword"
     else:
         return filter_key
 

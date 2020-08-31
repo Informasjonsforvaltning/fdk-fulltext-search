@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:a05f767abaa91bcf066528de27fbbd987e806fe382b17cbca7a0b75fe0376bef",
-                "sha256:a09966505422ed94181dbe433077250681a380c3bf1a004450a9fe5a3b7511f0"
+                "sha256:9933e2056322a2fd3ab1d45f1397bf85c2d0a26e75202b03d22ce85f189644f5",
+                "sha256:ad97a328aca1b808c090b0d28edb6f5636288ed5d31e45c4bfa41fb4120109cf"
             ],
             "index": "pypi",
-            "version": "==0.1.15"
+            "version": "==0.1.16"
         },
         "flask": {
             "hashes": [
@@ -407,11 +407,11 @@
         },
         "pytest-mock": {
             "hashes": [
-                "sha256:0061f9e8f14b77d0f3915a00f18b1b71f07da3c8bd66994e42ee91537681a76e",
-                "sha256:1d146a6e798b9e6322825e207b4e0544635e679b69253e6e01a221f45945d2f6"
+                "sha256:024e405ad382646318c4281948aadf6fe1135632bea9cc67366ea0c4098ef5f2",
+                "sha256:a4d6d37329e4a893e77d9ffa89e838dd2b45d5dc099984cf03c703ac8411bb82"
             ],
             "index": "pypi",
-            "version": "==3.3.0"
+            "version": "==3.3.1"
         },
         "six": {
             "hashes": [

@@ -44,5 +44,6 @@ services:
         - RABBIT_PASSWORD=admin
         - RABBIT_HOST=rabbitmq
         - DATASET_HARVESTER_BASE_URI=http://servicesmock:8080/dataset
+        - FDK_DATASERVICE_HARVESTER_URI=http://servicesmock:8080/dataservice
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
         - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
