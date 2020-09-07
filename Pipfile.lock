@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:9933e2056322a2fd3ab1d45f1397bf85c2d0a26e75202b03d22ce85f189644f5",
-                "sha256:ad97a328aca1b808c090b0d28edb6f5636288ed5d31e45c4bfa41fb4120109cf"
+                "sha256:4645571d0ed86a047a5b08a7d4da669e17b34a54630f99b9eb24200dd4f1760a",
+                "sha256:5b407e513eb4e69b9e4d4b600212663bafedf53a453ec8fd3abdf07c10391696"
             ],
             "index": "pypi",
-            "version": "==0.1.16"
+            "version": "==0.1.18"
         },
         "flask": {
             "hashes": [
@@ -85,11 +85,11 @@
         },
         "flask-cors": {
             "hashes": [
-                "sha256:72170423eb4612f0847318afff8c247b38bd516b7737adfc10d1c2cdbb382d16",
-                "sha256:f4d97201660e6bbcff2d89d082b5b6d31abee04b1b3003ee073a6fd25ad1d69a"
+                "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8",
+                "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"
             ],
             "index": "pypi",
-            "version": "==3.0.8"
+            "version": "==3.0.9"
         },
         "flask-restful": {
             "hashes": [
@@ -265,10 +265,10 @@
     "develop": {
         "attrs": {
             "hashes": [
-                "sha256:0ef97238856430dcf9228e07f316aefc17e8939fc8507e18c6501b761ef1a42a",
-                "sha256:2867b7b9f8326499ab5b0e2d12801fa5c98842d2cbd22b35112ae04bf85b4dff"
+                "sha256:26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594",
+                "sha256:fce7fc47dfc976152e82d53ff92fa0407700c21acd20886a13777a0d20e655dc"
             ],
-            "version": "==20.1.0"
+            "version": "==20.2.0"
         },
         "certifi": {
             "hashes": [
@@ -356,10 +356,10 @@
         },
         "more-itertools": {
             "hashes": [
-                "sha256:68c70cc7167bdf5c7c9d8f6954a7837089c6a36bf565383919bb595efb8a17e5",
-                "sha256:b78134b2063dd214000685165d81c154522c3ee0a1c0d4d113c80361c234c5a2"
+                "sha256:6f83822ae94818eae2612063a5101a7311e68ae8002005b5e05f03fd74a86a20",
+                "sha256:9b30f12df9393f0d28af9210ff8efe48d10c94f73e5daf886f10c4b0b0b4f03c"
             ],
-            "version": "==8.4.0"
+            "version": "==8.5.0"
         },
         "packaging": {
             "hashes": [
