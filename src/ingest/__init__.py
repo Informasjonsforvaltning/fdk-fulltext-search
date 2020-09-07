@@ -39,8 +39,8 @@ def result_msg(count):
 
 
 def reindex():
-    reindex_all_indices()
-    result = fetch_all_content()
+    # reindex_all_indices()
+    result = fetch_all_content(True)
     return result
 
 
@@ -74,16 +74,16 @@ def fetch_all_content(re_index=False):
 def fetch_information_models(re_index=False):
     info_url = API_URL + "informationmodels"
     try:
-        if re_index:
-            reindex_error = reindex_specific_index(IndicesKey.INFO_MODEL)
-            if reindex_error:
-                return reindex_error
         logging.info("fetching information models")
         size = requests.get(url=info_url, timeout=5)
         size.raise_for_status()
         totalElements = size.json()["page"]["totalElements"]
         r = requests.get(url=info_url, params={"size": totalElements}, timeout=5)
         r.raise_for_status()
+        if re_index:
+            reindex_error = reindex_specific_index(IndicesKey.INFO_MODEL)
+            if reindex_error:
+                return reindex_error
         documents = r.json()["_embedded"]["informationmodels"]
         result = elasticsearch_ingest(documents, IndicesKey.INFO_MODEL, IndicesKey.INFO_MODEL_ID_KEY)
         return result_msg(result[0])
@@ -96,8 +96,6 @@ def fetch_information_models(re_index=False):
 def fetch_concepts(re_index=False):
     concept_url = API_URL + "concepts"
     try:
-        if re_index:
-            reindex_specific_index(IndicesKey.CONCEPTS)
         logging.info("fetching concepts")
         size = requests.get(url=concept_url, timeout=5)
         size.raise_for_status()
@@ -109,10 +107,18 @@ def fetch_concepts(re_index=False):
             for x in range(doRequest):
                 r = requests.get(url=concept_url, params={"size": "1000", "page": str(x)}, timeout=5)
                 r.raise_for_status()
-                concepts.extend(r.json()["_embedded"]["concepts"])
+                if re_index:
+                    reindex_error = reindex_specific_index(IndicesKey.CONCEPTS)
+                    if reindex_error:
+                        return reindex_error
+            concepts.extend(r.json()["_embedded"]["concepts"])
         else:
             r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
             r.raise_for_status()
+            if re_index:
+                reindex_error = reindex_specific_index(IndicesKey.CONCEPTS)
+                if reindex_error:
+                    return reindex_error
             concepts = r.json()["_embedded"]["concepts"]
 
         result = elasticsearch_ingest(concepts, IndicesKey.CONCEPTS, IndicesKey.CONCEPTS_ID_KEY)
@@ -127,13 +133,15 @@ def fetch_concepts(re_index=False):
 def fetch_data_sets(re_index=False):
     dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
     try:
-        if re_index:
-            reindex_specific_index(IndicesKey.DATA_SETS)
         logging.info("fetching datasets")
         req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=30)
         req.raise_for_status()
         parsed_rdf = fdk_rdf_parser.parseDatasets(req.text)
         if parsed_rdf is not None:
+            if re_index:
+                reindex_error = reindex_specific_index(IndicesKey.DATA_SETS)
+                if reindex_error:
+                    return reindex_error
             logging.info(f"ingesting parsed datasets")
             result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
             return result_msg(result[0])
@@ -146,8 +154,7 @@ def fetch_data_sets(re_index=False):
 
 
 def fetch_data_services(re_index=False):
-    if re_index:
-        reindex_specific_index(IndicesKey.DATA_SERVICES)
+
 
     dataservice_url = f'{FDK_DATASERVICE_HARVESTER_URI}/catalogs'
 
@@ -158,6 +165,10 @@ def fetch_data_services(re_index=False):
 
         parsed_rdf = fdk_rdf_parser.parseDataServices(response.text)
         if parsed_rdf is not None:
+            if re_index:
+                reindex_error = reindex_specific_index(IndicesKey.DATA_SERVICES)
+                if reindex_error:
+                    return reindex_error
             logging.info(f"ingesting parsed data services")
             result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SERVICES,
                                                      IndicesKey.DATA_SERVICES_ID_KEY)
@@ -247,35 +258,35 @@ def reindex_specific_index(index_name):
         return None
 
 
-def reindex_all_indices():
-    with open(os.getcwd() + "/elasticsearch/create_concepts_index.json") as concept_mapping:
-        try:
-            es_client.indices.delete(index="concepts")
-        except:
-            print("indices concept does not exist")
-        finally:
-            es_client.indices.create(index="concepts", body=json.load(concept_mapping))
-    with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
-        try:
-            es_client.indices.delete(index="dataservices")
-        except:
-            print("indices dataservices does not exist")
-        finally:
-            es_client.indices.create(index="dataservices", body=json.load(dataservice_mapping))
-    with open(os.getcwd() + "/elasticsearch/create_datasets_index.json") as datasets_mapping:
-        try:
-            es_client.indices.delete(index="datasets")
-        except:
-            print("indices datasets does not exist")
-        finally:
-            es_client.indices.create(index="datasets", body=json.load(datasets_mapping))
-    with(open(os.getcwd() + "/elasticsearch/create_informationmodels_index.json")) as info_mapping:
-        try:
-            es_client.indices.delete(index="informationmodels")
-        except:
-            print("indices informationmodels does not exist")
-        finally:
-            es_client.indices.create(index="informationmodels", body=json.load(info_mapping))
+# def reindex_all_indices():
+#     with open(os.getcwd() + "/elasticsearch/create_concepts_index.json") as concept_mapping:
+#         try:
+#             es_client.indices.delete(index="concepts")
+#         except:
+#             print("indices concept does not exist")
+#         finally:
+#             es_client.indices.create(index="concepts", body=json.load(concept_mapping))
+#     with open(os.getcwd() + "/elasticsearch/create_dataservices_index.json") as dataservice_mapping:
+#         try:
+#             es_client.indices.delete(index="dataservices")
+#         except:
+#             print("indices dataservices does not exist")
+#         finally:
+#             es_client.indices.create(index="dataservices", body=json.load(dataservice_mapping))
+#     with open(os.getcwd() + "/elasticsearch/create_datasets_index.json") as datasets_mapping:
+#         try:
+#             es_client.indices.delete(index="datasets")
+#         except:
+#             print("indices datasets does not exist")
+#         finally:
+#             es_client.indices.create(index="datasets", body=json.load(datasets_mapping))
+#     with(open(os.getcwd() + "/elasticsearch/create_informationmodels_index.json")) as info_mapping:
+#         try:
+#             es_client.indices.delete(index="informationmodels")
+#         except:
+#             print("indices informationmodels does not exist")
+#         finally:
+#             es_client.indices.create(index="informationmodels", body=json.load(info_mapping))
 
 
 def update_index_info(index_name):
