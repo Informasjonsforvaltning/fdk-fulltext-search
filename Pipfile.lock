@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:4645571d0ed86a047a5b08a7d4da669e17b34a54630f99b9eb24200dd4f1760a",
-                "sha256:5b407e513eb4e69b9e4d4b600212663bafedf53a453ec8fd3abdf07c10391696"
+                "sha256:65300024f44232bead3e8a09332f434898a9b8aa3286dac0061df3b505d1efd4",
+                "sha256:86925e623a0a3ad08b11ee9f406524c2ccb6456dbf6065efbc49c1c96ef72cdb"
             ],
             "index": "pypi",
-            "version": "==0.1.18"
+            "version": "==0.1.19"
         },
         "flask": {
             "hashes": [
