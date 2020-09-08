@@ -106,16 +106,13 @@ def fetch_concepts(re_index=False):
             for x in range(doRequest):
                 r = requests.get(url=concept_url, params={"size": "1000", "page": str(x)}, timeout=5)
                 r.raise_for_status()
-                if re_index:
-                    reindex_specific_index(IndicesKey.CONCEPTS)
                 concepts.extend(r.json()["_embedded"]["concepts"])
         else:
             r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
             r.raise_for_status()
-            if re_index:
-                reindex_specific_index(IndicesKey.CONCEPTS)
             concepts = r.json()["_embedded"]["concepts"]
-
+        if re_index and len(concepts) > 0:
+            reindex_specific_index(IndicesKey.CONCEPTS)
         result = elasticsearch_ingest(concepts, IndicesKey.CONCEPTS, IndicesKey.CONCEPTS_ID_KEY)
         return result_msg(result[0])
 
@@ -147,8 +144,6 @@ def fetch_data_sets(re_index=False):
 
 
 def fetch_data_services(re_index=False):
-
-
     dataservice_url = f'{FDK_DATASERVICE_HARVESTER_URI}/catalogs'
 
     logging.info(f"fetching data services from {dataservice_url}")
