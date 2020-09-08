@@ -80,7 +80,9 @@ def fetch_information_models(re_index=False):
         r = requests.get(url=info_url, params={"size": totalElements}, timeout=5)
         r.raise_for_status()
         if re_index:
-            reindex_specific_index(IndicesKey.INFO_MODEL)
+            reindex_error = reindex_specific_index(IndicesKey.INFO_MODEL)
+            if reindex_error:
+                return reindex_error
         documents = r.json()["_embedded"]["informationmodels"]
         result = elasticsearch_ingest(documents, IndicesKey.INFO_MODEL, IndicesKey.INFO_MODEL_ID_KEY)
         return result_msg(result[0])
