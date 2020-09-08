@@ -106,7 +106,7 @@ def fetch_concepts(re_index=False):
                 r.raise_for_status()
                 if re_index:
                     reindex_specific_index(IndicesKey.CONCEPTS)
-            concepts.extend(r.json()["_embedded"]["concepts"])
+                concepts.extend(r.json()["_embedded"]["concepts"])
         else:
             r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
             r.raise_for_status()
