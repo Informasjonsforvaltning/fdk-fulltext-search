@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:65300024f44232bead3e8a09332f434898a9b8aa3286dac0061df3b505d1efd4",
-                "sha256:86925e623a0a3ad08b11ee9f406524c2ccb6456dbf6065efbc49c1c96ef72cdb"
+                "sha256:57e896f0fe639eba57ee1495f7e948c334062ff1da1a38b82c76b4467de633bf",
+                "sha256:ca29a100276fa167b2deae5d252535b47d64ccd5aa4b905ae290389f9986e0d4"
             ],
             "index": "pypi",
-            "version": "==0.1.19"
+            "version": "==0.1.20"
         },
         "flask": {
             "hashes": [
@@ -137,11 +137,11 @@
         },
         "jsonpath-ng": {
             "hashes": [
-                "sha256:77b1f93f4444a50c924cb11cdc273546ff79f41830d485916fc6ddf4e0c1ce55",
-                "sha256:a4f014c28b5a1279c3a189fb1d2f37a98848f359f19fd296b54e38ec6fc841a9"
+                "sha256:144d91379be14d9019f51973bd647719c877bfc07dc6f3f5068895765950c69d",
+                "sha256:93d1f248be68e485eb6635c3a01b2d681f296dc349d71e37c8755837b8944d36"
             ],
             "index": "pypi",
-            "version": "==1.5.1"
+            "version": "==1.5.2"
         },
         "markupsafe": {
             "hashes": [
