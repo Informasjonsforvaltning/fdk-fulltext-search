@@ -16,6 +16,7 @@ index_description_fields = {
     IndicesKey.INFO_MODEL: ["schema^0.5"],
     IndicesKey.DATA_SETS: ["description.nb", "description.nn", "description.no", "description.en"],
     IndicesKey.DATA_SERVICES: ["description.nb", "description.nn", "description.en"],
+    IndicesKey.CONCEPTS: ["definition.text.nb", "definition.text.nn", "definition.text.no", "definition.text.en"],
     IndicesKey.ALL: ["description", "definition.text.*", "schema^0.5"]
 }
 

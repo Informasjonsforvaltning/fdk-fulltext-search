@@ -70,6 +70,21 @@ class SearchDataSet(Resource):
         else:
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
+class SearchConcepts(Resource):
+    def post(self):
+        page = 0
+        if len(request.data) == 0:
+            result = client.search_in_index(index=IndicesKey.CONCEPTS)
+        else:
+            body = request.get_json()
+            if "page" in body:
+                page = body["page"]
+            result = client.search_in_index(index=IndicesKey.CONCEPTS, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)            
+
 
 class Count(Resource):
     def get(self):
