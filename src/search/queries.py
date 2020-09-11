@@ -240,6 +240,54 @@ class DataSetQuery(AbstractSearchQuery):
                                                                              size=10)
             self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
 
+class ConceptQuery(AbstractSearchQuery):
+
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.query = {"match_all": {}}
+        self.add_aggs(aggs)
+        if filters:
+            if filters:
+                self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                    should_clause=[],
+                                                                     filter_clause=True)
+                self.add_filters(filters)
+        else:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[])
+
+    def add_search_string(self, search_string: str):
+        dismax_queries = [
+            index_match_in_title_query(index_key=IndicesKey.CONCEPTS, search_string=search_string, boost=5),
+            word_in_description_query(index_key=IndicesKey.CONCEPTS,
+                                      search_string=search_string,
+                                      autorativ_boost=False),
+            simple_query_string(search_string=search_string,
+                                        all_indices_autorativ_boost=False,
+                                        boost=0.02),
+            simple_query_string(search_string=search_string,
+                                        all_indices_autorativ_boost=False,
+                                        lenient=True)]
+        self.query["dis_max"]["queries"] = dismax_queries
+
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["los"] = los_aggregation()
+            self.body["aggs"]["provenance"] = get_aggregation_term_for_key(aggregation_key="provenance")
+            self.body["aggs"]["orgPath"] = org_path_aggregation()
+            self.body["aggs"]["opendata"] = {
+                "filter": open_data_query()
+            }
+            self.body["aggs"]["theme"] = get_aggregation_term_for_key(aggregation_key="theme")
+            self.body["aggs"]["accessRights"] = get_aggregation_term_for_key(aggregation_key="accessRights",
+                                                                             missing="Ukjent",
+                                                                             size=10)
+            self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
+
 
 class RecentQuery:
     def __init__(self, size=None):
