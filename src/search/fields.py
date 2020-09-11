@@ -3,11 +3,13 @@ from src.ingest import IndicesKey
 index_title_fields = {
     IndicesKey.INFO_MODEL: ['title.nb', 'title.nn', 'title.no', 'title.en'],
     IndicesKey.DATA_SETS: ['title.nb', 'title.nn', 'title.no', 'title.en'],
-    IndicesKey.DATA_SERVICES: ['title.nb', 'title.nn', 'title.en']
+    IndicesKey.DATA_SERVICES: ['title.nb', 'title.nn', 'title.en'],
+    IndicesKey.CONCEPTS: ['prefLabel.nb', 'prefLabel.nn', 'prefLabel.no', 'prefLabel.en']
 }
 
 index_suggestion_fields = {
-    IndicesKey.DATA_SETS: ['title', 'uri']
+    IndicesKey.DATA_SETS: ['title', 'uri'],
+    IndicesKey.CONCEPTS: ['identifier', 'uri', 'definition', 'prefLabel', 'publisher']
 }
 
 index_description_fields = {
