@@ -9,7 +9,8 @@ index_title_fields = {
 
 index_suggestion_fields = {
     IndicesKey.DATA_SETS: ['title', 'uri'],
-    IndicesKey.CONCEPTS: ['id', 'identifier', 'uri', 'definition', 'prefLabel', 'publisher']
+    IndicesKey.CONCEPTS: ['id', 'identifier', 'uri', 'definition', 'prefLabel', 'publisher'],
+    IndicesKey.DATA_SERVICES: ['id', 'uri', 'title', 'publisher']
 }
 
 index_description_fields = {
