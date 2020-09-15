@@ -14,8 +14,6 @@ class TestSuggestions:
     def test_suggestion_not_implemented(self, api, wait_for_ready):
         result = requests.get(suggestions_endpoint)
         assert result.status_code == 501
-        result_info_models = requests.get(suggestions_endpoint + '/informationmodels')
-        assert result_info_models.status_code == 501
 
     @pytest.mark.contract
     def test_suggestion_bad_request(self, api, wait_for_ready):
@@ -71,8 +69,25 @@ class TestSuggestions:
                 was_prefix_count += 1
             else:
                 assert has_partial_match_in_title(hit['title'], prefix), "Title without match on prefix encountered "
-                was_partial_count += 1                
-       
+                was_partial_count += 1
+
+    @pytest.mark.contract
+    def test_suggestion_information_models(self, api, wait_for_ready):
+        prefix = "RA"
+        result = requests.get(suggestions_endpoint + '/informationmodels?q=RA'.format(prefix))
+        assert result.status_code == 200
+        assert len(result.json()['suggestions']) > 0
+        previous_was_prefix = True
+        was_prefix_count = 0
+        was_partial_count = 0
+        for hit in result.json()['suggestions']:
+            if has_prefix_in_title_all_languages(hit['title'], prefix):
+                assert previous_was_prefix, "Prefix match encountered after other suggestions"
+                was_prefix_count += 1
+            else:
+                assert has_partial_match_in_title(hit['title'], prefix), "Title without match on prefix encountered "
+                was_partial_count += 1
+
 
 def has_prefix_in_title_all_languages(title, prefix):
     keys = title.keys()
