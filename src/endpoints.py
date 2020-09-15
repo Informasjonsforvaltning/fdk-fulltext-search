@@ -160,10 +160,7 @@ class Recent(Resource):
 
 class Suggestion(Resource):
     def get(self, content_type):
-        if content_type in [IndicesKey.INFO_MODEL, None]:
-            abort(http_status_code=501,
-                  description="fulltext-search does not yet support autocomplete search for {0} ".format(content_type))
-        elif content_type not in (IndicesKey.DATA_SETS, IndicesKey.CONCEPTS, IndicesKey.DATA_SERVICES):
+        if content_type not in (IndicesKey.DATA_SETS, IndicesKey.CONCEPTS, IndicesKey.DATA_SERVICES, IndicesKey.INFO_MODEL):
             abort(http_status_code=400,
                   description="{0} is not a valid content type. Valid content types are [datasets, informationmodels, "
                               "dataservices, concepts]".format(content_type))
