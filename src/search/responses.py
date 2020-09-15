@@ -11,26 +11,23 @@ class SearchResponse:
     }
 
     def map_response(self, es_result, requested_page=0):
-        size = len(es_result["hits"]["hits"])
-        self.map_page(es_result["hits"], size, requested_page)
+        self.map_page(es_result["hits"], requested_page)
         if "aggregations" in es_result.keys():
             self.map_aggregations(es_result["aggregations"])
         self.map_hits(es_result["hits"]["hits"])
         return self.response
 
-    def map_page(self, es_hits, size, requested_page):
+    def map_page(self, es_hits, requested_page):
+        size = len(es_hits["hits"])
         total = es_hits["total"]["value"]
-        if total > 0:
-            total_pages = ceil(float(total) / float(size))
-        else:
-            total_pages = 0
-        page = {
+        total_pages = ceil(float(total) / float(size)) if size > 0 else 0
+
+        self.response["page"] = {
             "size": size,
             "totalElements": total,
             "totalPages": total_pages,
             "currentPage": requested_page
         }
-        self.response["page"] = page
 
     def map_aggregations(self, aggregations_result):
         response_aggregations = {}
