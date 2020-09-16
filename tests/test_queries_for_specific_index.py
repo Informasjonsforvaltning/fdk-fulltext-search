@@ -666,7 +666,8 @@ def test_dataset_with_spatial_filter():
                                             "accessRights.code",
                                             "subject.prefLabel.*",
                                             "subject.altLabel.*",
-                                            "subject.definition.*"
+                                            "subject.definition.*",
+                                            "distribution.title.*"
                                         ],
                                         "boost": 0.5
                                     }
@@ -687,7 +688,8 @@ def test_dataset_with_spatial_filter():
                                             "accessRights.code",
                                             "subject.prefLabel.*",
                                             "subject.altLabel.*",
-                                            "subject.definition.*"
+                                            "subject.definition.*",
+                                            "distribution.title.*"
                                         ],
                                         "boost": 0.001
                                     }
