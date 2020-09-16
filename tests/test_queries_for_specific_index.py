@@ -667,7 +667,8 @@ def test_dataset_with_spatial_filter():
                                             "subject.prefLabel.*",
                                             "subject.altLabel.*",
                                             "subject.definition.*",
-                                            "distribution.title.*"
+                                            "distribution.title.*",
+                                            "distribution.format"
                                         ],
                                         "boost": 0.5
                                     }
@@ -689,7 +690,8 @@ def test_dataset_with_spatial_filter():
                                             "subject.prefLabel.*",
                                             "subject.altLabel.*",
                                             "subject.definition.*",
-                                            "distribution.title.*"
+                                            "distribution.title.*",
+                                            "distribution.format"
                                         ],
                                         "boost": 0.001
                                     }

@@ -27,7 +27,7 @@ index_fulltext_fields = {
                            "expandedLosTema.*", "description.*", "publisher.name^3",
                            "publisher.prefLabel^3", "accessRights.prefLabel.*^3",
                            "accessRights.code", "subject.prefLabel.*", "subject.altLabel.*",
-                           "subject.definition.*", "distribution.title.*"],
+                           "subject.definition.*", "distribution.title.*", "distribution.format"],
     IndicesKey.DATA_SERVICES: ["title.*^3", "description.*", "publisher.name^3",
                                "publisher.prefLabel^3", "mediaType.code"],
 }
