@@ -1,7 +1,7 @@
 import abc
 from enum import Enum
 
-from src.search.fields import index_suggestion_fields
+from src.search.fields import index_suggestion_fields, index_title_fields
 from src.search.query_utils import *
 from src.search.themeprofiles import theme_profile_filter
 
@@ -262,7 +262,8 @@ class ConceptQuery(AbstractSearchQuery):
 
     def add_search_string(self, search_string: str):
         dismax_queries = [
-            index_match_in_title_query(index_key=IndicesKey.CONCEPTS, search_string=search_string, boost=5),
+            exact_match_in_title_query(index_title_fields[IndicesKey.CONCEPTS], search_string=search_string),
+            index_match_in_title_query(index_key=IndicesKey.CONCEPTS, search_string=search_string, boost=10),
             word_in_description_query(index_key=IndicesKey.CONCEPTS,
                                       search_string=search_string,
                                       autorativ_boost=False),
