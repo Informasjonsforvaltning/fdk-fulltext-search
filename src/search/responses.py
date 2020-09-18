@@ -20,7 +20,8 @@ class SearchResponse:
     def map_page(self, es_hits, requested_page):
         size = len(es_hits["hits"])
         total = es_hits["total"]["value"]
-        total_pages = ceil(float(total) / float(size)) if size > 0 else 0
+        hits_per_page = max(size, 10)
+        total_pages = ceil(float(total) / float(hits_per_page))
 
         self.response["page"] = {
             "size": size,
