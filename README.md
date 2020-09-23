@@ -19,9 +19,6 @@ fdk-fulltext-search
 ELASTIC_HOST=localhost
 ELASTIC_PORT=9200
 ELASTIC_TCP_PORT=9300
-RABBIT_HOST=localhost
-RABBIT_USERNAME=admin
-RABBIT_PASSWORD=admin
 API_URL=http://localhost:8080/
 DATASET_HARVESTER_BASE_URI=http://localhost:8080/dataset
 ORGANIZATION_CATALOGUE_BASE_URI=http://localhost:8080
