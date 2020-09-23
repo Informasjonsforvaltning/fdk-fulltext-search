@@ -48,7 +48,7 @@ class SearchResponse:
 
     def map_hit_item(self, item):
         mapped_item = item["_source"]
-        mapped_item["type"] = item["_index"].rstrip('s')
+        mapped_item["type"] = item["_index"].split("-")[0].rstrip('s')
         return mapped_item
 
 

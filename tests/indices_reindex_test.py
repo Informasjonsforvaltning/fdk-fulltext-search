@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytest
 
-from src.ingest import update_index_info, init_info_doc, reindex_specific_index
+from src.ingest import update_index_info, init_info_doc, create_index
 
 
 def mock_update_by_query_result(m_query_success):
@@ -59,31 +59,27 @@ def test_init_info_doc_should_create_indices_and_doc(mocker, mock_single_create)
 
 
 @pytest.mark.unit
-def test_reindex_specific_index_should_create_new_index(mocker,
-                                                        mock_env,
-                                                        mock_single_create,
-                                                        mock_single_delete,
-                                                        update_index_info_mock):
+def test_create_index_should_abort_when_new_index_does_not_exist(mocker,
+                                                                 mock_env,
+                                                                 mock_single_create,
+                                                                 update_index_info_mock):
     # if indices does not exist
     mocker.patch("src.ingest.es_client.indices.exists", return_value=False)
-    reindex_specific_index(index_name="dataservices")
-    assert mock_single_delete.call_count == 0
+    create_index(index_alias="dataservices", new_index_name="dataservices-123")
     assert mock_single_create.call_count == 1
-    assert mock_single_create.call_args[1]['index'] == "dataservices"
-    assert update_index_info_mock.call_count == 1
+    assert mock_single_create.call_args[1]['index'] == "dataservices-123"
+    assert update_index_info_mock.call_count == 0
 
 
 @pytest.mark.unit
-def test_reindex_specific_index_should_delete_and_create_new_index(mocker,
-                                                                   mock_env,
-                                                                   mock_single_create,
-                                                                   mock_single_delete,
-                                                                   update_index_info_mock):
+def test_create_index_updates_info_index_when_successful(mocker,
+                                                         mock_env,
+                                                         mock_single_create,
+                                                         update_index_info_mock):
     # if indices exist
     mocker.patch("src.ingest.es_client.indices.exists", return_value=True)
-    reindex_specific_index(index_name="dataservices")
-    assert mock_single_create.call_args[1]['index'] == "dataservices"
-    assert mock_single_delete.call_count == 1
+    create_index(index_alias="dataservices", new_index_name="dataservices-123")
+    assert mock_single_create.call_args[1]['index'] == "dataservices-123"
     assert mock_single_create.call_count == 1
-    assert mock_single_create.call_args[1]['index'] == "dataservices"
+    assert mock_single_create.call_args[1]['index'] == "dataservices-123"
     assert update_index_info_mock.call_count == 1

@@ -39,16 +39,16 @@ def result_msg(count):
 
 
 def reindex():
-    result = fetch_all_content(True)
+    result = fetch_all_content()
     return result
 
 
-def fetch_all_content(re_index=False):
+def fetch_all_content():
     start = time.time()
-    info_status = fetch_information_models(re_index=re_index)
-    concept_status = fetch_concepts(re_index=re_index)
-    service_status = fetch_data_services(re_index=re_index)
-    datasets_status = fetch_data_sets(re_index=re_index)
+    info_status = fetch_information_models()
+    concept_status = fetch_concepts()
+    service_status = fetch_data_services()
+    datasets_status = fetch_data_sets()
     total_time = time.time() - start
     totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
     status = "erros occured"
@@ -70,7 +70,7 @@ def fetch_all_content(re_index=False):
     return result
 
 
-def fetch_information_models(re_index=False):
+def fetch_information_models():
     info_url = API_URL + "informationmodels"
     try:
         logging.info("fetching information models")
@@ -79,12 +79,20 @@ def fetch_information_models(re_index=False):
         totalElements = size.json()["page"]["totalElements"]
         r = requests.get(url=info_url, params={"size": totalElements}, timeout=5)
         r.raise_for_status()
-        if re_index:
-            reindex_error = reindex_specific_index(IndicesKey.INFO_MODEL)
-            if reindex_error:
-                return reindex_error
+
+        new_index_name = f"{IndicesKey.INFO_MODEL}-{os.urandom(4).hex()}"
+
+        create_error = create_index(IndicesKey.INFO_MODEL, new_index_name)
+        if create_error:
+            return create_error
+
         documents = r.json()["_embedded"]["informationmodels"]
-        result = elasticsearch_ingest(documents, IndicesKey.INFO_MODEL, IndicesKey.INFO_MODEL_ID_KEY)
+        result = elasticsearch_ingest(documents, new_index_name, IndicesKey.INFO_MODEL_ID_KEY)
+
+        alias_error = set_alias_for_new_index(IndicesKey.INFO_MODEL, new_index_name)
+        if alias_error:
+            return alias_error
+
         return result_msg(result[0])
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch informationmodels from {info_url}", err)
@@ -92,7 +100,7 @@ def fetch_information_models(re_index=False):
         return result
 
 
-def fetch_concepts(re_index=False):
+def fetch_concepts():
     concept_url = API_URL + "concepts"
     try:
         logging.info("fetching concepts")
@@ -111,9 +119,19 @@ def fetch_concepts(re_index=False):
             r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
             r.raise_for_status()
             concepts = r.json()["_embedded"]["concepts"]
-        if re_index and len(concepts) > 0:
-            reindex_specific_index(IndicesKey.CONCEPTS)
-        result = elasticsearch_ingest(concepts, IndicesKey.CONCEPTS, IndicesKey.CONCEPTS_ID_KEY)
+
+        new_index_name = f"{IndicesKey.CONCEPTS}-{os.urandom(4).hex()}"
+
+        create_error = create_index(IndicesKey.CONCEPTS, new_index_name)
+        if create_error:
+            return create_error
+
+        result = elasticsearch_ingest(concepts, new_index_name, IndicesKey.CONCEPTS_ID_KEY)
+
+        alias_error = set_alias_for_new_index(IndicesKey.CONCEPTS, new_index_name)
+        if alias_error:
+            return alias_error
+
         return result_msg(result[0])
 
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
@@ -122,7 +140,7 @@ def fetch_concepts(re_index=False):
         return result
 
 
-def fetch_data_sets(re_index=False):
+def fetch_data_sets():
     dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
     try:
         logging.info("fetching datasets")
@@ -130,10 +148,19 @@ def fetch_data_sets(re_index=False):
         req.raise_for_status()
         parsed_rdf = fdk_rdf_parser.parseDatasets(req.text)
         if parsed_rdf is not None:
-            if re_index:
-                reindex_specific_index(IndicesKey.DATA_SETS)
+            new_index_name = f"{IndicesKey.DATA_SETS}-{os.urandom(4).hex()}"
+
+            create_error = create_index(IndicesKey.DATA_SETS, new_index_name)
+            if create_error:
+                return create_error
+
             logging.info(f"ingesting parsed datasets")
-            result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SETS, IndicesKey.DATA_SETS_ID_KEY)
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, new_index_name, IndicesKey.DATA_SETS_ID_KEY)
+
+            alias_error = set_alias_for_new_index(IndicesKey.DATA_SETS, new_index_name)
+            if alias_error:
+                return alias_error
+
             return result_msg(result[0])
         else:
             logging.error("could not parse datasets")
@@ -143,7 +170,7 @@ def fetch_data_sets(re_index=False):
         return result
 
 
-def fetch_data_services(re_index=False):
+def fetch_data_services():
     dataservice_url = f'{FDK_DATASERVICE_HARVESTER_URI}/catalogs'
 
     logging.info(f"fetching data services from {dataservice_url}")
@@ -153,11 +180,19 @@ def fetch_data_services(re_index=False):
 
         parsed_rdf = fdk_rdf_parser.parseDataServices(response.text)
         if parsed_rdf is not None:
-            if re_index:
-                reindex_specific_index(IndicesKey.DATA_SERVICES)
+            new_index_name = f"{IndicesKey.DATA_SERVICES}-{os.urandom(4).hex()}"
+
+            create_error = create_index(IndicesKey.DATA_SERVICES, new_index_name)
+            if create_error:
+                return create_error
+
             logging.info(f"ingesting parsed data services")
-            result = elasticsearch_ingest_from_harvester(parsed_rdf, IndicesKey.DATA_SERVICES,
-                                                     IndicesKey.DATA_SERVICES_ID_KEY)
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, new_index_name, IndicesKey.DATA_SERVICES_ID_KEY)
+
+            alias_error = set_alias_for_new_index(IndicesKey.DATA_SERVICES, new_index_name)
+            if alias_error:
+                return alias_error
+
             return result_msg(result[0])
         else:
             logging.error("could not parse data services")
@@ -180,17 +215,6 @@ def elasticsearch_ingest(documents, index, id_key):
 def elasticsearch_ingest_from_harvester(documents, index, id_key):
     try:
         result = helpers.bulk(client=es_client, actions=yield_documents_from_harvester(documents, index, id_key))
-
-        return result
-    except BulkIndexError as err:
-        result = error_msg(f"ingest {index}", err.errors)
-        logging.error(result)
-        return result
-
-
-def elasticsearch_ingest_from_source(documents, index, id_key):
-    try:
-        result = helpers.bulk(client=es_client, actions=yield_documents_from_source(documents, index, id_key))
 
         return result
     except BulkIndexError as err:
@@ -229,19 +253,37 @@ def yield_documents_from_source(documents, index, id_key):
         }
 
 
-def reindex_specific_index(index_name):
-    """delete and recreate an index with settings and mapping from file"""
-    logging.info("reindexing {0}".format(index_name))
-    with open(os.getcwd() + "/elasticsearch/create_{0}_index.json".format(index_name)) as mapping:
+def create_index(index_alias, new_index_name):
+    """create an index with settings and mapping from file"""
+    logging.info(f"creating {new_index_name}")
+    with open(f"{os.getcwd()}/elasticsearch/create_{index_alias}_index.json") as mapping:
         try:
-            if es_client.indices.exists(index=index_name):
-                es_client.indices.delete(index=index_name)
-            es_client.indices.create(index=index_name, body=json.load(mapping))
-            update_index_info(index_name)
+            es_client.indices.create(index=new_index_name, body=json.load(mapping))
+
+            if not es_client.indices.exists(index=new_index_name):
+                return error_msg(f"create index '{new_index_name}'", f"index '{new_index_name}' not created")
+
+            update_index_info(index_alias)
         except BaseException as err:
-            print("error when attempting to update {0} ".format(index_name))
-            return error_msg("reindex index '{0}'".format(index_name), err.error)
+            logging.error(f"error when attempting to create {new_index_name}")
+            return error_msg(f"create index '{new_index_name}'", err.error)
         return None
+
+
+def set_alias_for_new_index(index_alias, new_index_name):
+    """Delete old index and set alias for new index"""
+    logging.info(f"set alias {index_alias} for index {new_index_name}")
+    try:
+        if es_client.indices.exists_alias(name=index_alias):
+            alias_indices_dict = es_client.indices.get(index=index_alias)
+            for index_name in alias_indices_dict:
+                es_client.indices.delete(index=index_name)
+
+        es_client.indices.put_alias(index=new_index_name, name=index_alias)
+    except BaseException as err:
+        logging.error(f"error when attempting to set alias {index_alias} for index {new_index_name}")
+        return error_msg(f"set alias '{index_alias}'", err.error)
+    return None
 
 
 def update_index_info(index_name):

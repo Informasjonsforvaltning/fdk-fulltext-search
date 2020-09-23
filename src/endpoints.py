@@ -70,6 +70,7 @@ class SearchDataSet(Resource):
         else:
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
+
 class SearchConcepts(Resource):
     def post(self):
         page = 0
@@ -129,7 +130,7 @@ class Indices(Resource):
                 abort(http_status_code=400, description="bad request: indices {0} does not exist".format(index_name))
         else:
             index_name = 'all'
-        result = self.update_fun[index_name](re_index=True)
+        result = self.update_fun[index_name]()
         if result['status'] == 'OK':
             return Response(response=json.dumps(result), status=201, mimetype='application/json')
         else:

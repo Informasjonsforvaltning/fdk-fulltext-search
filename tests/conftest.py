@@ -165,7 +165,12 @@ def mock_single_create(mocker):
 
 @pytest.fixture
 def mock_single_reindex(mocker):
-    return mocker.patch('src.ingest.reindex_specific_index', return_value=None)
+    return mocker.patch('src.ingest.create_index', return_value=None)
+
+
+@pytest.fixture
+def mock_set_alias(mocker):
+    return mocker.patch('src.ingest.set_alias_for_new_index', return_value=None)
 
 
 @pytest.fixture
