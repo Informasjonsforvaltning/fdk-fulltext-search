@@ -223,7 +223,7 @@ def wait_for_ready():
                 pytest.fail(
                     'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
                     'was {0}'.format(response.json()["count"]))
-            time.sleep(1)
+            time.sleep(5)
     except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
         pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
     yield

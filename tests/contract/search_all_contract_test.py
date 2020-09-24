@@ -152,6 +152,35 @@ class TestSearchAll:
         assert exact_matches > 0
 
     @pytest.mark.contract
+    def test_hits_should_have_hit_in_owner_before_hit_in_description(self, wait_for_ready):
+        search_string = "Statens vegvesen"
+        body = {
+            "q": search_string,
+            "size": 1000
+        }
+        result = post(url=service_url + "/search", json=body)
+        match_in_description = False
+        match_on_publisher_name = False
+        for hit in result.json()["hits"]:
+            match_str = search_string.lower()
+            title = get_title_values(hit)
+            if match_str == hit.get("publisher").get("name"):
+                match_on_publisher_name = True
+                assert match_in_description == False
+            elif hit.get("publisher").get("prefLabel"):
+                publisher_labels = hit.get("publisher").get("prefLabel")
+                for key in publisher_labels.keys():
+                    if publisher_labels[key] == search_string:
+                        match_on_publisher_name = True
+                        assert match_in_description == False
+            elif re.findall(get_matches_with_stemming_regex(match_str), title.lower()):
+                continue
+            elif is_match_in_descriptive_texts(search_string, hit):
+                match_in_description = True
+        if match_in_description:
+            assert match_on_publisher_name
+
+    @pytest.mark.contract
     def test_hits_should_contain_search_string(self, api, wait_for_ready):
         body = {
             "q": "barnehage"
@@ -612,6 +641,40 @@ def get_title_values(hit):
         return json.dumps(hit['prefLabel'])
     elif "title" in hit:
         return json.dumps(hit['title'])
+
+
+def is_match_in_descriptive_texts(match_str: str, hit: dict) -> bool:
+    description_text = get_descriptive_texts(hit)
+    if description_text is None:
+        return False
+    else:
+        return len(re.findall(get_matches_with_stemming_regex(match_str), description_text)) > 0
+
+
+def get_descriptive_texts(hit: dict) -> str:
+    data_type = hit.get("type")
+    try:
+        if data_type == "concept":
+            return json.dumps(hit.get("definition").get("text"))
+        elif data_type == "dataset":
+            return json.dumps(hit.get("description").get("text"))
+        elif data_type == "dataservice":
+            return json.dumps(hit.get("description"))
+        elif data_type == "informationmodel":
+            return hit.get("schema")
+        else:
+            return None
+    except AttributeError:
+        return None
+
+
+def get_matches_with_stemming_regex(match_str: str):
+    all_matches = []
+    all_matches.extend(m.lower() for m in match_str.split("en") if len(m) > 1 and m != "")
+    all_matches.extend(m.lower() for m in match_str.split("ens") if len(m) > 1 and m != "")
+    all_matches.extend(m.lower() for m in match_str.split("er") if len(m) > 1 and m != "")
+    all_matches.extend(m.lower() for m in match_str.split(" ") if len(m) > 1 and m != "")
+    return "|".join(m.lower() for m in all_matches)
 
 
 def get_time(timestamp: str):

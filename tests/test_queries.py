@@ -120,6 +120,38 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     {
                         "bool": {
                             "must": {
+                                "multi_match": {
+                                    "query": search_str,
+                                    "fields": [
+                                        "publisher.prefLabel.*",
+                                        "publisher.title.*"
+                                    ]
+                                }
+                            },
+                            "should": [
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {
+                                                "match": {
+                                                    "provenance.code": "NASJONAL"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "nationalComponent": "true"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "boost": 10
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
                                 "simple_query_string": {
                                     "query": "{0} {0}*".format(search_str.replace(" ", "+")),
                                     "fields": [
@@ -423,6 +455,38 @@ def test_all_indices_should_return_query_with_filter():
                                         }
                                     ],
                                     "boost": 2
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": search_str,
+                                            "fields": [
+                                                "publisher.prefLabel.*",
+                                                "publisher.title.*"
+                                            ]
+                                        }
+                                    },
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "should": [
+                                                    {
+                                                        "match": {
+                                                            "provenance.code": "NASJONAL"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "nationalComponent": "true"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "boost": 10
                                 }
                             },
                             {
@@ -1019,6 +1083,38 @@ def test_all_indices_should_return_query_with_must_not():
                                             }
                                         ],
                                         "boost": 2
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "fields": [
+                                                    "publisher.prefLabel.*",
+                                                    "publisher.title.*"
+                                                ]
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 10
                                     }
                                 },
                                 {

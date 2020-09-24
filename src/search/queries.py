@@ -91,6 +91,7 @@ class AllIndicesQuery(AbstractSearchQuery):
         self.query["dis_max"]["queries"].append(
             word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
                                 search_string=param))
+        self.query["dis_max"]["queries"].append(match_on_publisher_name_query(param))
         self.query["dis_max"]["queries"].append(
             word_in_description_query(
                 index_key=IndicesKey.ALL,

@@ -84,7 +84,7 @@ class SearchConcepts(Resource):
         if "error" in result.keys():
             return result
         else:
-            return SearchResponse().map_response(es_result=result, requested_page=page)            
+            return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
 class Count(Resource):
@@ -161,7 +161,8 @@ class Recent(Resource):
 
 class Suggestion(Resource):
     def get(self, content_type):
-        if content_type not in (IndicesKey.DATA_SETS, IndicesKey.CONCEPTS, IndicesKey.DATA_SERVICES, IndicesKey.INFO_MODEL):
+        if content_type not in (
+        IndicesKey.DATA_SETS, IndicesKey.CONCEPTS, IndicesKey.DATA_SERVICES, IndicesKey.INFO_MODEL):
             abort(http_status_code=400,
                   description="{0} is not a valid content type. Valid content types are [datasets, informationmodels, "
                               "dataservices, concepts]".format(content_type))
@@ -172,12 +173,11 @@ class Suggestion(Resource):
             # TODO
             # return response.map_response(language=args["lang"])
             abort(http_status_code=501,
-                description="fulltext-search does not yet support autocomplete search for specific language")
-        
+                  description="fulltext-search does not yet support autocomplete search for specific language")
+
         result = client.get_suggestions(search_string=args["q"], index_key=content_type)
         response = SuggestionResponse(es_result=result)
         return response.map_response()
-            
 
 
 class SuggestionAllIndices(Resource):

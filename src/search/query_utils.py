@@ -159,6 +159,41 @@ def suggestion_title_query(index_key: IndicesKey, search_string: str) -> dict:
     }
 
 
+def match_on_publisher_name_query(search_str:str)->dict:
+    return {
+                    "bool": {
+                        "must": {
+                            "multi_match": {
+                                "query": search_str,
+                                "fields": [
+                                    "publisher.prefLabel.*",
+                                    "publisher.title.*"
+                                ]
+                            }
+                        },
+                        "should": [
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "match": {
+                                                "provenance.code": "NASJONAL"
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "nationalComponent": "true"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "boost": 10
+                    }
+                }
+
+
 def word_in_description_query(index_key: IndicesKey, search_string: str,
                               autorativ_boost=True) -> dict:
     query_string = search_string.replace(" ", "+")
