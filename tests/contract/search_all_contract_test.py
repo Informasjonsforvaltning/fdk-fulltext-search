@@ -551,6 +551,16 @@ class TestSearchAll:
         assert "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f" in uris
         assert "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2" in uris
 
+    @pytest.mark.contract
+    def test_search_all_total_should_be_sum_of_indices(self, api, wait_for_ready):
+        total_all = post(service_url + "/search").json()["page"]['totalElements']
+        total_datasets = post(service_url + "/datasets").json()['page']['totalElements']
+        total_services = post(service_url + "/dataservices").json()['page']['totalElements']
+        total_concepts = post(service_url + "/concepts").json()['page']['totalElements']
+        total_models = post(service_url + "/informationmodels").json()['page']['totalElements']
+
+        assert total_all == sum([total_datasets, total_services, total_concepts, total_models])
+
 
 def is_exact_match(keys, hit, search):
     for key in keys:
