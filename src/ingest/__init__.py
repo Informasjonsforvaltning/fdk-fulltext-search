@@ -280,6 +280,7 @@ def set_alias_for_new_index(index_alias, new_index_name):
                 es_client.indices.delete(index=index_name)
 
         es_client.indices.put_alias(index=new_index_name, name=index_alias)
+        es_client.indices.put_alias(index=new_index_name, name=IndicesKey.SEARCHABLE_ALIAS)
     except BaseException as err:
         logging.error(f"error when attempting to set alias {index_alias} for index {new_index_name}")
         return error_msg(f"set alias '{index_alias}'", err.error)

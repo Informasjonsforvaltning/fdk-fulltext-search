@@ -38,7 +38,7 @@ def search_all(request: dict = None):
             q.add_page(size=size, page=page)
         if sorting:
             q.add_sorting(sorting)
-        return es_client.search(body=q.body, search_type='dfs_query_then_fetch')
+        return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=q.body, search_type='dfs_query_then_fetch')
 
     except ConnectionError:
         return {
