@@ -10,7 +10,6 @@ class Direction(Enum):
     ASC = "asc"
     DESC = "desc"
 
-
 class AbstractSearchQuery(metaclass=abc.ABCMeta):
 
     def __init__(self, search_string: str = None):
@@ -42,6 +41,9 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(x_days_query)
             elif key == 'collection':
                 self.body["query"]["bool"]["filter"].append(collection_filter(f[key]))
+            elif key == 'catalog_name':
+                catalog_name_query = get_catalogs_by_name(f['catalog_name'])
+                self.body["query"]["bool"]["filter"].append(catalog_name_query)
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 

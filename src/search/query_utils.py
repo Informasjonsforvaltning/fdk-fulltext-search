@@ -309,6 +309,18 @@ def get_last_x_days_filter(request_item):
         }
     }
 
+def get_catalogs_by_name(cat_name):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"catalog.title.no.raw": cat_name}},
+                {"match": {"catalog.title.nb.raw": cat_name}},
+                {"match": {"catalog.title.nn.raw": cat_name}},
+                {"match": {"catalog.title.en.raw": cat_name}}
+            ],
+            "minimum_should_match": 1,
+        }
+    }
 
 def get_field_key(filter_key: str):
     """ Map the request filter key to keys in the elasticsearch mapping"""
