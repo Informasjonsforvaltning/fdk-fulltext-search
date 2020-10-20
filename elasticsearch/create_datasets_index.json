@@ -527,11 +527,13 @@
                                 }
                             },
                             "no": {
-                                "type": "search_as_you_type",
+                                "type": "text",
                                 "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
+                                    "ngrams": {
+                                        "type": "search_as_you_type"
+                                    },
+                                    "raw": {
+                                        "type": "keyword"
                                     }
                                 }
                             },
