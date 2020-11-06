@@ -146,7 +146,7 @@ def fetch_data_sets():
         logging.info("fetching datasets")
         req = requests.get(url=dataset_url, headers={"Accept": "text/turtle"}, timeout=30)
         req.raise_for_status()
-        parsed_rdf = fdk_rdf_parser.parseDatasets(req.text)
+        parsed_rdf = fdk_rdf_parser.parse_datasets(req.text)
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.DATA_SETS}-{os.urandom(4).hex()}"
 
@@ -178,7 +178,7 @@ def fetch_data_services():
         response = requests.get(url=dataservice_url, headers={'Accept': 'text/turtle'}, timeout=10)
         response.raise_for_status()
 
-        parsed_rdf = fdk_rdf_parser.parseDataServices(response.text)
+        parsed_rdf = fdk_rdf_parser.parse_data_services(response.text)
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.DATA_SERVICES}-{os.urandom(4).hex()}"
 

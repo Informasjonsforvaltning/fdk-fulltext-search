@@ -5,14 +5,12 @@ fdk-fulltext-search
 ## Developing
 ### Requirements
 ```
-% pip install pipenv    # package management tool
-% pip install invoke    # a task execution tool & library
-% pyenv install 3.8.2
-```
-
-```
 ### Setup envronment 
-% pipenv install --dev  # install packages from Pipfile including dev
+% pyenv install 3.8.6
+% pyenv local 3.8.6
+% pip install pipenv==2018.11.26    # package management tool
+% pip install invoke    # a task execution tool & library
+% pipenv --python 3.8.6 install --dev  # install packages from Pipfile including dev
 ```
 #### Env variables:
 ```
@@ -28,7 +26,7 @@ REFERENCE_DATA_BASE_URI=http://localhost:8080/reference-data
 ### Running the service locally
 
 ```
-% docker-comopose up -d                             # start es, rabbitmq and mockserver containers
+% docker-compose up -d                             # start es, rabbitmq and mockserver containers
 % pipenv shell                                      # open a session in the virtual environment
 % FLASK_APP=src FLASK_ENV=development flask run     # run application
 ```

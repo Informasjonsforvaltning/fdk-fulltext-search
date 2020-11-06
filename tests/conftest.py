@@ -175,12 +175,12 @@ def mock_set_alias(mocker):
 
 @pytest.fixture
 def mock_dataset_parser(mocker):
-    return mocker.patch('fdk_rdf_parser.parseDatasets', return_value={})
+    return mocker.patch('fdk_rdf_parser.parse_datasets', return_value={})
 
 
 @pytest.fixture
 def mock_data_service_parser(mocker):
-    return mocker.patch('fdk_rdf_parser.parseDataServices', return_value={})
+    return mocker.patch('fdk_rdf_parser.parse_data_services', return_value={})
 
 
 @pytest.fixture

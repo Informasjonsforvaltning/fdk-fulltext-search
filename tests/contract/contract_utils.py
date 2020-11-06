@@ -42,7 +42,7 @@ def populate():
 
 def start_reindex(data_type):
     url = "http://localhost:8000/indices"
-    if data_type is not "all":
+    if data_type != "all":
         url = url + f"?name={data_type}"
     response = requests.post(url)
     return response.json()
