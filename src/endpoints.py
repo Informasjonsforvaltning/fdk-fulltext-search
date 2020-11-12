@@ -5,7 +5,7 @@ from flask import request, Response
 
 from .search import client
 from .ingest import fetch_all_content, IndicesKey, fetch_data_sets, fetch_information_models, \
-    fetch_data_services, fetch_concepts
+    fetch_data_services, fetch_concepts, fetch_public_services
 from .search.responses import SearchResponse, IndicesInfoResponse, SuggestionResponse
 
 from .service.feed import create_feed, FeedType
@@ -113,6 +113,7 @@ class Indices(Resource):
         'dataservices': fetch_data_services,
         'concepts': fetch_concepts,
         'all': fetch_all_content,
+        'public_services': fetch_public_services
     }
 
     def get(self):
@@ -121,7 +122,7 @@ class Indices(Resource):
         index_name = request.args.get('name')
         if index_name:
             if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.DATA_SETS,
-                                  IndicesKey.CONCEPTS]:
+                                  IndicesKey.CONCEPTS, IndicesKey.PUBLIC_SERVICES]:
                 abort(http_status_code=400,
                       description={"bad request": "indices '{0}' is not a valid index. Valid indices values are ["
                                                   "datasets,dataservices,informationmodels,concepts]".format(
@@ -140,7 +141,7 @@ class Indices(Resource):
         index_name = request.args.get('name')
         if index_name:
             if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.DATA_SETS,
-                                  IndicesKey.CONCEPTS]:
+                                  IndicesKey.CONCEPTS, IndicesKey.PUBLIC_SERVICES]:
                 abort(http_status_code=400, description="bad request: indices {0} does not exist".format(index_name))
         else:
             index_name = 'all'

@@ -21,6 +21,7 @@ API_URL=http://localhost:8080/
 DATASET_HARVESTER_BASE_URI=http://localhost:8080/dataset
 ORGANIZATION_CATALOGUE_BASE_URI=http://localhost:8080
 REFERENCE_DATA_BASE_URI=http://localhost:8080/reference-data
+FDK_SERVICE_HARVESTER_URI=http://localhost:8080
 ```
 
 ### Running the service locally

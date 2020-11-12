@@ -21,6 +21,7 @@ es_client = Elasticsearch([ES_HOST + ':' + ES_PORT])
 API_URL = os.getenv('API_URL', 'http://localhost:8080/')
 DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI', 'http://localhost:8080/dataset')
 FDK_DATASERVICE_HARVESTER_URI = os.getenv('FDK_DATASERVICE_HARVESTER_URI', 'http://localhost:8080/dataservice')
+FDK_SERVICE_HARVESTER_URI = os.getenv('FDK_SERVICE_HARVESTER_URI', 'http://localhost:8080')
 
 
 def error_msg(exec_point, reason, count=0):
@@ -49,13 +50,15 @@ def fetch_all_content():
     concept_status = fetch_concepts()
     service_status = fetch_data_services()
     datasets_status = fetch_data_sets()
+    public_services_status = fetch_public_services()
     total_time = time.time() - start
-    totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"]
+    totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"] + public_services_status['count']
     status = "erros occured"
     if info_status['status'] == 'OK' \
             and concept_status['status'] == 'OK' \
             and service_status['status'] == 'OK' \
-            and datasets_status['status'] == 'OK':
+            and datasets_status['status'] == 'OK' \
+            and public_services_status['status'] == 'OK':
         status = "OK"
     result = {
         "status": status,
@@ -64,7 +67,8 @@ def fetch_all_content():
         "informationmodels": info_status,
         "concepts": concept_status,
         "dataservice": service_status,
-        "datasets": datasets_status
+        "datasets": datasets_status,
+        "public_services": public_services_status
     }
     logging.info("update of all services completed\n {}".format(result))
     return result
@@ -201,6 +205,37 @@ def fetch_data_services():
         logging.error(result["message"])
         return result
 
+def fetch_public_services():
+    public_service_url = f'{FDK_SERVICE_HARVESTER_URI}/public-services'
+
+    logging.info(f"fetching public_services from {public_service_url}")
+    try:
+        response = requests.get(url=public_service_url, headers={'Accept': 'text/turtle'}, timeout=10)
+        response.raise_for_status()
+
+        parsed_rdf = fdk_rdf_parser.parse_public_services(response.text)
+        if parsed_rdf is not None:
+            new_index_name = f"{IndicesKey.PUBLIC_SERVICES}-{os.urandom(4).hex()}"
+
+            create_error = create_index(IndicesKey.PUBLIC_SERVICES, new_index_name)
+            if create_error:
+                return create_error
+
+            logging.info(f"ingesting parsed public_services")
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, new_index_name, IndicesKey.PUBLIC_SERVICES_ID_KEY)
+
+            alias_error = set_alias_for_new_index(IndicesKey.PUBLIC_SERVICES, new_index_name)
+            if alias_error:
+                return alias_error
+
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse public_services")
+    except Exception as err:
+        result = error_msg(f"fetch public_services from {public_service_url}", err)
+        logging.error(result["message"])
+        return result
+
 
 def elasticsearch_ingest(documents, index, id_key):
     try:
@@ -280,7 +315,9 @@ def set_alias_for_new_index(index_alias, new_index_name):
                 es_client.indices.delete(index=index_name)
 
         es_client.indices.put_alias(index=new_index_name, name=index_alias)
-        es_client.indices.put_alias(index=new_index_name, name=IndicesKey.SEARCHABLE_ALIAS)
+        # TODO add public_services to SEARCHABLE_ALIAS when ready to search in index
+        if index_alias != IndicesKey.PUBLIC_SERVICES:
+            es_client.indices.put_alias(index=new_index_name, name=IndicesKey.SEARCHABLE_ALIAS)
     except BaseException as err:
         logging.error(f"error when attempting to set alias {index_alias} for index {new_index_name}")
         return error_msg(f"set alias '{index_alias}'", err.error)
