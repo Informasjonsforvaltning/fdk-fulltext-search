@@ -11,3 +11,5 @@ class IndicesKey:
     INDICES_INFO = "info"
     ALL = "all"
     SEARCHABLE_ALIAS = "searchable"
+    PUBLIC_SERVICES = "public_services"
+    PUBLIC_SERVICES_ID_KEY = "id"

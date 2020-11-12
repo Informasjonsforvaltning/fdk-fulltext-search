@@ -35,3 +35,4 @@ services:
         - FDK_DATASERVICE_HARVESTER_URI=http://servicesmock:8080/dataservice
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
         - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
+        - FDK_SERVICE_HARVESTER_URI=http://servicemock:8080
