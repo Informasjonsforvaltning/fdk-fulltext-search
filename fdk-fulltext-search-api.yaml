@@ -117,6 +117,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
+  /public-services:
+    post:
+      summary: "Returns a list of hits from full text searches in Felles Datakatalog's public-services"
+      operationId: searchServices
+      description: "Fulltext search for FDKs public services"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Returns an ObjectArray containing relevant hits and metadata for words or sentences in FDK's content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
   /suggestion/{type}:
     get:
       summary: Returns a list of auto complete suggestions for the specified content type in FDKs content. TODO-> Default to all content types, [dataservices,concepts,informationmodels]
@@ -169,6 +187,7 @@ components:
                   - $ref: '#/components/schemas/InformationModel'
                   - $ref: '#/components/schemas/DataService'
                   - $ref: '#/components/schemas/DataSet'
+                  - $ref: '#/components/schemas/PublicService'
             page:
               $ref: '#/components/schemas/Page'
             aggregations:
@@ -370,9 +389,32 @@ components:
           $ref: '#/components/schemas/ContactPoint'
         publisher:
           $ref: '#/components/schemas/Publisher'
-        harvestSourceUri:
+        harvest:
+          $ref: '#/components/schemas/HarvestMetadata'
+    PublicService:
+      type: object
+      properties:
+        type:
           type: string
-          description: The source where the record was harvested from
+          enum:
+            - publicservice
+        id:
+          type: string
+          description: The id given by the harvest system
+        uri:
+          type: string
+          description: 'The uri of the service'
+        identifier:
+          type: string
+          description: Identifier
+        title:
+          $ref: '#/components/schemas/TextField'
+        description:
+          $ref: '#/components/schemas/TextField'
+        hasCompetentAuthority:
+          type: array
+            items:
+              $ref: '#/components/schemas/Publisher'
         harvest:
           $ref: '#/components/schemas/HarvestMetadata'
     Catalog:

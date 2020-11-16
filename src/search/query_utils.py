@@ -410,6 +410,15 @@ def org_path_aggregation():
         }
     }
 
+def hasCompetentAuthority_aggregation():
+    return {
+        "terms": {
+            "field": "hasCompetentAuthority.orgPath",
+            "missing": "MISSING",
+            "size": 1000000000
+        }
+    }
+
 
 def default_all_indices_aggs():
     """ Return a dict with default aggregation for all indices search"""
