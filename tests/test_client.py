@@ -2,7 +2,7 @@ import pytest
 
 from src import IndicesKey
 from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices, count, search_in_index, \
-    InformationModelQuery, DataSetQuery, ConceptQuery, get_suggestions, SuggestionQuery
+    InformationModelQuery, DataSetQuery, ConceptQuery, PublicServiceQuery, get_suggestions, SuggestionQuery
 
 
 @pytest.fixture
@@ -155,6 +155,15 @@ def test_search_in_concept(mock_elastic):
     concept_query_body = ConceptQuery().body
     mock_elastic.assert_called_once_with(index=IndicesKey.CONCEPTS, body=concept_query_body)
 
+@pytest.mark.unit
+def test_search_in_public_services(mock_elastic):
+    """
+        1. should search in public services index
+        2. should search with PublicServiceQuery
+    """
+    search_in_index(index=IndicesKey.PUBLIC_SERVICES)
+    public_service_query_body = PublicServiceQuery().body
+    mock_elastic.assert_called_once_with(index=IndicesKey.PUBLIC_SERVICES, body=public_service_query_body)
 
 @pytest.mark.unit
 def test_get_suggestions_for_data_sett(mock_elastic):

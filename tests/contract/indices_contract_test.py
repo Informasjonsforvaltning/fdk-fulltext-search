@@ -3,7 +3,7 @@ import requests
 
 from tests.contract.search_all_contract_test import service_url
 
-indices_name = ["dataservices", "datasets", "concepts", "informationmodels"]
+indices_name = ["dataservices", "datasets", "concepts", "informationmodels", "public_services"]
 
 index_url = service_url + "/indices"
 

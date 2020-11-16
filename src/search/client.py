@@ -8,7 +8,8 @@ query_builder = {
     IndicesKey.INFO_MODEL: InformationModelQuery,
     IndicesKey.DATA_SETS: DataSetQuery,
     IndicesKey.DATA_SERVICES: DataServiceQuery,
-    IndicesKey.CONCEPTS: ConceptQuery
+    IndicesKey.CONCEPTS: ConceptQuery,
+    IndicesKey.PUBLIC_SERVICES: PublicServiceQuery
 }
 
 

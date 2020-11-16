@@ -293,6 +293,46 @@ class ConceptQuery(AbstractSearchQuery):
             self.body["aggs"]["spatial"] = get_aggregation_term_for_key(aggregation_key="spatial")
 
 
+class PublicServiceQuery(AbstractSearchQuery):
+
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.query = {"match_all": {}}
+        self.add_aggs(aggs)
+        if filters:
+            if filters:
+                self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                    should_clause=[],
+                                                                     filter_clause=True)
+                self.add_filters(filters)
+        else:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[])
+
+    def add_search_string(self, search_string: str):
+        dismax_queries = [
+            exact_match_in_title_query(index_title_fields[IndicesKey.PUBLIC_SERVICES], search_string=search_string),
+            index_match_in_title_query(index_key=IndicesKey.PUBLIC_SERVICES, search_string=search_string, boost=10),
+            word_in_description_query(index_key=IndicesKey.PUBLIC_SERVICES,
+                                      search_string=search_string,
+                                      autorativ_boost=False),
+            simple_query_string(search_string=search_string,
+                                        all_indices_autorativ_boost=False,
+                                        boost=0.02),
+            simple_query_string(search_string=search_string,
+                                        all_indices_autorativ_boost=False,
+                                        lenient=True)]
+        self.query["dis_max"]["queries"] = dismax_queries
+
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["hasCompetentAuthority"] = hasCompetentAuthority_aggregation()
+
+
 class RecentQuery:
     def __init__(self, size=None):
         self.query = {
