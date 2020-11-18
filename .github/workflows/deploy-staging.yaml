@@ -20,6 +20,8 @@ jobs:
 
     - name: Install pipenv
       uses: dschep/install-pipenv-action@v1
+      with:
+        version: 2018.11.26
 
     - name: Install invoke
       run: pip install invoke
