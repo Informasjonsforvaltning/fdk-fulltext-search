@@ -36,6 +36,7 @@ flask-cors = "*"
 jsonpath-ng = "*"
 pika = "*"
 fdk-rdf-parser = "*"
+feedgen = "*"
 
 [requires]
 python_version = "3.8"

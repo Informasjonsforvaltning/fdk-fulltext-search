@@ -2,10 +2,13 @@ import json
 
 from flask_restful import Resource, abort
 from flask import request, Response
+
 from .search import client
 from .ingest import fetch_all_content, IndicesKey, fetch_data_sets, fetch_information_models, \
     fetch_data_services, fetch_concepts
 from .search.responses import SearchResponse, IndicesInfoResponse, SuggestionResponse
+
+from .service.feed import create_feed, FeedType
 
 
 class Search(Resource):
@@ -56,6 +59,17 @@ class SearchInformationModels(Resource):
 
 
 class SearchDataSet(Resource):
+    def get(self) -> Response:
+        mimetype = request.accept_mimetypes.best
+
+        if mimetype == "application/rss+xml":
+            return Response(response=create_feed(FeedType.RSS), mimetype=mimetype)
+
+        if mimetype == "application/atom+xml":
+            return Response(response=create_feed(FeedType.ATOM), mimetype=mimetype)
+
+        return abort(http_status_code=415, description="Unsupported media type")
+
     def post(self):
         page = 0
         if len(request.data) == 0:
