@@ -1,6 +1,7 @@
 import pytest
 
-from src.ingest import fetch_information_models, fetch_concepts, fetch_data_sets, fetch_data_services, fetch_public_services
+from src.ingest import fetch_information_models, fetch_concepts, fetch_data_sets, fetch_data_services, \
+    fetch_public_services
 
 
 @pytest.mark.unit
@@ -79,8 +80,8 @@ def test_fetch_datasets_should_create_index_and_update_alias(mock_env, mock_inge
 
 @pytest.mark.unit
 def test_fetch_public_services_should_create_index_and_update_alias(mock_env, mock_ingest_from_harvester,
-                                                             mock_get, mock_single_reindex,
-                                                             mock_set_alias, mock_dataset_parser):
+                                                                    mock_get, mock_single_reindex,
+                                                                    mock_set_alias, mock_dataset_parser):
     fetch_public_services()
     assert mock_ingest_from_harvester.call_count == 1
     ingest_calls = mock_ingest_from_harvester.call_args_list[0][0]
