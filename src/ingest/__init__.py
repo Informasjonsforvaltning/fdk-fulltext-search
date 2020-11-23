@@ -205,6 +205,7 @@ def fetch_data_services():
         logging.error(result["message"])
         return result
 
+
 def fetch_public_services():
     public_service_url = f'{FDK_SERVICE_HARVESTER_URI}/public-services'
 

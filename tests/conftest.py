@@ -79,6 +79,40 @@ turtle_dataservices = """
 <https://testutgiver.no/dataservices/987654321>
         a                  dcat:DataService ."""
 
+turtle_models = """
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix modelldcatno: <https://data.norge.no/vocabulary/modelldcatno#> .
+
+<https://testdirektoratet.no/models/321>
+        a                  dcat:CatalogRecord ;
+        dct:identifier     "321" ;
+        dct:issued         "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        dct:modified       "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        foaf:primaryTopic  <https://testutgiver.no/models/987654321> .
+
+<https://testutgiver.no/models/987654321>
+        a                  modelldcatno:InformationModel ."""
+
+turtle_public_services = """
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix cpsv: <http://purl.org/vocab/cpsv#> .
+
+<https://testdirektoratet.no/services/321>
+        a                  dcat:CatalogRecord ;
+        dct:identifier     "321" ;
+        dct:issued         "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        dct:modified       "2020-06-22T13:39:27.334Z"^^xsd:dateTime ;
+        foaf:primaryTopic  <https://testutgiver.no/services/987654321> .
+
+<https://testutgiver.no/services/987654321>
+        a                  cpsv:PublicService ."""
+
 
 @pytest.fixture(scope="session")
 def api():
@@ -121,14 +155,20 @@ def mocked_requests_get(*args, **kwargs):
 
     response_json = {}
     response_text = ""
-    if re.findall("informationmodels", kwargs['url']).__len__() > 0:
+
+    req_url = kwargs.get('url')
+    req_url = req_url if req_url else ""
+
+    if re.findall("informationmodels", req_url).__len__() > 0:
         response_json = json_info_models
-    elif re.findall("concept", kwargs['url']).__len__() > 0:
+    elif re.findall("concept", req_url).__len__() > 0:
         response_json = json_concepts
-    elif re.findall("dataset", kwargs['url']).__len__() > 0:
+    elif re.findall("dataset", req_url).__len__() > 0:
         response_text = turtle_datasets
-    elif re.findall("dataservice", kwargs['url']).__len__() > 0:
+    elif re.findall("dataservice", req_url).__len__() > 0:
         response_text = turtle_dataservices
+    elif re.findall("public-services", req_url).__len__() > 0:
+        response_text = turtle_public_services
     return MockResponse(json_data=response_json,
                         status_code=200, text=response_text)
 
