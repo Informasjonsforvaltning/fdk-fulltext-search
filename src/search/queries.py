@@ -331,6 +331,7 @@ class PublicServiceQuery(AbstractSearchQuery):
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"]["hasCompetentAuthority"] = hasCompetentAuthority_aggregation()
+            self.body["aggs"]["isGroupedBy"] = is_grouped_by_aggregation()
 
 
 class RecentQuery:

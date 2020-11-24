@@ -410,10 +410,21 @@ def org_path_aggregation():
         }
     }
 
+
 def hasCompetentAuthority_aggregation():
     return {
         "terms": {
             "field": "hasCompetentAuthority.orgPath",
+            "missing": "MISSING",
+            "size": 1000000000
+        }
+    }
+
+
+def is_grouped_by_aggregation():
+    return {
+        "terms": {
+            "field": "isGroupedBy.uri.keyword",
             "missing": "MISSING",
             "size": 1000000000
         }
