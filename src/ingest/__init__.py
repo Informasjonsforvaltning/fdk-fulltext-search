@@ -22,6 +22,7 @@ API_URL = os.getenv('API_URL', 'http://localhost:8080/')
 DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI', 'http://localhost:8080/dataset')
 FDK_DATASERVICE_HARVESTER_URI = os.getenv('FDK_DATASERVICE_HARVESTER_URI', 'http://localhost:8080/dataservice')
 FDK_SERVICE_HARVESTER_URI = os.getenv('FDK_SERVICE_HARVESTER_URI', 'http://localhost:8080')
+MODEL_HARVESTER_URI = os.getenv('MODEL_HARVESTER_URI', 'http://localhost:8080/infomodel')
 
 
 def error_msg(exec_point, reason, count=0):
@@ -75,31 +76,33 @@ def fetch_all_content():
 
 
 def fetch_information_models():
-    info_url = API_URL + "informationmodels"
+    info_url = f'{MODEL_HARVESTER_URI}/catalogs'
+
+    logging.info(f"fetching information models from {info_url}")
     try:
-        logging.info("fetching information models")
-        size = requests.get(url=info_url, timeout=5)
-        size.raise_for_status()
-        totalElements = size.json()["page"]["totalElements"]
-        r = requests.get(url=info_url, params={"size": totalElements}, timeout=5)
-        r.raise_for_status()
+        response = requests.get(url=info_url, headers={'Accept': 'text/turtle'}, timeout=10)
+        response.raise_for_status()
 
-        new_index_name = f"{IndicesKey.INFO_MODEL}-{os.urandom(4).hex()}"
+        parsed_rdf = fdk_rdf_parser.parse_information_models(response.text)
+        if parsed_rdf is not None:
+            new_index_name = f"{IndicesKey.INFO_MODEL}-{os.urandom(4).hex()}"
 
-        create_error = create_index(IndicesKey.INFO_MODEL, new_index_name)
-        if create_error:
-            return create_error
+            create_error = create_index(IndicesKey.INFO_MODEL, new_index_name)
+            if create_error:
+                return create_error
 
-        documents = r.json()["_embedded"]["informationmodels"]
-        result = elasticsearch_ingest(documents, new_index_name, IndicesKey.INFO_MODEL_ID_KEY)
+            logging.info(f"ingesting parsed information models")
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, new_index_name, IndicesKey.INFO_MODEL_ID_KEY)
 
-        alias_error = set_alias_for_new_index(IndicesKey.INFO_MODEL, new_index_name)
-        if alias_error:
-            return alias_error
+            alias_error = set_alias_for_new_index(IndicesKey.INFO_MODEL, new_index_name)
+            if alias_error:
+                return alias_error
 
-        return result_msg(result[0])
-    except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
-        result = error_msg(f"fetch informationmodels from {info_url}", err)
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse data services")
+    except Exception as err:
+        result = error_msg(f"fetch information models from {info_url} ", err)
         logging.error(result["message"])
         return result
 

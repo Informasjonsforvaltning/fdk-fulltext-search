@@ -238,15 +238,17 @@ class TestDataSetSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_los(self, api, wait_for_datasets_ready):
-        los_path = "los"
+        los_path = "bygg-og-eiendom"
         body = {
             "filters": [{"los": los_path}]
         }
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
-        los_json_path = parse('themes[*].losPaths')
-        for hit in result.json()["hits"]:
-            assert los_path in [match.value for match in los_json_path.find(hit)]
+        result_hits = result.json()["hits"]
+        assert len(result_hits) > 0
+        for hit in result_hits:
+            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            assert los_path in los_paths
 
     @pytest.mark.contract
     def test_should_filter_on_orgPath_and_spatial(self, api, wait_for_datasets_ready):

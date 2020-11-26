@@ -9,15 +9,6 @@ from urllib3.exceptions import MaxRetryError, NewConnectionError
 
 from tests.contract.contract_utils import wait_for_es, populate
 
-json_info_models = {"page": {"totalElements": 2},
-                    "_embedded": {
-                        "informationmodels": [
-                            {
-                                "id": 1234566
-                            }
-                        ]
-                    }
-                    }
 json_concepts = {"page": {"totalElements": 2},
                  "_embedded": {
                      "concepts": [
@@ -159,8 +150,8 @@ def mocked_requests_get(*args, **kwargs):
     req_url = kwargs.get('url')
     req_url = req_url if req_url else ""
 
-    if re.findall("informationmodels", req_url).__len__() > 0:
-        response_json = json_info_models
+    if re.findall("infomodel", req_url).__len__() > 0:
+        response_text = turtle_models
     elif re.findall("concept", req_url).__len__() > 0:
         response_json = json_concepts
     elif re.findall("dataset", req_url).__len__() > 0:
@@ -224,6 +215,11 @@ def mock_data_service_parser(mocker):
 
 
 @pytest.fixture
+def mock_model_parser(mocker):
+    return mocker.patch('fdk_rdf_parser.parse_information_models', return_value={})
+
+
+@pytest.fixture
 def mock_env(monkeypatch):
     return monkeypatch.setattr(os, 'getcwd', mock_getcwd)
 
@@ -257,7 +253,7 @@ def wait_for_ready():
     try:
         while True:
             response = get("http://localhost:8000/count")
-            if response.json()['count'] >= 5569:
+            if response.json()['count'] >= 5537:
                 break
             if time.time() > timeout:
                 pytest.fail(

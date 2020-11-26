@@ -12,7 +12,7 @@ index_suggestion_fields = {
     IndicesKey.DATA_SETS: ['title', 'uri'],
     IndicesKey.CONCEPTS: ['id', 'identifier', 'uri', 'definition', 'prefLabel', 'publisher'],
     IndicesKey.DATA_SERVICES: ['id', 'uri', 'title', 'publisher'],
-    IndicesKey.INFO_MODEL: ['id', 'harvestSourceUri', 'title', 'publisher']
+    IndicesKey.INFO_MODEL: ['id', 'uri', 'title', 'publisher']
 }
 
 index_description_fields = {
@@ -32,4 +32,6 @@ index_fulltext_fields = {
                            "subject.definition.*", "distribution.title.*", "distribution.format"],
     IndicesKey.DATA_SERVICES: ["title.*^3", "description.*", "publisher.name^3",
                                "publisher.prefLabel^3", "mediaType.code"],
+    IndicesKey.INFO_MODEL: ["title.*^3", "keyword.*^2", "theme.title.*", "losTheme.name.^3",
+                            "description.*", "publisher.name^3", "publisher.prefLabel^3"],
 }

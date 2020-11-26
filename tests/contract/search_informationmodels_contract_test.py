@@ -19,7 +19,7 @@ def wait_for_information_models():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=informationmodels")
-            if response.json()[0]['count'] >= 530:
+            if response.json()[0]['count'] >= 4:
                 break
             if time.time() > timeout:
                 pytest.fail(
@@ -62,7 +62,7 @@ class TestInformationModelSearch:
             1. exact match
             2. word in title
         """
-        search_str = "RA-0554 Pris på juridisk tjenesteyting"
+        search_str = "di"
         body = {
             "q": search_str,
             "size": 300
@@ -86,11 +86,9 @@ class TestInformationModelSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_orgPath(self, api, wait_for_information_models):
-        org_path = "PRIVAT/910244132"
+        org_path = "STAT/972417858/991825827"
         body = {
-            "filters": {
-                [{"orgPath": org_path}]
-            }
+            "filters": [{"orgPath": org_path}]
         }
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
@@ -101,43 +99,39 @@ class TestInformationModelSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_los(self, api, wait_for_information_models):
-        los_path = "los"
+        los_path = "bygg-og-eiendom"
         body = {
             "filters": [{"los": los_path}]
         }
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
-        los_json_path = parse('themes[*].losPaths')
-        for hit in result.json()["hits"]:
-            assert los_path in [match.value for match in los_json_path.find(hit)]
+        result_hits = result.json()["hits"]
+        assert len(result_hits) == 2
+        for hit in result_hits:
+            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            assert los_path in los_paths
 
     @pytest.mark.contract
     def test_should_filter_on_several_los_themes(self, api, wait_for_information_models):
-        los_path_1 = "demokrati-og-innbyggerrettigheter"
-        los_path_2 = "naring"
+        los_path_1 = "helse-og-omsorg"
+        los_path_2 = "bygg-og-eiendom"
         body = {
             "filters": [{"los": f"{los_path_1},{los_path_2}"}]
         }
 
         result = requests.post(url=informationmodel_url, json=body)
+        result_json = result.json()
         assert result.status_code == 200
-        los_json_path = parse('themes[*].losPaths')
-        for hit in result.json()["hits"]:
-            has_los_path_1 = False,
-            has_los_path_2 = False
-            los_paths = [match.value for match in los_json_path.find(hit)]
-            for path in los_paths:
-                if re.findall(los_path_1, path[0]).__len__() > 0:
-                    has_los_path_1 = True
-                if re.findall(los_path_2, path[0]).__len__() > 0:
-                    has_los_path_2 = True
-            assert has_los_path_1
-            assert has_los_path_2
+        assert len(result_json["hits"]) == 1
+        for hit in result_json["hits"]:
+            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            assert los_path_1 in los_paths
+            assert los_path_2 in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, api, wait_for_information_models):
-        org_path = "PRIVAT"
-        los_path = "demokrati-og-innbyggerrettigheter"
+    def test_should_filter_on_los_and_orgPath(self, api, wait_for_information_models):
+        org_path = "STAT"
+        los_path = "bygg-og-eiendom"
         body = {
             "filters": [{"orgPath": org_path}, {"los": los_path}]
         }
@@ -151,15 +145,16 @@ class TestInformationModelSearch:
     @pytest.mark.contract
     def test_should_have_correct_size_and_page(self, api, wait_for_information_models):
         default_result = requests.post(informationmodel_url).json()
-        assert default_result["page"]["size"] == 10
+        assert default_result["page"]["size"] == 4
         assert default_result["page"]["currentPage"] == 0
 
         page_request_body = {
-            "page": 5
+            "page": 1,
+            "size": 2
         }
         page_result = requests.post(url=informationmodel_url, json=page_request_body).json()
-        assert page_result["page"]["size"] == 10
-        assert page_result["page"]["currentPage"] == 5
+        assert page_result["page"]["size"] == 2
+        assert page_result["page"]["currentPage"] == 1
 
         assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
 
@@ -174,7 +169,7 @@ class TestInformationModelSearch:
         for hit in result.json()["hits"]:
             date = hit["harvest"]["firstHarvested"]
             if last_date:
-                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%S") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%S")
+                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
 

@@ -73,8 +73,8 @@ class TestSuggestions:
 
     @pytest.mark.contract
     def test_suggestion_information_models(self, api, wait_for_ready):
-        prefix = "RA"
-        result = requests.get(suggestions_endpoint + '/informationmodels?q=RA'.format(prefix))
+        prefix = "div"
+        result = requests.get(f'{suggestions_endpoint}/informationmodels?q={prefix}')
         assert result.status_code == 200
         assert len(result.json()['suggestions']) > 0
         previous_was_prefix = True

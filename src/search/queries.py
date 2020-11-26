@@ -120,7 +120,8 @@ class InformationModelQuery(AbstractSearchQuery):
         if search_string:
             self.add_search_string(search_string)
         else:
-            self.query = information_model_default_query()
+            self.query = {"match_all": {}}
+
         self.add_aggs(aggs)
         if filters:
             if filters:
@@ -137,10 +138,12 @@ class InformationModelQuery(AbstractSearchQuery):
                                                     autorativ_boost=False),
                           simple_query_string(search_string=search_string,
                                               all_indices_autorativ_boost=False,
-                                              boost=0.02),
+                                              boost=0.02,
+                                              fields_for_index=IndicesKey.INFO_MODEL),
                           simple_query_string(search_string=search_string,
                                               all_indices_autorativ_boost=False,
-                                              lenient=True)]
+                                              lenient=True,
+                                              fields_for_index=IndicesKey.INFO_MODEL)]
         self.query["dis_max"]["queries"] = dismax_queries
 
     def add_aggs(self, fields: list):
