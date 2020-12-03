@@ -35,7 +35,7 @@ gunicorn = "*"
 flask-cors = "*"
 jsonpath-ng = "*"
 pika = "*"
-fdk-rdf-parser = "==0.2.5"
+fdk-rdf-parser = "==0.2.9"
 feedgen = "*"
 
 [requires]

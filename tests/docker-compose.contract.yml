@@ -33,6 +33,7 @@ services:
         - API_URL=http://servicesmock:8080/
         - DATASET_HARVESTER_BASE_URI=http://servicesmock:8080/dataset
         - FDK_DATASERVICE_HARVESTER_URI=http://servicesmock:8080/dataservice
+        - MODEL_HARVESTER_URI=http://servicesmock:8080/infomodel
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
         - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
         - FDK_SERVICE_HARVESTER_URI=http://servicemock:8080

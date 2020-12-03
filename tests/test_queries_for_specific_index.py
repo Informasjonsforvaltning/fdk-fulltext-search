@@ -99,12 +99,30 @@ def test_information_model_with_search_string_query():
                     {
                         "simple_query_string": {
                             "query": "RA+0554+Pris RA+0554+Pris*",
+                            "fields": [
+                                "title.*^3",
+                                "keyword.*^2",
+                                "theme.title.*",
+                                "losTheme.name.^3",
+                                "description.*",
+                                "publisher.name^3",
+                                "publisher.prefLabel^3",
+                            ],
                             "boost": 0.02
                         }
                     },
                     {
                         "simple_query_string": {
                             "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                            "fields": [
+                                "title.*^3",
+                                "keyword.*^2",
+                                "theme.title.*",
+                                "losTheme.name.^3",
+                                "description.*",
+                                "publisher.name^3",
+                                "publisher.prefLabel^3",
+                            ],
                             "boost": 0.001
                         }
                     }
@@ -202,12 +220,30 @@ def test_information_model_add_filter():
                                 {
                                     "simple_query_string": {
                                         "query": "RA+0554+Pris RA+0554+Pris*",
+                                        "fields": [
+                                            "title.*^3",
+                                            "keyword.*^2",
+                                            "theme.title.*",
+                                            "losTheme.name.^3",
+                                            "description.*",
+                                            "publisher.name^3",
+                                            "publisher.prefLabel^3",
+                                        ],
                                         "boost": 0.02
                                     }
                                 },
                                 {
                                     "simple_query_string": {
                                         "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                                        "fields": [
+                                            "title.*^3",
+                                            "keyword.*^2",
+                                            "theme.title.*",
+                                            "losTheme.name.^3",
+                                            "description.*",
+                                            "publisher.name^3",
+                                            "publisher.prefLabel^3",
+                                        ],
                                         "boost": 0.001
                                     }
                                 }
