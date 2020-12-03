@@ -534,7 +534,7 @@
         "index": {
             "mapping": {
                 "total_fields": {
-                    "limit": "5000"
+                    "limit": "15000"
                 }
             }
         }
