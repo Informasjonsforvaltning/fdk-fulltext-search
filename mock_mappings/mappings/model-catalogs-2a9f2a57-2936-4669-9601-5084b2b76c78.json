@@ -2,7 +2,7 @@
   "id" : "2a9f2a57-2936-4669-9601-5084b2b76c78",
   "name" : "catalogs",
   "request" : {
-    "url" : "/infomodel/catalogs",
+    "url" : "/infomodel/catalogs?catalogrecords=true",
     "method" : "GET"
   },
   "response" : {
