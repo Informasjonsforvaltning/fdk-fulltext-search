@@ -76,7 +76,7 @@ def fetch_all_content():
 
 
 def fetch_information_models():
-    info_url = f'{MODEL_HARVESTER_URI}/catalogs'
+    info_url = f'{MODEL_HARVESTER_URI}/catalogs?catalogrecords=true'
 
     logging.info(f"fetching information models from {info_url}")
     try:
