@@ -44,6 +44,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
             elif key == 'catalog_name':
                 catalog_name_query = get_catalogs_by_name(f['catalog_name'])
                 self.body["query"]["bool"]["filter"].append(catalog_name_query)
+            elif key == 'keywords':
+                self.body["query"]["bool"]["filter"].append(keyword_filter(f[key]))
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 
