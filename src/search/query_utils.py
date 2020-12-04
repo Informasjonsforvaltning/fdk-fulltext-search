@@ -378,6 +378,18 @@ def collection_filter(filter_obj: dict):
         }
     }
 
+def keyword_filter(keyword):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"keyword.no": keyword}},
+                {"match": {"keyword.nb": keyword}},
+                {"match": {"keyword.nn": keyword}},
+                {"match": {"keyword.en": keyword}},
+            ],
+            "minimum_should_match": 1,
+        }
+    }
 
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
     query = {
