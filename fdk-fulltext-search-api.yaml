@@ -417,6 +417,47 @@ components:
               $ref: '#/components/schemas/Publisher'
         harvest:
           $ref: '#/components/schemas/HarvestMetadata'
+        isGroupedBy:
+          $ref: '#/components/schemas/Event'
+        keyword:
+          type: array
+          items:
+            $ref: '#/components/schemas/TextField'
+        sector:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
+        isClassifiedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
+        language:
+          type: array
+          items:
+            type: object
+            properties:
+              uri:
+                type: string
+              code:
+                type: string
+              prefLabel:
+                $ref: '#/components/schemas/TextField'
+        hasCriterion:
+          type: array
+          items:
+            $ref: '#/components/schemas/CriterionRequirement'
+        hasParticipation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participation'
+        hasInput:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evidence'
+        produces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Output'
     Catalog:
       type: object
       properties:
@@ -687,3 +728,83 @@ components:
         count:
           type: integer
           description: the current number of elements in the index/indices
+    Event:
+      type: object
+      properties:
+        uri:
+          type: string
+        identifier:
+          type: string
+        title:
+          $ref: '#/components/schemas/TextField'
+        description:
+          $ref: '#/components/schemas/TextField'
+        type:
+          type: string
+    CriterionRequirement:
+      type: object
+      properties:
+        uri:
+          type: string
+        identifier:
+          type: string
+        name:
+          $ref: '#/components/schemas/TextField'
+        type:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
+    Evidence:
+      type: object
+      properties:
+        uri:
+          type: string
+        identifier:
+          type: string
+        name:
+          $ref: '#/components/schemas/TextField'
+        description:
+          $ref: '#/components/schemas/TextField'
+        type:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
+        language:
+          type: array
+          items:
+            type: object
+            properties:
+              uri:
+                type: string
+              code:
+                type: string
+              prefLabel:
+                $ref: '#/components/schemas/TextField'
+    Output:
+      type: object
+      properties:
+        uri:
+          type: string
+        identifier:
+          type: string
+        name:
+          $ref: '#/components/schemas/TextField'
+        description:
+          $ref: '#/components/schemas/TextField'
+        type:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
+    Participation:
+      type: object
+      properties:
+        uri:
+          type: string
+        identifier:
+          type: string
+        description:
+          $ref: '#/components/schemas/TextField'
+        role:
+          type: array
+          items:
+            $ref: '#/components/schemas/Concept'
