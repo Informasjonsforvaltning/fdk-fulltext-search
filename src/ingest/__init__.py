@@ -12,6 +12,7 @@ from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
 import fdk_rdf_parser
 from requests import HTTPError, RequestException, Timeout
+import simplejson
 
 from .utils import IndicesKey
 
@@ -278,7 +279,7 @@ def yield_documents_from_harvester(documents, index, id_key):
         yield {
             "_index": index,
             "_id": documents[doc_index].id,
-            "_source": asdict(documents[doc_index])
+            "_source": simplejson.dumps(asdict(documents[doc_index]), iterable_as_array=True)
         }
 
 

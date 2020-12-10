@@ -35,8 +35,9 @@ gunicorn = "*"
 flask-cors = "*"
 jsonpath-ng = "*"
 pika = "*"
-fdk-rdf-parser = "==0.2.9"
+fdk-rdf-parser = "==0.2.12"
 feedgen = "*"
+simplejson = "*"
 
 [requires]
 python_version = "3.8"
