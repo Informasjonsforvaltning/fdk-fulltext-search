@@ -391,6 +391,16 @@ def keyword_filter(keyword):
         }
     }
 
+def info_model_filter(uri):
+    return {
+        "bool": {
+            "filter": [
+                {"term": {"informationModel.uri.keyword": uri}}
+            ]
+        }
+    }
+
+
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
     query = {
         "terms": {
