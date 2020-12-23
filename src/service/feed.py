@@ -1,10 +1,16 @@
+import os
+
 from enum import Enum
-from typing import Iterable, Dict
+from typing import Iterable, Dict, Any
 from feedgen.feed import FeedGenerator
 from flask import request
+from urllib.parse import urlencode
 
 from src.search import client
 from src.ingest import IndicesKey
+
+
+FDK_BASE_URI = os.getenv('FDK_BASE_URI', 'https://staging.fellesdatakatalog.digdir.no')
 
 
 class FeedType(Enum):
@@ -15,20 +21,25 @@ class FeedType(Enum):
 def create_feed(feed_type: FeedType) -> str:
     feed_generator = FeedGenerator()
 
-    feed_generator.id(request.url)
+    search_params = extract_search_params(request.args)
+
+    base_url = f"{FDK_BASE_URI}/datasets"
+    query_string = build_query_string(search_params)
+
+    feed_generator.id(f"{base_url}{query_string}")
     feed_generator.title("Felles datakatalog - Datasett")
     feed_generator.description("En samling av datasett publisert i Felles datakataog")
-    feed_generator.link(href=request.url)
+    feed_generator.link(href=f"{base_url}{query_string}")
 
-    datasets = get_datasets_for_feed()
+    datasets = get_datasets_for_feed(map_search_params_to_search_request_body(search_params))
 
     for dataset in datasets:
         feed_entry = feed_generator.add_entry()
 
-        feed_entry.id(f"{request.url}/{dataset['id']}")
+        feed_entry.id(f"{base_url}/{dataset['id']}")
         feed_entry.title(translate(dataset["title"]))
         feed_entry.description(translate(dataset["description"]))
-        feed_entry.link(href=f"{request.url}/{dataset['id']}")
+        feed_entry.link(href=f"{base_url}/{dataset['id']}")
         feed_entry.author(name=translate(dataset["publisher"]["prefLabel"] or dataset["publisher"]["name"]))
         feed_entry.published(dataset["harvest"]["firstHarvested"])
 
@@ -40,11 +51,13 @@ def create_feed(feed_type: FeedType) -> str:
         return ""
 
 
-def get_datasets_for_feed() -> Iterable[Dict]:
+def get_datasets_for_feed(search_request_body: Dict[str, Any]) -> Iterable[Dict]:
     results = client.search_in_index(
         index=IndicesKey.DATA_SETS,
         request={
+            "q": search_request_body["q"],
             "filters": [
+                *search_request_body["filters"],
                 {
                     "last_x_days": 1
                 }
@@ -65,3 +78,53 @@ def get_datasets_for_feed() -> Iterable[Dict]:
 
 def translate(translatable: Dict[str, str]) -> str:
     return translatable["nb"] or translatable["no"] or translatable["nn"] or translatable["en"]
+
+
+def extract_search_params(params: Dict[str, str]) -> Dict[str, str]:
+    search_params = {
+        "q": params.get("q"),
+        "losTheme": params.get("losTheme"),
+        "theme": params.get("theme"),
+        "opendata": params.get("opendata"),
+        "accessrights": params.get("accessrights"),
+        "orgPath": params.get("orgPath"),
+        "spatial": params.get("spatial"),
+        "provenance": params.get("provenance"),
+        "sortfield": "harvest.firstHarvested"
+    }
+
+    return {k: v for k, v in search_params.items() if v is not None}
+
+
+def map_search_params_to_search_request_body(params: Dict[str, str]) -> Dict[str, Any]:
+    filters = []
+
+    if "losTheme" in params:
+        filters.append({"los": params["losTheme"]})
+
+    if "theme" in params:
+        filters.append({"theme": params["theme"]})
+
+    if "opendata" in params:
+        filters.append({"opendata": True})
+
+    if "accessrights" in params:
+        filters.append({"accessRights": params["accessrights"]})
+
+    if "orgPath" in params:
+        filters.append({"orgPath": params["orgPath"]})
+
+    if "spatial" in params:
+        filters.append({"spatial": params["spatial"]})
+
+    if "provenance" in params:
+        filters.append({"provenance": params["provenance"]})
+
+    return {
+        "q": params["q"] if "q" in params else "",
+        "filters": filters
+    }
+
+
+def build_query_string(params: Dict[str, str]) -> str:
+    return f"?{urlencode(params)}" if len(params) > 0 else ""
