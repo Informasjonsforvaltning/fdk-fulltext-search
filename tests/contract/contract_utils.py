@@ -44,5 +44,5 @@ def start_reindex(data_type):
     url = "http://localhost:8000/indices"
     if data_type != "all":
         url = url + f"?name={data_type}"
-    response = requests.post(url)
+    response = requests.post(url=url, headers={"X-API-KEY": "test-key"})
     return response.json()

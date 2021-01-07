@@ -1,4 +1,5 @@
 import json
+import os
 
 from flask_restful import Resource, abort
 from flask import request, Response
@@ -154,6 +155,10 @@ class Indices(Resource):
         return IndicesInfoResponse(es_result).map_response()
 
     def post(self):
+        api_key = request.headers.get('X-API-KEY')
+        if not api_key or os.getenv("API_KEY", "test-key") != api_key:
+            abort(http_status_code=403, description="Forbidden")
+
         index_name = request.args.get('name')
         if index_name:
             if index_name not in [IndicesKey.INFO_MODEL, IndicesKey.DATA_SERVICES, IndicesKey.DATA_SETS,
