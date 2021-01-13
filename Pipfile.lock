@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "17f218fb3c2513fb6b04f9116dc5791396aa4915bf4f3947043ca2081e82cd2d"
+            "sha256": "319a94017d83d0147fa0a895cb6c4218a58082db8bb44e7f5c6331cb3debc3c6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:7ce728860a65ee408f9d9b856ccd7083f9f0be3fd4fe6eabfb4bb4002f4ab166",
-                "sha256:a4c6450e3c34231a29248f336b766cc5ff1e0be09ac29de33bf41878e0cbf6a1"
+                "sha256:c08224a6a60f05e230d83044d70a1d04dd4ca6700df35937cb693934c77dc959",
+                "sha256:f501bb8940e0074deae69f7cdbf0cd190756cc988860ae68b50c9d5e1aa7938a"
             ],
             "index": "pypi",
-            "version": "==0.2.14"
+            "version": "==0.2.15"
         },
         "feedgen": {
             "hashes": [
@@ -92,11 +92,11 @@
         },
         "flask-cors": {
             "hashes": [
-                "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8",
-                "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"
+                "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438",
+                "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"
             ],
             "index": "pypi",
-            "version": "==3.0.9"
+            "version": "==3.0.10"
         },
         "flask-restful": {
             "hashes": [
@@ -507,11 +507,11 @@
         },
         "pytest-mock": {
             "hashes": [
-                "sha256:c0fc979afac4aaba545cbd01e9c20736eb3fefb0a066558764b07d3de8f04ed3",
-                "sha256:c3981f5edee6c4d1942250a60d9b39d38d5585398de1bfce057f925bdda720f4"
+                "sha256:379b391cfad22422ea2e252bdfc008edd08509029bcde3c25b2c0bd741e0424e",
+                "sha256:a1e2aba6af9560d313c642dae7e00a2a12b022b80301d9d7fc8ec6858e1dd9fc"
             ],
             "index": "pypi",
-            "version": "==3.4.0"
+            "version": "==3.5.1"
         },
         "toml": {
             "hashes": [
