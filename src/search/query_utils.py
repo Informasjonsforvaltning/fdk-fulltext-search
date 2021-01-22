@@ -378,6 +378,7 @@ def collection_filter(filter_obj: dict):
         }
     }
 
+
 def keyword_filter(keyword):
     return {
         "bool": {
@@ -391,12 +392,35 @@ def keyword_filter(keyword):
         }
     }
 
+
 def info_model_filter(uri):
     return {
         "bool": {
             "filter": [
                 {"term": {"informationModel.uri.keyword": uri}}
             ]
+        }
+    }
+
+
+def required_by_service_filter(uri):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"requires.uri.keyword": uri}}
+            ],
+            "minimum_should_match": 1,
+        }
+    }
+
+
+def related_by_service_filter(uri):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"relation.uri.keyword": uri}}
+            ],
+            "minimum_should_match": 1,
         }
     }
 

@@ -48,6 +48,10 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(keyword_filter(f[key]))
             elif key == 'info_model':
                 self.body["query"]["bool"]["filter"].append(info_model_filter(f[key]))
+            elif key == 'required_by_service':
+                self.body["query"]["bool"]["filter"].append(required_by_service_filter(f[key]))
+            elif key == 'related_by_service':
+                self.body["query"]["bool"]["filter"].append(related_by_service_filter(f[key]))
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 
