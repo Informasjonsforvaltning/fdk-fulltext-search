@@ -118,6 +118,22 @@ class SearchPublicServices(Resource):
             return SearchResponse().map_response(es_result=result, requested_page=page)
 
 
+class SearchEvents(Resource):
+    def post(self):
+        page = 0
+        if len(request.data) == 0:
+            result = client.search_in_index(index=IndicesKey.EVENTS)
+        else:
+            body = request.get_json()
+            if "page" in body:
+                page = body["page"]
+            result = client.search_in_index(index=IndicesKey.EVENTS, request=body)
+        if "error" in result.keys():
+            return result
+        else:
+            return SearchResponse().map_response(es_result=result, requested_page=page)
+
+
 class Count(Resource):
     def get(self):
         return client.count()
