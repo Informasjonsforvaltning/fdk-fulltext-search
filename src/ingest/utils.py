@@ -15,3 +15,4 @@ class IndicesKey:
     PUBLIC_SERVICES_ID_KEY = "id"
     EVENTS = "events"
     EVENTS_ID_KEY = "id"
+    PUBLIC_SERVICES_AND_EVENTS_ALIAS = "public_services_and_events"

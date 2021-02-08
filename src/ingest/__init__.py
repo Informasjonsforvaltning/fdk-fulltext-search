@@ -358,6 +358,9 @@ def set_alias_for_new_index(index_alias, new_index_name):
         # TODO add public_services to SEARCHABLE_ALIAS when ready to search in index
         if index_alias not in [IndicesKey.PUBLIC_SERVICES, IndicesKey.EVENTS]:
             es_client.indices.put_alias(index=new_index_name, name=IndicesKey.SEARCHABLE_ALIAS)
+        if index_alias in [IndicesKey.PUBLIC_SERVICES, IndicesKey.EVENTS]:
+            es_client.indices.put_alias(index=new_index_name, name=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS)
+
     except BaseException as err:
         logging.error(f"error when attempting to set alias {index_alias} for index {new_index_name}")
         return error_msg(f"set alias '{index_alias}'", err.error)

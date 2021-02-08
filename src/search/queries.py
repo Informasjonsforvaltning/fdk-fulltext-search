@@ -52,6 +52,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(required_by_service_filter(f[key]))
             elif key == 'related_by_service':
                 self.body["query"]["bool"]["filter"].append(related_by_service_filter(f[key]))
+            elif key == 'event':
+                self.body["query"]["bool"]["filter"].append(event_filter(f[key]))
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 
@@ -383,6 +385,59 @@ class EventQuery(AbstractSearchQuery):
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"]["hasCompetentAuthority"] = hasCompetentAuthority_aggregation()
+
+
+class PublicServicesAndEventsQuery(AbstractSearchQuery):
+
+    def __init__(self, search_string: str = None, aggs: list = None, filters: list = None):
+        super().__init__(search_string)
+
+        if search_string:
+            self.add_search_string(search_string)
+        else:
+            self.body["indices_boost"] = [{"public_services": 1.2}]
+            self.query = {"match_all": {}}
+        self.add_aggs(aggs)
+        if filters:
+            if filters:
+                self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                     should_clause=[],
+                                                                     filter_clause=True)
+                self.add_filters(filters)
+        else:
+            self.body["query"] = query_with_final_boost_template(must_clause=[self.query],
+                                                                 should_clause=[])
+
+    def add_aggs(self, fields: list):
+        if fields is None:
+            self.body["aggs"]["hasCompetentAuthority"] = hasCompetentAuthority_aggregation()
+            self.body["aggs"]["isGroupedBy"] = is_grouped_by_aggregation()
+
+    def add_search_string(self, param: str):
+        self.query["dis_max"]["queries"].append(exact_match_in_title_query(
+            title_field_names=["prefLabel.*", "title.*", "title"],
+            search_string=param))
+        self.query["dis_max"]["queries"].append(
+            word_in_title_query(title_field_names=["title.*", "title", "prefLabel.*"],
+                                search_string=param))
+        self.query["dis_max"]["queries"].append(match_on_publisher_name_query(param))
+        self.query["dis_max"]["queries"].append(
+            word_in_description_query(
+                index_key=IndicesKey.ALL,
+                search_string=param))
+        some_words_in_title = some_words_in_title_query(title_fields_list=["title.*", "title", "prefLabel.*"],
+                                                        search_string=param)
+        if some_words_in_title:
+            self.query["dis_max"]["queries"].append(some_words_in_title)
+
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param,
+                                                                    boost=0.0015,
+                                                                    all_indices_autorativ_boost=True))
+        self.query["dis_max"]["queries"].append(simple_query_string(search_string=param,
+                                                                    boost=0.001,
+                                                                    lenient=True,
+                                                                    all_indices_autorativ_boost=True
+                                                                    ))
 
 
 class RecentQuery:
