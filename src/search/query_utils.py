@@ -470,7 +470,7 @@ def hasCompetentAuthority_aggregation():
 def is_grouped_by_aggregation():
     return {
         "terms": {
-            "field": "isGroupedBy.uri.keyword",
+            "field": "isGroupedBy.keyword",
             "missing": "MISSING",
             "size": 1000000000
         }
