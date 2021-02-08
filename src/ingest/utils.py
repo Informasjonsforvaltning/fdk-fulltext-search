@@ -13,3 +13,5 @@ class IndicesKey:
     SEARCHABLE_ALIAS = "searchable"
     PUBLIC_SERVICES = "public_services"
     PUBLIC_SERVICES_ID_KEY = "id"
+    EVENTS = "events"
+    EVENTS_ID_KEY = "id"

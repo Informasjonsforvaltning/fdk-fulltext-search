@@ -53,6 +53,7 @@ def fetch_all_content():
     service_status = fetch_data_services()
     datasets_status = fetch_data_sets()
     public_services_status = fetch_public_services()
+    events_status = fetch_events()
     total_time = time.time() - start
     totalElements = info_status["count"] + concept_status["count"] + service_status["count"] + datasets_status["count"] + public_services_status['count']
     status = "erros occured"
@@ -60,7 +61,8 @@ def fetch_all_content():
             and concept_status['status'] == 'OK' \
             and service_status['status'] == 'OK' \
             and datasets_status['status'] == 'OK' \
-            and public_services_status['status'] == 'OK':
+            and public_services_status['status'] == 'OK' \
+            and events_status['status'] == 'OK':
         status = "OK"
     result = {
         "status": status,
@@ -70,7 +72,8 @@ def fetch_all_content():
         "concepts": concept_status,
         "dataservice": service_status,
         "datasets": datasets_status,
-        "public_services": public_services_status
+        "public_services": public_services_status,
+        "events": events_status
     }
     logging.info("update of all services completed\n {}".format(result))
     return result
@@ -242,6 +245,38 @@ def fetch_public_services():
         return result
 
 
+def fetch_events():
+    event_url = f'{FDK_SERVICE_HARVESTER_URI}/public-services'
+
+    logging.info(f"fetching events from {event_url}")
+    try:
+        response = requests.get(url=event_url, headers={'Accept': 'text/turtle'}, timeout=10)
+        response.raise_for_status()
+
+        parsed_rdf = fdk_rdf_parser.parse_events(response.text)
+        if parsed_rdf is not None:
+            new_index_name = f"{IndicesKey.EVENTS}-{os.urandom(4).hex()}"
+
+            create_error = create_index(IndicesKey.EVENTS, new_index_name)
+            if create_error:
+                return create_error
+
+            logging.info(f"ingesting parsed public_services")
+            result = elasticsearch_ingest_from_harvester(parsed_rdf, new_index_name, IndicesKey.EVENTS_ID_KEY)
+
+            alias_error = set_alias_for_new_index(IndicesKey.EVENTS, new_index_name)
+            if alias_error:
+                return alias_error
+
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse events")
+    except Exception as err:
+        result = error_msg(f"fetch events from {event_url}", err)
+        logging.error(result["message"])
+        return result
+
+
 def elasticsearch_ingest(documents, index, id_key):
     try:
         result = helpers.bulk(client=es_client, actions=yield_documents(documents, index, id_key))
@@ -321,7 +356,7 @@ def set_alias_for_new_index(index_alias, new_index_name):
 
         es_client.indices.put_alias(index=new_index_name, name=index_alias)
         # TODO add public_services to SEARCHABLE_ALIAS when ready to search in index
-        if index_alias != IndicesKey.PUBLIC_SERVICES:
+        if index_alias not in [IndicesKey.PUBLIC_SERVICES, IndicesKey.EVENTS]:
             es_client.indices.put_alias(index=new_index_name, name=IndicesKey.SEARCHABLE_ALIAS)
     except BaseException as err:
         logging.error(f"error when attempting to set alias {index_alias} for index {new_index_name}")
