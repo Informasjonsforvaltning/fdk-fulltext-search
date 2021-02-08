@@ -9,7 +9,8 @@ query_builder = {
     IndicesKey.DATA_SETS: DataSetQuery,
     IndicesKey.DATA_SERVICES: DataServiceQuery,
     IndicesKey.CONCEPTS: ConceptQuery,
-    IndicesKey.PUBLIC_SERVICES: PublicServiceQuery
+    IndicesKey.PUBLIC_SERVICES: PublicServiceQuery,
+    IndicesKey.EVENTS: EventQuery,
 }
 
 
