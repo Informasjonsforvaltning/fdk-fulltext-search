@@ -86,6 +86,42 @@ def search_in_index(index: str, request: dict = None):
         }
 
 
+def search_public_services_and_events(request: dict = None):
+    try:
+        aggs = None
+        search_str = None
+        f = None
+        size = None
+        page = None
+        sorting = None
+        if request:
+            if "aggregations" in request:
+                aggs = request.get("aggregations")
+            if "q" in request:
+                search_str = request.get("q")
+            if "filters" in request:
+                f = request.get("filters")
+            if "page" in request:
+                page = request.get("page")
+            if "size" in request:
+                size = request.get("size")
+            if "sorting" in request:
+                sorting = request.get("sorting")
+        q = PublicServicesAndEventsQuery(search_string=search_str, aggs=aggs, filters=f)
+        if size or page:
+            q.add_page(size=size, page=page)
+        if sorting:
+            q.add_sorting(sorting)
+        return es_client.search(index=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS, body=q.body, search_type='dfs_query_then_fetch')
+
+    except ConnectionError:
+        return {
+            "count": -1,
+            "operation": "search",
+            "error": "could not connect to elasticsearch"
+        }
+
+
 def count(index=None):
     try:
         if index:

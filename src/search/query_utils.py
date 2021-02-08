@@ -425,6 +425,18 @@ def related_by_service_filter(uri):
     }
 
 
+def event_filter(uri):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"isGroupedBy.keyword": uri}},
+                {"match": {"uri.keyword": uri}}
+            ],
+            "minimum_should_match": 1,
+        }
+    }
+
+
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
     query = {
         "terms": {
