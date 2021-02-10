@@ -27,6 +27,9 @@ index_description_fields = {
 }
 
 index_fulltext_fields = {
+    IndicesKey.CONCEPTS: ["publisher.name^3", "publisher.prefLabel^3", "definition.text.*",
+                            "definition.source.prefLabel.*^3","definition.sourceRelationship",
+                            "definition.sources.text.*", "prefLabel.*^3", "subject.*"],
     IndicesKey.DATA_SETS: ["title.*^3", "objective.*", "keyword.*^2", "theme.title.*",
                            "expandedLosTema.*", "description.*", "publisher.name^3",
                            "publisher.prefLabel^3", "accessRights.prefLabel.*^3",
