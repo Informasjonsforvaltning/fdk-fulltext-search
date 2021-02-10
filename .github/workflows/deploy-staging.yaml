@@ -45,7 +45,7 @@ jobs:
         invoke stop-docker
 
     - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search -a
 
     - name: Apply Helm template
       run: |

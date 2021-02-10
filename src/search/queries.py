@@ -285,10 +285,12 @@ class ConceptQuery(AbstractSearchQuery):
                                       autorativ_boost=False),
             simple_query_string(search_string=search_string,
                                         all_indices_autorativ_boost=False,
-                                        boost=0.02),
+                                        boost=0.02,
+                                        fields_for_index=IndicesKey.CONCEPTS),
             simple_query_string(search_string=search_string,
                                         all_indices_autorativ_boost=False,
-                                        lenient=True)]
+                                        lenient=True,
+                                        fields_for_index=IndicesKey.CONCEPTS)]
         self.query["dis_max"]["queries"] = dismax_queries
 
     def add_aggs(self, fields: list):
