@@ -27,13 +27,13 @@ jobs:
       run: pip install invoke
 
     - name: Setup gcloud CLI
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@master
       with:
         service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
 
-    # Configure docker to use the gcloud command-line tool as a credential helper
-    - run: gcloud auth configure-docker
+    - name: Configure docker to use the gcloud command-line tool as a credential helper
+      run: gcloud auth configure-docker eu.gcr.io
 
     - name: Build Docker image with GitHub commit sha tag and latest tag
       run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
@@ -48,7 +48,7 @@ jobs:
         invoke stop-docker
 
     - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search -a
 
     - name: Apply Helm template
       run: |
