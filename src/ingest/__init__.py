@@ -23,6 +23,7 @@ API_URL = os.getenv('API_URL', 'http://localhost:8080/')
 DATASET_HARVESTER_BASE_URI = os.getenv('DATASET_HARVESTER_BASE_URI', 'http://localhost:8080/dataset')
 FDK_DATASERVICE_HARVESTER_URI = os.getenv('FDK_DATASERVICE_HARVESTER_URI', 'http://localhost:8080/dataservice')
 FDK_SERVICE_HARVESTER_URI = os.getenv('FDK_SERVICE_HARVESTER_URI', 'http://localhost:8080')
+FDK_EVENT_HARVESTER_URI = os.getenv('FDK_EVENT_HARVESTER_URI', 'http://localhost:8080')
 MODEL_HARVESTER_URI = os.getenv('MODEL_HARVESTER_URI', 'http://localhost:8080/infomodel')
 
 
@@ -246,7 +247,7 @@ def fetch_public_services():
 
 
 def fetch_events():
-    event_url = f'{FDK_SERVICE_HARVESTER_URI}/public-services'
+    event_url = f'{FDK_EVENT_HARVESTER_URI}/events'
 
     logging.info(f"fetching events from {event_url}")
     try:
