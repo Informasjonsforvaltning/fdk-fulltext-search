@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "778a7763989c159a7b7a56798e4515db4108afabdb6c7a92b9d2b26a042155a3"
+            "sha256": "7cbc49849c639cae752dec7b2cb8c141e80de01f2ef6b2ecdc35a35716f8152e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -53,11 +53,11 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:4ebd34fd223b31c99d9f3b6b6236d3ac18b3046191a37231e8235b06ae7db955",
-                "sha256:a725dd923d349ca0652cf95d6ce23d952e2153740cf4ab6daf4a2d804feeed48"
+                "sha256:1e24b33a82bf381b42d3b0d390f76fdb9d6a9d47b310dea8eaeb0a5933c394c0",
+                "sha256:a113cfcee9ba8565cd48a67b60e9903b67a81b3b80ddc6d3fb2c16789a58b763"
             ],
             "index": "pypi",
-            "version": "==7.10.1"
+            "version": "==7.11.0"
         },
         "elasticsearch-dsl": {
             "hashes": [
@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:90e741647dbddd28a913587488caf375abf2eec52de238e8b80d6ea82a453482",
-                "sha256:ac983c820ed9bd987b89b747dea004270910e7cdea2094ddd59ff75d9b9803ca"
+                "sha256:03eb92ae8aad74c2137c67a3989e618ce17a59c94f5b34e66274232bd676beba",
+                "sha256:91e59bd8279edcf9d1c0e5f0375a875bf6277a09f9a8134473cee3bb5006e873"
             ],
             "index": "pypi",
-            "version": "==0.2.22"
+            "version": "==0.2.24"
         },
         "feedgen": {
             "hashes": [
@@ -459,11 +459,11 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:4ebd34fd223b31c99d9f3b6b6236d3ac18b3046191a37231e8235b06ae7db955",
-                "sha256:a725dd923d349ca0652cf95d6ce23d952e2153740cf4ab6daf4a2d804feeed48"
+                "sha256:1e24b33a82bf381b42d3b0d390f76fdb9d6a9d47b310dea8eaeb0a5933c394c0",
+                "sha256:a113cfcee9ba8565cd48a67b60e9903b67a81b3b80ddc6d3fb2c16789a58b763"
             ],
             "index": "pypi",
-            "version": "==7.10.1"
+            "version": "==7.11.0"
         },
         "iniconfig": {
             "hashes": [
