@@ -445,17 +445,6 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
 class RecentQuery:
     def __init__(self, size=None):
         self.query = {
-            "query": {
-                "bool": {
-                    "must_not": [
-                        {
-                            "match": {
-                                "type": 'publicservice'
-                            }
-                        }
-                    ]
-                }
-            },
             "size": 5,
             "sort": {"harvest.firstHarvested": {
                 "order": Direction.DESC.value,

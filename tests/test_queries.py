@@ -10,17 +10,6 @@ from src.search.query_utils import open_data_query
 @pytest.mark.unit
 def test_recent_query_should_have_size_5():
     expected = {
-        "query": {
-            "bool": {
-                "must_not": [
-                    {
-                        "match": {
-                            "type": 'publicservice'
-                        }
-                    }
-                ]
-            }
-        },
         "size": 5,
         "sort":
             {"harvest.firstHarvested": {"order": "desc"}}
@@ -34,17 +23,6 @@ def test_recent_query_should_have_size_5():
 @pytest.mark.unit
 def test_recent_query_should_have_size_18():
     expected = {
-        "query": {
-            "bool": {
-                "must_not": [
-                    {
-                        "match": {
-                            "type": 'publicservice'
-                        }
-                    }
-                ]
-            }
-        },
         "size": 18,
         "sort":
             {"harvest.firstHarvested": {"order": "desc"}}

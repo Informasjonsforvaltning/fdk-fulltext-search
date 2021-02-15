@@ -139,7 +139,7 @@ def count(index=None):
 
 def get_recent(size=None):
     q = RecentQuery(size).query
-    return es_client.search(body=q)
+    return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=q)
 
 
 def get_indices(index_name=None):

@@ -101,14 +101,14 @@ def test_should_call_search_with_simple_query_string(mock_elastic):
 def test_should_call_search_with_recent_query(mock_elastic):
     get_recent()
     expectedQuery = RecentQuery().query
-    mock_elastic.assert_called_once_with(body=expectedQuery)
+    mock_elastic.assert_called_once_with(index=IndicesKey.SEARCHABLE_ALIAS, body=expectedQuery)
 
 
 @pytest.mark.unit
 def test_should_call_search_with_recent_query_and_size_10(mock_elastic):
     get_recent(size=10)
     expectedQuery = RecentQuery(10).query
-    mock_elastic.assert_called_once_with(body=expectedQuery)
+    mock_elastic.assert_called_once_with(index=IndicesKey.SEARCHABLE_ALIAS, body=expectedQuery)
 
 
 @pytest.mark.unit
