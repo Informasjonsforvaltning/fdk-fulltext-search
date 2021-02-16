@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7cbc49849c639cae752dec7b2cb8c141e80de01f2ef6b2ecdc35a35716f8152e"
+            "sha256": "1463768dde0ea7870c1d24abe7da9d0c6d94e18f9c04aa554645e205d2b6823e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -69,11 +69,11 @@
         },
         "fdk-rdf-parser": {
             "hashes": [
-                "sha256:03eb92ae8aad74c2137c67a3989e618ce17a59c94f5b34e66274232bd676beba",
-                "sha256:91e59bd8279edcf9d1c0e5f0375a875bf6277a09f9a8134473cee3bb5006e873"
+                "sha256:e6ce776d251aa64943cba9b316508ffbb722138775d46384e2575d17bcc18587",
+                "sha256:ff566c77ebccf56a658883d6a27e16952da556eb92d2221d377e888052288661"
             ],
             "index": "pypi",
-            "version": "==0.2.24"
+            "version": "==0.2.25"
         },
         "feedgen": {
             "hashes": [
