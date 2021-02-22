@@ -488,6 +488,15 @@ def is_grouped_by_aggregation():
     }
 
 
+def associated_broader_types_by_events_aggregation():
+    return {
+        "terms": {
+            "field": "associatedBroaderTypesByEvents.keyword",
+            "size": 1000000000
+        }
+    }
+
+
 def default_all_indices_aggs():
     """ Return a dict with default aggregation for all indices search"""
     return {

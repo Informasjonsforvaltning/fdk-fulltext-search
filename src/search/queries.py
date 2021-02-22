@@ -416,6 +416,7 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
         if fields is None:
             self.body["aggs"]["hasCompetentAuthority"] = hasCompetentAuthority_aggregation()
             self.body["aggs"]["isGroupedBy"] = is_grouped_by_aggregation()
+            self.body["aggs"]["associatedBroaderTypesByEvents"] = associated_broader_types_by_events_aggregation()
 
     def add_search_string(self, param: str):
         self.query["dis_max"]["queries"].append(exact_match_in_title_query(
