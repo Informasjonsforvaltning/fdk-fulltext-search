@@ -32,6 +32,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(theme_profile_filter(f[key]))
             elif (f[key]) == 'MISSING' or (f[key]) == 'Ukjent':
                 self.body["query"]["bool"]["filter"].append(must_not_filter(key))
+            elif f.get("collection", {}).get("values") and f.get("collection", {}).get("values")[0] == 'MISSING':
+                self.body["query"]["bool"]["filter"].append(must_not_filter(f.get(key).get("field")))
             elif key == 'opendata':
                 self.body["query"]["bool"]["filter"].append(open_data_query())
             elif key == 'exists':
