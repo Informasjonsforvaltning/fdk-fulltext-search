@@ -37,7 +37,7 @@ jsonpath-ng = "*"
 pika = "*"
 feedgen = "*"
 simplejson = "*"
-fdk-rdf-parser = "==0.2.25"
+fdk-rdf-parser = "==0.2.26"
 
 [requires]
 python_version = "3.8"
