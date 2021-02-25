@@ -44,7 +44,7 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
             elif key == 'collection':
                 self.body["query"]["bool"]["filter"].append(collection_filter(f[key]))
             elif key == 'catalog_name':
-                catalog_name_query = get_catalogs_by_name(f[key])
+                catalog_name_query = get_catalogs_by_name(f['catalog_name'])
                 self.body["query"]["bool"]["filter"].append(catalog_name_query)
             elif key == 'keywords':
                 self.body["query"]["bool"]["filter"].append(keyword_filter(f[key]))
@@ -56,10 +56,6 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(related_by_service_filter(f[key]))
             elif key == 'event':
                 self.body["query"]["bool"]["filter"].append(event_filter(f[key]))
-            elif key == 'informationmodel_relation':
-                self.body["query"]["bool"]["filter"].append(get_information_model_by_relation(f[key]))
-            elif key == 'requires_or_relates':
-                self.body["query"]["bool"]["filter"].append(requires_or_relates(f[key]))
             else:
                 self.body["query"]["bool"]["filter"].extend(get_term_filter(f))
 

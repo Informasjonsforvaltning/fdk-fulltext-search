@@ -322,31 +322,6 @@ def get_catalogs_by_name(cat_name):
         }
     }
 
-def get_information_model_by_relation(model_uri):
-    return {
-        "bool": {
-            "should": [
-                {"match": {"isPartOf.keyword": model_uri}},
-                {"match": {"hasPart.keyword": model_uri}},
-                {"match": {"isReplacedBy.keyword": model_uri}},
-                {"match": {"replaces.keyword": model_uri}},
-                {"match": {"containsSubjects.keyword": model_uri}}
-            ],
-            "minimum_should_match": 1,
-        }
-    }
-
-def requires_or_relates(model_uri):
-    return {
-        "bool": {
-            "should": [
-                {"match": {"requires.keyword": model_uri}},
-                {"match": {"relation.keyword": model_uri}},
-            ],
-            "minimum_should_match": 1,
-        }
-    }
-
 def get_field_key(filter_key: str):
     """ Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":
@@ -509,15 +484,6 @@ def is_grouped_by_aggregation():
         "terms": {
             "field": "isGroupedBy.keyword",
             "size": 1000000000
-        }
-    }
-
-def reference_source_filter(uri):
-    return {
-        "bool": {
-            "filter": [
-                {"term": {"references.source.uri.keyword": uri}}
-            ]
         }
     }
 
