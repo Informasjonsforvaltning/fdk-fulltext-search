@@ -340,8 +340,8 @@ def requires_or_relates(model_uri):
     return {
         "bool": {
             "should": [
-                {"match": {"requires.keyword": model_uri}},
-                {"match": {"relation.keyword": model_uri}},
+                {"match": {"requires.uri.keyword": model_uri}},
+                {"match": {"relation.uri.keyword": model_uri}},
             ],
             "minimum_should_match": 1,
         }
