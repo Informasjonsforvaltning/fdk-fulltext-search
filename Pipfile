@@ -38,6 +38,7 @@ pika = "*"
 feedgen = "*"
 simplejson = "*"
 fdk-rdf-parser = "==0.3.0"
+python-json-logger = "*"
 
 [requires]
 python_version = "3.8"
