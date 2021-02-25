@@ -450,12 +450,26 @@ def related_by_service_filter(uri):
     }
 
 
-def event_filter(uri):
+def event_filter(filter_values):
+    is_grouped_by_list = []
+    uri_list = []
+    for uri in filter_values:
+        is_grouped_by_list.append({"match": {"isGroupedBy.keyword": uri}})
+    for uri in filter_values:
+        uri_list.append({"match": {"uri.keyword": uri}})
     return {
         "bool": {
             "should": [
-                {"match": {"isGroupedBy.keyword": uri}},
-                {"match": {"uri.keyword": uri}}
+                {
+                    "bool": {
+                        "should": uri_list
+                    }
+                },
+                {
+                    "bool": {
+                        "must": is_grouped_by_list
+                    }
+                }
             ],
             "minimum_should_match": 1,
         }
