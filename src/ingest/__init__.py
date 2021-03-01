@@ -215,6 +215,15 @@ def fetch_data_services():
 
 
 def fetch_public_services():
+    event_url = f'{FDK_EVENT_HARVESTER_URI}/events'
+    event_response = None
+    try:
+        event_response = requests.get(url=event_url, headers={'Accept': 'text/turtle'}, timeout=10)
+        event_response.raise_for_status()
+    except Exception as err:
+        result = error_msg(f"fetch events from {event_url}", err)
+        logging.error(result["message"])
+
     public_service_url = f'{FDK_SERVICE_HARVESTER_URI}/public-services'
 
     logging.info(f"fetching public_services from {public_service_url}")
@@ -222,7 +231,7 @@ def fetch_public_services():
         response = requests.get(url=public_service_url, headers={'Accept': 'text/turtle'}, timeout=10)
         response.raise_for_status()
 
-        parsed_rdf = fdk_rdf_parser.parse_public_services(response.text)
+        parsed_rdf = fdk_rdf_parser.parse_public_services(response.text, event_response.text if event_response is not None else None)
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.PUBLIC_SERVICES}-{os.urandom(4).hex()}"
 
