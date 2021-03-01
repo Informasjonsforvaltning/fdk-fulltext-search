@@ -208,13 +208,11 @@ class Indices(Resource):
 
 class Ping(Resource):
     def get(self):
-        client.count()
         return {}
 
 
 class Ready(Resource):
     def get(self):
-        client.count()
         return {}
 
 
