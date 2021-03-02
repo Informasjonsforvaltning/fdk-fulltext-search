@@ -476,6 +476,23 @@ def event_filter(filter_values):
     }
 
 
+def event_type_filter(filter_values):
+    associated_broader_types_by_events_list = []
+    for uri in filter_values:
+        associated_broader_types_by_events_list.append({"match": {"associatedBroaderTypesByEvents.keyword": uri}})
+    return {
+        "bool": {
+            "should": [
+                {
+                    "bool": {
+                        "must": associated_broader_types_by_events_list
+                    }
+                }
+            ]
+        }
+    }
+
+
 def get_aggregation_term_for_key(aggregation_key: str, missing: str = None, size: int = None) -> dict:
     query = {
         "terms": {
