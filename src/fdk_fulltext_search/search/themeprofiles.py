@@ -1,4 +1,4 @@
-from src.search.query_utils import get_field_key
+from fdk_fulltext_search.search.query_utils import get_field_key
 
 
 class ThemeProfileKeys:

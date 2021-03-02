@@ -6,8 +6,8 @@ from feedgen.feed import FeedGenerator
 from flask import request
 from urllib.parse import urlencode
 
-from src.search import client
-from src.ingest import IndicesKey
+from fdk_fulltext_search.search import client
+from fdk_fulltext_search.ingest import IndicesKey
 
 
 FDK_BASE_URI = os.getenv('FDK_BASE_URI', 'https://staging.fellesdatakatalog.digdir.no')

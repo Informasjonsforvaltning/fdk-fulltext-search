@@ -1,6 +1,6 @@
 from math import ceil
 
-from src.search.client import count
+from fdk_fulltext_search.search.client import count
 
 
 class SearchResponse:

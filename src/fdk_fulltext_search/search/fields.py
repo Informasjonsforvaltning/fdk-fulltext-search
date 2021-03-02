@@ -1,4 +1,4 @@
-from src.ingest import IndicesKey
+from fdk_fulltext_search.ingest.utils import IndicesKey
 
 index_title_fields = {
     IndicesKey.INFO_MODEL: ['title.nb', 'title.nn', 'title.no', 'title.en'],

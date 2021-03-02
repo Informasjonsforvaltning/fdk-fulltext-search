@@ -1,7 +1,7 @@
 import pytest
 
-from src import IndicesKey
-from src.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices, count, search_in_index, \
+from fdk_fulltext_search.ingest.utils import IndicesKey
+from fdk_fulltext_search.search.client import search_all, AllIndicesQuery, get_recent, RecentQuery, get_indices, count, search_in_index, \
     InformationModelQuery, DataSetQuery, ConceptQuery, PublicServiceQuery, get_suggestions, SuggestionQuery
 
 
@@ -12,12 +12,12 @@ def mock_elastic(mocker):
 
 @pytest.fixture
 def mock_index_false_exists(mocker):
-    return mocker.patch('src.ingest.es_client.indices.exists', return_value=False)
+    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.exists', return_value=False)
 
 
 @pytest.fixture
 def mock_index_true_exists(mocker):
-    return mocker.patch('src.ingest.es_client.indices.exists', return_value=True)
+    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.exists', return_value=True)
 
 
 @pytest.mark.unit
