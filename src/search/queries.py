@@ -56,6 +56,8 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(related_by_service_filter(f[key]))
             elif key == 'event':
                 self.body["query"]["bool"]["filter"].append(event_filter(f[key]))
+            elif key == 'eventType':
+                self.body["query"]["bool"]["filter"].append(event_type_filter(f[key]))
             elif key == 'informationmodel_relation':
                 self.body["query"]["bool"]["filter"].append(get_information_model_by_relation(f[key]))
             elif key == 'requires_or_relates':
