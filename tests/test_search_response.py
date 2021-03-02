@@ -1,6 +1,6 @@
 import pytest
 from tests.mock_data.test_data import test_hits, empty_result
-from src.search.responses import SearchResponse
+from fdk_fulltext_search.search.responses import SearchResponse
 
 data_types = ["dataservice", "dataset", "concept", "informationmodel"]
 

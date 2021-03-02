@@ -1,9 +1,9 @@
 import abc
 from enum import Enum
 
-from src.search.fields import index_suggestion_fields, index_title_fields
-from src.search.query_utils import *
-from src.search.themeprofiles import theme_profile_filter
+from fdk_fulltext_search.search.fields import index_suggestion_fields, index_title_fields
+from fdk_fulltext_search.search.query_utils import *
+from fdk_fulltext_search.search.themeprofiles import theme_profile_filter
 
 
 class Direction(Enum):

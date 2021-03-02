@@ -3,7 +3,8 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import InformationModelQuery, DataSetQuery, index_fulltext_fields, IndicesKey
+from fdk_fulltext_search.search.fields import index_fulltext_fields, IndicesKey
+from fdk_fulltext_search.search.queries import InformationModelQuery, DataSetQuery
 
 
 @pytest.mark.unit

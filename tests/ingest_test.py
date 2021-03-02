@@ -1,6 +1,6 @@
 import pytest
 
-from src.ingest import fetch_information_models, fetch_concepts, fetch_data_sets, fetch_data_services, \
+from fdk_fulltext_search.ingest import fetch_information_models, fetch_concepts, fetch_data_sets, fetch_data_services, \
     fetch_events, fetch_public_services
 
 

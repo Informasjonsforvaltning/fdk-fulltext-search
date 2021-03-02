@@ -1,7 +1,7 @@
 version: "3"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -17,3 +17,25 @@ services:
       - "8080:8080"
     volumes:
       - ./mock_mappings/mappings:/home/wiremock/mappings
+  fdk-fulltext-search:
+      image: eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:test
+      build: .
+      ports:
+        - "8000:8000"
+      depends_on:
+        - elasticsearch
+        - servicesmock
+      environment:
+        - HOST_URL=http://localhost
+        - HOST_PORT=8000
+        - ELASTIC_HOST=elasticsearch
+        - ELASTIC_PORT=9200
+        - ELASTIC_TCP_PORT=9300
+        - API_URL=http://servicesmock:8080/
+        - DATASET_HARVESTER_BASE_URI=http://servicesmock:8080/dataset
+        - FDK_DATASERVICE_HARVESTER_URI=http://servicesmock:8080/dataservice
+        - MODEL_HARVESTER_URI=http://servicesmock:8080/infomodel
+        - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
+        - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
+        - FDK_SERVICE_HARVESTER_URI=http://servicemock:8080
+        - FDK_EVENT_HARVESTER_URI=http://servicemock:8080

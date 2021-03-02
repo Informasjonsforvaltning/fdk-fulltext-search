@@ -3,8 +3,8 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import DataSetQuery
-from src.search.themeprofiles import theme_profile_filter, ThemeProfileKeys, theme_profile_los_paths
+from fdk_fulltext_search.search.queries import DataSetQuery
+from fdk_fulltext_search.search.themeprofiles import theme_profile_filter, ThemeProfileKeys, theme_profile_los_paths
 
 
 @pytest.mark.unit

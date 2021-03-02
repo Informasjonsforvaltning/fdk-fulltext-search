@@ -166,42 +166,42 @@ def mocked_requests_get(*args, **kwargs):
 
 @pytest.fixture
 def mock_ingest(mocker):
-    return mocker.patch('src.ingest.elasticsearch_ingest')
+    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest')
 
 
 @pytest.fixture
 def mock_ingest_from_source(mocker):
-    return mocker.patch('src.ingest.elasticsearch_ingest_from_source')
+    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest_from_source')
 
 
 @pytest.fixture
 def mock_ingest_from_harvester(mocker):
-    return mocker.patch('src.ingest.elasticsearch_ingest_from_harvester')
+    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest_from_harvester')
 
 
 @pytest.fixture
 def mock_get(mocker):
-    return mocker.patch('src.ingest.requests.get', side_effect=mocked_requests_get)
+    return mocker.patch('fdk_fulltext_search.ingest.requests.get', side_effect=mocked_requests_get)
 
 
 @pytest.fixture
 def mock_single_delete(mocker):
-    return mocker.patch('src.ingest.es_client.indices.delete')
+    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.delete')
 
 
 @pytest.fixture
 def mock_single_create(mocker):
-    return mocker.patch('src.ingest.es_client.indices.create')
+    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.create')
 
 
 @pytest.fixture
 def mock_single_reindex(mocker):
-    return mocker.patch('src.ingest.create_index', return_value=None)
+    return mocker.patch('fdk_fulltext_search.ingest.create_index', return_value=None)
 
 
 @pytest.fixture
 def mock_set_alias(mocker):
-    return mocker.patch('src.ingest.set_alias_for_new_index', return_value=None)
+    return mocker.patch('fdk_fulltext_search.ingest.set_alias_for_new_index', return_value=None)
 
 
 @pytest.fixture

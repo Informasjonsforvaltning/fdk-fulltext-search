@@ -3,8 +3,9 @@ import json
 import pytest
 from jsonpath_ng import parse
 
-from src.search.queries import RecentQuery, AllIndicesQuery, SuggestionQuery, IndicesKey
-from src.search.query_utils import open_data_query
+from fdk_fulltext_search.ingest.utils import IndicesKey
+from fdk_fulltext_search.search.queries import RecentQuery, AllIndicesQuery, SuggestionQuery
+from fdk_fulltext_search.search.query_utils_dataset import open_data_query
 
 
 @pytest.mark.unit

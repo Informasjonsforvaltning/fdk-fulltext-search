@@ -1,6 +1,7 @@
 import pytest
 
-from src import IndicesKey, IndicesInfoResponse
+from fdk_fulltext_search.ingest.utils import IndicesKey
+from fdk_fulltext_search.search.responses import IndicesInfoResponse
 
 
 @pytest.mark.unit
