@@ -4,3 +4,7 @@ requirements.txt
 .pytest_cache
 .env
 .python-version
+dist/
+.nox/
+.coverage
+.coverage.*
