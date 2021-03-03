@@ -10,7 +10,7 @@ index_url = service_url + "/indices"
 
 class TestSearchAll:
     @pytest.mark.contract
-    def test_should_return_status_of_all_indices(self, api):
+    def test_should_return_status_of_all_indices(self, docker_service, api):
         result = requests.get(index_url)
         assert result.status_code == 200
         count = 0
@@ -24,7 +24,7 @@ class TestSearchAll:
         assert count == 4
 
     @pytest.mark.contract
-    def test_should_return_status_of_concept_index(self, api):
+    def test_should_return_status_of_concept_index(self, docker_service, api):
         result = requests.get(index_url + "?name=concepts")
         assert result.status_code == 200
         assert result.json()[0]['name'] == 'concepts'
@@ -34,16 +34,16 @@ class TestSearchAll:
         assert isinstance(result.json()[0]["count"], int)
 
     @pytest.mark.contract
-    def test_should_return_404_for_unkown_index_names(self, api):
+    def test_should_return_404_for_unkown_index_names(self, docker_service, api):
         result = requests.get(index_url + "?name=nonsens")
         assert result.status_code == 400
 
     @pytest.mark.contract
-    def test_should_return_400_response(self, api):
+    def test_should_return_400_response(self, docker_service, api):
         result = requests.post(url=index_url + "?name=nope", headers={"X-API-KEY": "test-key"})
         assert result.status_code == 400
 
     @pytest.mark.contract
-    def test_should_return_403_response(self, api):
+    def test_should_return_403_response(self, docker_service, api):
         result = requests.post(url=index_url + "?name=concepts")
         assert result.status_code == 403

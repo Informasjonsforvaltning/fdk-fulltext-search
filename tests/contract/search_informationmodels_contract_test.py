@@ -39,7 +39,7 @@ informationmodel_url = service_url + f"/{indices_name}"
 class TestInformationModelSearch:
 
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, api, wait_for_information_models):
+    def test_response_should_have_correct_content(self, docker_service, api, wait_for_information_models):
         result = requests.post(informationmodel_url)
         result_json = result.json()
         content_keys = result_json.keys()
@@ -57,7 +57,7 @@ class TestInformationModelSearch:
         assert "orgPath" in agg_keys
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, api, wait_for_information_models):
+    def test_hits_should_be_correctly_sorted_on_title(self, docker_service, api, wait_for_information_models):
         """
             1. exact match
             2. word in title
@@ -85,7 +85,7 @@ class TestInformationModelSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, api, wait_for_information_models):
+    def test_should_filter_on_orgPath(self, docker_service, api, wait_for_information_models):
         org_path = "STAT/972417858/991825827"
         body = {
             "filters": [{"orgPath": org_path}]
@@ -98,7 +98,7 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_filter_on_los(self, api, wait_for_information_models):
+    def test_should_filter_on_los(self, docker_service, api, wait_for_information_models):
         los_path = "bygg-og-eiendom"
         body = {
             "filters": [{"los": los_path}]
@@ -112,7 +112,7 @@ class TestInformationModelSearch:
             assert los_path in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_several_los_themes(self, api, wait_for_information_models):
+    def test_should_filter_on_several_los_themes(self, docker_service, api, wait_for_information_models):
         los_path_1 = "helse-og-omsorg"
         los_path_2 = "bygg-og-eiendom"
         body = {
@@ -129,7 +129,7 @@ class TestInformationModelSearch:
             assert los_path_2 in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_los_and_orgPath(self, api, wait_for_information_models):
+    def test_should_filter_on_los_and_orgPath(self, docker_service, api, wait_for_information_models):
         org_path = "STAT"
         los_path = "bygg-og-eiendom"
         body = {
@@ -143,7 +143,7 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, api, wait_for_information_models):
+    def test_should_have_correct_size_and_page(self, docker_service, api, wait_for_information_models):
         default_result = requests.post(informationmodel_url).json()
         assert default_result["page"]["size"] == 4
         assert default_result["page"]["currentPage"] == 0
@@ -159,7 +159,7 @@ class TestInformationModelSearch:
         assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
 
     @pytest.mark.contract
-    def test_should_sort_on_date(self, api, wait_for_information_models):
+    def test_should_sort_on_date(self, docker_service, api, wait_for_information_models):
         body = {
             "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
         }
