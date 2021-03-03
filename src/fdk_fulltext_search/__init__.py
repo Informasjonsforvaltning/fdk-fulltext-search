@@ -3,7 +3,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 
-from src.fdk_fulltext_search.endpoints import *
+from fdk_fulltext_search.endpoints import *
 
 
 def create_app(test_config=None):
