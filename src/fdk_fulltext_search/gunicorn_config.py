@@ -17,7 +17,7 @@ bind = ":" + PORT
 workers = multiprocessing.cpu_count() * 2 + 1
 threads = 2 * multiprocessing.cpu_count()
 loglevel = str(LOG_LEVEL)
-accesslog = '-'
+accesslog = "-"
 
 
 class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
@@ -34,7 +34,6 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
 
 # Override the logger to remove healthcheck (ping) from the access log and format logs as json
 class CustomGunicornLogger(glogging.Logger):
-
     def setup(self, cfg):
         super().setup(cfg)
 
@@ -46,7 +45,12 @@ class CustomGunicornLogger(glogging.Logger):
         root_logger = logging.getLogger()
         root_logger.setLevel(loglevel)
 
-        other_loggers = ["gunicorn", "gunicorn.error", "gunicorn.http", "gunicorn.http.wsgi"]
+        other_loggers = [
+            "gunicorn",
+            "gunicorn.error",
+            "gunicorn.http",
+            "gunicorn.http.wsgi",
+        ]
         loggers = [logging.getLogger(name) for name in other_loggers]
         loggers.append(root_logger)
         loggers.append(access_logger)
@@ -62,12 +66,12 @@ class CustomGunicornLogger(glogging.Logger):
 
 class PingFilter(logging.Filter):
     def filter(self, record):
-        return 'GET /ping' not in record.getMessage()
+        return "GET /ping" not in record.getMessage()
 
 
 class ReadyFilter(logging.Filter):
     def filter(self, record):
-        return 'GET /ready' not in record.getMessage()
+        return "GET /ready" not in record.getMessage()
 
 
 logger_class = CustomGunicornLogger

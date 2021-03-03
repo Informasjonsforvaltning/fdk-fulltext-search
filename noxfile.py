@@ -1,12 +1,11 @@
 """Nox sessions."""
-import tempfile
-
 import nox
 from nox.sessions import Session
 import nox_poetry
 
 locations = "src", "tests", "noxfile.py"
 nox.options.sessions = (
+    "lint",
     "tests",
 )
 
@@ -80,6 +79,25 @@ def contract_tests(session: Session) -> None:
         "-rA",
         *args,
     )
+
+
+@nox_poetry.session
+def black(session: Session) -> None:
+    """Run black code formatter."""
+    args = session.posargs or locations
+    session.install("black")
+    session.run("black", *args)
+
+
+@nox_poetry.session
+def lint(session: Session) -> None:
+    """Lint using flake8."""
+    args = session.posargs or locations
+    session.install(
+        "flake8",
+        "flake8-black",
+    )
+    session.run("flake8", *args)
 
 
 @nox_poetry.session

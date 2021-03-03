@@ -1,7 +1,6 @@
 import json
 import re
 import time
-from datetime import datetime
 
 import pytest
 import requests
@@ -19,15 +18,23 @@ def wait_for_concepts():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=concepts")
-            if response.json()[0]['count'] >= 530:
+            if response.json()[0]["count"] >= 530:
                 break
             if time.time() > timeout:
                 pytest.fail(
-                    'Test function setup: timed out while waiting for fulltext-search, last response '
-                    'was {0}'.format(response.json()["count"]))
+                    "Test function setup: timed out while waiting for fulltext-search, last response "
+                    "was {0}".format(response.json()["count"])
+                )
             time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
     yield
 
 
@@ -37,19 +44,24 @@ concept_url = service_url + f"/{indices_name}"
 
 
 class TestConceptSearch:
-
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, docker_service, api, wait_for_concepts):
+    def test_response_should_have_correct_content(
+        self, docker_service, api, wait_for_concepts
+    ):
         result = requests.post(concept_url)
         result_json = result.json()
         content_keys = result_json.keys()
         assert result.status_code == 200
         assert "hits" in content_keys
-        result_data_types = [match.value for match in parse("hits[*].type").find(result_json["hits"])]
+        result_data_types = [
+            match.value for match in parse("hits[*].type").find(result_json["hits"])
+        ]
         for dt in result_data_types:
             assert dt == data_type
         assert "page" in content_keys
-        page_key_matches = list(set(result_json["page"].keys()) & set(expected_page_keys))
+        page_key_matches = list(
+            set(result_json["page"].keys()) & set(expected_page_keys)
+        )
         assert page_key_matches.__len__() == expected_page_keys.__len__()
         assert "aggregations" in content_keys
         agg_keys = result_json["aggregations"].keys()
@@ -57,16 +69,15 @@ class TestConceptSearch:
         assert "orgPath" in agg_keys
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, docker_service, api, wait_for_concepts):
+    def test_hits_should_be_correctly_sorted_on_title(
+        self, docker_service, api, wait_for_concepts
+    ):
         """
-            1. exact match
-            2. word in title
+        1. exact match
+        2. word in title
         """
         search_str = "skattefri inntekt"
-        body = {
-            "q": search_str,
-            "size": 300
-        }
+        body = {"q": search_str, "size": 300}
         result = requests.post(url=concept_url, json=body)
         assert result.status_code == 200
         result_json = result.json()
@@ -85,15 +96,13 @@ class TestConceptSearch:
             else:
                 last_was_exact_match = False
                 last_was_partial_match_in_title = False
-        
+
         assert exact_match_exists
 
     @pytest.mark.contract
     def test_should_filter_on_orgPath(self, docker_service, api, wait_for_concepts):
         org_path = "/STAT/972417807/974761076"
-        body = {
-            "filters": [{"orgPath": org_path}]
-        }
+        body = {"filters": [{"orgPath": org_path}]}
         result = requests.post(url=concept_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json()["hits"]
@@ -102,19 +111,22 @@ class TestConceptSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, docker_service, api, wait_for_concepts):
+    def test_should_have_correct_size_and_page(
+        self, docker_service, api, wait_for_concepts
+    ):
         default_result = requests.post(concept_url).json()
         assert default_result["page"]["size"] == 10
         assert default_result["page"]["currentPage"] == 0
 
-        page_request_body = {
-            "page": 5
-        }
+        page_request_body = {"page": 5}
         page_result = requests.post(url=concept_url, json=page_request_body).json()
         assert page_result["page"]["size"] == 10
         assert page_result["page"]["currentPage"] == 5
 
-        assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
+        assert json.dumps(default_result["hits"][0]) != json.dumps(
+            page_result["hits"][0]
+        )
+
 
 def has_exact_match_in_title(hit, search_str):
     title = hit["prefLabel"]

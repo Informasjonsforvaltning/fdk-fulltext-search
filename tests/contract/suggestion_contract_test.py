@@ -6,7 +6,7 @@ import requests
 
 from tests.contract.search_all_contract_test import service_url
 
-suggestions_endpoint = service_url + '/suggestion'
+suggestions_endpoint = service_url + "/suggestion"
 
 
 class TestSuggestions:
@@ -17,23 +17,27 @@ class TestSuggestions:
 
     @pytest.mark.contract
     def test_suggestion_bad_request(self, docker_service, api, wait_for_ready):
-        result = requests.get(suggestions_endpoint + '/invalid')
+        result = requests.get(suggestions_endpoint + "/invalid")
         assert result.status_code == 400
 
     @pytest.mark.contract
     def test_suggestion_datasets(self, docker_service, api, wait_for_ready):
         prefix = "Statisti"
-        result = requests.get(suggestions_endpoint + '/datasets?q=Statisti'.format(prefix))
+        result = requests.get(f"{suggestions_endpoint}/datasets?q={prefix}")
         assert result.status_code == 200
         previous_was_prefix = True
         was_prefix_count = 0
         was_partial_count = 0
-        for hit in result.json()['suggestions']:
-            if has_prefix_in_title_all_languages(hit['title'], prefix):
-                assert previous_was_prefix, "Prefix match encountered after other suggestions"
+        for hit in result.json()["suggestions"]:
+            if has_prefix_in_title_all_languages(hit["title"], prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
                 was_prefix_count += 1
             else:
-                assert has_partial_match_in_title(hit['title'], prefix), "Title without match on prefix encountered "
+                assert has_partial_match_in_title(
+                    hit["title"], prefix
+                ), "Title without match on prefix encountered "
                 was_partial_count += 1
         assert was_prefix_count > 0
         assert was_partial_count > 0
@@ -41,51 +45,63 @@ class TestSuggestions:
     @pytest.mark.contract
     def test_suggestion_concepts(self, docker_service, api, wait_for_ready):
         prefix = "Dokume"
-        result = requests.get(suggestions_endpoint + '/concepts?q=Dokume'.format(prefix))
+        result = requests.get(f"{suggestions_endpoint}/concepts?q={prefix}")
         assert result.status_code == 200
         previous_was_prefix = True
         was_prefix_count = 0
         was_partial_count = 0
-        for hit in result.json()['suggestions']:
-            if has_prefix_in_title_all_languages(hit['prefLabel'], prefix):
-                assert previous_was_prefix, "Prefix match encountered after other suggestions"
+        for hit in result.json()["suggestions"]:
+            if has_prefix_in_title_all_languages(hit["prefLabel"], prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
                 was_prefix_count += 1
             else:
-                assert has_partial_match_in_title(hit['prefLabel'], prefix), "Title without match on prefix encountered "
+                assert has_partial_match_in_title(
+                    hit["prefLabel"], prefix
+                ), "Title without match on prefix encountered "
                 was_partial_count += 1
 
     @pytest.mark.contract
     def test_suggestion_dataservices(self, docker_service, api, wait_for_ready):
         prefix = "Swag"
-        result = requests.get(suggestions_endpoint + '/dataservices?q=Swag'.format(prefix))
+        result = requests.get(f"{suggestions_endpoint}/dataservices?q={prefix}")
         assert result.status_code == 200
-        assert len(result.json()['suggestions']) > 0
+        assert len(result.json()["suggestions"]) > 0
         previous_was_prefix = True
         was_prefix_count = 0
         was_partial_count = 0
-        for hit in result.json()['suggestions']:
-            if has_prefix_in_title_all_languages(hit['title'], prefix):
-                assert previous_was_prefix, "Prefix match encountered after other suggestions"
+        for hit in result.json()["suggestions"]:
+            if has_prefix_in_title_all_languages(hit["title"], prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
                 was_prefix_count += 1
             else:
-                assert has_partial_match_in_title(hit['title'], prefix), "Title without match on prefix encountered "
+                assert has_partial_match_in_title(
+                    hit["title"], prefix
+                ), "Title without match on prefix encountered "
                 was_partial_count += 1
 
     @pytest.mark.contract
     def test_suggestion_information_models(self, docker_service, api, wait_for_ready):
         prefix = "div"
-        result = requests.get(f'{suggestions_endpoint}/informationmodels?q={prefix}')
+        result = requests.get(f"{suggestions_endpoint}/informationmodels?q={prefix}")
         assert result.status_code == 200
-        assert len(result.json()['suggestions']) > 0
+        assert len(result.json()["suggestions"]) > 0
         previous_was_prefix = True
         was_prefix_count = 0
         was_partial_count = 0
-        for hit in result.json()['suggestions']:
-            if has_prefix_in_title_all_languages(hit['title'], prefix):
-                assert previous_was_prefix, "Prefix match encountered after other suggestions"
+        for hit in result.json()["suggestions"]:
+            if has_prefix_in_title_all_languages(hit["title"], prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
                 was_prefix_count += 1
             else:
-                assert has_partial_match_in_title(hit['title'], prefix), "Title without match on prefix encountered "
+                assert has_partial_match_in_title(
+                    hit["title"], prefix
+                ), "Title without match on prefix encountered "
                 was_partial_count += 1
 
 

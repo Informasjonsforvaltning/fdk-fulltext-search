@@ -1,6 +1,16 @@
-import json
+from .queries import (
+    InformationModelQuery,
+    DataSetQuery,
+    DataServiceQuery,
+    ConceptQuery,
+    PublicServiceQuery,
+    EventQuery,
+    AllIndicesQuery,
+    PublicServicesAndEventsQuery,
+    RecentQuery,
+    SuggestionQuery,
+)
 
-from .queries import *
 from ..ingest import es_client, IndicesKey
 from elasticsearch.exceptions import ConnectionError
 
@@ -40,13 +50,17 @@ def search_all(request: dict = None):
             q.add_page(size=size, page=page)
         if sorting:
             q.add_sorting(sorting)
-        return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=q.body, search_type='dfs_query_then_fetch')
+        return es_client.search(
+            index=IndicesKey.SEARCHABLE_ALIAS,
+            body=q.body,
+            search_type="dfs_query_then_fetch",
+        )
 
     except ConnectionError:
         return {
             "count": -1,
             "operation": "search",
-            "error": "could not connect to elasticsearch"
+            "error": "could not connect to elasticsearch",
         }
 
 
@@ -82,7 +96,7 @@ def search_in_index(index: str, request: dict = None):
             "count": -1,
             "operation": "search",
             "index": index,
-            "error": "could not connect to elasticsearch"
+            "error": "could not connect to elasticsearch",
         }
 
 
@@ -112,13 +126,17 @@ def search_public_services_and_events(request: dict = None):
             q.add_page(size=size, page=page)
         if sorting:
             q.add_sorting(sorting)
-        return es_client.search(index=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS, body=q.body, search_type='dfs_query_then_fetch')
+        return es_client.search(
+            index=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS,
+            body=q.body,
+            search_type="dfs_query_then_fetch",
+        )
 
     except ConnectionError:
         return {
             "count": -1,
             "operation": "search",
-            "error": "could not connect to elasticsearch"
+            "error": "could not connect to elasticsearch",
         }
 
 
@@ -133,7 +151,7 @@ def count(index=None):
         return {
             "count": -1,
             "operation": "count",
-            "error": "could not connect to elasticsearch"
+            "error": "could not connect to elasticsearch",
         }
 
 
@@ -145,13 +163,9 @@ def get_recent(size=None):
 def get_indices(index_name=None):
     req_body = {"query": {}}
     if index_name:
-        req_body["query"]["term"] = {
-            "name": index_name
-        }
+        req_body["query"]["term"] = {"name": index_name}
     else:
-        req_body["query"] = {
-            "match_all": {}
-        }
+        req_body["query"] = {"match_all": {}}
     if es_client.indices.exists(index=IndicesKey.INDICES_INFO):
         return es_client.search(index=IndicesKey.INDICES_INFO, body=req_body)
     else:

@@ -4,11 +4,7 @@ from fdk_fulltext_search.search.client import count
 
 
 class SearchResponse:
-    response: dict = {
-        "hits": {},
-        "page": {},
-        "aggregations": {}
-    }
+    response: dict = {"hits": {}, "page": {}, "aggregations": {}}
 
     def map_response(self, es_result, requested_page=0):
         self.map_page(es_result["hits"], requested_page)
@@ -27,14 +23,16 @@ class SearchResponse:
             "size": size,
             "totalElements": total,
             "totalPages": total_pages,
-            "currentPage": requested_page
+            "currentPage": requested_page,
         }
 
     def map_aggregations(self, aggregations_result):
         response_aggregations = {}
         for agg_key in aggregations_result.keys():
             if agg_key == "dataset_access":
-                response_aggregations["accessRights"] = aggregations_result["dataset_access"]["accessRights"]
+                response_aggregations["accessRights"] = aggregations_result[
+                    "dataset_access"
+                ]["accessRights"]
             else:
                 response_aggregations[agg_key] = aggregations_result[agg_key]
         self.response["aggregations"] = response_aggregations
@@ -48,7 +46,7 @@ class SearchResponse:
 
     def map_hit_item(self, item):
         mapped_item = item["_source"]
-        mapped_item["type"] = item["_index"].split("-")[0].rstrip('s')
+        mapped_item["type"] = item["_index"].split("-")[0].rstrip("s")
         return mapped_item
 
 
@@ -67,7 +65,6 @@ class IndicesInfoResponse:
 
 
 class SuggestionResponse:
-
     def __init__(self, es_result):
         self.es_result = es_result["hits"]["hits"]
 

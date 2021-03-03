@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 130
+application-import-names = fdk_fulltext_search, tests
+per-file-ignores = tests/mock_data//*:E501

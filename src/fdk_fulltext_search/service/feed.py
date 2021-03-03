@@ -10,7 +10,7 @@ from fdk_fulltext_search.search import client
 from fdk_fulltext_search.ingest import IndicesKey
 
 
-FDK_BASE_URI = os.getenv('FDK_BASE_URI', 'https://staging.fellesdatakatalog.digdir.no')
+FDK_BASE_URI = os.getenv("FDK_BASE_URI", "https://staging.fellesdatakatalog.digdir.no")
 
 
 class FeedType(Enum):
@@ -31,7 +31,9 @@ def create_feed(feed_type: FeedType) -> str:
     feed_generator.description("En samling av datasett publisert i Felles datakataog")
     feed_generator.link(href=f"{base_url}{query_string}")
 
-    datasets = get_datasets_for_feed(map_search_params_to_search_request_body(search_params))
+    datasets = get_datasets_for_feed(
+        map_search_params_to_search_request_body(search_params)
+    )
 
     for dataset in datasets:
         feed_entry = feed_generator.add_entry()
@@ -40,7 +42,11 @@ def create_feed(feed_type: FeedType) -> str:
         feed_entry.title(translate(dataset["title"]))
         feed_entry.description(translate(dataset["description"]))
         feed_entry.link(href=f"{base_url}/{dataset['id']}")
-        feed_entry.author(name=translate(dataset["publisher"]["prefLabel"] or dataset["publisher"]["name"]))
+        feed_entry.author(
+            name=translate(
+                dataset["publisher"]["prefLabel"] or dataset["publisher"]["name"]
+            )
+        )
         feed_entry.published(dataset["harvest"]["firstHarvested"])
 
     if feed_type == FeedType.RSS:
@@ -56,18 +62,10 @@ def get_datasets_for_feed(search_request_body: Dict[str, Any]) -> Iterable[Dict]
         index=IndicesKey.DATA_SETS,
         request={
             "q": search_request_body["q"],
-            "filters": [
-                *search_request_body["filters"],
-                {
-                    "last_x_days": 1
-                }
-            ],
-            "sorting": {
-                "field": "harvest.firstHarvested",
-                "direction": "desc"
-            },
-            "size": 1000
-        }
+            "filters": [*search_request_body["filters"], {"last_x_days": 1}],
+            "sorting": {"field": "harvest.firstHarvested", "direction": "desc"},
+            "size": 1000,
+        },
     )
 
     if results["hits"] and results["hits"]["hits"]:
@@ -77,7 +75,12 @@ def get_datasets_for_feed(search_request_body: Dict[str, Any]) -> Iterable[Dict]
 
 
 def translate(translatable: Dict[str, str]) -> str:
-    return translatable["nb"] or translatable["no"] or translatable["nn"] or translatable["en"]
+    return (
+        translatable["nb"]
+        or translatable["no"]
+        or translatable["nn"]
+        or translatable["en"]
+    )
 
 
 def extract_search_params(params: Dict[str, str]) -> Dict[str, str]:
@@ -90,7 +93,7 @@ def extract_search_params(params: Dict[str, str]) -> Dict[str, str]:
         "orgPath": params.get("orgPath"),
         "spatial": params.get("spatial"),
         "provenance": params.get("provenance"),
-        "sortfield": "harvest.firstHarvested"
+        "sortfield": "harvest.firstHarvested",
     }
 
     return {k: v for k, v in search_params.items() if v is not None}
@@ -120,10 +123,7 @@ def map_search_params_to_search_request_body(params: Dict[str, str]) -> Dict[str
     if "provenance" in params:
         filters.append({"provenance": params["provenance"]})
 
-    return {
-        "q": params["q"] if "q" in params else "",
-        "filters": filters
-    }
+    return {"q": params["q"] if "q" in params else "", "filters": filters}
 
 
 def build_query_string(params: Dict[str, str]) -> str:
