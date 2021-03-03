@@ -39,7 +39,7 @@ concept_url = service_url + f"/{indices_name}"
 class TestConceptSearch:
 
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, api, wait_for_concepts):
+    def test_response_should_have_correct_content(self, docker_service, api, wait_for_concepts):
         result = requests.post(concept_url)
         result_json = result.json()
         content_keys = result_json.keys()
@@ -57,7 +57,7 @@ class TestConceptSearch:
         assert "orgPath" in agg_keys
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, api, wait_for_concepts):
+    def test_hits_should_be_correctly_sorted_on_title(self, docker_service, api, wait_for_concepts):
         """
             1. exact match
             2. word in title
@@ -89,7 +89,7 @@ class TestConceptSearch:
         assert exact_match_exists
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, api, wait_for_concepts):
+    def test_should_filter_on_orgPath(self, docker_service, api, wait_for_concepts):
         org_path = "/STAT/972417807/974761076"
         body = {
             "filters": [{"orgPath": org_path}]
@@ -102,7 +102,7 @@ class TestConceptSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, api, wait_for_concepts):
+    def test_should_have_correct_size_and_page(self, docker_service, api, wait_for_concepts):
         default_result = requests.post(concept_url).json()
         assert default_result["page"]["size"] == 10
         assert default_result["page"]["currentPage"] == 0

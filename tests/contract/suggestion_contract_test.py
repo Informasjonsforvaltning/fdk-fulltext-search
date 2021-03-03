@@ -11,17 +11,17 @@ suggestions_endpoint = service_url + '/suggestion'
 
 class TestSuggestions:
     @pytest.mark.contract
-    def test_suggestion_not_implemented(self, api, wait_for_ready):
+    def test_suggestion_not_implemented(self, docker_service, api, wait_for_ready):
         result = requests.get(suggestions_endpoint)
         assert result.status_code == 501
 
     @pytest.mark.contract
-    def test_suggestion_bad_request(self, api, wait_for_ready):
+    def test_suggestion_bad_request(self, docker_service, api, wait_for_ready):
         result = requests.get(suggestions_endpoint + '/invalid')
         assert result.status_code == 400
 
     @pytest.mark.contract
-    def test_suggestion_datasets(self, api, wait_for_ready):
+    def test_suggestion_datasets(self, docker_service, api, wait_for_ready):
         prefix = "Statisti"
         result = requests.get(suggestions_endpoint + '/datasets?q=Statisti'.format(prefix))
         assert result.status_code == 200
@@ -39,7 +39,7 @@ class TestSuggestions:
         assert was_partial_count > 0
 
     @pytest.mark.contract
-    def test_suggestion_concepts(self, api, wait_for_ready):
+    def test_suggestion_concepts(self, docker_service, api, wait_for_ready):
         prefix = "Dokume"
         result = requests.get(suggestions_endpoint + '/concepts?q=Dokume'.format(prefix))
         assert result.status_code == 200
@@ -55,7 +55,7 @@ class TestSuggestions:
                 was_partial_count += 1
 
     @pytest.mark.contract
-    def test_suggestion_dataservices(self, api, wait_for_ready):
+    def test_suggestion_dataservices(self, docker_service, api, wait_for_ready):
         prefix = "Swag"
         result = requests.get(suggestions_endpoint + '/dataservices?q=Swag'.format(prefix))
         assert result.status_code == 200
@@ -72,7 +72,7 @@ class TestSuggestions:
                 was_partial_count += 1
 
     @pytest.mark.contract
-    def test_suggestion_information_models(self, api, wait_for_ready):
+    def test_suggestion_information_models(self, docker_service, api, wait_for_ready):
         prefix = "div"
         result = requests.get(f'{suggestions_endpoint}/informationmodels?q={prefix}')
         assert result.status_code == 200
