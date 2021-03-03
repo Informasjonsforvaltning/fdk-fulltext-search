@@ -1,18 +1,10 @@
-test_hits = {"hits":
-    {
+test_hits = {
+    "hits": {
         "took": 22,
         "timed_out": "false",
-        "_shards": {
-            "total": 4,
-            "successful": 4,
-            "skipped": 0,
-            "failed": 0
-        },
+        "_shards": {"total": 4, "successful": 4, "skipped": 0, "failed": 0},
         "hits": {
-            "total": {
-                "value": 130,
-                "relation": "eq"
-            },
+            "total": {"value": 130, "relation": "eq"},
             "max_score": 1.2,
             "hits": [
                 {
@@ -31,9 +23,9 @@ test_hits = {"hits":
                         "publisher": {
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
-                        }
-                    }
+                            "orgPath": "/ANNET/910244132",
+                        },
+                    },
                 },
                 {
                     "_index": "dataservices",
@@ -53,9 +45,9 @@ test_hits = {"hits":
                         "publisher": {
                             "id": "910258028",
                             "name": "LILAND OG ERDAL REVISJON",
-                            "orgPath": "/ANNET/910258028"
-                        }
-                    }
+                            "orgPath": "/ANNET/910258028",
+                        },
+                    },
                 },
                 {
                     "_index": "dataservices",
@@ -75,14 +67,14 @@ test_hits = {"hits":
                         "formats": [
                             "application/json",
                             "application/vnd.enhetsregisteret.enhet.v1+json",
-                            "application/vnd.enhetsregisteret.organisasjonsform.v1+json"
+                            "application/vnd.enhetsregisteret.organisasjonsform.v1+json",
                         ],
                         "publisher": {
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
-                        }
-                    }
+                            "orgPath": "/ANNET/910244132",
+                        },
+                    },
                 },
                 {
                     "_index": "dataservices",
@@ -102,14 +94,14 @@ test_hits = {"hits":
                         "formats": [
                             "application/json",
                             "application/vnd.enhetsregisteret.enhet.v1+json",
-                            "application/vnd.enhetsregisteret.organisasjonsform.v1+json"
+                            "application/vnd.enhetsregisteret.organisasjonsform.v1+json",
                         ],
                         "publisher": {
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
-                        }
-                    }
+                            "orgPath": "/ANNET/910244132",
+                        },
+                    },
                 },
                 {
                     "_index": "dataservices",
@@ -126,15 +118,13 @@ test_hits = {"hits":
                         "title": "National API Directory Search API",
                         "description": "Provides a basic search api against the National API Directory of Norway",
                         "descriptionFormatted": "Provides a basic search api against the National API Directory of Norway",
-                        "formats": [
-                            "application/json"
-                        ],
+                        "formats": ["application/json"],
                         "publisher": {
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
-                        }
-                    }
+                            "orgPath": "/ANNET/910244132",
+                        },
+                    },
                 },
                 {
                     "_index": "datasets",
@@ -220,7 +210,7 @@ test_hits = {"hits":
                             "sports events",
                             "idrettslag",
                             "idrettslag",
-                            "sports clubs"
+                            "sports clubs",
                         ],
                         "losTheme": [
                             {
@@ -234,27 +224,23 @@ test_hits = {"hits":
                                     "https://psi.norge.no/los/ord/bibliotektjenester",
                                     "https://psi.norge.no/los/ord/kulturminner",
                                     "https://psi.norge.no/los/ord/arkiv",
-                                    "https://psi.norge.no/los/ord/slektsforskning"
+                                    "https://psi.norge.no/los/ord/slektsforskning",
                                 ],
                                 "parents": [
                                     "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
                                 ],
                                 "isTema": "true",
-                                "losPaths": [
-                                    "kultur-idrett-og-fritid/kultur"
-                                ],
+                                "losPaths": ["kultur-idrett-og-fritid/kultur"],
                                 "name": {
                                     "nn": "Kultur",
                                     "nb": "Kultur",
-                                    "en": "Culture"
+                                    "en": "Culture",
                                 },
                                 "uri": "https://psi.norge.no/los/tema/kultur",
-                                "synonyms": []
+                                "synonyms": [],
                             },
                             {
-                                "parents": [
-                                    "https://psi.norge.no/los/tema/idrett"
-                                ],
+                                "parents": ["https://psi.norge.no/los/tema/idrett"],
                                 "isTema": "false",
                                 "losPaths": [
                                     "kultur-idrett-og-fritid/idrett/idrettsarrangement"
@@ -262,15 +248,13 @@ test_hits = {"hits":
                                 "name": {
                                     "nn": "Idrettsarrangement",
                                     "nb": "Idrettsarrangement",
-                                    "en": "Sports events"
+                                    "en": "Sports events",
                                 },
                                 "uri": "https://psi.norge.no/los/ord/idrettsarrangement",
-                                "synonyms": []
+                                "synonyms": [],
                             },
                             {
-                                "parents": [
-                                    "https://psi.norge.no/los/tema/idrett"
-                                ],
+                                "parents": ["https://psi.norge.no/los/tema/idrett"],
                                 "isTema": "false",
                                 "losPaths": [
                                     "kultur-idrett-og-fritid/idrett/idrettslag"
@@ -278,17 +262,17 @@ test_hits = {"hits":
                                 "name": {
                                     "nn": "Idrettslag",
                                     "nb": "Idrettslag",
-                                    "en": "Sports clubs"
+                                    "en": "Sports clubs",
                                 },
                                 "uri": "https://psi.norge.no/los/ord/idrettslag",
                                 "synonyms": [
                                     "Idrettsforening",
                                     "Idrettsklubb",
-                                    "Idrettslag"
+                                    "Idrettslag",
                                 ],
                                 "relatedTerms": [
                                     "https://psi.norge.no/los/ord/lag-og-foreninger"
-                                ]
+                                ],
                             },
                             {
                                 "children": [
@@ -296,23 +280,17 @@ test_hits = {"hits":
                                     "https://psi.norge.no/los/ord/svommehall",
                                     "https://psi.norge.no/los/ord/doping",
                                     "https://psi.norge.no/los/ord/idrettsarrangement",
-                                    "https://psi.norge.no/los/ord/idrettslag"
+                                    "https://psi.norge.no/los/ord/idrettslag",
                                 ],
                                 "parents": [
                                     "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
                                 ],
                                 "isTema": "true",
-                                "losPaths": [
-                                    "kultur-idrett-og-fritid/idrett"
-                                ],
-                                "name": {
-                                    "nn": "Idrett",
-                                    "nb": "Idrett",
-                                    "en": "Sport"
-                                },
+                                "losPaths": ["kultur-idrett-og-fritid/idrett"],
+                                "name": {"nn": "Idrett", "nb": "Idrett", "en": "Sport"},
                                 "uri": "https://psi.norge.no/los/tema/idrett",
-                                "synonyms": []
-                            }
+                                "synonyms": [],
+                            },
                         ],
                         "id": "e39269af-85e1-4a10-a60f-9b767f7d2b27",
                         "uri": "http://brreg.no/catalogs/910244132/datasets/b3b8a5b2-b88e-4f3d-95be-1cecb4e9b500",
@@ -762,27 +740,19 @@ test_hits = {"hits":
                                 "2020-03-14T01:03:02+0100",
                                 "2020-03-15T01:03:05+0100",
                                 "2020-03-16T01:02:55+0100",
-                                "2020-03-17T01:02:53+0100"
-                            ]
+                                "2020-03-17T01:02:53+0100",
+                            ],
                         },
-                        "title": {
-                            "nb": "Viking"
-                        },
-                        "description": {
-                            "nb": "Fotballlag frå Stavanger"
-                        },
-                        "descriptionFormatted": {
-                            "nb": "Fotballlag frå Stavanger"
-                        },
-                        "objective": {
-                            "nb": "Prodtest "
-                        },
+                        "title": {"nb": "Viking"},
+                        "description": {"nb": "Fotballlag frå Stavanger"},
+                        "descriptionFormatted": {"nb": "Fotballlag frå Stavanger"},
+                        "objective": {"nb": "Prodtest "},
                         "contactPoint": [
                             {
                                 "email": "mail@post.no",
                                 "organizationUnit": "Avdelingsjæfen",
                                 "hasURL": "https://kontakt.no",
-                                "hasTelephone": "+4711234566"
+                                "hasTelephone": "+4711234566",
                             }
                         ],
                         "publisher": {
@@ -791,7 +761,7 @@ test_hits = {"hits":
                             "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
+                            "orgPath": "/ANNET/910244132",
                         },
                         "issued": "2019-04-15T00:00:00+0200",
                         "modified": "2019-04-03T00:00:00+0200",
@@ -803,47 +773,33 @@ test_hits = {"hits":
                                     "nb": "Norsk",
                                     "nn": "Norsk",
                                     "no": "Norsk",
-                                    "en": "Norwegian"
-                                }
+                                    "en": "Norwegian",
+                                },
                             }
                         ],
                         "landingPage": [],
                         "theme": [
-                            {
-                                "id": "https://psi.norge.no/los/tema/kultur"
-                            },
-                            {
-                                "id": "https://psi.norge.no/los/ord/idrettsarrangement"
-                            },
-                            {
-                                "id": "https://psi.norge.no/los/ord/idrettslag"
-                            },
-                            {
-                                "id": "https://psi.norge.no/los/tema/idrett"
-                            }
+                            {"id": "https://psi.norge.no/los/tema/kultur"},
+                            {"id": "https://psi.norge.no/los/ord/idrettsarrangement"},
+                            {"id": "https://psi.norge.no/los/ord/idrettslag"},
+                            {"id": "https://psi.norge.no/los/tema/idrett"},
                         ],
                         "distribution": [
                             {
-                                "description": {
-                                    "nb": "asdasd asdasdasd"
-                                },
+                                "description": {"nb": "asdasd asdasdasd"},
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "https://vg.no"
-                                ],
+                                "accessURL": ["https://vg.no"],
                                 "license": {
                                     "uri": "http://creativecommons.org/publicdomain/zero/1.0/",
                                     "prefLabel": {
                                         "en": "Creative Commons Universal Public Domain Dedication",
-                                        "no": "Creative Commons Universal Fristatus-erklæring"
+                                        "no": "Creative Commons Universal Fristatus-erklæring",
                                     },
-                                    "extraType": "http://purl.org/dc/terms/LicenseDocument"
+                                    "extraType": "http://purl.org/dc/terms/LicenseDocument",
                                 },
                                 "openLicense": "true",
-                                "format": [
-                                    "json"
-                                ],
-                                "type": "API"
+                                "format": ["json"],
+                                "type": "API",
                             },
                             {
                                 "downloadURL": [],
@@ -858,11 +814,11 @@ test_hits = {"hits":
                                     "endpointDescription": [
                                         {
                                             "uri": "119f6f04-bc9b-486e-86b3-f74a46f8dccd",
-                                            "extraType": "http://xmlns.com/foaf/0.1/Document"
+                                            "extraType": "http://xmlns.com/foaf/0.1/Document",
                                         }
-                                    ]
-                                }
-                            }
+                                    ],
+                                },
+                            },
                         ],
                         "sample": [
                             {
@@ -870,28 +826,22 @@ test_hits = {"hits":
                                     "nb": "eksempel asd laksjdh pdisfsva adf asdf ADFs "
                                 },
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "https://vg.no"
-                                ],
+                                "accessURL": ["https://vg.no"],
                                 "openLicense": "false",
-                                "format": [
-                                    "json"
-                                ]
+                                "format": ["json"],
                             }
                         ],
                         "temporal": [
                             {
                                 "startDate": "2019-04-01T00:00:00+0200",
-                                "endDate": "2019-05-05T00:00:00+0200"
+                                "endDate": "2019-05-05T00:00:00+0200",
                             }
                         ],
                         "spatial": [
                             {
                                 "uri": "https://data.geonorge.no/administrativeEnheter/fylke/id/173142",
                                 "code": "https://data.geonorge.no/administrativeEnheter/fylke/id/173142",
-                                "prefLabel": {
-                                    "no": "Finnmárku"
-                                }
+                                "prefLabel": {"no": "Finnmárku"},
                             }
                         ],
                         "accessRights": {
@@ -900,38 +850,28 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Public",
                                 "nb": "Offentlig",
-                                "nn": "Offentlig"
-                            }
+                                "nn": "Offentlig",
+                            },
                         },
                         "hasAccuracyAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Accuracy",
-                            "hasBody": {
-                                "nb": "nøyaktig"
-                            }
+                            "hasBody": {"nb": "nøyaktig"},
                         },
                         "hasCompletenessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Completeness",
-                            "hasBody": {
-                                "nb": "komplett"
-                            }
+                            "hasBody": {"nb": "komplett"},
                         },
                         "hasCurrentnessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Currentness",
-                            "hasBody": {
-                                "nb": "ert"
-                            }
+                            "hasBody": {"nb": "ert"},
                         },
                         "hasAvailabilityAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Availability",
-                            "hasBody": {
-                                "nb": "tilgjengelig"
-                            }
+                            "hasBody": {"nb": "tilgjengelig"},
                         },
                         "hasRelevanceAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Relevance",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "references": [
                             {
@@ -941,12 +881,12 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Is Part Of",
                                         "nn": "Er del av",
-                                        "nb": "Er en del av"
-                                    }
+                                        "nb": "Er en del av",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/2468de68-f6e0-4158-a4ab-e3c86034f4a5"
-                                }
+                                },
                             },
                             {
                                 "referenceType": {
@@ -955,13 +895,13 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Requires",
                                         "nn": "Krevjar",
-                                        "nb": "Krever"
-                                    }
+                                        "nb": "Krever",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/5325dea3-eb86-4e89-ac77-12f3c32cfb3f"
-                                }
-                            }
+                                },
+                            },
                         ],
                         "provenance": {
                             "uri": "http://data.brreg.no/datakatalog/provinens/nasjonal",
@@ -969,8 +909,8 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Authoritativ source",
                                 "nb": "Autoritativ kilde",
-                                "nn": "Autoritativ kilde"
-                            }
+                                "nn": "Autoritativ kilde",
+                            },
                         },
                         "accrualPeriodicity": {
                             "uri": "http://publications.europa.eu/resource/authority/frequency/ANNUAL",
@@ -1000,44 +940,38 @@ test_hits = {"hits":
                                 "en": "annual",
                                 "cs": "roční",
                                 "it": "annuale",
-                                "hu": "évenkénti"
-                            }
+                                "hu": "évenkénti",
+                            },
                         },
                         "subject": [
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/fd0fe2be-c84e-4729-8b54-2a69ec6ab04e",
                                 "identifier": "http://begrepskatalogen/begrep/46f4d762-4c6c-11e8-bb3e-005056821322",
-                                "prefLabel": {
-                                    "nb": "saksbehandleridentifikator"
-                                },
+                                "prefLabel": {"nb": "saksbehandleridentifikator"},
                                 "definition": {
                                     "nb": "bruker-identifikatoren til den saksbehandleren som har utført en bestemt tilstandsendring i et gitt informasjonselement"
-                                }
+                                },
                             },
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/53187c64-9e2e-4766-8d15-f778dbc94f7d",
                                 "identifier": "http://data.brreg.no/begrep/40660",
-                                "prefLabel": {
-                                    "nb": "term"
-                                },
+                                "prefLabel": {"nb": "term"},
                                 "definition": {
-                                    "nb": "\"betegnelse for et allmennbegrep som tilhører et fagområde\"\n"
-                                }
-                            }
+                                    "nb": '"betegnelse for et allmennbegrep som tilhører et fagområde"\n'
+                                },
+                            },
                         ],
                         "conformsTo": [
                             {
                                 "uri": "https://viking.no",
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "informationModel": [
                             {
                                 "uri": "https://infomodell.no",
-                                "prefLabel": {
-                                    "nb": "Nr"
-                                },
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "prefLabel": {"nb": "Nr"},
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "type": "Data",
@@ -1053,10 +987,10 @@ test_hits = {"hits":
                                 "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                                 "id": "910244132",
                                 "name": "RAMSUND OG ROGNAN REVISJON",
-                                "orgPath": "/ANNET/910244132"
-                            }
-                        }
-                    }
+                                "orgPath": "/ANNET/910244132",
+                            },
+                        },
+                    },
                 },
                 {
                     "_index": "datasets",
@@ -1086,25 +1020,17 @@ test_hits = {"hits":
                                 "2019-11-21T01:03:29+0100",
                                 "2020-02-10T08:13:16+0100",
                                 "2020-02-12T01:03:51+0100",
-                                "2020-03-13T01:03:01+0100"
-                            ]
+                                "2020-03-13T01:03:01+0100",
+                            ],
                         },
-                        "title": {
-                            "nb": "Ny informasjonsmodell"
-                        },
-                        "description": {
-                            "nb": "Dagnes beskrivelse "
-                        },
-                        "descriptionFormatted": {
-                            "nb": "Dagnes beskrivelse "
-                        },
-                        "objective": {
-                            "nb": "Formål formål hei hei hei"
-                        },
+                        "title": {"nb": "Ny informasjonsmodell"},
+                        "description": {"nb": "Dagnes beskrivelse "},
+                        "descriptionFormatted": {"nb": "Dagnes beskrivelse "},
+                        "objective": {"nb": "Formål formål hei hei hei"},
                         "contactPoint": [
                             {
                                 "email": "post@post.no",
-                                "organizationUnit": "https://vg.no"
+                                "organizationUnit": "https://vg.no",
                             }
                         ],
                         "publisher": {
@@ -1113,7 +1039,7 @@ test_hits = {"hits":
                             "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
+                            "orgPath": "/ANNET/910244132",
                         },
                         "issued": "2019-01-29T00:00:00+0100",
                         "language": [
@@ -1124,13 +1050,11 @@ test_hits = {"hits":
                                     "nb": "Norsk",
                                     "nn": "Norsk",
                                     "no": "Norsk",
-                                    "en": "Norwegian"
-                                }
+                                    "en": "Norwegian",
+                                },
                             }
                         ],
-                        "landingPage": [
-                            "https://vg.no"
-                        ],
+                        "landingPage": ["https://vg.no"],
                         "theme": [
                             {
                                 "id": "http://publications.europa.eu/resource/authority/data-theme/ENVI",
@@ -1161,7 +1085,7 @@ test_hits = {"hits":
                                     "et": "Keskkond",
                                     "sv": "Miljö",
                                     "pl": "Środowisko",
-                                    "sk": "Životné prostredie"
+                                    "sk": "Životné prostredie",
                                 },
                                 "conceptSchema": {
                                     "id": "http://publications.europa.eu/resource/authority/data-theme",
@@ -1169,29 +1093,23 @@ test_hits = {"hits":
                                         "en": "Dataset types Named Authority List"
                                     },
                                     "versioninfo": "20160921-0",
-                                    "versionnumber": "20160921-0"
-                                }
+                                    "versionnumber": "20160921-0",
+                                },
                             }
                         ],
                         "sample": [
                             {
-                                "description": {
-                                    "nb": "asdfghjklø"
-                                },
+                                "description": {"nb": "asdfghjklø"},
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "https://vg.no"
-                                ],
+                                "accessURL": ["https://vg.no"],
                                 "openLicense": "false",
-                                "format": [
-                                    "application/AML"
-                                ]
+                                "format": ["application/AML"],
                             }
                         ],
                         "temporal": [
                             {
                                 "startDate": "2019-01-23T00:00:00+0100",
-                                "endDate": "2022-01-25T00:00:00+0100"
+                                "endDate": "2022-01-25T00:00:00+0100",
                             }
                         ],
                         "accessRights": {
@@ -1200,32 +1118,24 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Public",
                                 "nb": "Offentlig",
-                                "nn": "Offentlig"
-                            }
+                                "nn": "Offentlig",
+                            },
                         },
                         "hasAccuracyAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Accuracy",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "hasCompletenessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Completeness",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "hasAvailabilityAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Availability",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "hasRelevanceAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Relevance",
-                            "hasBody": {
-                                "nb": "aasdasd"
-                            }
+                            "hasBody": {"nb": "aasdasd"},
                         },
                         "references": [
                             {
@@ -1235,12 +1145,12 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Is Part Of",
                                         "nn": "Er del av",
-                                        "nb": "Er en del av"
-                                    }
+                                        "nb": "Er en del av",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/226d50d8-8f53-401f-b368-8879b48a276f"
-                                }
+                                },
                             },
                             {
                                 "referenceType": {
@@ -1249,13 +1159,13 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Is replaced by",
                                         "nn": "Er erstatta av",
-                                        "nb": "Er erstattet av"
-                                    }
+                                        "nb": "Er erstattet av",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/a1c26cb4-fb8f-449d-bc7c-d502d535ba33"
-                                }
-                            }
+                                },
+                            },
                         ],
                         "provenance": {
                             "uri": "http://data.brreg.no/datakatalog/provinens/nasjonal",
@@ -1263,37 +1173,31 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Authoritativ source",
                                 "nb": "Autoritativ kilde",
-                                "nn": "Autoritativ kilde"
-                            }
+                                "nn": "Autoritativ kilde",
+                            },
                         },
                         "subject": [
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/f0d1288a-bc36-4477-ac5c-4e5a4a4cff96",
                                 "identifier": "http://data.brreg.no/begrep/43443",
-                                "prefLabel": {
-                                    "nb": "saksøkt"
-                                },
+                                "prefLabel": {"nb": "saksøkt"},
                                 "definition": {
                                     "nb": "den som det blir reist sak mot, eller som en begjæring om tvangsfullbyrdelse er rettet mot"
-                                }
+                                },
                             }
                         ],
                         "conformsTo": [
                             {
                                 "uri": "https://vg.no",
-                                "prefLabel": {
-                                    "nb": "Avis"
-                                },
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "prefLabel": {"nb": "Avis"},
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "informationModel": [
                             {
                                 "uri": "https://vg.no",
-                                "prefLabel": {
-                                    "nb": "APi"
-                                },
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "prefLabel": {"nb": "APi"},
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "type": "Data",
@@ -1309,10 +1213,10 @@ test_hits = {"hits":
                                 "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                                 "id": "910244132",
                                 "name": "RAMSUND OG ROGNAN REVISJON",
-                                "orgPath": "/ANNET/910244132"
-                            }
-                        }
-                    }
+                                "orgPath": "/ANNET/910244132",
+                            },
+                        },
+                    },
                 },
                 {
                     "_index": "datasets",
@@ -1346,18 +1250,12 @@ test_hits = {"hits":
                                 "2019-11-21T01:03:29+0100",
                                 "2020-02-10T08:13:16+0100",
                                 "2020-02-12T01:03:51+0100",
-                                "2020-03-13T01:03:01+0100"
-                            ]
+                                "2020-03-13T01:03:01+0100",
+                            ],
                         },
-                        "title": {
-                            "nb": "Fint datasett"
-                        },
-                        "description": {
-                            "nb": "bbbb"
-                        },
-                        "descriptionFormatted": {
-                            "nb": "bbbb"
-                        },
+                        "title": {"nb": "Fint datasett"},
+                        "description": {"nb": "bbbb"},
+                        "descriptionFormatted": {"nb": "bbbb"},
                         "contactPoint": [],
                         "publisher": {
                             "type": "no.dcat.datastore.domain.dcat.Publisher",
@@ -1365,7 +1263,7 @@ test_hits = {"hits":
                             "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
+                            "orgPath": "/ANNET/910244132",
                         },
                         "landingPage": [],
                         "theme": [
@@ -1398,7 +1296,7 @@ test_hits = {"hits":
                                     "el": "Παιδεία, πολιτιστικά θέματα και αθλητισμός",
                                     "ga": "Oideachas, cultúr agus spórt",
                                     "pl": "Edukacja, kultura i sport",
-                                    "et": "Haridus, kultuur ja sport"
+                                    "et": "Haridus, kultuur ja sport",
                                 },
                                 "conceptSchema": {
                                     "id": "http://publications.europa.eu/resource/authority/data-theme",
@@ -1406,8 +1304,8 @@ test_hits = {"hits":
                                         "en": "Dataset types Named Authority List"
                                     },
                                     "versioninfo": "20160921-0",
-                                    "versionnumber": "20160921-0"
-                                }
+                                    "versionnumber": "20160921-0",
+                                },
                             }
                         ],
                         "accessRights": {
@@ -1416,8 +1314,8 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Public",
                                 "nb": "Offentlig",
-                                "nn": "Offentlig"
-                            }
+                                "nn": "Offentlig",
+                            },
                         },
                         "provenance": {
                             "uri": "http://data.brreg.no/datakatalog/provinens/nasjonal",
@@ -1425,8 +1323,8 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Authoritativ source",
                                 "nb": "Autoritativ kilde",
-                                "nn": "Autoritativ kilde"
-                            }
+                                "nn": "Autoritativ kilde",
+                            },
                         },
                         "catalog": {
                             "id": "910244132",
@@ -1440,10 +1338,10 @@ test_hits = {"hits":
                                 "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                                 "id": "910244132",
                                 "name": "RAMSUND OG ROGNAN REVISJON",
-                                "orgPath": "/ANNET/910244132"
-                            }
-                        }
-                    }
+                                "orgPath": "/ANNET/910244132",
+                            },
+                        },
+                    },
                 },
                 {
                     "_index": "datasets",
@@ -1474,27 +1372,19 @@ test_hits = {"hits":
                                 "2019-11-21T01:03:29+0100",
                                 "2020-02-10T08:13:16+0100",
                                 "2020-02-12T01:03:51+0100",
-                                "2020-03-13T01:03:01+0100"
-                            ]
+                                "2020-03-13T01:03:01+0100",
+                            ],
                         },
-                        "title": {
-                            "nb": "Nå er jula over"
-                        },
-                        "description": {
-                            "nb": "Bare tull"
-                        },
-                        "descriptionFormatted": {
-                            "nb": "Bare tull"
-                        },
-                        "objective": {
-                            "nb": "Test"
-                        },
+                        "title": {"nb": "Nå er jula over"},
+                        "description": {"nb": "Bare tull"},
+                        "descriptionFormatted": {"nb": "Bare tull"},
+                        "objective": {"nb": "Test"},
                         "contactPoint": [
                             {
                                 "email": "post@post.no",
                                 "organizationUnit": "aaa",
                                 "hasURL": "http://vg.no",
-                                "hasTelephone": "12345678"
+                                "hasTelephone": "12345678",
                             }
                         ],
                         "publisher": {
@@ -1503,12 +1393,10 @@ test_hits = {"hits":
                             "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
+                            "orgPath": "/ANNET/910244132",
                         },
                         "modified": "2019-01-09T00:00:00+0100",
-                        "landingPage": [
-                            "http://vg.no"
-                        ],
+                        "landingPage": ["http://vg.no"],
                         "theme": [
                             {
                                 "id": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
@@ -1539,7 +1427,7 @@ test_hits = {"hits":
                                     "fr": "Gouvernement et secteur public",
                                     "sl": "Vlada in javni sektor",
                                     "sv": "Regeringen och den offentliga sektorn",
-                                    "nl": "Overheid en publieke sector"
+                                    "nl": "Overheid en publieke sector",
                                 },
                                 "conceptSchema": {
                                     "id": "http://publications.europa.eu/resource/authority/data-theme",
@@ -1547,50 +1435,40 @@ test_hits = {"hits":
                                         "en": "Dataset types Named Authority List"
                                     },
                                     "versioninfo": "20160921-0",
-                                    "versionnumber": "20160921-0"
-                                }
+                                    "versionnumber": "20160921-0",
+                                },
                             }
                         ],
                         "distribution": [
                             {
-                                "description": {
-                                    "nb": "asdasda"
-                                },
+                                "description": {"nb": "asdasda"},
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "http://vg.no"
-                                ],
+                                "accessURL": ["http://vg.no"],
                                 "license": {
                                     "uri": "http://creativecommons.org/licenses/by/4.0/",
                                     "prefLabel": {
                                         "en": "Creative Commons Attribution 4.0 International",
-                                        "no": "Creative Commons Navngivelse 4.0 Internasjonal"
+                                        "no": "Creative Commons Navngivelse 4.0 Internasjonal",
                                     },
-                                    "extraType": "http://purl.org/dc/terms/LicenseDocument"
+                                    "extraType": "http://purl.org/dc/terms/LicenseDocument",
                                 },
                                 "openLicense": "true",
                                 "page": [
                                     {
                                         "uri": "http://vg.no",
-                                        "extraType": "http://xmlns.com/foaf/0.1/Document"
+                                        "extraType": "http://xmlns.com/foaf/0.1/Document",
                                     }
                                 ],
-                                "format": [
-                                    "application/json"
-                                ],
-                                "type": "API"
+                                "format": ["application/json"],
+                                "type": "API",
                             }
                         ],
                         "sample": [
                             {
-                                "description": {
-                                    "nb": "asdasd"
-                                },
+                                "description": {"nb": "asdasd"},
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "http://vg.no"
-                                ],
-                                "openLicense": "false"
+                                "accessURL": ["http://vg.no"],
+                                "openLicense": "false",
                             }
                         ],
                         "accessRights": {
@@ -1599,32 +1477,24 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "nb": "Begrenset",
                                 "nn": "Begrenset",
-                                "en": "Restricted"
-                            }
+                                "en": "Restricted",
+                            },
                         },
                         "hasAccuracyAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Accuracy",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "hasCompletenessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Completeness",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "hasCurrentnessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Currentness",
-                            "hasBody": {
-                                "nb": "Aktuelt så det holder"
-                            }
+                            "hasBody": {"nb": "Aktuelt så det holder"},
                         },
                         "hasRelevanceAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Relevance",
-                            "hasBody": {
-                                "nb": "asdasd"
-                            }
+                            "hasBody": {"nb": "asdasd"},
                         },
                         "references": [
                             {
@@ -1634,12 +1504,12 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Has version",
                                         "nn": "Har versjon",
-                                        "nb": "Har versjon"
-                                    }
+                                        "nb": "Har versjon",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
-                                }
+                                },
                             }
                         ],
                         "provenance": {
@@ -1648,47 +1518,39 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Authoritativ source",
                                 "nb": "Autoritativ kilde",
-                                "nn": "Autoritativ kilde"
-                            }
+                                "nn": "Autoritativ kilde",
+                            },
                         },
                         "subject": [
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/67f7066a-870b-4ddf-8781-31bca01d1228",
                                 "identifier": "http://data.brreg.no/begrep/28164",
-                                "prefLabel": {
-                                    "nb": "saksbehandler"
-                                },
+                                "prefLabel": {"nb": "saksbehandler"},
                                 "definition": {
                                     "nb": "person i organet som er ansvarlig for oppfølging og behandling av ett eller flere dokumenter i en sak"
-                                }
+                                },
                             },
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/f0d1288a-bc36-4477-ac5c-4e5a4a4cff96",
                                 "identifier": "http://data.brreg.no/begrep/43443",
-                                "prefLabel": {
-                                    "nb": "saksøkt"
-                                },
+                                "prefLabel": {"nb": "saksøkt"},
                                 "definition": {
                                     "nb": "den som det blir reist sak mot, eller som en begjæring om tvangsfullbyrdelse er rettet mot"
-                                }
-                            }
+                                },
+                            },
                         ],
                         "conformsTo": [
                             {
                                 "uri": "http://vg.no",
-                                "prefLabel": {
-                                    "nb": "asdasd"
-                                },
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "prefLabel": {"nb": "asdasd"},
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "informationModel": [
                             {
                                 "uri": "http://dagbladet.no",
-                                "prefLabel": {
-                                    "nb": "mr"
-                                },
-                                "extraType": "http://purl.org/dc/terms/Standard"
+                                "prefLabel": {"nb": "mr"},
+                                "extraType": "http://purl.org/dc/terms/Standard",
                             }
                         ],
                         "type": "Taksonomi",
@@ -1704,10 +1566,10 @@ test_hits = {"hits":
                                 "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                                 "id": "910244132",
                                 "name": "RAMSUND OG ROGNAN REVISJON",
-                                "orgPath": "/ANNET/910244132"
-                            }
-                        }
-                    }
+                                "orgPath": "/ANNET/910244132",
+                            },
+                        },
+                    },
                 },
                 {
                     "_index": "datasets",
@@ -2021,7 +1883,7 @@ test_hits = {"hits":
                             "care services",
                             "helse og omsorg",
                             "helse og omsorg",
-                            "health and care"
+                            "health and care",
                         ],
                         "losTheme": [
                             {
@@ -2034,32 +1896,26 @@ test_hits = {"hits":
                                     "https://psi.norge.no/los/tema/pasientrettigheter",
                                     "https://psi.norge.no/los/tema/svangerskap",
                                     "https://psi.norge.no/los/tema/avlastning-og-stotte",
-                                    "https://psi.norge.no/los/tema/akutt-hjelp"
+                                    "https://psi.norge.no/los/tema/akutt-hjelp",
                                 ],
                                 "isTema": "true",
-                                "losPaths": [
-                                    "helse-og-omsorg"
-                                ],
+                                "losPaths": ["helse-og-omsorg"],
                                 "name": {
                                     "nn": "Helse og omsorg",
                                     "nb": "Helse og omsorg",
-                                    "en": "Health and care"
+                                    "en": "Health and care",
                                 },
                                 "uri": "https://psi.norge.no/los/tema/helse-og-omsorg",
-                                "synonyms": []
+                                "synonyms": [],
                             },
                             {
-                                "parents": [
-                                    "https://psi.norge.no/los/tema/folkehelse"
-                                ],
+                                "parents": ["https://psi.norge.no/los/tema/folkehelse"],
                                 "isTema": "false",
-                                "losPaths": [
-                                    "helse-og-omsorg/folkehelse/ernaring"
-                                ],
+                                "losPaths": ["helse-og-omsorg/folkehelse/ernaring"],
                                 "name": {
                                     "nn": "Ernæring",
                                     "nb": "Ernæring",
-                                    "en": "Nutrition"
+                                    "en": "Nutrition",
                                 },
                                 "uri": "https://psi.norge.no/los/ord/ernaring",
                                 "synonyms": [
@@ -2075,8 +1931,8 @@ test_hits = {"hits":
                                     "Kosthold",
                                     "Tilsettingsstoffer",
                                     "Tilsetjingsstoff",
-                                    "Næringsmidler"
-                                ]
+                                    "Næringsmidler",
+                                ],
                             },
                             {
                                 "parents": [
@@ -2089,17 +1945,14 @@ test_hits = {"hits":
                                 "name": {
                                     "nn": "Matlevering",
                                     "nb": "Matlevering",
-                                    "en": "Meals on wheels"
+                                    "en": "Meals on wheels",
                                 },
                                 "uri": "https://psi.norge.no/los/ord/matlevering",
-                                "synonyms": [
-                                    "Matombringing",
-                                    "Matombringning"
-                                ],
+                                "synonyms": ["Matombringing", "Matombringning"],
                                 "relatedTerms": [
                                     "https://psi.norge.no/los/ord/trygghet-i-hjemmet"
-                                ]
-                            }
+                                ],
+                            },
                         ],
                         "id": "a8a16564-7b2f-4fb3-9520-2b53516b06a4",
                         "uri": "http://brreg.no/catalogs/910244132/datasets/c6b9e443-12a4-4d29-854a-0f6eda682858",
@@ -2116,15 +1969,11 @@ test_hits = {"hits":
                                 "2019-11-29T01:03:36+0100",
                                 "2020-02-10T08:13:16+0100",
                                 "2020-02-12T01:03:51+0100",
-                                "2020-03-13T01:03:01+0100"
-                            ]
+                                "2020-03-13T01:03:01+0100",
+                            ],
                         },
-                        "title": {
-                            "nb": "Biff er beef"
-                        },
-                        "description": {
-                            "nb": "oversikt over verdens beste biff"
-                        },
+                        "title": {"nb": "Biff er beef"},
+                        "description": {"nb": "oversikt over verdens beste biff"},
                         "descriptionFormatted": {
                             "nb": "oversikt over verdens beste biff"
                         },
@@ -2136,7 +1985,7 @@ test_hits = {"hits":
                                 "email": "biff@steak.no",
                                 "organizationUnit": "biff.no",
                                 "hasURL": "http://steak.com",
-                                "hasTelephone": "1337"
+                                "hasTelephone": "1337",
                             }
                         ],
                         "publisher": {
@@ -2145,21 +1994,13 @@ test_hits = {"hits":
                             "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                             "id": "910244132",
                             "name": "RAMSUND OG ROGNAN REVISJON",
-                            "orgPath": "/ANNET/910244132"
+                            "orgPath": "/ANNET/910244132",
                         },
-                        "landingPage": [
-                            "https://en.wikipedia.org/wiki/Steak"
-                        ],
+                        "landingPage": ["https://en.wikipedia.org/wiki/Steak"],
                         "theme": [
-                            {
-                                "id": "https://psi.norge.no/los/tema/helse-og-omsorg"
-                            },
-                            {
-                                "id": "https://psi.norge.no/los/ord/ernaring"
-                            },
-                            {
-                                "id": "https://psi.norge.no/los/ord/matlevering"
-                            }
+                            {"id": "https://psi.norge.no/los/tema/helse-og-omsorg"},
+                            {"id": "https://psi.norge.no/los/ord/ernaring"},
+                            {"id": "https://psi.norge.no/los/ord/matlevering"},
                         ],
                         "distribution": [
                             {
@@ -2169,34 +2010,22 @@ test_hits = {"hits":
                                     "uri": "http://creativecommons.org/publicdomain/zero/1.0/",
                                     "prefLabel": {
                                         "no": "Creative Commons Universal Fristatus-erklæring",
-                                        "en": "Creative Commons Universal Public Domain Dedication"
+                                        "en": "Creative Commons Universal Public Domain Dedication",
                                     },
-                                    "extraType": "http://purl.org/dc/terms/LicenseDocument"
+                                    "extraType": "http://purl.org/dc/terms/LicenseDocument",
                                 },
                                 "openLicense": "false",
-                                "format": [
-                                    "biff",
-                                    "bouf",
-                                    "beef"
-                                ],
-                                "type": "API"
+                                "format": ["biff", "bouf", "beef"],
+                                "type": "API",
                             }
                         ],
                         "sample": [
                             {
-                                "description": {
-                                    "nb": "biff"
-                                },
+                                "description": {"nb": "biff"},
                                 "downloadURL": [],
-                                "accessURL": [
-                                    "http://www.eksempelbiffen.no"
-                                ],
+                                "accessURL": ["http://www.eksempelbiffen.no"],
                                 "openLicense": "false",
-                                "format": [
-                                    "bouff",
-                                    "baouff",
-                                    "boauff"
-                                ]
+                                "format": ["bouff", "baouff", "boauff"],
                             }
                         ],
                         "accessRights": {
@@ -2205,26 +2034,20 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Public",
                                 "nb": "Offentlig",
-                                "nn": "Offentlig"
-                            }
+                                "nn": "Offentlig",
+                            },
                         },
                         "hasAccuracyAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Accuracy",
-                            "hasBody": {
-                                "nb": "Veldig nøyaktig"
-                            }
+                            "hasBody": {"nb": "Veldig nøyaktig"},
                         },
                         "hasCompletenessAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Completeness",
-                            "hasBody": {
-                                "nb": "Veldig komplett"
-                            }
+                            "hasBody": {"nb": "Veldig komplett"},
                         },
                         "hasRelevanceAnnotation": {
                             "inDimension": "http://iso.org/25012/2008/dataquality/Relevance",
-                            "hasBody": {
-                                "nb": "Veldig relevant"
-                            }
+                            "hasBody": {"nb": "Veldig relevant"},
                         },
                         "references": [
                             {
@@ -2234,12 +2057,12 @@ test_hits = {"hits":
                                     "prefLabel": {
                                         "en": "Is Part Of",
                                         "nn": "Er del av",
-                                        "nb": "Er en del av"
-                                    }
+                                        "nb": "Er en del av",
+                                    },
                                 },
                                 "source": {
                                     "uri": "http://brreg.no/catalogs/910244132/datasets/17ed5a7d-1a22-49f4-a1d6-25f7d90dfa6d"
-                                }
+                                },
                             }
                         ],
                         "provenance": {
@@ -2248,25 +2071,21 @@ test_hits = {"hits":
                             "prefLabel": {
                                 "en": "Authoritativ source",
                                 "nb": "Autoritativ kilde",
-                                "nn": "Autoritativ kilde"
-                            }
+                                "nn": "Autoritativ kilde",
+                            },
                         },
                         "accrualPeriodicity": {
                             "uri": "http://publications.europa.eu/resource/authority/frequency",
-                            "prefLabel": {
-                                "en": "Frequency"
-                            }
+                            "prefLabel": {"en": "Frequency"},
                         },
                         "subject": [
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/11a9cb05-d60f-4ff4-9228-5d3fd483de93",
                                 "identifier": "http://data.brreg.no/begrep/55561",
-                                "prefLabel": {
-                                    "nb": "transport"
-                                },
+                                "prefLabel": {"nb": "transport"},
                                 "definition": {
                                     "nb": "overføring av panterett til ny rettighetshaver"
-                                }
+                                },
                             },
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/b9066a91-0e03-4512-8b0b-88c5d64fabbd",
@@ -2276,18 +2095,16 @@ test_hits = {"hits":
                                 },
                                 "definition": {
                                     "nb": "utgiftsgodtgjørelse for merkostnader til kost i forbindelse med overtid"
-                                }
+                                },
                             },
                             {
                                 "uri": "https://fellesdatakatalog.brreg.no/api/concepts/81b49255-8168-451a-9d7c-3a38c27b872d",
                                 "identifier": "http://begrepskatalogen/begrep/8ea2df49-7662-11e6-a74e-7e18b36b3fd9",
-                                "prefLabel": {
-                                    "nb": "overnatting"
-                                },
+                                "prefLabel": {"nb": "overnatting"},
                                 "definition": {
                                     "nb": "den skattepliktige tilbringer natten borte fra hjemmet på grunn av arbeid, virksomhet eller annen inntektsgivende aktivitet"
-                                }
-                            }
+                                },
+                            },
                         ],
                         "type": "Testdata",
                         "catalog": {
@@ -2302,105 +2119,45 @@ test_hits = {"hits":
                                 "uri": "http://data.brreg.no/enhetsregisteret/enhet/910244132",
                                 "id": "910244132",
                                 "name": "RAMSUND OG ROGNAN REVISJON",
-                                "orgPath": "/ANNET/910244132"
-                            }
-                        }
-                    }
-                }
-            ]
+                                "orgPath": "/ANNET/910244132",
+                            },
+                        },
+                    },
+                },
+            ],
         },
         "aggregations": {
             "los": {
                 "doc_count_error_upper_bound": 1,
                 "sum_other_doc_count": 329,
                 "buckets": [
-                    {
-                        "key": "doping",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "tilrettelagd transport",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "tilrettelagt transport",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "traffic and transport",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "trafikk og transport",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "transport services for disabled persons",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "abort",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "abortion",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "accident and emergency unit",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "activities and aid for adiction problems",
-                        "doc_count": 1
-                    }
-                ]
+                    {"key": "doping", "doc_count": 2},
+                    {"key": "tilrettelagd transport", "doc_count": 2},
+                    {"key": "tilrettelagt transport", "doc_count": 2},
+                    {"key": "traffic and transport", "doc_count": 2},
+                    {"key": "trafikk og transport", "doc_count": 2},
+                    {"key": "transport services for disabled persons", "doc_count": 2},
+                    {"key": "abort", "doc_count": 1},
+                    {"key": "abortion", "doc_count": 1},
+                    {"key": "accident and emergency unit", "doc_count": 1},
+                    {"key": "activities and aid for adiction problems", "doc_count": 1},
+                ],
             },
             "orgPath": {
                 "doc_count_error_upper_bound": 1,
                 "sum_other_doc_count": 82,
                 "buckets": [
-                    {
-                        "key": "/ANNET/910244132",
-                        "doc_count": 12
-                    },
-                    {
-                        "key": "/STAT/972417866/961181399",
-                        "doc_count": 7
-                    },
-                    {
-                        "key": "/ANNET/910258028",
-                        "doc_count": 3
-                    },
-                    {
-                        "key": "/STAT/872417842/970018131",
-                        "doc_count": 3
-                    },
-                    {
-                        "key": "/STAT/972417858/991825827",
-                        "doc_count": 3
-                    },
-                    {
-                        "key": "/KOMMUNE/964338531",
-                        "doc_count": 2
-                    },
-                    {
-                        "key": "/KOMMUNE/964968063",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "/PRIVAT/817244742",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "/PRIVAT/832554332",
-                        "doc_count": 1
-                    },
-                    {
-                        "key": "/PRIVAT/837886252",
-                        "doc_count": 1
-                    }
-                ]
+                    {"key": "/ANNET/910244132", "doc_count": 12},
+                    {"key": "/STAT/972417866/961181399", "doc_count": 7},
+                    {"key": "/ANNET/910258028", "doc_count": 3},
+                    {"key": "/STAT/872417842/970018131", "doc_count": 3},
+                    {"key": "/STAT/972417858/991825827", "doc_count": 3},
+                    {"key": "/KOMMUNE/964338531", "doc_count": 2},
+                    {"key": "/KOMMUNE/964968063", "doc_count": 1},
+                    {"key": "/PRIVAT/817244742", "doc_count": 1},
+                    {"key": "/PRIVAT/832554332", "doc_count": 1},
+                    {"key": "/PRIVAT/837886252", "doc_count": 1},
+                ],
             },
             "dataset_access": {
                 "meta": {},
@@ -2409,59 +2166,27 @@ test_hits = {"hits":
                     "doc_count_error_upper_bound": 0,
                     "sum_other_doc_count": 0,
                     "buckets": [
-                        {
-                            "key": "PUBLIC",
-                            "doc_count": 1198
-                        },
-                        {
-                            "key": "RESTRICTED",
-                            "doc_count": 99
-                        },
-                        {
-                            "key": "NON_PUBLIC",
-                            "doc_count": 11
-                        },
-                        {
-                            "key": "Ukjent",
-                            "doc_count": 1
-                        }
-                    ]
-                }
+                        {"key": "PUBLIC", "doc_count": 1198},
+                        {"key": "RESTRICTED", "doc_count": 99},
+                        {"key": "NON_PUBLIC", "doc_count": 11},
+                        {"key": "Ukjent", "doc_count": 1},
+                    ],
+                },
             },
             "isOpenAccess": {
                 "doc_count_error_upper_bound": 0,
                 "sum_other_doc_count": 0,
                 "buckets": [
-                    {
-                        "key": 1,
-                        "key_as_string": "true",
-                        "doc_count": 5
-                    },
-                    {
-                        "key": 0,
-                        "key_as_string": "false",
-                        "doc_count": 2
-                    }
-                ]
-            }
-        }
+                    {"key": 1, "key_as_string": "true", "doc_count": 5},
+                    {"key": 0, "key_as_string": "false", "doc_count": 2},
+                ],
+            },
+        },
     }
 }
 empty_result = {
     "took": 5,
     "timed_out": "false",
-    "_shards": {
-        "total": 4,
-        "successful": 4,
-        "skipped": 0,
-        "failed": 0
-    },
-    "hits": {
-        "total": {
-            "value": 0,
-            "relation": "eq"
-        },
-        "max_score": "null",
-        "hits": []
-    }
+    "_shards": {"total": 4, "successful": 4, "skipped": 0, "failed": 0},
+    "hits": {"total": {"value": 0, "relation": "eq"}, "max_score": "null", "hits": []},
 }

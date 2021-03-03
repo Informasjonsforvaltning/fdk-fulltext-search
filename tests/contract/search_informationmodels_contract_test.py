@@ -19,15 +19,23 @@ def wait_for_information_models():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=informationmodels")
-            if response.json()[0]['count'] >= 4:
+            if response.json()[0]["count"] >= 4:
                 break
             if time.time() > timeout:
                 pytest.fail(
-                    'Test function setup: timed out while waiting for fulltext-search, last response '
-                    'was {0}'.format(response.json()["count"]))
+                    "Test function setup: timed out while waiting for fulltext-search, last response "
+                    "was {0}".format(response.json()["count"])
+                )
             time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
     yield
 
 
@@ -37,19 +45,24 @@ informationmodel_url = service_url + f"/{indices_name}"
 
 
 class TestInformationModelSearch:
-
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, docker_service, api, wait_for_information_models):
+    def test_response_should_have_correct_content(
+        self, docker_service, api, wait_for_information_models
+    ):
         result = requests.post(informationmodel_url)
         result_json = result.json()
         content_keys = result_json.keys()
         assert result.status_code == 200
         assert "hits" in content_keys
-        result_data_types = [match.value for match in parse("hits[*].type").find(result_json["hits"])]
+        result_data_types = [
+            match.value for match in parse("hits[*].type").find(result_json["hits"])
+        ]
         for dt in result_data_types:
             assert dt == data_type
         assert "page" in content_keys
-        page_key_matches = list(set(result_json["page"].keys()) & set(expected_page_keys))
+        page_key_matches = list(
+            set(result_json["page"].keys()) & set(expected_page_keys)
+        )
         assert page_key_matches.__len__() == expected_page_keys.__len__()
         assert "aggregations" in content_keys
         agg_keys = result_json["aggregations"].keys()
@@ -57,16 +70,15 @@ class TestInformationModelSearch:
         assert "orgPath" in agg_keys
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, docker_service, api, wait_for_information_models):
+    def test_hits_should_be_correctly_sorted_on_title(
+        self, docker_service, api, wait_for_information_models
+    ):
         """
-            1. exact match
-            2. word in title
+        1. exact match
+        2. word in title
         """
         search_str = "di"
-        body = {
-            "q": search_str,
-            "size": 300
-        }
+        body = {"q": search_str, "size": 300}
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
         result_json = result.json()
@@ -85,11 +97,11 @@ class TestInformationModelSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, docker_service, api, wait_for_information_models):
+    def test_should_filter_on_orgPath(
+        self, docker_service, api, wait_for_information_models
+    ):
         org_path = "STAT/972417858/991825827"
-        body = {
-            "filters": [{"orgPath": org_path}]
-        }
+        body = {"filters": [{"orgPath": org_path}]}
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json()["hits"]
@@ -98,43 +110,47 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_filter_on_los(self, docker_service, api, wait_for_information_models):
+    def test_should_filter_on_los(
+        self, docker_service, api, wait_for_information_models
+    ):
         los_path = "bygg-og-eiendom"
-        body = {
-            "filters": [{"los": los_path}]
-        }
+        body = {"filters": [{"los": los_path}]}
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
         result_hits = result.json()["hits"]
         assert len(result_hits) == 2
         for hit in result_hits:
-            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            los_paths = ",".join(
+                [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
+            )
             assert los_path in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_several_los_themes(self, docker_service, api, wait_for_information_models):
+    def test_should_filter_on_several_los_themes(
+        self, docker_service, api, wait_for_information_models
+    ):
         los_path_1 = "helse-og-omsorg"
         los_path_2 = "bygg-og-eiendom"
-        body = {
-            "filters": [{"los": f"{los_path_1},{los_path_2}"}]
-        }
+        body = {"filters": [{"los": f"{los_path_1},{los_path_2}"}]}
 
         result = requests.post(url=informationmodel_url, json=body)
         result_json = result.json()
         assert result.status_code == 200
         assert len(result_json["hits"]) == 1
         for hit in result_json["hits"]:
-            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            los_paths = ",".join(
+                [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
+            )
             assert los_path_1 in los_paths
             assert los_path_2 in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_los_and_orgPath(self, docker_service, api, wait_for_information_models):
+    def test_should_filter_on_los_and_orgPath(
+        self, docker_service, api, wait_for_information_models
+    ):
         org_path = "STAT"
         los_path = "bygg-og-eiendom"
-        body = {
-            "filters": [{"orgPath": org_path}, {"los": los_path}]
-        }
+        body = {"filters": [{"orgPath": org_path}, {"los": los_path}]}
         result = requests.post(url=informationmodel_url, json=body)
         result_json = result.json()
         assert result.status_code == 200
@@ -143,33 +159,38 @@ class TestInformationModelSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, docker_service, api, wait_for_information_models):
+    def test_should_have_correct_size_and_page(
+        self, docker_service, api, wait_for_information_models
+    ):
         default_result = requests.post(informationmodel_url).json()
         assert default_result["page"]["size"] == 4
         assert default_result["page"]["currentPage"] == 0
 
-        page_request_body = {
-            "page": 1,
-            "size": 2
-        }
-        page_result = requests.post(url=informationmodel_url, json=page_request_body).json()
+        page_request_body = {"page": 1, "size": 2}
+        page_result = requests.post(
+            url=informationmodel_url, json=page_request_body
+        ).json()
         assert page_result["page"]["size"] == 2
         assert page_result["page"]["currentPage"] == 1
 
-        assert json.dumps(default_result["hits"][0]) != json.dumps(page_result["hits"][0])
+        assert json.dumps(default_result["hits"][0]) != json.dumps(
+            page_result["hits"][0]
+        )
 
     @pytest.mark.contract
-    def test_should_sort_on_date(self, docker_service, api, wait_for_information_models):
-        body = {
-            "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
-        }
+    def test_should_sort_on_date(
+        self, docker_service, api, wait_for_information_models
+    ):
+        body = {"sorting": {"field": "harvest.firstHarvested", "direction": "desc"}}
         result = requests.post(url=informationmodel_url, json=body)
         assert result.status_code == 200
         last_date = None
         for hit in result.json()["hits"]:
             date = hit["harvest"]["firstHarvested"]
             if last_date:
-                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ") <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
+                assert datetime.strptime(
+                    date, "%Y-%m-%dT%H:%M:%SZ"
+                ) <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
 

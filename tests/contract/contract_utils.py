@@ -16,11 +16,18 @@ def wait_for_es():
         adapter = HTTPAdapter(max_retries=retry_strategy)
         http = requests.Session()
         http.mount("http://", adapter)
-        es_health = http.get("http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s")
+        es_health = http.get(
+            "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s"
+        )
         if es_health.status_code != 200:
-            pytest.fail('Test containers: could not contact ElasticSearch')
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test containers: could not contact ElasticsSearch')
+            pytest.fail("Test containers: could not contact ElasticSearch")
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail("Test containers: could not contact ElasticsSearch")
     return
 
 
@@ -30,14 +37,21 @@ def populate():
     try:
         while True:
             response = requests.get("http://localhost:8000/count")
-            if response.json()['count'] >= 5537:
+            if response.json()["count"] >= 5537:
                 break
             if time.time() > timeout:
-                pytest.fail('Test containers: timed out while waiting for poupulation of ElasticSearch, last response '
-                            'was {0}'.format(response.json()["count"]))
+                pytest.fail(
+                    "Test containers: timed out while waiting for poupulation of ElasticSearch, last response "
+                    "was {0}".format(response.json()["count"])
+                )
             time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test containers: could not contact fdk-fulltext-search container')
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail("Test containers: could not contact fdk-fulltext-search container")
 
 
 def start_reindex(data_type):

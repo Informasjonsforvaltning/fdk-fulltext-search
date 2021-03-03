@@ -4,17 +4,17 @@ import pytest
 from jsonpath_ng import parse
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
-from fdk_fulltext_search.search.queries import RecentQuery, AllIndicesQuery, SuggestionQuery
+from fdk_fulltext_search.search.queries import (
+    RecentQuery,
+    AllIndicesQuery,
+    SuggestionQuery,
+)
 from fdk_fulltext_search.search.query_utils_dataset import open_data_query
 
 
 @pytest.mark.unit
 def test_recent_query_should_have_size_5():
-    expected = {
-        "size": 5,
-        "sort":
-            {"harvest.firstHarvested": {"order": "desc"}}
-    }
+    expected = {"size": 5, "sort": {"harvest.firstHarvested": {"order": "desc"}}}
     result = RecentQuery().query
     assert result.keys() == expected.keys()
     assert result["size"] == expected["size"]
@@ -23,11 +23,7 @@ def test_recent_query_should_have_size_5():
 
 @pytest.mark.unit
 def test_recent_query_should_have_size_18():
-    expected = {
-        "size": 18,
-        "sort":
-            {"harvest.firstHarvested": {"order": "desc"}}
-    }
+    expected = {"size": 18, "sort": {"harvest.firstHarvested": {"order": "desc"}}}
     result = RecentQuery(18).query
     assert result.keys() == expected.keys()
     assert result["size"] == expected["size"]
@@ -49,29 +45,21 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     "fields": [
                                         "prefLabel.*.raw",
                                         "title.*.raw",
-                                        "title.raw"
-                                    ]
+                                        "title.raw",
+                                    ],
                                 }
                             },
                             "should": [
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
                             ],
-                            "boost": 20
+                            "boost": 20,
                         }
                     },
                     {
@@ -93,29 +81,21 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         "title.ngrams.3_gram",
                                         "prefLabel.*.ngrams",
                                         "prefLabel.*.ngrams.2_gram",
-                                        "prefLabel.*.ngrams.3_gram"
-                                    ]
+                                        "prefLabel.*.ngrams.3_gram",
+                                    ],
                                 }
                             },
                             "should": [
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
                             ],
-                            "boost": 2
+                            "boost": 2,
                         }
                     },
                     {
@@ -125,89 +105,69 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     "query": search_str,
                                     "fields": [
                                         "publisher.prefLabel.*",
-                                        "publisher.title.*"
-                                    ]
+                                        "publisher.title.*",
+                                    ],
                                 }
                             },
                             "should": [
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
                             ],
-                            "boost": 10
+                            "boost": 10,
                         }
                     },
                     {
                         "bool": {
                             "must": {
                                 "simple_query_string": {
-                                    "query": "{0} {0}*".format(search_str.replace(" ", "+")),
+                                    "query": "{0} {0}*".format(
+                                        search_str.replace(" ", "+")
+                                    ),
                                     "fields": [
                                         "description",
                                         "definition.text.*",
-                                        "schema^0.5"
-                                    ]
+                                        "schema^0.5",
+                                    ],
                                 }
                             },
                             "should": [
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
-                            ]
+                            ],
                         }
                     },
                     {
                         "bool": {
                             "must": {
                                 "simple_query_string": {
-                                    "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                    "query": "{0} {0}*".format(
+                                        search_str.replace(" ", "+")
+                                    )
                                 }
                             },
                             "should": [
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
                             ],
-                            "boost": 0.0015
+                            "boost": 0.0015,
                         }
                     },
                     {
@@ -221,102 +181,62 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                 {
                                     "bool": {
                                         "should": [
-                                            {
-                                                "match": {
-                                                    "provenance.code": "NASJONAL"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "nationalComponent": "true"
-                                                }
-                                            }
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                         ]
                                     }
                                 }
                             ],
-                            "boost": 0.001
+                            "boost": 0.001,
                         }
-                    }
+                    },
                 ]
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
             },
             "availability": {
                 "filters": {
                     "filters": {
-                        "isOpenAccess": {
-                            "term": {
-                                "isOpenAccess": "true"
-                            }
-                        },
-                        "isOpenLicense": {
-                            "term": {
-                                "isOpenLicense": "true"
-                            }
-                        },
-                        "isFree": {
-                            "term": {
-                                "isFree": "true"
-                            }
-                        }
+                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
+                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
+                        "isFree": {"term": {"isFree": "true"}},
                     }
                 }
             },
             "dataset_access": {
-                "filter": {
-                    "term": {
-                        "_index": "datasets"
-                    }
-                },
+                "filter": {"term": {"_index": "datasets"}},
                 "aggs": {
                     "accessRights": {
                         "terms": {
                             "field": "accessRights.code.keyword",
                             "missing": "Ukjent",
-                            "size": 10
+                            "size": 10,
                         }
                     }
-                }
+                },
             },
             "opendata": {
                 "filter": {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
                 }
             },
-            "theme": {
-                "terms": {
-                    "field": "euTheme"
-                }
-            }
-        }
-
+            "theme": {"terms": {"field": "euTheme"}},
+        },
     }
     result = AllIndicesQuery(search_string="stønad")
     assert json.dumps(result.body) == json.dumps(expected)
@@ -327,43 +247,23 @@ def test_empty_all_indices_query():
     """Should return query with high boost on authority and datasets and lower boost for authority and dataservices"""
     expected_query = {
         "bool": {
-            "must": {
-                "match_all": {}
-            },
+            "must": {"match_all": {}},
             "should": [
                 {
                     "term": {
-                        "provenance.code.keyword": {
-                            "value": "NASJONAL",
-                            "boost": 3
-                        }
+                        "provenance.code.keyword": {"value": "NASJONAL", "boost": 3}
                     }
                 },
-                {
-                    "term": {
-                        "nationalComponent": {
-                            "value": "true",
-                            "boost": 1
-                        }
-                    }
-                },
+                {"term": {"nationalComponent": {"value": "true", "boost": 1}}},
                 {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
-            ]
+                },
+            ],
         }
     }
     expected_indices_boost = [{"datasets": 1.2}]
@@ -378,304 +278,6 @@ def test_all_indices_should_return_query_with_filter():
     expected = {
         "query": {
             "bool": {
-                "must": [{
-                    "dis_max": {
-                        "queries": [
-                            {
-                                "bool": {
-                                    "must": {
-                                        "multi_match": {
-                                            "query": search_str,
-                                            "fields": [
-                                                "prefLabel.*.raw",
-                                                "title.*.raw",
-                                                "title.raw"
-                                            ]
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ],
-                                    "boost": 20
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "multi_match": {
-                                            "query": search_str,
-                                            "type": "phrase_prefix",
-                                            "fields": [
-                                                "title.*.ngrams",
-                                                "title.*.ngrams.2_gram",
-                                                "title.*.ngrams.3_gram",
-                                                "title.nb",
-                                                "title.no",
-                                                "title.nn",
-                                                "title.en",
-                                                "title.ngrams",
-                                                "title.ngrams.2_gram",
-                                                "title.ngrams.3_gram",
-                                                "prefLabel.*.ngrams",
-                                                "prefLabel.*.ngrams.2_gram",
-                                                "prefLabel.*.ngrams.3_gram"
-                                            ]
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ],
-                                    "boost": 2
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "multi_match": {
-                                            "query": search_str,
-                                            "fields": [
-                                                "publisher.prefLabel.*",
-                                                "publisher.title.*"
-                                            ]
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ],
-                                    "boost": 10
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "simple_query_string": {
-                                            "query": "{0} {0}*".format(search_str.replace(" ", "+")),
-                                            "fields": [
-                                                "description",
-                                                "definition.text.*",
-                                                "schema^0.5"
-                                            ]
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "simple_query_string": {
-                                            "query": "{0} {0}*".format(search_str.replace(" ", "+"))
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ],
-                                    "boost": 0.0015
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "simple_query_string": {
-                                            "query": "*{0} {0} {0}*".format(search_str)
-                                        }
-                                    },
-                                    "should": [
-                                        {
-                                            "bool": {
-                                                "should": [
-                                                    {
-                                                        "match": {
-                                                            "provenance.code": "NASJONAL"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "nationalComponent": "true"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ],
-                                    "boost": 0.001
-                                }
-                            }
-                        ]
-                    }
-                }],
-                "filter": [
-                    {
-                        "term": {
-                            "publisher.orgPath": "/KOMMUNE/840029212"
-                        }
-                    }
-                ],
-            }
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {
-                            "term": {
-                                "isOpenAccess": "true"
-                            }
-                        },
-                        "isOpenLicense": {
-                            "term": {
-                                "isOpenLicense": "true"
-                            }
-                        },
-                        "isFree": {
-                            "term": {
-                                "isFree": "true"
-                            }
-                        }
-                    }
-                }
-            },
-            "dataset_access": {
-                "filter": {
-                    "term": {
-                        "_index": "datasets"
-                    }
-                },
-                "aggs": {
-                    "accessRights": {
-                        "terms": {
-                            "field": "accessRights.code.keyword",
-                            "missing": "Ukjent",
-                            "size": 10
-                        }
-                    }
-                }
-            },
-            "opendata": {
-                "filter": {
-                    "bool": {
-                        "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "theme": {
-                "terms": {
-                    "field": "euTheme"
-                }
-            }
-        }
-    }
-    result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': '/KOMMUNE/840029212'}])
-    assert json.dumps(result.body) == json.dumps(expected)
-
-
-@pytest.mark.unit
-def test_all_indices_should_return_query_with_must_not():
-    search_str = "barnehage"
-    expected = {
-        "query": {
-            "bool": {
                 "must": [
                     {
                         "dis_max": {
@@ -688,8 +290,8 @@ def test_all_indices_should_return_query_with_must_not():
                                                 "fields": [
                                                     "prefLabel.*.raw",
                                                     "title.*.raw",
-                                                    "title.raw"
-                                                ]
+                                                    "title.raw",
+                                                ],
                                             }
                                         },
                                         "should": [
@@ -705,12 +307,12 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
                                         ],
-                                        "boost": 20
+                                        "boost": 20,
                                     }
                                 },
                                 {
@@ -732,8 +334,8 @@ def test_all_indices_should_return_query_with_must_not():
                                                     "title.ngrams.3_gram",
                                                     "prefLabel.*.ngrams",
                                                     "prefLabel.*.ngrams.2_gram",
-                                                    "prefLabel.*.ngrams.3_gram"
-                                                ]
+                                                    "prefLabel.*.ngrams.3_gram",
+                                                ],
                                             }
                                         },
                                         "should": [
@@ -749,341 +351,12 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
                                         ],
-                                        "boost": 2
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "simple_query_string": {
-                                                "query": "{0} {0}*".format(search_str.replace(" ", "+")),
-                                                "fields": [
-                                                    "description",
-                                                    "definition.text.*",
-                                                    "schema^0.5"
-                                                ]
-                                            }
-                                        },
-                                        "should": [
-                                            {
-                                                "bool": {
-                                                    "should": [
-                                                        {
-                                                            "match": {
-                                                                "provenance.code": "NASJONAL"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "nationalComponent": "true"
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "simple_query_string": {
-                                                "query": "{0} {0}*".format(search_str.replace(" ", "+"))
-                                            }
-                                        },
-                                        "should": [
-                                            {
-                                                "bool": {
-                                                    "should": [
-                                                        {
-                                                            "match": {
-                                                                "provenance.code": "NASJONAL"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "nationalComponent": "true"
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "boost": 0.0015
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "simple_query_string": {
-                                                "query": "*{0} {0} {0}*".format(search_str)
-                                            }
-                                        },
-                                        "should": [
-                                            {
-                                                "bool": {
-                                                    "should": [
-                                                        {
-                                                            "match": {
-                                                                "provenance.code": "NASJONAL"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "nationalComponent": "true"
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "boost": 0.001
-                                    }
-                                }
-
-                            ]
-                        }
-                    }
-                ],
-                "filter": [
-                    {
-                        "bool": {
-                            "must_not": {
-                                "exists": {
-                                    "field": "publisher.orgPath"
-                                }
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "aggs": {
-            "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
-            },
-            "orgPath": {
-                "terms": {
-                    "field": "publisher.orgPath",
-                    "missing": "MISSING",
-                    "size": 1000000000
-                }
-            },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {
-                            "term": {
-                                "isOpenAccess": "true"
-                            }
-                        },
-                        "isOpenLicense": {
-                            "term": {
-                                "isOpenLicense": "true"
-                            }
-                        },
-                        "isFree": {
-                            "term": {
-                                "isFree": "true"
-                            }
-                        }
-                    }
-                }
-            },
-            "dataset_access": {
-                "filter": {
-                    "term": {
-                        "_index": "datasets"
-                    }
-                },
-                "aggs": {
-                    "accessRights": {
-                        "terms": {
-                            "field": "accessRights.code.keyword",
-                            "missing": "Ukjent",
-                            "size": 10
-                        }
-                    }
-                }
-            },
-            "opendata": {
-                "filter": {
-                    "bool": {
-                        "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "theme": {
-                "terms": {
-                    "field": "euTheme"
-                }
-            }
-        }
-    }
-    result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
-    assert json.dumps(result.body) == json.dumps(expected)
-
-
-@pytest.mark.unit
-def test_all_indices_with_several_words():
-    """ should return query with simple query string query for title"""
-    search_string = "some string"
-    result = AllIndicesQuery(search_string=search_string)
-    result_query = result.body["query"]
-    simple_queries_fields = parse('$..simple_query_string[*].fields')
-    assert ['title.*', 'title', 'prefLabel.*'] in [match.value for match in simple_queries_fields.find(result_query)]
-
-
-@pytest.mark.unit
-def test_add_filter_should_add_opendata_filter():
-    builder = AllIndicesQuery(filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something")
-    has_open_data = False
-    for f in builder.body["query"]["bool"]["filter"]:
-        if f == open_data_query():
-            has_open_data = True
-            break
-    assert has_open_data is True
-
-
-@pytest.mark.unit
-def test_add_filter_should_add_multiple_los_filters():
-    builder = AllIndicesQuery(filters=[{"los": "helse-og-omsorg,naring"}, {"other": "filter"}],
-                              search_string="something")
-    los_count = 0
-    for f in builder.body["query"]["bool"]["filter"]:
-        if "term" in f.keys() and "losTheme.losPaths.keyword" in f["term"].keys():
-            los_count += 1
-    assert los_count == 2
-
-
-@pytest.mark.unit
-def test_add_filter_should_add_must_not_filter_for_Ukjent():
-    must_no_access_rights = {'exists': {'field': 'accessRights.code.keyword'}}
-    index_filter = {
-        "term": {
-            "_index": "datasets"
-        }
-    }
-    builder = AllIndicesQuery(filters=[{"accessRights": "Ukjent"}, {"other": "filter"}], search_string="something")
-    has_must_not = False
-    has_index_filter = False
-    for f in builder.body['query']['bool']['filter']:
-        if 'bool' in f.keys():
-            if 'must_not' in f['bool'].keys() and f['bool']['must_not'] == must_no_access_rights:
-                has_must_not = True
-            if 'must' in f['bool'].keys() and f['bool']['must'] == index_filter:
-                has_index_filter = True
-        if has_must_not and has_index_filter:
-            break
-
-    assert has_must_not is True
-    assert has_index_filter is True
-
-
-@pytest.mark.unit
-def test_all_indices_should_return_query_with_must_not():
-    search_str = "barnehage"
-    expected = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "dis_max": {
-                            "queries": [
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "multi_match": {
-                                                "query": search_str,
-                                                "fields": [
-                                                    "prefLabel.*.raw",
-                                                    "title.*.raw",
-                                                    "title.raw"
-                                                ]
-                                            }
-                                        },
-                                        "should": [
-                                            {
-                                                "bool": {
-                                                    "should": [
-                                                        {
-                                                            "match": {
-                                                                "provenance.code": "NASJONAL"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "nationalComponent": "true"
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "boost": 20
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "multi_match": {
-                                                "query": search_str,
-                                                "type": "phrase_prefix",
-                                                "fields": [
-                                                    "title.*.ngrams",
-                                                    "title.*.ngrams.2_gram",
-                                                    "title.*.ngrams.3_gram",
-                                                    "title.nb",
-                                                    "title.no",
-                                                    "title.nn",
-                                                    "title.en",
-                                                    "title.ngrams",
-                                                    "title.ngrams.2_gram",
-                                                    "title.ngrams.3_gram",
-                                                    "prefLabel.*.ngrams",
-                                                    "prefLabel.*.ngrams.2_gram",
-                                                    "prefLabel.*.ngrams.3_gram"
-                                                ]
-                                            }
-                                        },
-                                        "should": [
-                                            {
-                                                "bool": {
-                                                    "should": [
-                                                        {
-                                                            "match": {
-                                                                "provenance.code": "NASJONAL"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "nationalComponent": "true"
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ],
-                                        "boost": 2
+                                        "boost": 2,
                                     }
                                 },
                                 {
@@ -1093,8 +366,8 @@ def test_all_indices_should_return_query_with_must_not():
                                                 "query": search_str,
                                                 "fields": [
                                                     "publisher.prefLabel.*",
-                                                    "publisher.title.*"
-                                                ]
+                                                    "publisher.title.*",
+                                                ],
                                             }
                                         },
                                         "should": [
@@ -1110,24 +383,26 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
                                         ],
-                                        "boost": 10
+                                        "boost": 10,
                                     }
                                 },
                                 {
                                     "bool": {
                                         "must": {
                                             "simple_query_string": {
-                                                "query": "{0} {0}*".format(search_str.replace(" ", "+")),
+                                                "query": "{0} {0}*".format(
+                                                    search_str.replace(" ", "+")
+                                                ),
                                                 "fields": [
                                                     "description",
                                                     "definition.text.*",
-                                                    "schema^0.5"
-                                                ]
+                                                    "schema^0.5",
+                                                ],
                                             }
                                         },
                                         "should": [
@@ -1143,18 +418,20 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
-                                        ]
+                                        ],
                                     }
                                 },
                                 {
                                     "bool": {
                                         "must": {
                                             "simple_query_string": {
-                                                "query": "{0} {0}*".format(search_str.replace(" ", "+"))
+                                                "query": "{0} {0}*".format(
+                                                    search_str.replace(" ", "+")
+                                                )
                                             }
                                         },
                                         "should": [
@@ -1170,19 +447,21 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
                                         ],
-                                        "boost": 0.0015
+                                        "boost": 0.0015,
                                     }
                                 },
                                 {
                                     "bool": {
                                         "must": {
                                             "simple_query_string": {
-                                                "query": "*{0} {0} {0}*".format(search_str)
+                                                "query": "*{0} {0} {0}*".format(
+                                                    search_str
+                                                )
                                             }
                                         },
                                         "should": [
@@ -1198,109 +477,69 @@ def test_all_indices_should_return_query_with_must_not():
                                                             "term": {
                                                                 "nationalComponent": "true"
                                                             }
-                                                        }
+                                                        },
                                                     ]
                                                 }
                                             }
                                         ],
-                                        "boost": 0.001
+                                        "boost": 0.001,
                                     }
-                                }
-
+                                },
                             ]
                         }
                     }
                 ],
-                "filter": [
-                    {
-                        "bool": {
-                            "must_not": {
-                                "exists": {
-                                    "field": "publisher.orgPath"
-                                }
-                            }
-                        }
-                    }
-                ]
+                "filter": [{"term": {"publisher.orgPath": "/KOMMUNE/840029212"}}],
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
             },
             "availability": {
                 "filters": {
                     "filters": {
-                        "isOpenAccess": {
-                            "term": {
-                                "isOpenAccess": "true"
-                            }
-                        },
-                        "isOpenLicense": {
-                            "term": {
-                                "isOpenLicense": "true"
-                            }
-                        },
-                        "isFree": {
-                            "term": {
-                                "isFree": "true"
-                            }
-                        }
+                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
+                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
+                        "isFree": {"term": {"isFree": "true"}},
                     }
                 }
             },
             "dataset_access": {
-                "filter": {
-                    "term": {
-                        "_index": "datasets"
-                    }
-                },
+                "filter": {"term": {"_index": "datasets"}},
                 "aggs": {
                     "accessRights": {
                         "terms": {
                             "field": "accessRights.code.keyword",
                             "missing": "Ukjent",
-                            "size": 10
+                            "size": 10,
                         }
                     }
-                }
+                },
             },
             "opendata": {
                 "filter": {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
                 }
             },
-            "theme": {
-                "terms": {
-                    "field": "euTheme"
-                }
-            }
-        }
+            "theme": {"terms": {"field": "euTheme"}},
+        },
     }
-    result = AllIndicesQuery(search_string="barnehage", filters=[{'orgPath': 'MISSING'}])
+    result = AllIndicesQuery(
+        search_string="barnehage", filters=[{"orgPath": "/KOMMUNE/840029212"}]
+    )
     assert json.dumps(result.body) == json.dumps(expected)
 
 
@@ -1310,13 +549,17 @@ def test_all_indices_with_several_words():
     search_string = "some string"
     result = AllIndicesQuery(search_string=search_string)
     result_query = result.body["query"]
-    simple_queries_fields = parse('$..simple_query_string[*].fields')
-    assert ['title.*', 'title', 'prefLabel.*'] in [match.value for match in simple_queries_fields.find(result_query)]
+    simple_queries_fields = parse("$..simple_query_string[*].fields")
+    assert ["title.*", "title", "prefLabel.*"] in [
+        match.value for match in simple_queries_fields.find(result_query)
+    ]
 
 
 @pytest.mark.unit
 def test_add_filter_should_add_opendata_filter():
-    builder = AllIndicesQuery(filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something")
+    builder = AllIndicesQuery(
+        filters=[{"opendata": "true"}, {"other": "filter"}], search_string="something"
+    )
     has_open_data = False
     for f in builder.body["query"]["bool"]["filter"]:
         if f == open_data_query():
@@ -1326,27 +569,11 @@ def test_add_filter_should_add_opendata_filter():
 
 
 @pytest.mark.unit
-def test_add_filter_should_add_x_last_days_filter():
-    builder = AllIndicesQuery(filters=[{"last_x_days": 6}])
-    has_x_last_days = False
-    for f in builder.body["query"]["bool"]["filter"]:
-        if f == {
-            "range": {
-                "harvest.firstHarvested": {
-                    "gte": "now-6d/d",
-                    "lt": "now/d"
-                }
-            }
-        }:
-            has_x_last_days = True
-            break
-    assert has_x_last_days is True
-
-
-@pytest.mark.unit
 def test_add_filter_should_add_multiple_los_filters():
-    builder = AllIndicesQuery(filters=[{"los": "helse-og-omsorg,naring"}, {"other": "filter"}],
-                              search_string="something")
+    builder = AllIndicesQuery(
+        filters=[{"los": "helse-og-omsorg,naring"}, {"other": "filter"}],
+        search_string="something",
+    )
     los_count = 0
     for f in builder.body["query"]["bool"]["filter"]:
         if "term" in f.keys() and "losTheme.losPaths.keyword" in f["term"].keys():
@@ -1356,26 +583,314 @@ def test_add_filter_should_add_multiple_los_filters():
 
 @pytest.mark.unit
 def test_add_filter_should_add_must_not_filter_for_Ukjent():
-    must_no_access_rights = {'exists': {'field': 'accessRights.code.keyword'}}
-    index_filter = {
-        "term": {
-            "_index": "datasets"
-        }
-    }
-    builder = AllIndicesQuery(filters=[{"accessRights": "Ukjent"}, {"other": "filter"}], search_string="something")
+    must_no_access_rights = {"exists": {"field": "accessRights.code.keyword"}}
+    index_filter = {"term": {"_index": "datasets"}}
+    builder = AllIndicesQuery(
+        filters=[{"accessRights": "Ukjent"}, {"other": "filter"}],
+        search_string="something",
+    )
     has_must_not = False
     has_index_filter = False
-    for f in builder.body['query']['bool']['filter']:
-        if 'bool' in f.keys():
-            if 'must_not' in f['bool'].keys() and f['bool']['must_not'] == must_no_access_rights:
+    for f in builder.body["query"]["bool"]["filter"]:
+        if "bool" in f.keys():
+            if (
+                "must_not" in f["bool"].keys()
+                and f["bool"]["must_not"] == must_no_access_rights
+            ):
                 has_must_not = True
-            if 'must' in f['bool'].keys() and f['bool']['must'] == index_filter:
+            if "must" in f["bool"].keys() and f["bool"]["must"] == index_filter:
                 has_index_filter = True
         if has_must_not and has_index_filter:
             break
 
     assert has_must_not is True
     assert has_index_filter is True
+
+
+@pytest.mark.unit
+def test_all_indices_should_return_query_with_must_not():
+    search_str = "barnehage"
+    expected = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            "queries": [
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "fields": [
+                                                    "prefLabel.*.raw",
+                                                    "title.*.raw",
+                                                    "title.raw",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 20,
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "type": "phrase_prefix",
+                                                "fields": [
+                                                    "title.*.ngrams",
+                                                    "title.*.ngrams.2_gram",
+                                                    "title.*.ngrams.3_gram",
+                                                    "title.nb",
+                                                    "title.no",
+                                                    "title.nn",
+                                                    "title.en",
+                                                    "title.ngrams",
+                                                    "title.ngrams.2_gram",
+                                                    "title.ngrams.3_gram",
+                                                    "prefLabel.*.ngrams",
+                                                    "prefLabel.*.ngrams.2_gram",
+                                                    "prefLabel.*.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 2,
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": search_str,
+                                                "fields": [
+                                                    "publisher.prefLabel.*",
+                                                    "publisher.title.*",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 10,
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "{0} {0}*".format(
+                                                    search_str.replace(" ", "+")
+                                                ),
+                                                "fields": [
+                                                    "description",
+                                                    "definition.text.*",
+                                                    "schema^0.5",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "{0} {0}*".format(
+                                                    search_str.replace(" ", "+")
+                                                )
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 0.0015,
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "*{0} {0} {0}*".format(
+                                                    search_str
+                                                )
+                                            }
+                                        },
+                                        "should": [
+                                            {
+                                                "bool": {
+                                                    "should": [
+                                                        {
+                                                            "match": {
+                                                                "provenance.code": "NASJONAL"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "nationalComponent": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        "boost": 0.001,
+                                    }
+                                },
+                            ]
+                        }
+                    }
+                ],
+                "filter": [
+                    {"bool": {"must_not": {"exists": {"field": "publisher.orgPath"}}}}
+                ],
+            }
+        },
+        "aggs": {
+            "los": {
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
+            },
+            "orgPath": {
+                "terms": {
+                    "field": "publisher.orgPath",
+                    "missing": "MISSING",
+                    "size": 1000000000,
+                }
+            },
+            "availability": {
+                "filters": {
+                    "filters": {
+                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
+                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
+                        "isFree": {"term": {"isFree": "true"}},
+                    }
+                }
+            },
+            "dataset_access": {
+                "filter": {"term": {"_index": "datasets"}},
+                "aggs": {
+                    "accessRights": {
+                        "terms": {
+                            "field": "accessRights.code.keyword",
+                            "missing": "Ukjent",
+                            "size": 10,
+                        }
+                    }
+                },
+            },
+            "opendata": {
+                "filter": {
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
+                    }
+                }
+            },
+            "theme": {"terms": {"field": "euTheme"}},
+        },
+    }
+    result = AllIndicesQuery(
+        search_string="barnehage", filters=[{"orgPath": "MISSING"}]
+    )
+    assert json.dumps(result.body) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_add_filter_should_add_x_last_days_filter():
+    builder = AllIndicesQuery(filters=[{"last_x_days": 6}])
+    has_x_last_days = False
+    for f in builder.body["query"]["bool"]["filter"]:
+        if f == {
+            "range": {"harvest.firstHarvested": {"gte": "now-6d/d", "lt": "now/d"}}
+        }:
+            has_x_last_days = True
+            break
+    assert has_x_last_days is True
 
 
 @pytest.mark.unit
@@ -1392,8 +907,8 @@ def test_suggestion_query_data_sett():
                             "fields": [
                                 "title.nb.ngrams",
                                 "title.nb.ngrams.2_gram",
-                                "title.nb.ngrams.3_gram"
-                            ]
+                                "title.nb.ngrams.3_gram",
+                            ],
                         }
                     },
                     {
@@ -1403,8 +918,8 @@ def test_suggestion_query_data_sett():
                             "fields": [
                                 "title.nn.ngrams",
                                 "title.nn.ngrams.2_gram",
-                                "title.nn.ngrams.3_gram"
-                            ]
+                                "title.nn.ngrams.3_gram",
+                            ],
                         }
                     },
                     {
@@ -1414,8 +929,8 @@ def test_suggestion_query_data_sett():
                             "fields": [
                                 "title.no.ngrams",
                                 "title.no.ngrams.2_gram",
-                                "title.no.ngrams.3_gram"
-                            ]
+                                "title.no.ngrams.3_gram",
+                            ],
                         }
                     },
                     {
@@ -1425,14 +940,13 @@ def test_suggestion_query_data_sett():
                             "fields": [
                                 "title.en.ngrams",
                                 "title.en.ngrams.2_gram",
-                                "title.en.ngrams.3_gram"
-                            ]
+                                "title.en.ngrams.3_gram",
+                            ],
                         }
-                    }
+                    },
                 ]
             }
-        }
-
+        },
     }
     result = SuggestionQuery(search_string="Giv", index_key=IndicesKey.DATA_SETS).body
     assert json.dumps(result) == json.dumps(expected_body)

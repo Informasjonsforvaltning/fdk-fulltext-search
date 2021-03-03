@@ -14,19 +14,24 @@ datasets_url = service_url + f"/{indices_name}"
 
 
 class TestDataSetSearch:
-
     @pytest.mark.contract
-    def test_response_should_have_correct_content(self, docker_service, api, wait_for_datasets_ready):
+    def test_response_should_have_correct_content(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         result = requests.post(datasets_url)
         assert result.status_code == 200
         result_json = result.json()
         content_keys = result_json.keys()
         assert "hits" in content_keys
-        result_data_types = [match.value for match in parse("hits[*].type").find(result_json["hits"])]
+        result_data_types = [
+            match.value for match in parse("hits[*].type").find(result_json["hits"])
+        ]
         for dt in result_data_types:
             assert dt == data_type
         assert "page" in content_keys
-        page_key_matches = list(set(result_json["page"].keys()) & set(expected_page_keys))
+        page_key_matches = list(
+            set(result_json["page"].keys()) & set(expected_page_keys)
+        )
         assert page_key_matches.__len__() == expected_page_keys.__len__()
         assert "aggregations" in content_keys
         aggregations = result_json["aggregations"]
@@ -48,48 +53,49 @@ class TestDataSetSearch:
         assert len(aggregations["spatial"]["buckets"]) > 0
 
     @pytest.mark.contract
-    def test_should_have_correct_size_and_page(self, docker_service, api, wait_for_datasets_ready):
+    def test_should_have_correct_size_and_page(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         result = requests.post(datasets_url)
         assert result.status_code == 200
         default_result_json = result.json()
         assert default_result_json["page"]["size"] == 10
         assert default_result_json["page"]["currentPage"] == 0
-        page_request_body = {
-            "page": 5
-        }
+        page_request_body = {"page": 5}
         page_result = requests.post(url=datasets_url, json=page_request_body)
         assert page_result.status_code == 200
         page_result_json = page_result.json()
 
         assert page_result_json["page"]["size"] == 10
         assert page_result_json["page"]["currentPage"] == 5
-        assert json.dumps(default_result_json["hits"][0]) != json.dumps(page_result_json["hits"][0])
+        assert json.dumps(default_result_json["hits"][0]) != json.dumps(
+            page_result_json["hits"][0]
+        )
 
     @pytest.mark.contract
     def test_should_sort_on_date(self, docker_service, api, wait_for_datasets_ready):
-        body = {
-            "sorting": {"field": "harvest.firstHarvested", "direction": "desc"}
-        }
+        body = {"sorting": {"field": "harvest.firstHarvested", "direction": "desc"}}
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
         last_date = None
         for hit in result.json()["hits"]:
-            date = hit["harvest"]["firstHarvested"].split('+')[0]
+            date = hit["harvest"]["firstHarvested"].split("+")[0]
             if last_date:
-                assert datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ") <= datetime.strptime(last_date,
-                                                                                          "%Y-%m-%dT%H:%M:%SZ")
+                assert datetime.strptime(
+                    date, "%Y-%m-%dT%H:%M:%SZ"
+                ) <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
     @pytest.mark.contract
-    def test_search_without_query_should_have_correct_sorting(self, docker_service, api, wait_for_datasets_ready):
+    def test_search_without_query_should_have_correct_sorting(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         """
         1. open authoritative datasets
         2. authoritative datasets
         3. open datasets
         """
-        body = {
-            "size": 500
-        }
+        body = {"size": 500}
         result = requests.post(datasets_url, json=body)
         assert result.status_code == 200
         previous_was_open_data = True
@@ -97,37 +103,47 @@ class TestDataSetSearch:
         for hit in result.json()["hits"]:
             if "provenance" in hit.keys():
                 if hit.get("provenance") and hit["provenance"]["code"] == "NASJONAL":
-                    assert previous_was_authoritative is True, "dataset with NASJONAL provenance encountered after " \
-                                                               "non-authoritative hit"
-                elif hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC":
-                    openLicence = [match.value for match in parse("distribution[*].openLicense").find(hit)]
+                    assert previous_was_authoritative is True, (
+                        "dataset with NASJONAL provenance encountered after "
+                        "non-authoritative hit"
+                    )
+                elif (
+                    hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC"
+                ):
+                    openLicence = [
+                        match.value
+                        for match in parse("distribution[*].openLicense").find(hit)
+                    ]
                     if True in openLicence:
-                        assert previous_was_open_data, "open authorative dataset encountered after non-open " \
-                                                       "authoritative dataset dataset "
+                        assert previous_was_open_data, (
+                            "open authorative dataset encountered after non-open "
+                            "authoritative dataset dataset "
+                        )
                         previous_was_open_data = True
                     else:
                         previous_was_open_data = False
                 previous_was_authoritative = True
             elif hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC":
-                assert previous_was_open_data or previous_was_authoritative, "non-authoritative open dataset, " \
-                                                                             "encountered after non-open, " \
-                                                                             "non authoritative dataset "
+                assert previous_was_open_data or previous_was_authoritative, (
+                    "non-authoritative open dataset, "
+                    "encountered after non-open, "
+                    "non authoritative dataset "
+                )
                 previous_was_open_data = True
             else:
                 previous_was_open_data = False
                 previous_was_authoritative = False
 
     @pytest.mark.contract
-    def test_hits_should_be_correctly_sorted_on_title(self, docker_service, api, wait_for_datasets_ready):
+    def test_hits_should_be_correctly_sorted_on_title(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         """
-            1. exact match
-            2. word in title
+        1. exact match
+        2. word in title
         """
         search_str = "Elbiloversikt i Norge"
-        body = {
-            "q": search_str,
-            "size": 1000
-        }
+        body = {"q": search_str, "size": 1000}
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
         result_json = result.json()
@@ -146,12 +162,11 @@ class TestDataSetSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(self, docker_service, api, wait_for_datasets_ready):
+    def test_should_filter_on_orgPath(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         org_path = "STAT/972417858/971040238"
-        body = {
-            "filters":
-                [{"orgPath": org_path}]
-        }
+        body = {"filters": [{"orgPath": org_path}]}
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json()["hits"]
@@ -160,48 +175,43 @@ class TestDataSetSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_should_filter_on_spatial(self, docker_service, api, wait_for_datasets_ready):
+    def test_should_filter_on_spatial(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         expected_spatial = "Norge"
-        body = {
-            "filters":
-                [{"spatial": expected_spatial}]
-
-        }
+        body = {"filters": [{"spatial": expected_spatial}]}
         result = requests.post(url=datasets_url, json=body)
         result_json = result.json()
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
-            spatial_path_nb = parse('spatial[*].prefLabel.nb')
-            spatial_path_no = parse('spatial[*].prefLabel.no')
-            assert (expected_spatial in [match.value for match in spatial_path_nb.find(hit)]
-                    or expected_spatial in [match.value for match in spatial_path_no.find(hit)])
+            spatial_path_nb = parse("spatial[*].prefLabel.nb")
+            spatial_path_no = parse("spatial[*].prefLabel.no")
+            assert expected_spatial in [
+                match.value for match in spatial_path_nb.find(hit)
+            ] or expected_spatial in [
+                match.value for match in spatial_path_no.find(hit)
+            ]
 
     @pytest.mark.contract
     def test_filter_on_eu_theme(self, docker_service, api, wait_for_datasets_ready):
-        body = {
-            "filters": [
-                {"theme": "GOVE"}
-            ],
-            "size": 100
-        }
+        body = {"filters": [{"theme": "GOVE"}], "size": 100}
         result = requests.post(url=service_url + "/search", json=body).json()
         assert len(result["hits"]) > 0
         for hit in result["hits"]:
             assert "theme" in hit.keys()
-            id_path = parse('theme[*].code')
+            id_path = parse("theme[*].code")
             assert "GOVE" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
     def test_filter_on_open_data(self, docker_service, api, wait_for_datasets_ready):
-        body = {
-            "filters": [
-                {"opendata": "true"}
-            ]
-        }
+        body = {"filters": [{"opendata": "true"}]}
         result = requests.post(url=service_url + "/search", json=body).json()
         assert len(result["hits"]) > 0
-        assert result["page"]["totalElements"] == result["aggregations"]["opendata"]["doc_count"]
+        assert (
+            result["page"]["totalElements"]
+            == result["aggregations"]["opendata"]["doc_count"]
+        )
         hasOpenLicenceDistribution = False
         for hits in result["hits"]:
             assert hits["accessRights"]["code"] == "PUBLIC"
@@ -212,77 +222,65 @@ class TestDataSetSearch:
         assert hasOpenLicenceDistribution is True
 
     @pytest.mark.contract
-    def test_filter_on_accessRights_NON_PUBLIC(self, docker_service, api, wait_for_datasets_ready):
-        body = {
-            "filters": [{"accessRights": "NON_PUBLIC"}]
-        }
+    def test_filter_on_accessRights_NON_PUBLIC(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
+        body = {"filters": [{"accessRights": "NON_PUBLIC"}]}
         result = requests.post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
     @pytest.mark.contract
-    def test_should_filter_on_provenance(self, docker_service, api, wait_for_datasets_ready):
+    def test_should_filter_on_provenance(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         expected_provenance = "TREDJEPART"
-        body = {
-            "filters":
-                [{"provenance": expected_provenance}]
-
-        }
+        body = {"filters": [{"provenance": expected_provenance}]}
         result = requests.post(url=datasets_url, json=body)
         result_json = result.json()
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
-            provenance_path = parse('provenance.code')
-            assert expected_provenance in [match.value for match in provenance_path.find(hit)]
+            provenance_path = parse("provenance.code")
+            assert expected_provenance in [
+                match.value for match in provenance_path.find(hit)
+            ]
 
     @pytest.mark.contract
     def test_should_filter_on_los(self, docker_service, api, wait_for_datasets_ready):
         los_path = "bygg-og-eiendom"
-        body = {
-            "filters": [{"los": los_path}]
-        }
+        body = {"filters": [{"los": los_path}]}
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
         result_hits = result.json()["hits"]
         assert len(result_hits) > 0
         for hit in result_hits:
-            los_paths = ",".join([",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]])
+            los_paths = ",".join(
+                [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
+            )
             assert los_path in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath_and_spatial(self, docker_service, api, wait_for_datasets_ready):
+    def test_should_filter_on_orgPath_and_spatial(
+        self, docker_service, api, wait_for_datasets_ready
+    ):
         expected_org_path = "PRIVAT"
         expected_spatial = "Norge"
-        body = {
-            "filters": [{"orgPath": "PRIVAT"}, {"spatial": "Norge"}]
-        }
+        body = {"filters": [{"orgPath": "PRIVAT"}, {"spatial": "Norge"}]}
         result = requests.post(url=datasets_url, json=body)
         assert result.status_code == 200
         result_json = result.json()
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
             assert expected_org_path in hit["publisher"]["orgPath"]
-            spatial_nb_path = parse('spatial[*].prefLabel.nb')
-            spatial_no_path = parse('spatial[*].prefLabel.no')
-            has_correct_spatial = expected_spatial in [match.value for match in spatial_nb_path.find(hit)] \
-                                  or expected_spatial in [match.value for match in spatial_no_path.find(hit)]
+            spatial_nb_path = parse("spatial[*].prefLabel.nb")
+            spatial_no_path = parse("spatial[*].prefLabel.no")
+            has_correct_spatial = expected_spatial in [
+                match.value for match in spatial_nb_path.find(hit)
+            ] or expected_spatial in [
+                match.value for match in spatial_no_path.find(hit)
+            ]
             assert has_correct_spatial
-
-    @pytest.mark.contract
-    def test_filter_on_eu_theme(self, docker_service, api, wait_for_datasets_ready):
-        body = {
-            "filters": [
-                {"theme": "GOVE"}
-            ],
-            "size": 100
-        }
-        result = requests.post(url=service_url + "/search", json=body).json()
-        assert len(result["hits"]) > 0
-        for hit in result["hits"]:
-            assert "theme" in hit.keys()
-            id_path = parse('theme[*].code')
-            assert "GOVE" in [match.value for match in id_path.find(hit)]
 
     @pytest.mark.contract
     def test_filter_with_transport_profile(self, wait_for_datasets_ready):
@@ -290,21 +288,26 @@ class TestDataSetSearch:
         default_profile_body = {
             "filters": [
                 {"accessRights": "PUBLIC"},
-                {"los": "trafikk-og-transport/mobilitetstilbud,trafikk-og-transport/trafikkinformasjon,"
-                        "trafikk-og-transport/veg-og-vegregulering,trafikk-og-transport/yrkestransport"}
+                {
+                    "los": "trafikk-og-transport/mobilitetstilbud,trafikk-og-transport/trafikkinformasjon,"
+                    "trafikk-og-transport/veg-og-vegregulering,trafikk-og-transport/yrkestransport"
+                },
             ]
         }
 
-        default_profile_result = requests.post(url=service_url + "/datasets", json=default_profile_body)
+        default_profile_result = requests.post(
+            url=service_url + "/datasets", json=default_profile_body
+        )
         transport_profile_body = {
-            "filters": [
-                {"accessRights": 'PUBLIC'},
-                {"themeprofile": 'transport'}
-            ]
+            "filters": [{"accessRights": "PUBLIC"}, {"themeprofile": "transport"}]
         }
-        transport_profile_result = requests.post(url=service_url + "/datasets", json=transport_profile_body)
+        transport_profile_result = requests.post(
+            url=service_url + "/datasets", json=transport_profile_body
+        )
         assert transport_profile_result.status_code == 200
-        assert len(transport_profile_result.json()["hits"]) > len(default_profile_result.json()["hits"])
+        assert len(transport_profile_result.json()["hits"]) > len(
+            default_profile_result.json()["hits"]
+        )
 
         los_key_1 = "trafikk-og-transport/mobilitetstilbud"
         los_key_2 = "trafikk-og-transport/trafikkinformasjon"
@@ -312,9 +315,11 @@ class TestDataSetSearch:
         los_key_4 = "trafikk-og-transport/yrkestransport"
         partial_hits = 0
         for hit in transport_profile_result.json()["hits"]:
-            los_key_path = parse('losTheme[*].losPaths[*]')
+            los_key_path = parse("losTheme[*].losPaths[*]")
             los_keys = [match.value for match in los_key_path.find(hit)]
-            matches = union_los_lists(los_keys, [los_key_1, los_key_2, los_key_3, los_key_4])
+            matches = union_los_lists(
+                los_keys, [los_key_1, los_key_2, los_key_3, los_key_4]
+            )
             if matches.__len__() == 4:
                 pass
             elif matches.__len__() > 0:
@@ -326,7 +331,7 @@ class TestDataSetSearch:
 
 def union_los_lists(result_list: list, expected_list: list):
     union = []
-    result_str = ' '.join(result_list)
+    result_str = " ".join(result_list)
     for path in expected_list:
         if re.findall(path, result_str).__len__() > 0:
             union.append(path)
@@ -358,4 +363,4 @@ def has_partial_match_in_title(hit, search_str):
 
 
 def get_time(timestamp: str):
-    return datetime.strptime(timestamp.split("T")[0], '%Y-%M-%d')
+    return datetime.strptime(timestamp.split("T")[0], "%Y-%M-%d")

@@ -10,15 +10,10 @@ from dotenv import load_dotenv
 
 from tests.contract.contract_utils import wait_for_es, populate
 
-json_concepts = {"page": {"totalElements": 2},
-                 "_embedded": {
-                     "concepts": [
-                         {
-                             "id": 1234566
-                         }
-                     ]
-                 }
-                 }
+json_concepts = {
+    "page": {"totalElements": 2},
+    "_embedded": {"concepts": [{"id": 1234566}]},
+}
 json_data_services = {
     "total": 2,
     "hits": [
@@ -33,10 +28,10 @@ json_data_services = {
             "publisher": {
                 "id": "910244132",
                 "name": "RAMSUND OG ROGNAN REVISJON",
-                "orgPath": "/ANNET/910244132"
-            }
+                "orgPath": "/ANNET/910244132",
+            },
         }
-    ]
+    ],
 }
 
 turtle_datasets = """
@@ -153,21 +148,29 @@ def wait_for_datasets_ready():
     try:
         while True:
             response = get("http://localhost:8000/indices?name=datasets")
-            if response.json()[0]['count'] >= 1252:
+            if response.json()[0]["count"] >= 1252:
                 break
             if time.time() > timeout:
                 pytest.fail(
-                    'Test function setup: timed out while waiting for fulltext-search, last response '
-                    'was {0}'.format(response.json()["count"]))
+                    "Test function setup: timed out while waiting for fulltext-search, last response "
+                    "was {0}".format(response.json()["count"])
+                )
             time.sleep(1)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
     yield
 
 
 def mocked_requests_get(*args, **kwargs):
     class MockResponse:
-        def __init__(self, json_data, status_code, text = None):
+        def __init__(self, json_data, status_code, text=None):
             self.json_data = json_data
             self.status_code = status_code
             self.text = text
@@ -182,7 +185,7 @@ def mocked_requests_get(*args, **kwargs):
     response_json = {}
     response_text = ""
 
-    req_url = kwargs.get('url')
+    req_url = kwargs.get("url")
     req_url = req_url if req_url else ""
 
     if re.findall("infomodel", req_url).__len__() > 0:
@@ -195,87 +198,89 @@ def mocked_requests_get(*args, **kwargs):
         response_text = turtle_dataservices
     elif re.findall("public-services", req_url).__len__() > 0:
         response_text = turtle_public_services
-    return MockResponse(json_data=response_json,
-                        status_code=200, text=response_text)
+    return MockResponse(json_data=response_json, status_code=200, text=response_text)
 
 
 @pytest.fixture
 def mock_ingest(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest')
+    return mocker.patch("fdk_fulltext_search.ingest.elasticsearch_ingest")
 
 
 @pytest.fixture
 def mock_ingest_from_source(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest_from_source')
+    return mocker.patch("fdk_fulltext_search.ingest.elasticsearch_ingest_from_source")
 
 
 @pytest.fixture
 def mock_ingest_from_harvester(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.elasticsearch_ingest_from_harvester')
+    return mocker.patch(
+        "fdk_fulltext_search.ingest.elasticsearch_ingest_from_harvester"
+    )
 
 
 @pytest.fixture
 def mock_get(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.requests.get', side_effect=mocked_requests_get)
+    return mocker.patch(
+        "fdk_fulltext_search.ingest.requests.get", side_effect=mocked_requests_get
+    )
 
 
 @pytest.fixture
 def mock_single_delete(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.delete')
+    return mocker.patch("fdk_fulltext_search.ingest.es_client.indices.delete")
 
 
 @pytest.fixture
 def mock_single_create(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.es_client.indices.create')
+    return mocker.patch("fdk_fulltext_search.ingest.es_client.indices.create")
 
 
 @pytest.fixture
 def mock_single_reindex(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.create_index', return_value=None)
+    return mocker.patch("fdk_fulltext_search.ingest.create_index", return_value=None)
 
 
 @pytest.fixture
 def mock_set_alias(mocker):
-    return mocker.patch('fdk_fulltext_search.ingest.set_alias_for_new_index', return_value=None)
+    return mocker.patch(
+        "fdk_fulltext_search.ingest.set_alias_for_new_index", return_value=None
+    )
 
 
 @pytest.fixture
 def mock_dataset_parser(mocker):
-    return mocker.patch('fdk_rdf_parser.parse_datasets', return_value={})
+    return mocker.patch("fdk_rdf_parser.parse_datasets", return_value={})
 
 
 @pytest.fixture
 def mock_data_service_parser(mocker):
-    return mocker.patch('fdk_rdf_parser.parse_data_services', return_value={})
+    return mocker.patch("fdk_rdf_parser.parse_data_services", return_value={})
 
 
 @pytest.fixture
 def mock_model_parser(mocker):
-    return mocker.patch('fdk_rdf_parser.parse_information_models', return_value={})
+    return mocker.patch("fdk_rdf_parser.parse_information_models", return_value={})
 
 
 @pytest.fixture
 def mock_env(monkeypatch):
-    return monkeypatch.setattr(os, 'getcwd', mock_getcwd)
+    return monkeypatch.setattr(os, "getcwd", mock_getcwd)
 
 
 @pytest.fixture
 def mock_count_elastic(mocker):
-    return mocker.patch('elasticsearch.Elasticsearch.count',
-                        return_value={
-                            "count": 1090,
-                            "_shards": {
-                                "total": 1,
-                                "successful": 1,
-                                "skipped": 0,
-                                "failed": 0
-                            }
-                        })
+    return mocker.patch(
+        "elasticsearch.Elasticsearch.count",
+        return_value={
+            "count": 1090,
+            "_shards": {"total": 1, "successful": 1, "skipped": 0, "failed": 0},
+        },
+    )
 
 
 def mock_getcwd():
     pwd = os.getcwdb().decode("utf-8")
-    return pwd.replace('/tests', '')
+    return pwd.replace("/tests", "")
 
 
 def empty_mock():
@@ -288,13 +293,21 @@ def wait_for_ready():
     try:
         while True:
             response = get("http://localhost:8000/count")
-            if response.json()['count'] >= 5537:
+            if response.json()["count"] >= 5537:
                 break
             if time.time() > timeout:
                 pytest.fail(
-                    'Test function setup: timed out while waiting for poupulation of ElasticSearch, last response '
-                    'was {0}'.format(response.json()["count"]))
+                    "Test function setup: timed out while waiting for poupulation of ElasticSearch, last response "
+                    "was {0}".format(response.json()["count"])
+                )
             time.sleep(5)
-    except (requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        pytest.fail('Test function setup: could not contact fdk-fulltext-search container')
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
     yield

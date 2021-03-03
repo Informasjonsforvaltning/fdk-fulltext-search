@@ -4,7 +4,11 @@ import pytest
 from jsonpath_ng import parse
 
 from fdk_fulltext_search.search.queries import DataSetQuery
-from fdk_fulltext_search.search.themeprofiles import theme_profile_filter, ThemeProfileKeys, theme_profile_los_paths
+from fdk_fulltext_search.search.themeprofiles import (
+    theme_profile_filter,
+    ThemeProfileKeys,
+    theme_profile_los_paths,
+)
 
 
 @pytest.mark.unit
@@ -45,7 +49,7 @@ def test_theme_profile_filter_in_query():
                     "term": {
                         "losTheme.losPaths.keyword": "trafikk-og-transport/yrkestransport"
                     }
-                }
+                },
             ]
         }
     }

@@ -3,7 +3,13 @@ import requests
 
 from tests.contract.search_all_contract_test import service_url
 
-indices_name = ["dataservices", "datasets", "concepts", "informationmodels", "public_services"]
+indices_name = [
+    "dataservices",
+    "datasets",
+    "concepts",
+    "informationmodels",
+    "public_services",
+]
 
 index_url = service_url + "/indices"
 
@@ -16,7 +22,7 @@ class TestSearchAll:
         count = 0
         for index in result.json():
             keys = index.keys()
-            assert index['name'] in indices_name
+            assert index["name"] in indices_name
             assert "lastUpdate" in keys
             assert "count" in keys
             assert isinstance(index["count"], int)
@@ -27,7 +33,7 @@ class TestSearchAll:
     def test_should_return_status_of_concept_index(self, docker_service, api):
         result = requests.get(index_url + "?name=concepts")
         assert result.status_code == 200
-        assert result.json()[0]['name'] == 'concepts'
+        assert result.json()[0]["name"] == "concepts"
         keys = result.json()[0].keys()
         assert "lastUpdate" in keys
         assert "count" in keys
@@ -40,7 +46,9 @@ class TestSearchAll:
 
     @pytest.mark.contract
     def test_should_return_400_response(self, docker_service, api):
-        result = requests.post(url=index_url + "?name=nope", headers={"X-API-KEY": "test-key"})
+        result = requests.post(
+            url=index_url + "?name=nope", headers={"X-API-KEY": "test-key"}
+        )
         assert result.status_code == 400
 
     @pytest.mark.contract

@@ -10,24 +10,19 @@ from fdk_fulltext_search.search.queries import InformationModelQuery, DataSetQue
 @pytest.mark.unit
 def test_information_model_empty_query():
     expected_body = {
-        "query": {
-            "match_all": {}
-        },
+        "query": {"match_all": {}},
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
-            }
-        }
+            },
+        },
     }
 
     result_body = InformationModelQuery().body
@@ -50,8 +45,8 @@ def test_information_model_with_search_string_query():
                                         "fields": [
                                             "title.nb.ngrams",
                                             "title.nb.ngrams.2_gram",
-                                            "title.nb.ngrams.3_gram"
-                                        ]
+                                            "title.nb.ngrams.3_gram",
+                                        ],
                                     }
                                 },
                                 {
@@ -61,8 +56,8 @@ def test_information_model_with_search_string_query():
                                         "fields": [
                                             "title.nn.ngrams",
                                             "title.nn.ngrams.2_gram",
-                                            "title.nn.ngrams.3_gram"
-                                        ]
+                                            "title.nn.ngrams.3_gram",
+                                        ],
                                     }
                                 },
                                 {
@@ -72,8 +67,8 @@ def test_information_model_with_search_string_query():
                                         "fields": [
                                             "title.no.ngrams",
                                             "title.no.ngrams.2_gram",
-                                            "title.no.ngrams.3_gram"
-                                        ]
+                                            "title.no.ngrams.3_gram",
+                                        ],
                                     }
                                 },
                                 {
@@ -83,12 +78,12 @@ def test_information_model_with_search_string_query():
                                         "fields": [
                                             "title.en.ngrams",
                                             "title.en.ngrams.2_gram",
-                                            "title.en.ngrams.3_gram"
-                                        ]
+                                            "title.en.ngrams.3_gram",
+                                        ],
                                     }
-                                }
+                                },
                             ],
-                            "boost": 2
+                            "boost": 2,
                         }
                     },
                     {
@@ -109,7 +104,7 @@ def test_information_model_with_search_string_query():
                                 "publisher.name^3",
                                 "publisher.prefLabel^3",
                             ],
-                            "boost": 0.02
+                            "boost": 0.02,
                         }
                     },
                     {
@@ -124,27 +119,24 @@ def test_information_model_with_search_string_query():
                                 "publisher.name^3",
                                 "publisher.prefLabel^3",
                             ],
-                            "boost": 0.001
+                            "boost": 0.001,
                         }
-                    }
+                    },
                 ]
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
-            }
-        }
+            },
+        },
     }
     result_body = InformationModelQuery(search_string="RA-0554 Pris").body
     assert result_body == expected_body
@@ -169,8 +161,8 @@ def test_information_model_add_filter():
                                                     "fields": [
                                                         "title.nb.ngrams",
                                                         "title.nb.ngrams.2_gram",
-                                                        "title.nb.ngrams.3_gram"
-                                                    ]
+                                                        "title.nb.ngrams.3_gram",
+                                                    ],
                                                 }
                                             },
                                             {
@@ -180,8 +172,8 @@ def test_information_model_add_filter():
                                                     "fields": [
                                                         "title.nn.ngrams",
                                                         "title.nn.ngrams.2_gram",
-                                                        "title.nn.ngrams.3_gram"
-                                                    ]
+                                                        "title.nn.ngrams.3_gram",
+                                                    ],
                                                 }
                                             },
                                             {
@@ -191,8 +183,8 @@ def test_information_model_add_filter():
                                                     "fields": [
                                                         "title.no.ngrams",
                                                         "title.no.ngrams.2_gram",
-                                                        "title.no.ngrams.3_gram"
-                                                    ]
+                                                        "title.no.ngrams.3_gram",
+                                                    ],
                                                 }
                                             },
                                             {
@@ -202,20 +194,18 @@ def test_information_model_add_filter():
                                                     "fields": [
                                                         "title.en.ngrams",
                                                         "title.en.ngrams.2_gram",
-                                                        "title.en.ngrams.3_gram"
-                                                    ]
+                                                        "title.en.ngrams.3_gram",
+                                                    ],
                                                 }
-                                            }
+                                            },
                                         ],
-                                        "boost": 2
+                                        "boost": 2,
                                     }
                                 },
                                 {
                                     "simple_query_string": {
                                         "query": "RA-0554+Pris RA-0554+Pris*",
-                                        "fields": [
-                                            "schema^0.5"
-                                        ]
+                                        "fields": ["schema^0.5"],
                                     }
                                 },
                                 {
@@ -230,7 +220,7 @@ def test_information_model_add_filter():
                                             "publisher.name^3",
                                             "publisher.prefLabel^3",
                                         ],
-                                        "boost": 0.02
+                                        "boost": 0.02,
                                     }
                                 },
                                 {
@@ -245,39 +235,32 @@ def test_information_model_add_filter():
                                             "publisher.name^3",
                                             "publisher.prefLabel^3",
                                         ],
-                                        "boost": 0.001
+                                        "boost": 0.001,
                                     }
-                                }
+                                },
                             ]
                         }
                     }
                 ],
-                "filter": [
-                    {
-                        "term": {
-                            "losTheme.losPaths.keyword": "naring"
-                        }
-                    }
-                ]
+                "filter": [{"term": {"losTheme.losPaths.keyword": "naring"}}],
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
-            }
-        }
+            },
+        },
     }
-    result = InformationModelQuery(search_string="RA-0554 Pris", filters=[{"los": "naring"}]).body
+    result = InformationModelQuery(
+        search_string="RA-0554 Pris", filters=[{"los": "naring"}]
+    ).body
     assert json.dumps(result) == json.dumps(expected_body)
 
 
@@ -286,39 +269,24 @@ def test_information_model_should_return_query_with_must_not_for_MISSING():
     expected_body = {
         "query": {
             "bool": {
-                "must": [
-                    {
-                        "match_all": {}
-                    }
-                ],
+                "must": [{"match_all": {}}],
                 "filter": [
-                    {
-                        "bool": {
-                            "must_not": {
-                                "exists": {
-                                    "field": "publisher.orgPath"
-                                }
-                            }
-                        }
-                    }
-                ]
+                    {"bool": {"must_not": {"exists": {"field": "publisher.orgPath"}}}}
+                ],
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
-            }
-        }
+            },
+        },
     }
     result = InformationModelQuery(filters=[{"orgPath": "MISSING"}]).body
     assert json.dumps(result) == json.dumps(expected_body)
@@ -327,59 +295,34 @@ def test_information_model_should_return_query_with_must_not_for_MISSING():
 @pytest.mark.unit
 def test_dataset_default_aggregations():
     expected_aggs = {
-        "los": {
-            "terms": {
-                "field": "losTheme.losPaths.keyword",
-                "size": 1000000000
-            }
-        },
-        "provenance": {
-            "terms": {
-                "field": "provenance.code.keyword"
-            }
-        },
+        "los": {"terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}},
+        "provenance": {"terms": {"field": "provenance.code.keyword"}},
         "orgPath": {
             "terms": {
                 "field": "publisher.orgPath",
                 "missing": "MISSING",
-                "size": 1000000000
+                "size": 1000000000,
             }
         },
         "opendata": {
             "filter": {
                 "bool": {
                     "must": [
-                        {
-                            "term": {
-                                "accessRights.code.keyword": "PUBLIC"
-                            }
-                        },
-                        {
-                            "term": {
-                                "distribution.openLicense": "true"
-                            }
-                        }
+                        {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                        {"term": {"distribution.openLicense": "true"}},
                     ]
                 }
             }
         },
-        "theme": {
-            "terms": {
-                "field": "euTheme"
-            }
-        },
+        "theme": {"terms": {"field": "euTheme"}},
         "accessRights": {
             "terms": {
                 "field": "accessRights.code.keyword",
                 "missing": "Ukjent",
-                "size": 10
+                "size": 10,
             }
         },
-        "spatial": {
-            "terms": {
-                "field": "spatial.prefLabel.no.keyword"
-            }
-        }
+        "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
     }
     result = DataSetQuery().body["aggs"]
     agg_keys = result.keys()
@@ -399,91 +342,52 @@ def test_dataset_empty_query():
     expected_body = {
         "query": {
             "bool": {
-                "must": [
-                    {
-                        "match_all": {}
-                    }
-                ],
+                "must": [{"match_all": {}}],
                 "should": [
-                    {
-                        "match": {
-                            "provenance.code": "NASJONAL"
-                        }
-                    },
+                    {"match": {"provenance.code": "NASJONAL"}},
                     {
                         "bool": {
                             "must": [
-                                {
-                                    "term": {
-                                        "accessRights.code.keyword": "PUBLIC"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "distribution.openLicense": "true"
-                                    }
-                                }
+                                {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                                {"term": {"distribution.openLicense": "true"}},
                             ]
                         }
-                    }
-                ]
+                    },
+                ],
             }
         },
         "aggs": {
             "los": {
-                "terms": {
-                    "field": "losTheme.losPaths.keyword",
-                    "size": 1000000000
-                }
+                "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
-            "provenance": {
-                "terms": {
-                    "field": "provenance.code.keyword"
-                }
-            },
+            "provenance": {"terms": {"field": "provenance.code.keyword"}},
             "orgPath": {
                 "terms": {
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
-                    "size": 1000000000
+                    "size": 1000000000,
                 }
             },
             "opendata": {
                 "filter": {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
                 }
             },
-            "theme": {
-                "terms": {
-                    "field": "euTheme"
-                }
-            },
+            "theme": {"terms": {"field": "euTheme"}},
             "accessRights": {
                 "terms": {
                     "field": "accessRights.code.keyword",
                     "missing": "Ukjent",
-                    "size": 10
+                    "size": 10,
                 }
             },
-            "spatial": {
-                "terms": {
-                    "field": "spatial.prefLabel.no.keyword"
-                }
-            }
-        }
+            "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
+        },
     }
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)
 
@@ -506,8 +410,8 @@ def test_dataset_with_query_string_query():
                                                 "fields": [
                                                     "title.nb.ngrams",
                                                     "title.nb.ngrams.2_gram",
-                                                    "title.nb.ngrams.3_gram"
-                                                ]
+                                                    "title.nb.ngrams.3_gram",
+                                                ],
                                             }
                                         },
                                         {
@@ -517,8 +421,8 @@ def test_dataset_with_query_string_query():
                                                 "fields": [
                                                     "title.nn.ngrams",
                                                     "title.nn.ngrams.2_gram",
-                                                    "title.nn.ngrams.3_gram"
-                                                ]
+                                                    "title.nn.ngrams.3_gram",
+                                                ],
                                             }
                                         },
                                         {
@@ -528,8 +432,8 @@ def test_dataset_with_query_string_query():
                                                 "fields": [
                                                     "title.no.ngrams",
                                                     "title.no.ngrams.2_gram",
-                                                    "title.no.ngrams.3_gram"
-                                                ]
+                                                    "title.no.ngrams.3_gram",
+                                                ],
                                             }
                                         },
                                         {
@@ -539,12 +443,12 @@ def test_dataset_with_query_string_query():
                                                 "fields": [
                                                     "title.en.ngrams",
                                                     "title.en.ngrams.2_gram",
-                                                    "title.en.ngrams.3_gram"
-                                                ]
+                                                    "title.en.ngrams.3_gram",
+                                                ],
                                             }
-                                        }
+                                        },
                                     ],
-                                    "boost": 5
+                                    "boost": 5,
                                 }
                             },
                             {
@@ -554,221 +458,210 @@ def test_dataset_with_query_string_query():
                                         "description.nb",
                                         "description.nn",
                                         "description.no",
-                                        "description.en"
-                                    ]
+                                        "description.en",
+                                    ],
                                 }
                             },
                             {
                                 "simple_query_string": {
                                     "query": "Elbiloversikt+i Elbiloversikt+i*",
-                                    "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
-                                    "boost": 0.5
+                                    "fields": index_fulltext_fields[
+                                        IndicesKey.DATA_SETS
+                                    ],
+                                    "boost": 0.5,
                                 }
                             },
                             {
                                 "simple_query_string": {
                                     "query": "*Elbiloversikt Elbiloversikt Elbiloversikt* *i i i*",
-                                    "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+                                    "fields": index_fulltext_fields[
+                                        IndicesKey.DATA_SETS
+                                    ],
                                     "boost": 0.001,
                                 }
-                            }
+                            },
                         ]
                     }
                 }
             ],
             "should": [
-                {
-                    "match": {
-                        "provenance.code": "NASJONAL"
-                    }
-                },
+                {"match": {"provenance.code": "NASJONAL"}},
                 {
                     "bool": {
                         "must": [
-                            {
-                                "term": {
-                                    "accessRights.code.keyword": "PUBLIC"
-                                }
-                            },
-                            {
-                                "term": {
-                                    "distribution.openLicense": "true"
-                                }
-                            }
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
-            ]
+                },
+            ],
         }
     }
     result = DataSetQuery("Elbiloversikt i").body["query"]
     # has boolean root clause
-    assert parse('bool.must').find(result).__len__() > 0 and parse('bool.should').find(result).__len__() > 0, \
-        "No boolean root clause "
-    assert parse('bool.must[*].dis_max').find(result).__len__() == 1, "No dismax query in boolean must root clause"
+    assert (
+        parse("bool.must").find(result).__len__() > 0
+        and parse("bool.should").find(result).__len__() > 0
+    ), "No boolean root clause "
+    assert (
+        parse("bool.must[*].dis_max").find(result).__len__() == 1
+    ), "No dismax query in boolean must root clause"
     # has title clause
-    assert parse('bool.must[*].dis_max.queries[*].dis_max').find(result).__len__() == 1, "No root query for " \
-                                                                                         "dismax_title "
-    assert parse('bool.must[*].dis_max.queries[*].dis_max.queries[*].multi_match').find(result).__len__() == 4, \
-        "clauses missing from dis_max title queries "
+    assert (
+        parse("bool.must[*].dis_max.queries[*].dis_max").find(result).__len__() == 1
+    ), ("No root query for " "dismax_title ")
+    assert (
+        parse("bool.must[*].dis_max.queries[*].dis_max.queries[*].multi_match")
+        .find(result)
+        .__len__()
+        == 4
+    ), "clauses missing from dis_max title queries "
     # has fulltext clauses
-    assert parse('bool.must[*].dis_max.queries[*].simple_query_string').find(
-        result).__len__() == 3, "missing fulltext_queries"
+    assert (
+        parse("bool.must[*].dis_max.queries[*].simple_query_string")
+        .find(result)
+        .__len__()
+        == 3
+    ), "missing fulltext_queries"
     assert json.dumps(result) == json.dumps(expected)
 
 
 @pytest.mark.unit
 def test_dataset_with_spatial_filter():
     expected = {
-            "bool": {
-                "must": [
-                    {
-                        "dis_max": {
-                            "queries": [
-                                {
-                                    "dis_max": {
-                                        "queries": [
-                                            {
-                                                "multi_match": {
-                                                    "query": "Ad",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nb.ngrams",
-                                                        "title.nb.ngrams.2_gram",
-                                                        "title.nb.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "Ad",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nn.ngrams",
-                                                        "title.nn.ngrams.2_gram",
-                                                        "title.nn.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "Ad",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.no.ngrams",
-                                                        "title.no.ngrams.2_gram",
-                                                        "title.no.ngrams.3_gram"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "Ad",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.en.ngrams",
-                                                        "title.en.ngrams.2_gram",
-                                                        "title.en.ngrams.3_gram"
-                                                    ]
-                                                }
+        "bool": {
+            "must": [
+                {
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "dis_max": {
+                                    "queries": [
+                                        {
+                                            "multi_match": {
+                                                "query": "Ad",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nb.ngrams",
+                                                    "title.nb.ngrams.2_gram",
+                                                    "title.nb.ngrams.3_gram",
+                                                ],
                                             }
-                                        ],
-                                        "boost": 5
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "Ad Ad*",
-                                        "fields": [
-                                            "description.nb",
-                                            "description.nn",
-                                            "description.no",
-                                            "description.en"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "Ad Ad*",
-                                        "fields": [
-                                            "title.*^3",
-                                            "objective.*",
-                                            "keyword.*^2",
-                                            "theme.title.*",
-                                            "expandedLosTema.*",
-                                            "description.*",
-                                            "publisher.name^3",
-                                            "publisher.prefLabel^3",
-                                            "accessRights.prefLabel.*^3",
-                                            "accessRights.code",
-                                            "subject.prefLabel.*",
-                                            "subject.altLabel.*",
-                                            "subject.definition.*",
-                                            "distribution.title.*",
-                                            "distribution.format"
-                                        ],
-                                        "boost": 0.5
-                                    }
-                                },
-                                {
-                                    "simple_query_string": {
-                                        "query": "*Ad Ad Ad*",
-                                        "fields": [
-                                            "title.*^3",
-                                            "objective.*",
-                                            "keyword.*^2",
-                                            "theme.title.*",
-                                            "expandedLosTema.*",
-                                            "description.*",
-                                            "publisher.name^3",
-                                            "publisher.prefLabel^3",
-                                            "accessRights.prefLabel.*^3",
-                                            "accessRights.code",
-                                            "subject.prefLabel.*",
-                                            "subject.altLabel.*",
-                                            "subject.definition.*",
-                                            "distribution.title.*",
-                                            "distribution.format"
-                                        ],
-                                        "boost": 0.001
-                                    }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Ad",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nn.ngrams",
+                                                    "title.nn.ngrams.2_gram",
+                                                    "title.nn.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Ad",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.no.ngrams",
+                                                    "title.no.ngrams.2_gram",
+                                                    "title.no.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Ad",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.en.ngrams",
+                                                    "title.en.ngrams.2_gram",
+                                                    "title.en.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                    ],
+                                    "boost": 5,
                                 }
-                            ]
-                        }
-                    }
-                ],
-                "should": [
-                    {
-                        "match": {
-                            "provenance.code": "NASJONAL"
-                        }
-                    },
-                    {
-                        "bool": {
-                            "must": [
-                                {
-                                    "term": {
-                                        "accessRights.code.keyword": "PUBLIC"
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "distribution.openLicense": "true"
-                                    }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Ad Ad*",
+                                    "fields": [
+                                        "description.nb",
+                                        "description.nn",
+                                        "description.no",
+                                        "description.en",
+                                    ],
                                 }
-                            ]
-                        }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Ad Ad*",
+                                    "fields": [
+                                        "title.*^3",
+                                        "objective.*",
+                                        "keyword.*^2",
+                                        "theme.title.*",
+                                        "expandedLosTema.*",
+                                        "description.*",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "accessRights.prefLabel.*^3",
+                                        "accessRights.code",
+                                        "subject.prefLabel.*",
+                                        "subject.altLabel.*",
+                                        "subject.definition.*",
+                                        "distribution.title.*",
+                                        "distribution.format",
+                                    ],
+                                    "boost": 0.5,
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "*Ad Ad Ad*",
+                                    "fields": [
+                                        "title.*^3",
+                                        "objective.*",
+                                        "keyword.*^2",
+                                        "theme.title.*",
+                                        "expandedLosTema.*",
+                                        "description.*",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "accessRights.prefLabel.*^3",
+                                        "accessRights.code",
+                                        "subject.prefLabel.*",
+                                        "subject.altLabel.*",
+                                        "subject.definition.*",
+                                        "distribution.title.*",
+                                        "distribution.format",
+                                    ],
+                                    "boost": 0.001,
+                                }
+                            },
+                        ]
                     }
-                ],
-                "filter": [
-                    {
-                        "term": {
-                            "spatial.prefLabel.no.keyword": "Norge"
-                        }
+                }
+            ],
+            "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
                     }
-                ]
-            }
+                },
+            ],
+            "filter": [{"term": {"spatial.prefLabel.no.keyword": "Norge"}}],
+        }
     }
-    result = DataSetQuery(search_string="Ad", filters=[{"spatial": "Norge"}]).body["query"]
+    result = DataSetQuery(search_string="Ad", filters=[{"spatial": "Norge"}]).body[
+        "query"
+    ]
 
     assert json.dumps(result) == json.dumps(expected)
