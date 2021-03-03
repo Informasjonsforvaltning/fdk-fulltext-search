@@ -13,19 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup pyhton environment
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-
-    - name: Install pipenv
-      uses: dschep/install-pipenv-action@v1
-      with:
-        version: 2018.11.26
-
-    - name: Install invoke
-      run: pip install invoke
-
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@master
       with:
@@ -35,20 +22,30 @@ jobs:
     - name: Configure docker to use the gcloud command-line tool as a credential helper
       run: gcloud auth configure-docker eu.gcr.io
 
-    - name: Build Docker image with GitHub commit sha tag and latest tag
-      run: invoke build-image --tags=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA,eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        architecture: x64
+
+    - name: Install dependencies
+      run: |
+        pip install poetry==1.1.4
+        pip install nox==2020.12.31
+        pip install nox-poetry==0.8.1
 
     - name: Set max map count for elasticsearch
       run: sudo sysctl -w vm.max_map_count=262144
 
-    - name: Run tests
-      run: |
-        invoke unit-test --install
-        invoke contract-test --compose --image=eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
-        invoke stop-docker
+    - name: Build image and run tests with nox
+      run: nox
 
-    - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search -a
+    - name: Tag and publish docker image to Google Cloud
+      run: |
+        docker tag eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:test eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:$GITHUB_SHA
+        docker tag eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:test eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:latest
+        docker rmi eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search:test
+        docker -- push eu.gcr.io/digdir-fdk-infra/fdk-fulltext-search -a
 
     - name: Apply Helm template
       run: |
