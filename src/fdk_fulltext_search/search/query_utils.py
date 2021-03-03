@@ -478,11 +478,19 @@ def event_filter(filter_values):
 
 def event_type_filter(filter_values):
     associated_broader_types_by_events_list = []
+    associated_broader_types_list = []
     for uri in filter_values:
         associated_broader_types_by_events_list.append({"match": {"associatedBroaderTypesByEvents.keyword": uri}})
+    for uri in filter_values:
+        associated_broader_types_list.append({"match": {"associatedBroaderTypes.keyword": uri}})
     return {
         "bool": {
             "should": [
+                {
+                    "bool": {
+                        "should": associated_broader_types_list
+                    }
+                },
                 {
                     "bool": {
                         "must": associated_broader_types_by_events_list
