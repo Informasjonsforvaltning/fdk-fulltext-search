@@ -23,7 +23,7 @@ def test_hits_should_have_object_without_es_data():
 
 
 @pytest.mark.unit
-def test_should_map_data_access_to_accessRights():
+def test_should_map_data_access_to_access_rights():
     result = SearchResponse().map_response(test_hits["hits"])
     aggregation_keys = result["aggregations"].keys()
     assert "accessRights" in aggregation_keys

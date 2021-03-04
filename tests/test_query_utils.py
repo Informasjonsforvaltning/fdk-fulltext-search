@@ -431,8 +431,8 @@ def test_default_aggs():
 
 @pytest.mark.unit
 def test_get_filter_key():
-    result_orgPath = get_field_key("orgPath")
-    assert result_orgPath == "publisher.orgPath"
+    result_org_path = get_field_key("orgPath")
+    assert result_org_path == "publisher.orgPath"
     result_access = get_field_key("accessRights")
     assert result_access == "accessRights.code.keyword"
     result_los = get_field_key("los")
@@ -451,10 +451,10 @@ def test_get_filter_key():
 def test_get_filter_index():
     result_access = get_index_filter_for_key("accessRights")
     result_theme = get_index_filter_for_key("theme")
-    result_orgPath = get_index_filter_for_key("orgPath")
+    result_org_path = get_index_filter_for_key("orgPath")
     assert result_access == "datasets"
     assert result_theme == "datasets"
-    assert not result_orgPath
+    assert not result_org_path
 
 
 @pytest.mark.unit

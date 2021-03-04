@@ -489,7 +489,7 @@ class PublicServiceQuery(AbstractSearchQuery):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.hasCompetentAuthority_aggregation()
+            ] = query_utils.has_competent_authority_aggregation()
             self.body["aggs"]["isGroupedBy"] = query_utils.is_grouped_by_aggregation()
 
 
@@ -545,7 +545,7 @@ class EventQuery(AbstractSearchQuery):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.hasCompetentAuthority_aggregation()
+            ] = query_utils.has_competent_authority_aggregation()
 
 
 class PublicServicesAndEventsQuery(AbstractSearchQuery):
@@ -575,7 +575,7 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.hasCompetentAuthority_aggregation()
+            ] = query_utils.has_competent_authority_aggregation()
             self.body["aggs"]["isGroupedBy"] = query_utils.is_grouped_by_aggregation()
             self.body["aggs"][
                 "associatedBroaderTypesByEvents"

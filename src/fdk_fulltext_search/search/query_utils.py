@@ -471,7 +471,7 @@ def org_path_aggregation():
     }
 
 
-def hasCompetentAuthority_aggregation():
+def has_competent_authority_aggregation():
     return {
         "terms": {
             "field": "hasCompetentAuthority.orgPath",

@@ -103,7 +103,7 @@ class TestDataServiceSearch:
             last_date = date
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(
+    def test_should_filter_on_org_path(
         self, docker_service, api, wait_for_datasets_ready
     ):
         org_path = "PRIVAT/910244132"

@@ -582,7 +582,7 @@ def test_add_filter_should_add_multiple_los_filters():
 
 
 @pytest.mark.unit
-def test_add_filter_should_add_must_not_filter_for_Ukjent():
+def test_add_filter_should_add_must_not_filter_for_ukjent():
     must_no_access_rights = {"exists": {"field": "accessRights.code.keyword"}}
     index_filter = {"term": {"_index": "datasets"}}
     builder = AllIndicesQuery(

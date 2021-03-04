@@ -60,11 +60,11 @@ def test_get_indices_should_return_none(mock_elastic, mock_index_false_exists):
 @pytest.mark.unit
 def test_should_call_search_with_match_all_query(mock_elastic):
     search_all()
-    expectedQuery = AllIndicesQuery()
-    expectedQuery.add_aggs()
+    expected_query = AllIndicesQuery()
+    expected_query.add_aggs()
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
-        body=expectedQuery.body,
+        body=expected_query.body,
         search_type="dfs_query_then_fetch",
     )
 
@@ -73,24 +73,24 @@ def test_should_call_search_with_match_all_query(mock_elastic):
 def test_should_call_search_with_match_all_query_and_filters(mock_elastic):
     filters = {"filters": [{"accessRights": "PUBLIC"}]}
     search_all(filters)
-    expectedQuery = AllIndicesQuery(filters=[{"accessRights": "PUBLIC"}])
+    expected_query = AllIndicesQuery(filters=[{"accessRights": "PUBLIC"}])
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
-        body=expectedQuery.body,
+        body=expected_query.body,
         search_type="dfs_query_then_fetch",
     )
 
 
 @pytest.mark.unit
 def test_should_call_search_with_simple_query_string(mock_elastic):
-    expectedQuery = AllIndicesQuery(
+    expected_query = AllIndicesQuery(
         search_string="barnehage", filters=[{"orgPath": "/KOMMUNE/840029212"}]
     )
     req = {"q": "barnehage", "filters": [{"orgPath": "/KOMMUNE/840029212"}]}
     search_all(req)
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
-        body=expectedQuery.body,
+        body=expected_query.body,
         search_type="dfs_query_then_fetch",
     )
 
@@ -98,18 +98,18 @@ def test_should_call_search_with_simple_query_string(mock_elastic):
 @pytest.mark.unit
 def test_should_call_search_with_recent_query(mock_elastic):
     get_recent()
-    expectedQuery = RecentQuery().query
+    expected_query = RecentQuery().query
     mock_elastic.assert_called_once_with(
-        index=IndicesKey.SEARCHABLE_ALIAS, body=expectedQuery
+        index=IndicesKey.SEARCHABLE_ALIAS, body=expected_query
     )
 
 
 @pytest.mark.unit
 def test_should_call_search_with_recent_query_and_size_10(mock_elastic):
     get_recent(size=10)
-    expectedQuery = RecentQuery(10).query
+    expected_query = RecentQuery(10).query
     mock_elastic.assert_called_once_with(
-        index=IndicesKey.SEARCHABLE_ALIAS, body=expectedQuery
+        index=IndicesKey.SEARCHABLE_ALIAS, body=expected_query
     )
 
 
