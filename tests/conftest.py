@@ -2,13 +2,13 @@ import os
 import re
 import time
 
+from dotenv import load_dotenv
 import pytest
 import requests
 from requests import get
 from urllib3.exceptions import MaxRetryError, NewConnectionError
-from dotenv import load_dotenv
 
-from tests.contract.contract_utils import wait_for_es, populate
+from tests.contract.contract_utils import populate, wait_for_es
 
 json_concepts = {
     "page": {"totalElements": 2},

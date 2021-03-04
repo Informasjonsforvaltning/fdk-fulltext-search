@@ -1,18 +1,18 @@
+from elasticsearch.exceptions import ConnectionError
+
 from .queries import (
-    InformationModelQuery,
-    DataSetQuery,
-    DataServiceQuery,
-    ConceptQuery,
-    PublicServiceQuery,
-    EventQuery,
     AllIndicesQuery,
+    ConceptQuery,
+    DataServiceQuery,
+    DataSetQuery,
+    EventQuery,
+    InformationModelQuery,
+    PublicServiceQuery,
     PublicServicesAndEventsQuery,
     RecentQuery,
     SuggestionQuery,
 )
-
 from ..ingest import es_client, IndicesKey
-from elasticsearch.exceptions import ConnectionError
 
 query_builder = {
     IndicesKey.INFO_MODEL: InformationModelQuery,

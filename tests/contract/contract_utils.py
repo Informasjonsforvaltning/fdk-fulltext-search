@@ -1,9 +1,10 @@
+import time
+
 import pytest
 import requests
 from requests.adapters import HTTPAdapter
-from urllib3.exceptions import NewConnectionError, MaxRetryError
+from urllib3.exceptions import MaxRetryError, NewConnectionError
 from urllib3.util.retry import Retry
-import time
 
 expected_content_keys = ["hits", "page", "aggregations"]
 expected_page_keys = ["totalElements", "totalPages", "currentPage", "size"]

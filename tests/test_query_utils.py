@@ -1,27 +1,28 @@
 import json
+
 import pytest
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
 from fdk_fulltext_search.search.fields import index_fulltext_fields
 from fdk_fulltext_search.search.query_utils import (
-    get_term_filter,
-    exact_match_in_title_query,
-    word_in_title_query,
-    word_in_description_query,
-    autorativ_boost_clause,
-    simple_query_string,
-    query_template,
     all_indices_default_query,
+    autorativ_boost_clause,
+    collection_filter,
     default_all_indices_aggs,
+    exact_match_in_title_query,
+    get_aggregation_term_for_key,
+    get_catch_all_query_string,
     get_field_key,
     get_index_filter_for_key,
-    words_only_string,
-    some_words_in_title_query,
-    get_catch_all_query_string,
-    index_match_in_title_query,
-    get_aggregation_term_for_key,
     get_last_x_days_filter,
-    collection_filter,
+    get_term_filter,
+    index_match_in_title_query,
+    query_template,
+    simple_query_string,
+    some_words_in_title_query,
+    word_in_description_query,
+    word_in_title_query,
+    words_only_string,
 )
 
 

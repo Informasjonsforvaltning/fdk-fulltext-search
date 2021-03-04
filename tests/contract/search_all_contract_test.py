@@ -1,9 +1,9 @@
+from datetime import datetime
 import json
 import re
-from datetime import datetime
 
-import pytest
 from jsonpath_ng import parse
+import pytest
 from requests import post
 
 service_url = "http://localhost:8000"

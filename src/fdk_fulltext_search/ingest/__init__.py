@@ -1,16 +1,16 @@
+from dataclasses import asdict
+from datetime import datetime
 import json
+from json import JSONDecodeError
 import logging
 import math
-import time
-from datetime import datetime
-from dataclasses import asdict
-from json import JSONDecodeError
-
-import requests
 import os
+import time
+
 from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
 import fdk_rdf_parser
+import requests
 from requests import HTTPError, RequestException, Timeout
 import simplejson
 

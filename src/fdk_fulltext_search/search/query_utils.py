@@ -1,14 +1,14 @@
 import re
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
+from fdk_fulltext_search.search.fields import (
+    index_description_fields,
+    index_fulltext_fields,
+    index_title_fields,
+)
 from fdk_fulltext_search.search.query_utils_dataset import (
     autorativ_dataset_query,
     open_data_query,
-)
-from fdk_fulltext_search.search.fields import (
-    index_description_fields,
-    index_title_fields,
-    index_fulltext_fields,
 )
 
 

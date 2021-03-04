@@ -1,13 +1,13 @@
-import os
-
 from enum import Enum
-from typing import Iterable, Dict, Any
-from feedgen.feed import FeedGenerator
-from flask import request
+import os
+from typing import Any, Dict, Iterable
 from urllib.parse import urlencode
 
-from fdk_fulltext_search.search import client
+from feedgen.feed import FeedGenerator
+from flask import request
+
 from fdk_fulltext_search.ingest import IndicesKey
+from fdk_fulltext_search.search import client
 
 
 FDK_BASE_URI = os.getenv("FDK_BASE_URI", "https://staging.fellesdatakatalog.digdir.no")

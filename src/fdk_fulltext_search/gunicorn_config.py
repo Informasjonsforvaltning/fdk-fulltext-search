@@ -1,9 +1,10 @@
-from dotenv import load_dotenv
+import logging
+import multiprocessing
 from os import environ as env
 import sys
-import logging
+
+from dotenv import load_dotenv
 from gunicorn import glogging
-import multiprocessing
 from pythonjsonlogger import jsonlogger
 
 load_dotenv()

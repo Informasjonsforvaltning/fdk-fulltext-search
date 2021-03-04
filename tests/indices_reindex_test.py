@@ -1,7 +1,8 @@
 from datetime import datetime
+
 import pytest
 
-from fdk_fulltext_search.ingest import update_index_info, init_info_doc, create_index
+from fdk_fulltext_search.ingest import create_index, init_info_doc, update_index_info
 
 
 def mock_update_by_query_result(m_query_success):

@@ -96,6 +96,7 @@ def lint(session: Session) -> None:
     session.install(
         "flake8",
         "flake8-black",
+        "flake8-import-order",
     )
     session.run("flake8", *args)
 
