@@ -55,3 +55,26 @@ FDK_EVENT_HARVESTER_URI=http://localhost:8080
 2. Go to `http://0.0.0.0:8080/__admin/recorder/` and start recording with target url 
 3. Start the application and run an http request to POST /indices
 4. Stop recording
+
+### Other helpful commands
+
+Code formatting:
+```
+% nox -s black
+```
+
+Run tests outside of a nox session:
+```
+% poetry run pytest
+```
+
+Run specific nox sessions:
+```
+% nox -s safety
+% nox -rs lint
+```
+
+Run session with specified arguments:
+```
+% nox -s tests -- -vv
+```
