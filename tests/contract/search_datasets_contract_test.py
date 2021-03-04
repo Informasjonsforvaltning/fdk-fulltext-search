@@ -326,7 +326,7 @@ class TestDataSetSearch:
             elif matches.__len__() > 0:
                 partial_hits += 1
             else:
-                assert False, "no occurrence of los themes for profile"
+                raise AssertionError("no occurrence of los themes for profile")
         assert partial_hits > 0
 
 

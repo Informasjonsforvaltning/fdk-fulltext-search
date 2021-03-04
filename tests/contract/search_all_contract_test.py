@@ -20,7 +20,7 @@ class TestSearchAll:
         hasAggregation = False
         hasPage = False
         unknownItems = []
-        for k, v in result.items():
+        for k, _v in result.items():
             if k == "hits":
                 hasHits = True
             elif k == "aggregations":
