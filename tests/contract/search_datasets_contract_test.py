@@ -111,11 +111,11 @@ class TestDataSetSearch:
                 elif (
                     hit.get("accessRights") and hit["accessRights"]["code"] == "PUBLIC"
                 ):
-                    openLicence = [
+                    open_licence = [
                         match.value
                         for match in parse("distribution[*].openLicense").find(hit)
                     ]
-                    if True in openLicence:
+                    if True in open_licence:
                         assert previous_was_open_data, (
                             "open authorative dataset encountered after non-open "
                             "authoritative dataset dataset "
@@ -163,7 +163,7 @@ class TestDataSetSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(
+    def test_should_filter_on_org_path(
         self, docker_service, api, wait_for_datasets_ready
     ):
         org_path = "STAT/972417858/971040238"
@@ -213,17 +213,17 @@ class TestDataSetSearch:
             result["page"]["totalElements"]
             == result["aggregations"]["opendata"]["doc_count"]
         )
-        hasOpenLicenceDistribution = False
+        has_open_licence_distribution = False
         for hits in result["hits"]:
             assert hits["accessRights"]["code"] == "PUBLIC"
             for dists in hits["distribution"]:
                 if "openLicense" in dists.keys() and dists["openLicense"]:
-                    hasOpenLicenceDistribution = True
+                    has_open_licence_distribution = True
                     break
-        assert hasOpenLicenceDistribution is True
+        assert has_open_licence_distribution is True
 
     @pytest.mark.contract
-    def test_filter_on_accessRights_NON_PUBLIC(
+    def test_filter_on_access_rights_non_public(
         self, docker_service, api, wait_for_datasets_ready
     ):
         body = {"filters": [{"accessRights": "NON_PUBLIC"}]}
@@ -262,7 +262,7 @@ class TestDataSetSearch:
             assert los_path in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath_and_spatial(
+    def test_should_filter_on_org_path_and_spatial(
         self, docker_service, api, wait_for_datasets_ready
     ):
         expected_org_path = "PRIVAT"

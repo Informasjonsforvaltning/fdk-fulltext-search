@@ -16,23 +16,23 @@ class TestSearchAll:
         self, docker_service, api, wait_for_ready
     ):
         result = post(service_url + "/search").json()
-        hasHits = False
-        hasAggregation = False
-        hasPage = False
-        unknownItems = []
+        has_hits = False
+        has_aggregation = False
+        has_page = False
+        unknown_items = []
         for k, _v in result.items():
             if k == "hits":
-                hasHits = True
+                has_hits = True
             elif k == "aggregations":
-                hasAggregation = True
+                has_aggregation = True
             elif k == "page":
-                hasPage = True
+                has_page = True
             else:
-                unknownItems.append(k)
-        assert hasHits is True
-        assert hasAggregation is True
-        assert hasPage is True
-        assert len(unknownItems) == 0
+                unknown_items.append(k)
+        assert has_hits is True
+        assert has_aggregation is True
+        assert has_page is True
+        assert len(unknown_items) == 0
 
     @pytest.mark.contract
     def test_search_without_query_should_have_correct_sorting(
@@ -72,11 +72,11 @@ class TestSearchAll:
                         "non-authoritative hit {0}".format(json.dumps(debug_values))
                     )
                     if hits["accessRights"]["code"] == "PUBLIC":
-                        openLicence = [
+                        open_licence = [
                             match.value
                             for match in parse("distribution[*].openLicense").find(hits)
                         ]
-                        if True in openLicence:
+                        if True in open_licence:
                             assert (
                                 previous_was_open_data
                             ), "open dataset encountered after non-open dataset dataset"
@@ -139,8 +139,8 @@ class TestSearchAll:
         result = post(url=service_url + "/search", json=body)
         for hit in result.json()["hits"]:
             if "prefLabel" in hit:
-                prefLabels = hit["prefLabel"]
-                if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
+                pref_labels = hit["prefLabel"]
+                if is_exact_match(pref_labels.keys(), pref_labels, srch_string):
                     assert last_was_exact, "exact match found at position {0}".format(
                         position
                     )
@@ -247,7 +247,7 @@ class TestSearchAll:
         )
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_orgPath(
+    def test_hits_should_be_filtered_on_org_path(
         self, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"orgPath": "/PRIVAT"}]}
@@ -256,7 +256,7 @@ class TestSearchAll:
             assert "PRIVAT" in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_hits_should_have_word_and_be_filtered_on_orgPath(
+    def test_hits_should_have_word_and_be_filtered_on_org_path(
         self, docker_service, api, wait_for_ready
     ):
         body = {"q": "barnehage", "filters": [{"orgPath": "/KOMMUNE/840029212"}]}
@@ -270,7 +270,7 @@ class TestSearchAll:
             assert "/KOMMUNE/840029212" in hit["publisher"]["orgPath"]
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_is_open_Access(
+    def test_hits_should_be_filtered_on_is_open_access(
         self, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"isOpenAccess": "true"}]}
@@ -279,7 +279,7 @@ class TestSearchAll:
             assert hit["isOpenAccess"] is True
 
     @pytest.mark.contract
-    def test_hits_should_have_word_and_be_filtered_on_is_not_open_Access(
+    def test_hits_should_have_word_and_be_filtered_on_is_not_open_access(
         self, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"isOpenAccess": "false"}]}
@@ -288,7 +288,7 @@ class TestSearchAll:
             assert hit["isOpenAccess"] is False
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_accessRights_PUBLIC(
+    def test_hits_should_be_filtered_on_access_rights_public(
         self, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"accessRights": "PUBLIC"}]}
@@ -297,7 +297,7 @@ class TestSearchAll:
             assert hit["accessRights"]["code"] == "PUBLIC"
 
     @pytest.mark.contract
-    def test_hits_should_be_filtered_on_accessRights_NON_PUBLIC(
+    def test_hits_should_be_filtered_on_access_rights_non_public(
         self, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"accessRights": "NON_PUBLIC"}]}
@@ -521,14 +521,14 @@ class TestSearchAll:
             result["page"]["totalElements"]
             == result["aggregations"]["opendata"]["doc_count"]
         )
-        hasOpenLicenceDistribution = False
+        has_open_licence_distribution = False
         for hits in result["hits"]:
             assert hits["accessRights"]["code"] == "PUBLIC"
             for dists in hits["distribution"]:
                 if "openLicense" in dists.keys() and dists["openLicense"]:
-                    hasOpenLicenceDistribution = True
+                    has_open_licence_distribution = True
                     break
-        assert hasOpenLicenceDistribution is True
+        assert has_open_licence_distribution is True
 
     @pytest.mark.contract
     def test_filter_on_unknown_access_datasets(
@@ -635,8 +635,8 @@ def is_exact_match(keys, hit, search):
 
 def is_exact_match_in_title(hit, srch_string):
     if "prefLabel" in hit:
-        prefLabels = hit["prefLabel"]
-        if is_exact_match(prefLabels.keys(), prefLabels, srch_string):
+        pref_labels = hit["prefLabel"]
+        if is_exact_match(pref_labels.keys(), pref_labels, srch_string):
             return True
     elif "title" in hit:
         title = hit["title"]
@@ -653,12 +653,12 @@ def has_word_in_title(hit, search_string, search_string_parts=None):
     if search_string_parts is None:
         search_string_parts = []
     if "prefLabel" in hit:
-        prefLabels = hit["prefLabel"]
-        prt1 = re.findall(search_string.lower(), json.dumps(prefLabels).lower())
+        pref_labels = hit["prefLabel"]
+        prt1 = re.findall(search_string.lower(), json.dumps(pref_labels).lower())
         prt2 = 0
         if search_string_parts:
             for part in search_string_parts:
-                partial_matches = re.findall(part, json.dumps(prefLabels))
+                partial_matches = re.findall(part, json.dumps(pref_labels))
                 prt2 += partial_matches.__len__()
         if len(prt1) > 0 or prt2 > 0:
             return True

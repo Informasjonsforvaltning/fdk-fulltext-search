@@ -61,7 +61,7 @@ def fetch_all_content():
     public_services_status = fetch_public_services()
     events_status = fetch_events()
     total_time = time.time() - start
-    totalElements = (
+    total_elements = (
         info_status["count"]
         + concept_status["count"]
         + service_status["count"]
@@ -81,7 +81,7 @@ def fetch_all_content():
     result = {
         "status": status,
         "took": total_time,
-        "total": totalElements,
+        "total": total_elements,
         "informationmodels": info_status,
         "concepts": concept_status,
         "dataservice": service_status,
@@ -135,12 +135,12 @@ def fetch_concepts():
         logging.info("fetching concepts")
         size = requests.get(url=concept_url, timeout=5)
         size.raise_for_status()
-        totalElements = size.json()["page"]["totalElements"]
-        doRequest = math.ceil(totalElements / 1000)
-        # repeat request if totalElements exceeds max size of response
+        total_elements = size.json()["page"]["totalElements"]
+        do_request = math.ceil(total_elements / 1000)
+        # repeat request if total_elements exceeds max size of response
         concepts = []
-        if doRequest > 1:
-            for x in range(doRequest):
+        if do_request > 1:
+            for x in range(do_request):
                 r = requests.get(
                     url=concept_url, params={"size": "1000", "page": str(x)}, timeout=5
                 )

@@ -265,7 +265,7 @@ def test_information_model_add_filter():
 
 
 @pytest.mark.unit
-def test_information_model_should_return_query_with_must_not_for_MISSING():
+def test_information_model_should_return_query_with_must_not_for_missing():
     expected_body = {
         "query": {
             "bool": {

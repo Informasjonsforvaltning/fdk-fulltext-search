@@ -97,7 +97,7 @@ class TestInformationModelSearch:
                 last_was_partial_match_in_title = False
 
     @pytest.mark.contract
-    def test_should_filter_on_orgPath(
+    def test_should_filter_on_org_path(
         self, docker_service, api, wait_for_information_models
     ):
         org_path = "STAT/972417858/991825827"
@@ -145,7 +145,7 @@ class TestInformationModelSearch:
             assert los_path_2 in los_paths
 
     @pytest.mark.contract
-    def test_should_filter_on_los_and_orgPath(
+    def test_should_filter_on_los_and_org_path(
         self, docker_service, api, wait_for_information_models
     ):
         org_path = "STAT"
