@@ -1,4 +1,6 @@
 """Nox sessions."""
+import tempfile
+
 import nox
 from nox.sessions import Session
 import nox_poetry
@@ -6,6 +8,7 @@ import nox_poetry
 locations = "src", "tests", "noxfile.py"
 nox.options.sessions = (
     "lint",
+    "safety",
     "tests",
 )
 
@@ -110,3 +113,20 @@ def coverage(session: Session) -> None:
     session.install("coverage[toml]", "codecov")
     session.run("coverage", "xml", "--fail-under=0")
     session.run("codecov", *session.posargs)
+
+
+@nox_poetry.session
+def safety(session: Session) -> None:
+    """Scan dependencies for insecure packages."""
+    with tempfile.NamedTemporaryFile() as requirements:
+        session.run(
+            "poetry",
+            "export",
+            "--dev",
+            "--format=requirements.txt",
+            "--without-hashes",
+            f"--output={requirements.name}",
+            external=True,
+        )
+        session.install("safety")
+        session.run("safety", "check", f"--file={requirements.name}", "--full-report")
