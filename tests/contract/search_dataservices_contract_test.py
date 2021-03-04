@@ -1,10 +1,11 @@
+from datetime import datetime
 import json
 import time
-from datetime import datetime
+
+from jsonpath_ng import parse
 import pytest
 import requests
 from urllib3.exceptions import MaxRetryError, NewConnectionError
-from jsonpath_ng import parse
 
 from tests.contract.contract_utils import expected_page_keys
 from tests.contract.search_all_contract_test import service_url

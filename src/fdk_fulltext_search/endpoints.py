@@ -1,22 +1,21 @@
 import json
 import os
 
-from flask_restful import Resource, abort
 from flask import request, Response
+from flask_restful import abort, Resource
 
-from .search import client
 from .ingest import (
     fetch_all_content,
-    IndicesKey,
-    fetch_data_sets,
-    fetch_information_models,
-    fetch_data_services,
     fetch_concepts,
-    fetch_public_services,
+    fetch_data_services,
+    fetch_data_sets,
     fetch_events,
+    fetch_information_models,
+    fetch_public_services,
+    IndicesKey,
 )
-from .search.responses import SearchResponse, IndicesInfoResponse, SuggestionResponse
-
+from .search import client
+from .search.responses import IndicesInfoResponse, SearchResponse, SuggestionResponse
 from .service.feed import create_feed, FeedType
 
 

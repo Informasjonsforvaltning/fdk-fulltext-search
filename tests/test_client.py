@@ -2,18 +2,18 @@ import pytest
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
 from fdk_fulltext_search.search.client import (
-    search_all,
     AllIndicesQuery,
-    get_recent,
-    RecentQuery,
-    get_indices,
-    count,
-    search_in_index,
-    InformationModelQuery,
-    DataSetQuery,
     ConceptQuery,
-    PublicServiceQuery,
+    count,
+    DataSetQuery,
+    get_indices,
+    get_recent,
     get_suggestions,
+    InformationModelQuery,
+    PublicServiceQuery,
+    RecentQuery,
+    search_all,
+    search_in_index,
     SuggestionQuery,
 )
 

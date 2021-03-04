@@ -1,11 +1,11 @@
 import pytest
 
 from fdk_fulltext_search.ingest import (
-    fetch_information_models,
     fetch_concepts,
-    fetch_data_sets,
     fetch_data_services,
+    fetch_data_sets,
     fetch_events,
+    fetch_information_models,
     fetch_public_services,
 )
 

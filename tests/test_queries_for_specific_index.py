@@ -1,10 +1,10 @@
 import json
 
-import pytest
 from jsonpath_ng import parse
+import pytest
 
 from fdk_fulltext_search.search.fields import index_fulltext_fields, IndicesKey
-from fdk_fulltext_search.search.queries import InformationModelQuery, DataSetQuery
+from fdk_fulltext_search.search.queries import DataSetQuery, InformationModelQuery
 
 
 @pytest.mark.unit

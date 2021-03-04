@@ -2,15 +2,15 @@ import abc
 from enum import Enum
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
-from fdk_fulltext_search.search.query_utils_dataset import (
-    autorativ_dataset_query,
-    open_data_query,
-)
 from fdk_fulltext_search.search.fields import (
     index_suggestion_fields,
     index_title_fields,
 )
 import fdk_fulltext_search.search.query_utils as query_utils
+from fdk_fulltext_search.search.query_utils_dataset import (
+    autorativ_dataset_query,
+    open_data_query,
+)
 from fdk_fulltext_search.search.themeprofiles import theme_profile_filter
 
 

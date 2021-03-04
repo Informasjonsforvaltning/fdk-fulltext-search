@@ -1,13 +1,13 @@
 import json
 
-import pytest
 from jsonpath_ng import parse
+import pytest
 
 from fdk_fulltext_search.search.queries import DataSetQuery
 from fdk_fulltext_search.search.themeprofiles import (
     theme_profile_filter,
-    ThemeProfileKeys,
     theme_profile_los_paths,
+    ThemeProfileKeys,
 )
 
 

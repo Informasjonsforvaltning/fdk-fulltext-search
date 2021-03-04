@@ -1,9 +1,10 @@
+from datetime import datetime
 import json
 import re
-from datetime import datetime
+
+from jsonpath_ng import parse
 import pytest
 import requests
-from jsonpath_ng import parse
 
 from tests.contract.contract_utils import expected_page_keys
 from tests.contract.search_all_contract_test import service_url

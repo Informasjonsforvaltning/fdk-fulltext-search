@@ -2,9 +2,9 @@ import json
 import re
 import time
 
+from jsonpath_ng import parse
 import pytest
 import requests
-from jsonpath_ng import parse
 from requests import get
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 

@@ -336,6 +336,17 @@ black = "*"
 flake8 = ">=3.0.0"
 
 [[package]]
+name = "flake8-import-order"
+version = "0.18.1"
+description = "Flake8 and pylama plugin that checks the ordering of import statements."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycodestyle = "*"
+
+[[package]]
 name = "flask"
 version = "1.1.2"
 description = "A simple framework for building complex web applications."
@@ -913,7 +924,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8c901a6341716a289e221e6ba7a02826b9b2207d108e18a2d24ceeaf1a0186a6"
+content-hash = "13ecc81154540a1ce48110b3b8a3a7696756c7396508ec93688cdc99ef103b57"
 
 [metadata.files]
 aniso8601 = [
@@ -1114,6 +1125,10 @@ flake8 = [
 ]
 flake8-black = [
     {file = "flake8-black-0.2.1.tar.gz", hash = "sha256:f26651bc10db786c03f4093414f7c9ea982ed8a244cec323c984feeffdf4c118"},
+]
+flake8-import-order = [
+    {file = "flake8-import-order-0.18.1.tar.gz", hash = "sha256:a28dc39545ea4606c1ac3c24e9d05c849c6e5444a50fb7e9cdd430fc94de6e92"},
+    {file = "flake8_import_order-0.18.1-py2.py3-none-any.whl", hash = "sha256:90a80e46886259b9c396b578d75c749801a41ee969a235e163cfe1be7afd2543"},
 ]
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},

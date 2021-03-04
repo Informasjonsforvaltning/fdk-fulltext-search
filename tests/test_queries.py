@@ -1,12 +1,12 @@
 import json
 
-import pytest
 from jsonpath_ng import parse
+import pytest
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
 from fdk_fulltext_search.search.queries import (
-    RecentQuery,
     AllIndicesQuery,
+    RecentQuery,
     SuggestionQuery,
 )
 from fdk_fulltext_search.search.query_utils_dataset import open_data_query
