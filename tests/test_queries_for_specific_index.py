@@ -323,6 +323,7 @@ def test_dataset_default_aggregations():
             }
         },
         "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
+        "mediaType": {"terms": {"field": "distribution.mediaType.code.keyword"}},
     }
     result = DataSetQuery().body["aggs"]
     agg_keys = result.keys()
@@ -333,6 +334,7 @@ def test_dataset_default_aggregations():
     assert "theme" in agg_keys
     assert "accessRights" in agg_keys
     assert "spatial" in agg_keys
+    assert "mediaType" in agg_keys
 
     assert json.dumps(result) == json.dumps(expected_aggs)
 
@@ -387,6 +389,7 @@ def test_dataset_empty_query():
                 }
             },
             "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
+            "mediaType": {"terms": {"field": "distribution.mediaType.code.keyword"}},
         },
     }
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)
@@ -663,5 +666,149 @@ def test_dataset_with_spatial_filter():
     result = DataSetQuery(search_string="Ad", filters=[{"spatial": "Norge"}]).body[
         "query"
     ]
+
+    assert json.dumps(result) == json.dumps(expected)
+
+
+@pytest.mark.unit
+def test_dataset_with_media_type_filter():
+    expected = {
+        "bool": {
+            "must": [
+                {
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "dis_max": {
+                                    "queries": [
+                                        {
+                                            "multi_match": {
+                                                "query": "Fotball",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nb.ngrams",
+                                                    "title.nb.ngrams.2_gram",
+                                                    "title.nb.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Fotball",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nn.ngrams",
+                                                    "title.nn.ngrams.2_gram",
+                                                    "title.nn.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Fotball",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.no.ngrams",
+                                                    "title.no.ngrams.2_gram",
+                                                    "title.no.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "Fotball",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.en.ngrams",
+                                                    "title.en.ngrams.2_gram",
+                                                    "title.en.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                    ],
+                                    "boost": 5,
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Fotball Fotball*",
+                                    "fields": [
+                                        "description.nb",
+                                        "description.nn",
+                                        "description.no",
+                                        "description.en",
+                                    ],
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "Fotball Fotball*",
+                                    "fields": [
+                                        "title.*^3",
+                                        "objective.*",
+                                        "keyword.*^2",
+                                        "theme.title.*",
+                                        "expandedLosTema.*",
+                                        "description.*",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "accessRights.prefLabel.*^3",
+                                        "accessRights.code",
+                                        "subject.prefLabel.*",
+                                        "subject.altLabel.*",
+                                        "subject.definition.*",
+                                        "distribution.title.*",
+                                        "distribution.format",
+                                    ],
+                                    "boost": 0.5,
+                                }
+                            },
+                            {
+                                "simple_query_string": {
+                                    "query": "*Fotball Fotball Fotball*",
+                                    "fields": [
+                                        "title.*^3",
+                                        "objective.*",
+                                        "keyword.*^2",
+                                        "theme.title.*",
+                                        "expandedLosTema.*",
+                                        "description.*",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "accessRights.prefLabel.*^3",
+                                        "accessRights.code",
+                                        "subject.prefLabel.*",
+                                        "subject.altLabel.*",
+                                        "subject.definition.*",
+                                        "distribution.title.*",
+                                        "distribution.format",
+                                    ],
+                                    "boost": 0.001,
+                                }
+                            },
+                        ]
+                    }
+                }
+            ],
+            "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
+                    }
+                },
+            ],
+            "filter": [
+                {"term": {"distribution.mediaType.code.keyword": "application/json"}}
+            ],
+        }
+    }
+    result = DataSetQuery(
+        search_string="Fotball",
+        filters=[{"distribution.mediaType.code.keyword": "application/json"}],
+    ).body["query"]
 
     assert json.dumps(result) == json.dumps(expected)

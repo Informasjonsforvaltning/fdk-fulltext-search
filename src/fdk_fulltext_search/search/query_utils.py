@@ -340,6 +340,8 @@ def get_field_key(filter_key: str):
         return "uri.keyword"
     elif filter_key == "formats":
         return "mediaType.keyword"
+    elif filter_key == "datasetMediaType":
+        return "distribution.mediaType.code.keyword"
     else:
         return filter_key
 
@@ -368,6 +370,12 @@ def collection_filter(filter_obj: dict):
     collection = get_term_filter_from_collection(
         key=filter_obj["field"], collection=filter_obj["values"]
     )
+
+    if get_field_key("datasetMediaType") == filter_obj["field"]:
+        return {"bool": {"must": collection}}
+    if get_field_key("formats") == filter_obj["field"]:
+        return {"bool": {"must": collection}}
+
     return {"bool": {"should": collection}}
 
 
