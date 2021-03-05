@@ -305,13 +305,12 @@ class DataSetQuery(AbstractSearchQuery):
             self.query = {"match_all": {}}
         self.add_aggs(aggs)
         if filters:
-            if filters:
-                self.body["query"] = query_utils.query_with_final_boost_template(
-                    must_clause=[self.query],
-                    should_clause=[autorativ_dataset_query(), open_data_query()],
-                    filter_clause=True,
-                )
-                self.add_filters(filters)
+            self.body["query"] = query_utils.query_with_final_boost_template(
+                must_clause=[self.query],
+                should_clause=[autorativ_dataset_query(), open_data_query()],
+                filter_clause=True,
+            )
+            self.add_filters(filters)
         else:
             self.body["query"] = query_utils.query_with_final_boost_template(
                 must_clause=[self.query],
@@ -360,6 +359,9 @@ class DataSetQuery(AbstractSearchQuery):
             )
             self.body["aggs"]["spatial"] = query_utils.get_aggregation_term_for_key(
                 aggregation_key="spatial"
+            )
+            self.body["aggs"]["mediaType"] = query_utils.get_aggregation_term_for_key(
+                aggregation_key="distribution.mediaType.code.keyword"
             )
 
 
