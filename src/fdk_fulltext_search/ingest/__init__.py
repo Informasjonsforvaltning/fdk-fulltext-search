@@ -34,6 +34,8 @@ MODEL_HARVESTER_URI = os.getenv(
     "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
 )
 
+RECORDS_PARAM = "?catalogrecords=true"
+
 
 def error_msg(exec_point, reason, count=0):
     return {
@@ -94,7 +96,7 @@ def fetch_all_content():
 
 
 def fetch_information_models():
-    info_url = f"{MODEL_HARVESTER_URI}/catalogs?catalogrecords=true"
+    info_url = f"{MODEL_HARVESTER_URI}/catalogs{RECORDS_PARAM}"
 
     logging.info(f"fetching information models from {info_url}")
     try:
@@ -246,7 +248,7 @@ def fetch_data_services():
 
 
 def fetch_public_services():
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
+    event_url = f"{FDK_EVENT_HARVESTER_URI}/events{RECORDS_PARAM}"
     event_response = None
     try:
         event_response = requests.get(
@@ -257,7 +259,7 @@ def fetch_public_services():
         result = error_msg(f"fetch events from {event_url}", err)
         logging.error(result["message"])
 
-    public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services"
+    public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services{RECORDS_PARAM}"
 
     logging.info(f"fetching public_services from {public_service_url}")
     try:
@@ -297,7 +299,7 @@ def fetch_public_services():
 
 
 def fetch_events():
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
+    event_url = f"{FDK_EVENT_HARVESTER_URI}/events{RECORDS_PARAM}"
 
     logging.info(f"fetching events from {event_url}")
     try:
