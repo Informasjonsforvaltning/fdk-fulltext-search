@@ -1,4 +1,4 @@
-from fdk_fulltext_search.search.query_utils import get_field_key
+from fdk_fulltext_search.search.query_filter_utils import get_field_by_filter_key
 
 
 class ThemeProfileKeys:
@@ -11,7 +11,7 @@ class ThemeProfileKeys:
 
 def theme_profile_filter(key: str) -> dict:
     terms_list = []
-    los_filter_key = get_field_key("los")
+    los_filter_key = get_field_by_filter_key("los")
     for path in theme_profile_los_paths[ThemeProfileKeys(key).value]:
         terms_list.append({"term": {los_filter_key: path}})
     return {"bool": {"should": terms_list}}

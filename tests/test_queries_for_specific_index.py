@@ -1,16 +1,30 @@
 import json
 
-from jsonpath_ng import parse
 import pytest
 
-from fdk_fulltext_search.search.fields import index_fulltext_fields, IndicesKey
 from fdk_fulltext_search.search.queries import DataSetQuery, InformationModelQuery
 
 
 @pytest.mark.unit
 def test_information_model_empty_query():
     expected_body = {
-        "query": {"match_all": {}},
+        "query": {
+            "bool": {
+                "must": {"match_all": {}},
+                "should": [
+                    {"match": {"provenance.code": "NASJONAL"}},
+                    {"term": {"nationalComponent": "true"}},
+                    {
+                        "bool": {
+                            "must": [
+                                {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                                {"term": {"distribution.openLicense": "true"}},
+                            ]
+                        }
+                    },
+                ],
+            }
+        },
         "aggs": {
             "los": {
                 "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
@@ -36,88 +50,267 @@ def test_information_model_with_search_string_query():
             "dis_max": {
                 "queries": [
                     {
-                        "dis_max": {
-                            "queries": [
+                        "bool": {
+                            "must": {
+                                "multi_match": {
+                                    "query": "RA-0554 Pris",
+                                    "fields": [
+                                        "title.en.raw",
+                                        "title.nb.raw",
+                                        "title.nn.raw",
+                                        "title.no.raw",
+                                    ],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
                                 {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.nb.ngrams",
-                                            "title.nb.ngrams.2_gram",
-                                            "title.nb.ngrams.3_gram",
-                                        ],
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.nn.ngrams",
-                                            "title.nn.ngrams.2_gram",
-                                            "title.nn.ngrams.3_gram",
-                                        ],
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.no.ngrams",
-                                            "title.no.ngrams.2_gram",
-                                            "title.no.ngrams.3_gram",
-                                        ],
-                                    }
-                                },
-                                {
-                                    "multi_match": {
-                                        "query": "RA-0554 Pris",
-                                        "type": "bool_prefix",
-                                        "fields": [
-                                            "title.en.ngrams",
-                                            "title.en.ngrams.2_gram",
-                                            "title.en.ngrams.3_gram",
-                                        ],
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
                                     }
                                 },
                             ],
-                            "boost": 2,
+                            "boost": 20,
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "RA-0554+Pris RA-0554+Pris*",
-                            "fields": ["schema^0.5"],
+                        "bool": {
+                            "must": {
+                                "dis_max": {
+                                    "queries": [
+                                        {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.en.ngrams",
+                                                    "title.en.ngrams.2_gram",
+                                                    "title.en.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nb.ngrams",
+                                                    "title.nb.ngrams.2_gram",
+                                                    "title.nb.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.nn.ngrams",
+                                                    "title.nn.ngrams.2_gram",
+                                                    "title.nn.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "type": "bool_prefix",
+                                                "fields": [
+                                                    "title.no.ngrams",
+                                                    "title.no.ngrams.2_gram",
+                                                    "title.no.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "simple_query_string": {
+                                                "query": "RA 0554 Pris",
+                                                "fields": [
+                                                    "title.en",
+                                                    "title.nb",
+                                                    "title.nn",
+                                                    "title.no",
+                                                ],
+                                            }
+                                        },
+                                    ],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
+                            ],
+                            "boost": 10,
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "RA+0554+Pris RA+0554+Pris*",
-                            "fields": [
-                                "title.*^3",
-                                "keyword.*^2",
-                                "theme.title.*",
-                                "losTheme.name.^3",
-                                "description.*",
-                                "publisher.name^3",
-                                "publisher.prefLabel^3",
+                        "bool": {
+                            "must": {
+                                "multi_match": {
+                                    "query": "RA-0554 Pris",
+                                    "fields": [
+                                        "publisher.prefLabel.*",
+                                        "publisher.title.*",
+                                        "hasCompetentAuthority.prefLabel.*",
+                                        "hasCompetentAuthority.name.*",
+                                    ],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
+                            ],
+                            "boost": 10,
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "RA-0554+Pris RA-0554+Pris*",
+                                    "fields": ["schema^0.5"],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
+                            ],
+                        }
+                    },
+                    {
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "RA+0554+Pris RA+0554+Pris*",
+                                    "fields": [
+                                        "description.*",
+                                        "keyword.*^2",
+                                        "losTheme.name.^3",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "theme.title.*",
+                                        "title.*^3",
+                                    ],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
                             ],
                             "boost": 0.02,
                         }
                     },
                     {
-                        "simple_query_string": {
-                            "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
-                            "fields": [
-                                "title.*^3",
-                                "keyword.*^2",
-                                "theme.title.*",
-                                "losTheme.name.^3",
-                                "description.*",
-                                "publisher.name^3",
-                                "publisher.prefLabel^3",
+                        "bool": {
+                            "must": {
+                                "simple_query_string": {
+                                    "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                                    "fields": [
+                                        "description.*",
+                                        "keyword.*^2",
+                                        "losTheme.name.^3",
+                                        "publisher.name^3",
+                                        "publisher.prefLabel^3",
+                                        "theme.title.*",
+                                        "title.*^3",
+                                    ],
+                                }
+                            },
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
                             ],
                             "boost": 0.001,
                         }
@@ -152,88 +345,267 @@ def test_information_model_add_filter():
                         "dis_max": {
                             "queries": [
                                 {
-                                    "dis_max": {
-                                        "queries": [
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "fields": [
+                                                    "title.en.raw",
+                                                    "title.nb.raw",
+                                                    "title.nn.raw",
+                                                    "title.no.raw",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
                                             {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nb.ngrams",
-                                                        "title.nb.ngrams.2_gram",
-                                                        "title.nb.ngrams.3_gram",
-                                                    ],
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.nn.ngrams",
-                                                        "title.nn.ngrams.2_gram",
-                                                        "title.nn.ngrams.3_gram",
-                                                    ],
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.no.ngrams",
-                                                        "title.no.ngrams.2_gram",
-                                                        "title.no.ngrams.3_gram",
-                                                    ],
-                                                }
-                                            },
-                                            {
-                                                "multi_match": {
-                                                    "query": "RA-0554 Pris",
-                                                    "type": "bool_prefix",
-                                                    "fields": [
-                                                        "title.en.ngrams",
-                                                        "title.en.ngrams.2_gram",
-                                                        "title.en.ngrams.3_gram",
-                                                    ],
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
                                                 }
                                             },
                                         ],
-                                        "boost": 2,
+                                        "boost": 20,
                                     }
                                 },
                                 {
-                                    "simple_query_string": {
-                                        "query": "RA-0554+Pris RA-0554+Pris*",
-                                        "fields": ["schema^0.5"],
+                                    "bool": {
+                                        "must": {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "multi_match": {
+                                                            "query": "RA-0554 Pris",
+                                                            "type": "bool_prefix",
+                                                            "fields": [
+                                                                "title.en.ngrams",
+                                                                "title.en.ngrams.2_gram",
+                                                                "title.en.ngrams.3_gram",
+                                                            ],
+                                                        }
+                                                    },
+                                                    {
+                                                        "multi_match": {
+                                                            "query": "RA-0554 Pris",
+                                                            "type": "bool_prefix",
+                                                            "fields": [
+                                                                "title.nb.ngrams",
+                                                                "title.nb.ngrams.2_gram",
+                                                                "title.nb.ngrams.3_gram",
+                                                            ],
+                                                        }
+                                                    },
+                                                    {
+                                                        "multi_match": {
+                                                            "query": "RA-0554 Pris",
+                                                            "type": "bool_prefix",
+                                                            "fields": [
+                                                                "title.nn.ngrams",
+                                                                "title.nn.ngrams.2_gram",
+                                                                "title.nn.ngrams.3_gram",
+                                                            ],
+                                                        }
+                                                    },
+                                                    {
+                                                        "multi_match": {
+                                                            "query": "RA-0554 Pris",
+                                                            "type": "bool_prefix",
+                                                            "fields": [
+                                                                "title.no.ngrams",
+                                                                "title.no.ngrams.2_gram",
+                                                                "title.no.ngrams.3_gram",
+                                                            ],
+                                                        }
+                                                    },
+                                                    {
+                                                        "simple_query_string": {
+                                                            "query": "RA 0554 Pris",
+                                                            "fields": [
+                                                                "title.en",
+                                                                "title.nb",
+                                                                "title.nn",
+                                                                "title.no",
+                                                            ],
+                                                        }
+                                                    },
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
+                                            {
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            },
+                                        ],
+                                        "boost": 10,
                                     }
                                 },
                                 {
-                                    "simple_query_string": {
-                                        "query": "RA+0554+Pris RA+0554+Pris*",
-                                        "fields": [
-                                            "title.*^3",
-                                            "keyword.*^2",
-                                            "theme.title.*",
-                                            "losTheme.name.^3",
-                                            "description.*",
-                                            "publisher.name^3",
-                                            "publisher.prefLabel^3",
+                                    "bool": {
+                                        "must": {
+                                            "multi_match": {
+                                                "query": "RA-0554 Pris",
+                                                "fields": [
+                                                    "publisher.prefLabel.*",
+                                                    "publisher.title.*",
+                                                    "hasCompetentAuthority.prefLabel.*",
+                                                    "hasCompetentAuthority.name.*",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
+                                            {
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            },
+                                        ],
+                                        "boost": 10,
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "RA-0554+Pris RA-0554+Pris*",
+                                                "fields": ["schema^0.5"],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
+                                            {
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            },
+                                        ],
+                                    }
+                                },
+                                {
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "RA+0554+Pris RA+0554+Pris*",
+                                                "fields": [
+                                                    "description.*",
+                                                    "keyword.*^2",
+                                                    "losTheme.name.^3",
+                                                    "publisher.name^3",
+                                                    "publisher.prefLabel^3",
+                                                    "theme.title.*",
+                                                    "title.*^3",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
+                                            {
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            },
                                         ],
                                         "boost": 0.02,
                                     }
                                 },
                                 {
-                                    "simple_query_string": {
-                                        "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
-                                        "fields": [
-                                            "title.*^3",
-                                            "keyword.*^2",
-                                            "theme.title.*",
-                                            "losTheme.name.^3",
-                                            "description.*",
-                                            "publisher.name^3",
-                                            "publisher.prefLabel^3",
+                                    "bool": {
+                                        "must": {
+                                            "simple_query_string": {
+                                                "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                                                "fields": [
+                                                    "description.*",
+                                                    "keyword.*^2",
+                                                    "losTheme.name.^3",
+                                                    "publisher.name^3",
+                                                    "publisher.prefLabel^3",
+                                                    "theme.title.*",
+                                                    "title.*^3",
+                                                ],
+                                            }
+                                        },
+                                        "should": [
+                                            {"match": {"provenance.code": "NASJONAL"}},
+                                            {"term": {"nationalComponent": "true"}},
+                                            {
+                                                "bool": {
+                                                    "must": [
+                                                        {
+                                                            "term": {
+                                                                "accessRights.code.keyword": "PUBLIC"
+                                                            }
+                                                        },
+                                                        {
+                                                            "term": {
+                                                                "distribution.openLicense": "true"
+                                                            }
+                                                        },
+                                                    ]
+                                                }
+                                            },
                                         ],
                                         "boost": 0.001,
                                     }
@@ -269,7 +641,33 @@ def test_information_model_should_return_query_with_must_not_for_missing():
     expected_body = {
         "query": {
             "bool": {
-                "must": [{"match_all": {}}],
+                "must": [
+                    {
+                        "bool": {
+                            "must": {"match_all": {}},
+                            "should": [
+                                {"match": {"provenance.code": "NASJONAL"}},
+                                {"term": {"nationalComponent": "true"}},
+                                {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "term": {
+                                                    "accessRights.code.keyword": "PUBLIC"
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "distribution.openLicense": "true"
+                                                }
+                                            },
+                                        ]
+                                    }
+                                },
+                            ],
+                        }
+                    }
+                ],
                 "filter": [
                     {"bool": {"must_not": {"exists": {"field": "publisher.orgPath"}}}}
                 ],
@@ -344,9 +742,10 @@ def test_dataset_empty_query():
     expected_body = {
         "query": {
             "bool": {
-                "must": [{"match_all": {}}],
+                "must": {"match_all": {}},
                 "should": [
                     {"match": {"provenance.code": "NASJONAL"}},
+                    {"term": {"nationalComponent": "true"}},
                     {
                         "bool": {
                             "must": [
@@ -398,134 +797,275 @@ def test_dataset_empty_query():
 @pytest.mark.unit
 def test_dataset_with_query_string_query():
     expected = {
-        "bool": {
-            "must": [
-                {
-                    "dis_max": {
-                        "queries": [
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "multi_match": {
-                                                "query": "Elbiloversikt i",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nb.ngrams",
-                                                    "title.nb.ngrams.2_gram",
-                                                    "title.nb.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Elbiloversikt i",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nn.ngrams",
-                                                    "title.nn.ngrams.2_gram",
-                                                    "title.nn.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Elbiloversikt i",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.no.ngrams",
-                                                    "title.no.ngrams.2_gram",
-                                                    "title.no.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Elbiloversikt i",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.en.ngrams",
-                                                    "title.en.ngrams.2_gram",
-                                                    "title.en.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                    ],
-                                    "boost": 5,
-                                }
-                            },
-                            {
-                                "simple_query_string": {
-                                    "query": "Elbiloversikt+i Elbiloversikt+i*",
-                                    "fields": [
-                                        "description.nb",
-                                        "description.nn",
-                                        "description.no",
-                                        "description.en",
-                                    ],
-                                }
-                            },
-                            {
-                                "simple_query_string": {
-                                    "query": "Elbiloversikt+i Elbiloversikt+i*",
-                                    "fields": index_fulltext_fields[
-                                        IndicesKey.DATA_SETS
-                                    ],
-                                    "boost": 0.5,
-                                }
-                            },
-                            {
-                                "simple_query_string": {
-                                    "query": "*Elbiloversikt Elbiloversikt Elbiloversikt* *i i i*",
-                                    "fields": index_fulltext_fields[
-                                        IndicesKey.DATA_SETS
-                                    ],
-                                    "boost": 0.001,
-                                }
-                            },
-                        ]
-                    }
-                }
-            ],
-            "should": [
-                {"match": {"provenance.code": "NASJONAL"}},
+        "dis_max": {
+            "queries": [
                 {
                     "bool": {
-                        "must": [
-                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
-                        ]
+                        "must": {
+                            "multi_match": {
+                                "query": "Elbiloversikt i",
+                                "fields": [
+                                    "title.en.raw",
+                                    "title.nb.raw",
+                                    "title.nn.raw",
+                                    "title.no.raw",
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                        "boost": 20,
                     }
                 },
-            ],
+                {
+                    "bool": {
+                        "must": {
+                            "dis_max": {
+                                "queries": [
+                                    {
+                                        "multi_match": {
+                                            "query": "Elbiloversikt i",
+                                            "type": "bool_prefix",
+                                            "fields": [
+                                                "title.en.ngrams",
+                                                "title.en.ngrams.2_gram",
+                                                "title.en.ngrams.3_gram",
+                                            ],
+                                        }
+                                    },
+                                    {
+                                        "multi_match": {
+                                            "query": "Elbiloversikt i",
+                                            "type": "bool_prefix",
+                                            "fields": [
+                                                "title.nb.ngrams",
+                                                "title.nb.ngrams.2_gram",
+                                                "title.nb.ngrams.3_gram",
+                                            ],
+                                        }
+                                    },
+                                    {
+                                        "multi_match": {
+                                            "query": "Elbiloversikt i",
+                                            "type": "bool_prefix",
+                                            "fields": [
+                                                "title.nn.ngrams",
+                                                "title.nn.ngrams.2_gram",
+                                                "title.nn.ngrams.3_gram",
+                                            ],
+                                        }
+                                    },
+                                    {
+                                        "multi_match": {
+                                            "query": "Elbiloversikt i",
+                                            "type": "bool_prefix",
+                                            "fields": [
+                                                "title.no.ngrams",
+                                                "title.no.ngrams.2_gram",
+                                                "title.no.ngrams.3_gram",
+                                            ],
+                                        }
+                                    },
+                                    {
+                                        "simple_query_string": {
+                                            "query": "Elbiloversikt i",
+                                            "fields": [
+                                                "title.en",
+                                                "title.nb",
+                                                "title.nn",
+                                                "title.no",
+                                            ],
+                                        }
+                                    },
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                        "boost": 10,
+                    }
+                },
+                {
+                    "bool": {
+                        "must": {
+                            "multi_match": {
+                                "query": "Elbiloversikt i",
+                                "fields": [
+                                    "publisher.prefLabel.*",
+                                    "publisher.title.*",
+                                    "hasCompetentAuthority.prefLabel.*",
+                                    "hasCompetentAuthority.name.*",
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                        "boost": 10,
+                    }
+                },
+                {
+                    "bool": {
+                        "must": {
+                            "simple_query_string": {
+                                "query": "Elbiloversikt+i Elbiloversikt+i*",
+                                "fields": [
+                                    "description.en",
+                                    "description.nb",
+                                    "description.nn",
+                                    "description.no",
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                    }
+                },
+                {
+                    "bool": {
+                        "must": {
+                            "simple_query_string": {
+                                "query": "Elbiloversikt+i Elbiloversikt+i*",
+                                "fields": [
+                                    "accessRights.code",
+                                    "accessRights.prefLabel.*^3",
+                                    "description.*",
+                                    "distribution.format",
+                                    "distribution.title.*",
+                                    "expandedLosTema.*",
+                                    "keyword.*^2",
+                                    "objective.*",
+                                    "publisher.name^3",
+                                    "publisher.prefLabel^3",
+                                    "subject.altLabel.*",
+                                    "subject.definition.*",
+                                    "subject.prefLabel.*",
+                                    "theme.title.*",
+                                    "title.*^3",
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                        "boost": 0.02,
+                    }
+                },
+                {
+                    "bool": {
+                        "must": {
+                            "simple_query_string": {
+                                "query": "*Elbiloversikt Elbiloversikt Elbiloversikt* *i i i*",
+                                "fields": [
+                                    "accessRights.code",
+                                    "accessRights.prefLabel.*^3",
+                                    "description.*",
+                                    "distribution.format",
+                                    "distribution.title.*",
+                                    "expandedLosTema.*",
+                                    "keyword.*^2",
+                                    "objective.*",
+                                    "publisher.name^3",
+                                    "publisher.prefLabel^3",
+                                    "subject.altLabel.*",
+                                    "subject.definition.*",
+                                    "subject.prefLabel.*",
+                                    "theme.title.*",
+                                    "title.*^3",
+                                ],
+                            }
+                        },
+                        "should": [
+                            {"match": {"provenance.code": "NASJONAL"}},
+                            {"term": {"nationalComponent": "true"}},
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "accessRights.code.keyword": "PUBLIC"
+                                            }
+                                        },
+                                        {"term": {"distribution.openLicense": "true"}},
+                                    ]
+                                }
+                            },
+                        ],
+                        "boost": 0.001,
+                    }
+                },
+            ]
         }
     }
     result = DataSetQuery("Elbiloversikt i").body["query"]
-    # has boolean root clause
-    assert (
-        parse("bool.must").find(result).__len__() > 0
-        and parse("bool.should").find(result).__len__() > 0
-    ), "No boolean root clause "
-    assert (
-        parse("bool.must[*].dis_max").find(result).__len__() == 1
-    ), "No dismax query in boolean must root clause"
-    # has title clause
-    assert (
-        parse("bool.must[*].dis_max.queries[*].dis_max").find(result).__len__() == 1
-    ), ("No root query for " "dismax_title ")
-    assert (
-        parse("bool.must[*].dis_max.queries[*].dis_max.queries[*].multi_match")
-        .find(result)
-        .__len__()
-        == 4
-    ), "clauses missing from dis_max title queries "
-    # has fulltext clauses
-    assert (
-        parse("bool.must[*].dis_max.queries[*].simple_query_string")
-        .find(result)
-        .__len__()
-        == 3
-    ), "missing fulltext_queries"
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -538,109 +1078,277 @@ def test_dataset_with_spatial_filter():
                     "dis_max": {
                         "queries": [
                             {
-                                "dis_max": {
-                                    "queries": [
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": "Ad",
+                                            "fields": [
+                                                "title.en.raw",
+                                                "title.nb.raw",
+                                                "title.nn.raw",
+                                                "title.no.raw",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
                                         {
-                                            "multi_match": {
-                                                "query": "Ad",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nb.ngrams",
-                                                    "title.nb.ngrams.2_gram",
-                                                    "title.nb.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Ad",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nn.ngrams",
-                                                    "title.nn.ngrams.2_gram",
-                                                    "title.nn.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Ad",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.no.ngrams",
-                                                    "title.no.ngrams.2_gram",
-                                                    "title.no.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Ad",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.en.ngrams",
-                                                    "title.en.ngrams.2_gram",
-                                                    "title.en.ngrams.3_gram",
-                                                ],
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
                                             }
                                         },
                                     ],
-                                    "boost": 5,
+                                    "boost": 20,
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "Ad Ad*",
-                                    "fields": [
-                                        "description.nb",
-                                        "description.nn",
-                                        "description.no",
-                                        "description.en",
+                                "bool": {
+                                    "must": {
+                                        "dis_max": {
+                                            "queries": [
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Ad",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.en.ngrams",
+                                                            "title.en.ngrams.2_gram",
+                                                            "title.en.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Ad",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.nb.ngrams",
+                                                            "title.nb.ngrams.2_gram",
+                                                            "title.nb.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Ad",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.nn.ngrams",
+                                                            "title.nn.ngrams.2_gram",
+                                                            "title.nn.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Ad",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.no.ngrams",
+                                                            "title.no.ngrams.2_gram",
+                                                            "title.no.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
+                                    ],
+                                    "boost": 10,
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": "Ad",
+                                            "fields": [
+                                                "publisher.prefLabel.*",
+                                                "publisher.title.*",
+                                                "hasCompetentAuthority.prefLabel.*",
+                                                "hasCompetentAuthority.name.*",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
+                                    ],
+                                    "boost": 10,
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "Ad Ad*",
+                                            "fields": [
+                                                "description.en",
+                                                "description.nb",
+                                                "description.nn",
+                                                "description.no",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "Ad Ad*",
-                                    "fields": [
-                                        "title.*^3",
-                                        "objective.*",
-                                        "keyword.*^2",
-                                        "theme.title.*",
-                                        "expandedLosTema.*",
-                                        "description.*",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "accessRights.prefLabel.*^3",
-                                        "accessRights.code",
-                                        "subject.prefLabel.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "distribution.title.*",
-                                        "distribution.format",
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "Ad Ad*",
+                                            "fields": [
+                                                "accessRights.code",
+                                                "accessRights.prefLabel.*^3",
+                                                "description.*",
+                                                "distribution.format",
+                                                "distribution.title.*",
+                                                "expandedLosTema.*",
+                                                "keyword.*^2",
+                                                "objective.*",
+                                                "publisher.name^3",
+                                                "publisher.prefLabel^3",
+                                                "subject.altLabel.*",
+                                                "subject.definition.*",
+                                                "subject.prefLabel.*",
+                                                "theme.title.*",
+                                                "title.*^3",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
-                                    "boost": 0.5,
+                                    "boost": 0.02,
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "*Ad Ad Ad*",
-                                    "fields": [
-                                        "title.*^3",
-                                        "objective.*",
-                                        "keyword.*^2",
-                                        "theme.title.*",
-                                        "expandedLosTema.*",
-                                        "description.*",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "accessRights.prefLabel.*^3",
-                                        "accessRights.code",
-                                        "subject.prefLabel.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "distribution.title.*",
-                                        "distribution.format",
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "*Ad Ad Ad*",
+                                            "fields": [
+                                                "accessRights.code",
+                                                "accessRights.prefLabel.*^3",
+                                                "description.*",
+                                                "distribution.format",
+                                                "distribution.title.*",
+                                                "expandedLosTema.*",
+                                                "keyword.*^2",
+                                                "objective.*",
+                                                "publisher.name^3",
+                                                "publisher.prefLabel^3",
+                                                "subject.altLabel.*",
+                                                "subject.definition.*",
+                                                "subject.prefLabel.*",
+                                                "theme.title.*",
+                                                "title.*^3",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
                                     "boost": 0.001,
                                 }
@@ -648,17 +1356,6 @@ def test_dataset_with_spatial_filter():
                         ]
                     }
                 }
-            ],
-            "should": [
-                {"match": {"provenance.code": "NASJONAL"}},
-                {
-                    "bool": {
-                        "must": [
-                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
-                        ]
-                    }
-                },
             ],
             "filter": [{"term": {"spatial.prefLabel.no.keyword": "Norge"}}],
         }
@@ -679,109 +1376,277 @@ def test_dataset_with_media_type_filter():
                     "dis_max": {
                         "queries": [
                             {
-                                "dis_max": {
-                                    "queries": [
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": "Fotball",
+                                            "fields": [
+                                                "title.en.raw",
+                                                "title.nb.raw",
+                                                "title.nn.raw",
+                                                "title.no.raw",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
                                         {
-                                            "multi_match": {
-                                                "query": "Fotball",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nb.ngrams",
-                                                    "title.nb.ngrams.2_gram",
-                                                    "title.nb.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Fotball",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.nn.ngrams",
-                                                    "title.nn.ngrams.2_gram",
-                                                    "title.nn.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Fotball",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.no.ngrams",
-                                                    "title.no.ngrams.2_gram",
-                                                    "title.no.ngrams.3_gram",
-                                                ],
-                                            }
-                                        },
-                                        {
-                                            "multi_match": {
-                                                "query": "Fotball",
-                                                "type": "bool_prefix",
-                                                "fields": [
-                                                    "title.en.ngrams",
-                                                    "title.en.ngrams.2_gram",
-                                                    "title.en.ngrams.3_gram",
-                                                ],
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
                                             }
                                         },
                                     ],
-                                    "boost": 5,
+                                    "boost": 20,
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "Fotball Fotball*",
-                                    "fields": [
-                                        "description.nb",
-                                        "description.nn",
-                                        "description.no",
-                                        "description.en",
+                                "bool": {
+                                    "must": {
+                                        "dis_max": {
+                                            "queries": [
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Fotball",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.en.ngrams",
+                                                            "title.en.ngrams.2_gram",
+                                                            "title.en.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Fotball",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.nb.ngrams",
+                                                            "title.nb.ngrams.2_gram",
+                                                            "title.nb.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Fotball",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.nn.ngrams",
+                                                            "title.nn.ngrams.2_gram",
+                                                            "title.nn.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "multi_match": {
+                                                        "query": "Fotball",
+                                                        "type": "bool_prefix",
+                                                        "fields": [
+                                                            "title.no.ngrams",
+                                                            "title.no.ngrams.2_gram",
+                                                            "title.no.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                            ]
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
+                                    ],
+                                    "boost": 10,
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "multi_match": {
+                                            "query": "Fotball",
+                                            "fields": [
+                                                "publisher.prefLabel.*",
+                                                "publisher.title.*",
+                                                "hasCompetentAuthority.prefLabel.*",
+                                                "hasCompetentAuthority.name.*",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
+                                    ],
+                                    "boost": 10,
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "Fotball Fotball*",
+                                            "fields": [
+                                                "description.en",
+                                                "description.nb",
+                                                "description.nn",
+                                                "description.no",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "Fotball Fotball*",
-                                    "fields": [
-                                        "title.*^3",
-                                        "objective.*",
-                                        "keyword.*^2",
-                                        "theme.title.*",
-                                        "expandedLosTema.*",
-                                        "description.*",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "accessRights.prefLabel.*^3",
-                                        "accessRights.code",
-                                        "subject.prefLabel.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "distribution.title.*",
-                                        "distribution.format",
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "Fotball Fotball*",
+                                            "fields": [
+                                                "accessRights.code",
+                                                "accessRights.prefLabel.*^3",
+                                                "description.*",
+                                                "distribution.format",
+                                                "distribution.title.*",
+                                                "expandedLosTema.*",
+                                                "keyword.*^2",
+                                                "objective.*",
+                                                "publisher.name^3",
+                                                "publisher.prefLabel^3",
+                                                "subject.altLabel.*",
+                                                "subject.definition.*",
+                                                "subject.prefLabel.*",
+                                                "theme.title.*",
+                                                "title.*^3",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
-                                    "boost": 0.5,
+                                    "boost": 0.02,
                                 }
                             },
                             {
-                                "simple_query_string": {
-                                    "query": "*Fotball Fotball Fotball*",
-                                    "fields": [
-                                        "title.*^3",
-                                        "objective.*",
-                                        "keyword.*^2",
-                                        "theme.title.*",
-                                        "expandedLosTema.*",
-                                        "description.*",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "accessRights.prefLabel.*^3",
-                                        "accessRights.code",
-                                        "subject.prefLabel.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "distribution.title.*",
-                                        "distribution.format",
+                                "bool": {
+                                    "must": {
+                                        "simple_query_string": {
+                                            "query": "*Fotball Fotball Fotball*",
+                                            "fields": [
+                                                "accessRights.code",
+                                                "accessRights.prefLabel.*^3",
+                                                "description.*",
+                                                "distribution.format",
+                                                "distribution.title.*",
+                                                "expandedLosTema.*",
+                                                "keyword.*^2",
+                                                "objective.*",
+                                                "publisher.name^3",
+                                                "publisher.prefLabel^3",
+                                                "subject.altLabel.*",
+                                                "subject.definition.*",
+                                                "subject.prefLabel.*",
+                                                "theme.title.*",
+                                                "title.*^3",
+                                            ],
+                                        }
+                                    },
+                                    "should": [
+                                        {"match": {"provenance.code": "NASJONAL"}},
+                                        {"term": {"nationalComponent": "true"}},
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "accessRights.code.keyword": "PUBLIC"
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "distribution.openLicense": "true"
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        },
                                     ],
                                     "boost": 0.001,
                                 }
@@ -789,17 +1654,6 @@ def test_dataset_with_media_type_filter():
                         ]
                     }
                 }
-            ],
-            "should": [
-                {"match": {"provenance.code": "NASJONAL"}},
-                {
-                    "bool": {
-                        "must": [
-                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
-                        ]
-                    }
-                },
             ],
             "filter": [
                 {"term": {"distribution.mediaType.code.keyword": "application/json"}}
