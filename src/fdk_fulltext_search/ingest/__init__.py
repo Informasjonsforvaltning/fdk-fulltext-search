@@ -34,7 +34,7 @@ MODEL_HARVESTER_URI = os.getenv(
     "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
 )
 
-RECORDS_PARAM = "catalogrecords"
+RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
 
 
 def error_msg(exec_point, reason, count=0):
@@ -102,7 +102,7 @@ def fetch_information_models():
     try:
         response = requests.get(
             url=info_url,
-            params={RECORDS_PARAM: "true"},
+            params=RECORDS_PARAM_TRUE,
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -256,7 +256,7 @@ def fetch_public_services():
     try:
         event_response = requests.get(
             url=event_url,
-            params={RECORDS_PARAM: "true"},
+            params=RECORDS_PARAM_TRUE,
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -271,7 +271,7 @@ def fetch_public_services():
     try:
         response = requests.get(
             url=public_service_url,
-            params={RECORDS_PARAM: "true"},
+            params=RECORDS_PARAM_TRUE,
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -314,7 +314,7 @@ def fetch_events():
     try:
         response = requests.get(
             url=event_url,
-            params={RECORDS_PARAM: "true"},
+            params=RECORDS_PARAM_TRUE,
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
