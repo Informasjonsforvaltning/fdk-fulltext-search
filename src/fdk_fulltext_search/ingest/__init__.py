@@ -34,7 +34,7 @@ MODEL_HARVESTER_URI = os.getenv(
     "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
 )
 
-RECORDS_PARAM = "?catalogrecords=true"
+RECORDS_PARAM = "catalogrecords"
 
 
 def error_msg(exec_point, reason, count=0):
@@ -96,12 +96,15 @@ def fetch_all_content():
 
 
 def fetch_information_models():
-    info_url = f"{MODEL_HARVESTER_URI}/catalogs{RECORDS_PARAM}"
+    info_url = f"{MODEL_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching information models from {info_url}")
     try:
         response = requests.get(
-            url=info_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=info_url,
+            params={RECORDS_PARAM: "true"},
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
@@ -248,23 +251,29 @@ def fetch_data_services():
 
 
 def fetch_public_services():
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events{RECORDS_PARAM}"
+    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
     event_response = None
     try:
         event_response = requests.get(
-            url=event_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=event_url,
+            params={RECORDS_PARAM: "true"},
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         event_response.raise_for_status()
     except Exception as err:
         result = error_msg(f"fetch events from {event_url}", err)
         logging.error(result["message"])
 
-    public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services{RECORDS_PARAM}"
+    public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services"
 
     logging.info(f"fetching public_services from {public_service_url}")
     try:
         response = requests.get(
-            url=public_service_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=public_service_url,
+            params={RECORDS_PARAM: "true"},
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
@@ -299,12 +308,15 @@ def fetch_public_services():
 
 
 def fetch_events():
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events{RECORDS_PARAM}"
+    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
 
     logging.info(f"fetching events from {event_url}")
     try:
         response = requests.get(
-            url=event_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=event_url,
+            params={RECORDS_PARAM: "true"},
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
