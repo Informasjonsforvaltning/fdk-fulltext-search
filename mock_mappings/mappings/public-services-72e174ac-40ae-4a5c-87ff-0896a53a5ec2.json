@@ -2,7 +2,7 @@
   "id" : "72e174ac-40ae-4a5c-87ff-0896a53a5ec2",
   "name" : "public-services",
   "request" : {
-    "url" : "/public-services",
+    "url" : "/public-services?catalogrecords=true",
     "method" : "GET"
   },
   "response" : {

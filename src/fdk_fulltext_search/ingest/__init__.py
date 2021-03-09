@@ -34,6 +34,8 @@ MODEL_HARVESTER_URI = os.getenv(
     "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
 )
 
+RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
+
 
 def error_msg(exec_point, reason, count=0):
     return {
@@ -94,12 +96,15 @@ def fetch_all_content():
 
 
 def fetch_information_models():
-    info_url = f"{MODEL_HARVESTER_URI}/catalogs?catalogrecords=true"
+    info_url = f"{MODEL_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching information models from {info_url}")
     try:
         response = requests.get(
-            url=info_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=info_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
@@ -250,7 +255,10 @@ def fetch_public_services():
     event_response = None
     try:
         event_response = requests.get(
-            url=event_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=event_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         event_response.raise_for_status()
     except Exception as err:
@@ -262,7 +270,10 @@ def fetch_public_services():
     logging.info(f"fetching public_services from {public_service_url}")
     try:
         response = requests.get(
-            url=public_service_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=public_service_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
@@ -302,7 +313,10 @@ def fetch_events():
     logging.info(f"fetching events from {event_url}")
     try:
         response = requests.get(
-            url=event_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=event_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
