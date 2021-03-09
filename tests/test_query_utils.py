@@ -3,25 +3,26 @@ import json
 import pytest
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
-from fdk_fulltext_search.search.fields import index_fulltext_fields
-from fdk_fulltext_search.search.query_utils import (
-    all_indices_default_query,
-    autorativ_boost_clause,
-    collection_filter,
+from fdk_fulltext_search.search.field_utils import fulltext_fields, title_fields
+from fdk_fulltext_search.search.query_aggregation_utils import (
     default_all_indices_aggs,
-    exact_match_in_title_query,
     get_aggregation_term_for_key,
-    get_catch_all_query_string,
-    get_field_key,
+)
+from fdk_fulltext_search.search.query_filter_utils import (
+    collection_filter,
+    get_field_by_filter_key,
     get_index_filter_for_key,
-    get_last_x_days_filter,
-    get_term_filter,
-    index_match_in_title_query,
+    last_x_days_filter,
+    term_filter,
+)
+from fdk_fulltext_search.search.query_utils import (
+    default_query,
+    description_query,
+    get_catch_all_query_string,
     query_template,
     simple_query_string,
-    some_words_in_title_query,
-    word_in_description_query,
-    word_in_title_query,
+    title_exact_match_query,
+    title_query,
     words_only_string,
 )
 
@@ -29,7 +30,7 @@ from fdk_fulltext_search.search.query_utils import (
 @pytest.mark.unit
 def test_should_return_filter_array_with_modified_key():
     expected = [{"term": {"publisher.orgPath": "KOMMUNE/678687"}}]
-    result = get_term_filter({"orgPath": "KOMMUNE/678687"})
+    result = term_filter({"orgPath": "KOMMUNE/678687"})
     assert result == expected
 
 
@@ -37,7 +38,7 @@ def test_should_return_filter_array_with_modified_key():
 def test_should_return_filter_array_with_unmodified_key():
     request_filter = {"openLicence": "true"}
     expected = [{"term": {"openLicence": "true"}}]
-    result = get_term_filter(request_filter)
+    result = term_filter(request_filter)
     assert result == expected
 
 
@@ -48,7 +49,7 @@ def test_should_return_filter_array_with_two_entiries():
         {"term": {"losTheme.losPaths.keyword": "kjoretøy"}},
         {"term": {"losTheme.losPaths.keyword": "trafikk-og-transport"}},
     ]
-    result = get_term_filter(request_filter)
+    result = term_filter(request_filter)
     assert result == expected
 
 
@@ -63,71 +64,101 @@ def test_exact_match_title():
                 }
             },
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
             "boost": 20,
         }
     }
-    result = exact_match_in_title_query(
-        ["prefLabel.*", "title.*", "title"], "åpne data"
-    )
+    result = title_exact_match_query(["prefLabel.*", "title.*", "title"], "åpne data")
     assert json.dumps(result) == json.dumps(expected)
 
 
 @pytest.mark.unit
-def test_word_in_title():
+def test_title_query():
     expected = {
         "bool": {
             "must": {
-                "multi_match": {
-                    "query": "åpne data",
-                    "type": "phrase_prefix",
-                    "fields": [
-                        "title.*.ngrams",
-                        "title.*.ngrams.2_gram",
-                        "title.*.ngrams.3_gram",
-                        "title.nb",
-                        "title.no",
-                        "title.nn",
-                        "title.en",
-                        "title.ngrams",
-                        "title.ngrams.2_gram",
-                        "title.ngrams.3_gram",
-                        "prefLabel.*.ngrams",
-                        "prefLabel.*.ngrams.2_gram",
-                        "prefLabel.*.ngrams.3_gram",
+                "dis_max": {
+                    "queries": [
+                        {
+                            "multi_match": {
+                                "query": "åpne data",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.*.ngrams",
+                                    "title.*.ngrams.2_gram",
+                                    "title.*.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "multi_match": {
+                                "query": "åpne data",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.ngrams",
+                                    "title.ngrams.2_gram",
+                                    "title.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "multi_match": {
+                                "query": "åpne data",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "prefLabel.*.ngrams",
+                                    "prefLabel.*.ngrams.2_gram",
+                                    "prefLabel.*.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "simple_query_string": {
+                                "query": "åpne data",
+                                "fields": [
+                                    "title.*",
+                                    "title",
+                                    "prefLabel.*",
+                                ],
+                            }
+                        },
                     ],
                 }
             },
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
-            "boost": 2,
+            "boost": 10,
         }
     }
 
-    result = word_in_title_query(
-        title_field_names=["title.*", "title", "prefLabel.*"], search_string="åpne data"
+    result = title_query(
+        fields=["title.*", "title", "prefLabel.*"], search_string="åpne data"
     )
     assert json.dumps(result) == json.dumps(expected)
 
 
 @pytest.mark.unit
-def test_word_in_description_one_word():
+def test_match_in_description_one_word():
     expected = {
         "bool": {
             "must": {
@@ -137,19 +168,22 @@ def test_word_in_description_one_word():
                 }
             },
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
         }
     }
-    result = word_in_description_query(
-        index_key=IndicesKey.ALL, search_string="heimevernet"
+    result = description_query(
+        fields=["description", "definition.text.*", "schema^0.5"],
+        search_string="heimevernet",
     )
     assert json.dumps(result) == json.dumps(expected)
 
@@ -165,19 +199,22 @@ def test_word_in_description_several_words():
                 }
             },
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
         }
     }
-    result = word_in_description_query(
-        index_key=IndicesKey.ALL, search_string="åpne data"
+    result = description_query(
+        fields=["description", "definition.text.*", "schema^0.5"],
+        search_string="åpne data",
     )
     assert json.dumps(result) == json.dumps(expected)
 
@@ -185,32 +222,29 @@ def test_word_in_description_several_words():
 @pytest.mark.unit
 def test_word_in_description_several_words_without_aut_clause():
     expected = {
-        "simple_query_string": {
-            "query": "åpne+data åpne+data*",
-            "fields": ["schema^0.5"],
-        }
-    }
-
-    result = word_in_description_query(
-        index_key=IndicesKey.INFO_MODEL,
-        search_string="åpne data",
-        autorativ_boost=False,
-    )
-    assert json.dumps(result) == json.dumps(expected)
-
-
-@pytest.mark.unit
-def test_boost_autorativ_clause():
-    expected = {
         "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "åpne+data åpne+data*",
+                    "fields": ["schema^0.5"],
+                }
+            },
             "should": [
                 {"match": {"provenance.code": "NASJONAL"}},
                 {"term": {"nationalComponent": "true"}},
-            ]
+                {
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
+                    }
+                },
+            ],
         }
     }
 
-    result = autorativ_boost_clause()
+    result = description_query(fields=["schema^0.5"], search_string="åpne data")
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -220,21 +254,21 @@ def test_simple_query_string_query():
         "bool": {
             "must": {"simple_query_string": {"query": "åpne+data åpne+data*"}},
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
             "boost": 0.001,
         }
     }
-    result = simple_query_string(
-        search_string="åpne data", all_indices_autorativ_boost=True
-    )
+    result = simple_query_string(search_string="åpne data")
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -244,21 +278,21 @@ def test_simple_query_string_query_special_chars():
         "bool": {
             "must": {"simple_query_string": {"query": "åpne+data åpne+data*"}},
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
             "boost": 0.001,
         }
     }
-    result = simple_query_string(
-        search_string="åpne - !! (data)", all_indices_autorativ_boost=True
-    )
+    result = simple_query_string(search_string="åpne - !! (data)")
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -272,14 +306,16 @@ def test_simple_query_lenient():
                 }
             },
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
             "boost": 1,
         }
@@ -287,7 +323,6 @@ def test_simple_query_lenient():
 
     result = simple_query_string(
         search_string="mange bekker",
-        all_indices_autorativ_boost=True,
         boost=1,
         lenient=True,
     )
@@ -297,9 +332,41 @@ def test_simple_query_lenient():
 
 def test_simple_query_with_fields():
     expected = {
-        "simple_query_string": {
-            "query": "*mange mange mange* *bekker bekker bekker*",
-            "fields": index_fulltext_fields[IndicesKey.DATA_SETS],
+        "bool": {
+            "must": {
+                "simple_query_string": {
+                    "query": "*mange mange mange* *bekker bekker bekker*",
+                    "fields": [
+                        "accessRights.code",
+                        "accessRights.prefLabel.*^3",
+                        "description.*",
+                        "distribution.format",
+                        "distribution.title.*",
+                        "expandedLosTema.*",
+                        "keyword.*^2",
+                        "objective.*",
+                        "publisher.name^3",
+                        "publisher.prefLabel^3",
+                        "subject.altLabel.*",
+                        "subject.definition.*",
+                        "subject.prefLabel.*",
+                        "theme.title.*",
+                        "title.*^3",
+                    ],
+                }
+            },
+            "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
+                {
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
+                    }
+                },
+            ],
             "boost": 0.001,
         }
     }
@@ -307,8 +374,7 @@ def test_simple_query_with_fields():
     result = simple_query_string(
         search_string="mange bekker",
         lenient=True,
-        all_indices_autorativ_boost=False,
-        fields_for_index=IndicesKey.DATA_SETS,
+        fields=fulltext_fields([IndicesKey.DATA_SETS]),
     )
     assert json.dumps(result) == json.dumps(expected)
 
@@ -319,22 +385,22 @@ def test_simple_query_string_query_boost_1():
         "bool": {
             "must": {"simple_query_string": {"query": "åpne+data åpne+data*"}},
             "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
                         ]
                     }
-                }
+                },
             ],
             "boost": 1,
         }
     }
 
-    result = simple_query_string(
-        search_string="åpne data", boost=1, all_indices_autorativ_boost=True
-    )
+    result = simple_query_string(search_string="åpne data", boost=1)
 
     assert json.dumps(result) == json.dumps(expected)
 
@@ -348,23 +414,19 @@ def test_query_template_should_return_empty_query():
 
 @pytest.mark.unit
 def test_query_template_should_return_empty_query_with_boost():
-    expected = {"query": {}, "aggs": {}, "indices_boost": [{"datasets": 1.2}]}
-    result = query_template(dataset_boost=1.2)
+    expected = {"query": {}, "aggs": {}}
+    result = query_template()
     assert json.dumps(result) == json.dumps(expected)
 
 
 @pytest.mark.unit
-def test_all_indices_default_query():
+def test_default_query():
     expected = {
         "bool": {
             "must": {"match_all": {}},
             "should": [
-                {
-                    "term": {
-                        "provenance.code.keyword": {"value": "NASJONAL", "boost": 3}
-                    }
-                },
-                {"term": {"nationalComponent": {"value": "true", "boost": 1}}},
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
                     "bool": {
                         "must": [
@@ -377,7 +439,7 @@ def test_all_indices_default_query():
         }
     }
 
-    result = all_indices_default_query()
+    result = default_query()
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -431,19 +493,19 @@ def test_default_aggs():
 
 @pytest.mark.unit
 def test_get_filter_key():
-    result_org_path = get_field_key("orgPath")
+    result_org_path = get_field_by_filter_key("orgPath")
     assert result_org_path == "publisher.orgPath"
-    result_access = get_field_key("accessRights")
+    result_access = get_field_by_filter_key("accessRights")
     assert result_access == "accessRights.code.keyword"
-    result_los = get_field_key("los")
+    result_los = get_field_by_filter_key("los")
     assert result_los == "losTheme.losPaths.keyword"
-    result_theme = get_field_key("theme")
+    result_theme = get_field_by_filter_key("theme")
     assert result_theme == "euTheme"
-    result_random_key = get_field_key("random")
+    result_random_key = get_field_by_filter_key("random")
     assert result_random_key == "random"
-    result_spatial = get_field_key("spatial")
+    result_spatial = get_field_by_filter_key("spatial")
     assert result_spatial == "spatial.prefLabel.no.keyword"
-    result_provenance = get_field_key("provenance")
+    result_provenance = get_field_by_filter_key("provenance")
     assert result_provenance == "provenance.code.keyword"
 
 
@@ -483,53 +545,62 @@ def test_words_only_string():
 
 
 @pytest.mark.unit
-def test_some_words_in_title_query():
+def test_words_only_string_in_title_query():
     expected = {
         "simple_query_string": {
             "query": "some query to be queried",
-            "fields": ["title", "title.*", "prefLabel.*"],
+            "fields": ["title"],
         }
     }
+
     expected_one_word = {
         "simple_query_string": {
             "query": "nothing",
-            "fields": ["title", "title.*", "prefLabel.*"],
+            "fields": ["title"],
         }
     }
 
-    title_fields = ["title", "title.*", "prefLabel.*"]
+    title_fields = ["title"]
 
-    string_with_special_char = some_words_in_title_query(
-        title_fields_list=title_fields, search_string="]some query to be queried ["
+    string_with_special_char = title_query(
+        fields=title_fields, search_string="]some query to be queried ["
     )
-    string_with_special_char2 = some_words_in_title_query(
-        title_fields_list=title_fields, search_string="some - query to be ()queried"
+    string_with_special_char2 = title_query(
+        fields=title_fields, search_string="some - query to be ()queried"
     )
-    string_with_special_char3 = some_words_in_title_query(
-        title_fields_list=title_fields,
+    string_with_special_char3 = title_query(
+        fields=title_fields,
         search_string="+some + + query to be ! queried?   ",
     )
-    string_with_special_char4 = some_words_in_title_query(
-        title_fields_list=title_fields,
+    string_with_special_char4 = title_query(
+        fields=title_fields,
         search_string="+some + + -query to be queried !    ",
     )
-    string_with_four_words = some_words_in_title_query(
-        title_fields_list=title_fields, search_string="some query to be queried"
+    string_with_four_words = title_query(
+        fields=title_fields, search_string="some query to be queried"
     )
-    string_with_one_word = some_words_in_title_query(
-        title_fields_list=title_fields, search_string="nothing"
+    string_with_one_word = title_query(fields=title_fields, search_string="nothing")
+    string_with_one_word_and_special_char = title_query(
+        fields=title_fields, search_string="nothing-"
     )
-    string_with_one_word_and_special_char = some_words_in_title_query(
-        title_fields_list=title_fields, search_string="nothing-"
-    )
-    assert json.dumps(string_with_special_char["bool"]["must"]) == json.dumps(expected)
-    assert json.dumps(string_with_special_char2["bool"]["must"]) == json.dumps(expected)
-    assert json.dumps(string_with_special_char3["bool"]["must"]) == json.dumps(expected)
-    assert json.dumps(string_with_special_char4["bool"]["must"]) == json.dumps(expected)
-    assert json.dumps(string_with_four_words["bool"]["must"]) == json.dumps(expected)
-    assert string_with_one_word is None
     assert json.dumps(
-        string_with_one_word_and_special_char["bool"]["must"]
+        string_with_special_char["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected)
+    assert json.dumps(
+        string_with_special_char2["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected)
+    assert json.dumps(
+        string_with_special_char3["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected)
+    assert json.dumps(
+        string_with_special_char4["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected)
+    assert json.dumps(
+        string_with_four_words["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected)
+    assert string_with_one_word["bool"]["must"]["dis_max"]["queries"].__len__() == 1
+    assert json.dumps(
+        string_with_one_word_and_special_char["bool"]["must"]["dis_max"]["queries"][1]
     ) == json.dumps(expected_one_word)
 
 
@@ -542,60 +613,87 @@ def test_get_catch_all_query_string():
 
 
 @pytest.mark.unit
-def test_match_in_index_title_info_model():
+def test_match_in_title_info_model():
     expected = {
-        "dis_max": {
-            "queries": [
+        "bool": {
+            "must": {
+                "dis_max": {
+                    "queries": [
+                        {
+                            "multi_match": {
+                                "query": "RA-05 string",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.en.ngrams",
+                                    "title.en.ngrams.2_gram",
+                                    "title.en.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "multi_match": {
+                                "query": "RA-05 string",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.nb.ngrams",
+                                    "title.nb.ngrams.2_gram",
+                                    "title.nb.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "multi_match": {
+                                "query": "RA-05 string",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.nn.ngrams",
+                                    "title.nn.ngrams.2_gram",
+                                    "title.nn.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "multi_match": {
+                                "query": "RA-05 string",
+                                "type": "bool_prefix",
+                                "fields": [
+                                    "title.no.ngrams",
+                                    "title.no.ngrams.2_gram",
+                                    "title.no.ngrams.3_gram",
+                                ],
+                            }
+                        },
+                        {
+                            "simple_query_string": {
+                                "query": "RA 05 string",
+                                "fields": [
+                                    "title.en",
+                                    "title.nb",
+                                    "title.nn",
+                                    "title.no",
+                                ],
+                            }
+                        },
+                    ],
+                }
+            },
+            "should": [
+                {"match": {"provenance.code": "NASJONAL"}},
+                {"term": {"nationalComponent": "true"}},
                 {
-                    "multi_match": {
-                        "query": "RA-05 string",
-                        "type": "bool_prefix",
-                        "fields": [
-                            "title.nb.ngrams",
-                            "title.nb.ngrams.2_gram",
-                            "title.nb.ngrams.3_gram",
-                        ],
-                    }
-                },
-                {
-                    "multi_match": {
-                        "query": "RA-05 string",
-                        "type": "bool_prefix",
-                        "fields": [
-                            "title.nn.ngrams",
-                            "title.nn.ngrams.2_gram",
-                            "title.nn.ngrams.3_gram",
-                        ],
-                    }
-                },
-                {
-                    "multi_match": {
-                        "query": "RA-05 string",
-                        "type": "bool_prefix",
-                        "fields": [
-                            "title.no.ngrams",
-                            "title.no.ngrams.2_gram",
-                            "title.no.ngrams.3_gram",
-                        ],
-                    }
-                },
-                {
-                    "multi_match": {
-                        "query": "RA-05 string",
-                        "type": "bool_prefix",
-                        "fields": [
-                            "title.en.ngrams",
-                            "title.en.ngrams.2_gram",
-                            "title.en.ngrams.3_gram",
-                        ],
+                    "bool": {
+                        "must": [
+                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
+                            {"term": {"distribution.openLicense": "true"}},
+                        ]
                     }
                 },
             ],
-            "boost": 2,
+            "boost": 10,
         }
     }
-    result = index_match_in_title_query(
-        index_key=IndicesKey.INFO_MODEL, search_string="RA-05 string"
+    result = title_query(
+        fields=title_fields([IndicesKey.INFO_MODEL]), search_string="RA-05 string"
     )
     assert json.dumps(result) == json.dumps(expected)
 
@@ -617,17 +715,17 @@ def test_get_aggregation_term_for_key():
     )
 
 
-def test_get_last_x_days_filter():
+def test_last_x_days_filter():
     expected_1 = {
         "range": {"harvest.firstHarvested": {"gte": "now-3d/d", "lt": "now/d"}}
     }
-    result_1 = get_last_x_days_filter({"last_x_days": 3})
+    result_1 = last_x_days_filter({"last_x_days": 3})
     assert result_1 == expected_1
 
     expected_2 = {
         "range": {"harvest.firstHarvested": {"gte": "now-672d/d", "lt": "now/d"}}
     }
-    result_2 = get_last_x_days_filter({"last_x_days": "672"})
+    result_2 = last_x_days_filter({"last_x_days": "672"})
     assert result_2 == expected_2
 
 

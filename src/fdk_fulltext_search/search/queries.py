@@ -2,15 +2,15 @@ import abc
 from enum import Enum
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
-from fdk_fulltext_search.search.fields import (
-    index_suggestion_fields,
-    index_title_fields,
+from fdk_fulltext_search.search.field_utils import (
+    description_fields,
+    fulltext_fields,
+    suggestion_fields,
+    title_fields,
 )
+import fdk_fulltext_search.search.query_aggregation_utils as query_aggregation_utils
+import fdk_fulltext_search.search.query_filter_utils as query_filter_utils
 import fdk_fulltext_search.search.query_utils as query_utils
-from fdk_fulltext_search.search.query_utils_dataset import (
-    autorativ_dataset_query,
-    open_data_query,
-)
 from fdk_fulltext_search.search.themeprofiles import theme_profile_filter
 
 
@@ -42,70 +42,72 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 )
             elif (f[key]) == "MISSING" or (f[key]) == "Ukjent":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.must_not_filter(key)
+                    query_filter_utils.must_not_filter(key)
                 )
             elif (
                 f.get("collection", {}).get("values")
                 and f.get("collection", {}).get("values")[0] == "MISSING"
             ):
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.must_not_filter(f.get(key).get("field"))
+                    query_filter_utils.must_not_filter(f.get(key).get("field"))
                 )
             elif key == "opendata":
-                self.body["query"]["bool"]["filter"].append(open_data_query())
+                self.body["query"]["bool"]["filter"].append(
+                    query_utils.open_data_query()
+                )
             elif key == "exists":
                 self.body["query"]["bool"]["filter"].extend(
-                    query_utils.get_exists_filter(f)
+                    query_filter_utils.exists_filter(f)
                 )
             elif key == "last_x_days":
-                x_days_query = query_utils.get_last_x_days_filter(f)
+                x_days_query = query_filter_utils.last_x_days_filter(f)
                 self.body["query"]["bool"]["filter"].append(x_days_query)
             elif key == "collection":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.collection_filter(f[key])
+                    query_filter_utils.collection_filter(f[key])
                 )
             elif key == "catalog_name":
-                catalog_name_query = query_utils.get_catalogs_by_name(f[key])
+                catalog_name_query = query_filter_utils.catalogs_by_name_filter(f[key])
                 self.body["query"]["bool"]["filter"].append(catalog_name_query)
             elif key == "keywords":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.keyword_filter(f[key])
+                    query_filter_utils.keyword_filter(f[key])
                 )
             elif key == "info_model":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.info_model_filter(f[key])
+                    query_filter_utils.info_model_filter(f[key])
                 )
             elif key == "required_by_service":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.required_by_service_filter(f[key])
+                    query_filter_utils.required_by_service_filter(f[key])
                 )
             elif key == "related_by_service":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.related_by_service_filter(f[key])
+                    query_filter_utils.related_by_service_filter(f[key])
                 )
             elif key == "event":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.event_filter(f[key])
+                    query_filter_utils.event_filter(f[key])
                 )
             elif key == "eventType":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.event_type_filter(f[key])
+                    query_filter_utils.event_type_filter(f[key])
                 )
             elif key == "informationmodel_relation":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.get_information_model_by_relation(f[key])
+                    query_filter_utils.information_model_by_relation_filter(f[key])
                 )
             elif key == "requires_or_relates":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.requires_or_relates(f[key])
+                    query_filter_utils.requires_or_relates_filter(f[key])
                 )
             elif key == "dataset_info_model_relations":
                 self.body["query"]["bool"]["filter"].append(
-                    query_utils.dataset_info_model_relations(f[key])
+                    query_filter_utils.dataset_info_model_relations_filter(f[key])
                 )
             else:
                 self.body["query"]["bool"]["filter"].extend(
-                    query_utils.get_term_filter(f)
+                    query_filter_utils.term_filter(f)
                 )
 
     def add_sorting(self, param: dict):
@@ -132,7 +134,7 @@ class AllIndicesQuery(AbstractSearchQuery):
             self.add_search_string(search_string.strip())
         else:
             self.body["indices_boost"] = [{"datasets": 1.2}]
-            self.query = query_utils.all_indices_default_query()
+            self.query = query_utils.default_query()
         if aggs is None:
             self.add_aggs()
         if filters:
@@ -146,47 +148,86 @@ class AllIndicesQuery(AbstractSearchQuery):
     def add_aggs(self, fields=None):
         # TODO user defined aggs
         if fields is None:
-            self.body["aggs"] = query_utils.default_all_indices_aggs()
+            self.body["aggs"] = query_aggregation_utils.default_all_indices_aggs()
 
     def add_search_string(self, param: str):
         self.query["dis_max"]["queries"].append(
-            query_utils.exact_match_in_title_query(
-                title_field_names=["prefLabel.*", "title.*", "title"],
+            query_utils.title_exact_match_query(
+                fields=title_fields(
+                    [
+                        IndicesKey.CONCEPTS,
+                        IndicesKey.DATA_SERVICES,
+                        IndicesKey.DATA_SETS,
+                        IndicesKey.EVENTS,
+                        IndicesKey.INFO_MODEL,
+                        IndicesKey.PUBLIC_SERVICES,
+                    ]
+                ),
                 search_string=param,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.word_in_title_query(
-                title_field_names=["title.*", "title", "prefLabel.*"],
+            query_utils.title_query(
+                fields=title_fields(
+                    [
+                        IndicesKey.CONCEPTS,
+                        IndicesKey.DATA_SERVICES,
+                        IndicesKey.DATA_SETS,
+                        IndicesKey.EVENTS,
+                        IndicesKey.INFO_MODEL,
+                        IndicesKey.PUBLIC_SERVICES,
+                    ]
+                ),
                 search_string=param,
             )
         )
+        self.query["dis_max"]["queries"].append(query_utils.organization_query(param))
         self.query["dis_max"]["queries"].append(
-            query_utils.match_on_publisher_name_query(param)
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.ALL, search_string=param
+            query_utils.description_query(
+                fields=description_fields(
+                    [
+                        IndicesKey.CONCEPTS,
+                        IndicesKey.DATA_SERVICES,
+                        IndicesKey.DATA_SETS,
+                        IndicesKey.EVENTS,
+                        IndicesKey.INFO_MODEL,
+                        IndicesKey.PUBLIC_SERVICES,
+                    ]
+                ),
+                search_string=param,
             )
         )
-        some_words_in_title = query_utils.some_words_in_title_query(
-            title_fields_list=["title.*", "title", "prefLabel.*"], search_string=param
-        )
-        if some_words_in_title:
-            self.query["dis_max"]["queries"].append(some_words_in_title)
-
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
-                search_string=param, boost=0.0015, all_indices_autorativ_boost=True
+                fields=fulltext_fields(
+                    [
+                        IndicesKey.CONCEPTS,
+                        IndicesKey.DATA_SERVICES,
+                        IndicesKey.DATA_SETS,
+                        IndicesKey.EVENTS,
+                        IndicesKey.INFO_MODEL,
+                        IndicesKey.PUBLIC_SERVICES,
+                    ]
+                ),
+                search_string=param,
+                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields(
+                    [
+                        IndicesKey.CONCEPTS,
+                        IndicesKey.DATA_SERVICES,
+                        IndicesKey.DATA_SETS,
+                        IndicesKey.EVENTS,
+                        IndicesKey.INFO_MODEL,
+                        IndicesKey.PUBLIC_SERVICES,
+                    ]
+                ),
                 search_string=param,
-                boost=0.001,
                 lenient=True,
-                all_indices_autorativ_boost=True,
-            )
+            ),
         )
 
 
@@ -196,49 +237,62 @@ class InformationModelQuery(AbstractSearchQuery):
     ):
         super().__init__(search_string)
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
 
         self.add_aggs(aggs)
         if filters:
-            if filters:
-                self.body["query"] = query_utils.query_with_filter_template(
-                    must_clause=[self.query]
-                )
-                self.add_filters(filters)
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
+            )
+            self.add_filters(filters)
         else:
             self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.INFO_MODEL, search_string=search_string
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.INFO_MODEL,
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
-                autorativ_boost=False,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.INFO_MODEL]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.INFO_MODEL]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 boost=0.02,
-                fields_for_index=IndicesKey.INFO_MODEL,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-                fields_for_index=IndicesKey.INFO_MODEL,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
     def add_aggs(self, fields: list):
         if fields is None:
-            self.body["aggs"]["los"] = query_utils.los_aggregation()
-            self.body["aggs"]["orgPath"] = query_utils.org_path_aggregation()
+            self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
+            self.body["aggs"][
+                "orgPath"
+            ] = query_aggregation_utils.org_path_aggregation()
         # TODO implement user defined aggregations?
 
 
@@ -249,52 +303,66 @@ class DataServiceQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
 
         self.add_aggs(aggs)
         if filters:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[], filter_clause=True
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
             )
             self.add_filters(filters)
         else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[]
-            )
+            self.body["query"] = self.query
 
     def add_aggs(self, fields: list):
         if fields is None:
-            self.body["aggs"]["orgPath"] = query_utils.org_path_aggregation()
-            self.body["aggs"]["formats"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "orgPath"
+            ] = query_aggregation_utils.org_path_aggregation()
+            self.body["aggs"][
+                "formats"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="mediaType.code.keyword"
             )
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.DATA_SERVICES, search_string=search_string
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.DATA_SERVICES,
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.DATA_SERVICES]),
                 search_string=search_string,
-                autorativ_boost=False,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.DATA_SERVICES]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.DATA_SERVICES]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.DATA_SERVICES]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 boost=0.02,
-                fields_for_index=IndicesKey.DATA_SERVICES,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.DATA_SERVICES]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-                fields_for_index=IndicesKey.DATA_SERVICES,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
 
 class DataSetQuery(AbstractSearchQuery):
@@ -304,67 +372,83 @@ class DataSetQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
         self.add_aggs(aggs)
         if filters:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query],
-                should_clause=[autorativ_dataset_query(), open_data_query()],
-                filter_clause=True,
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
             )
             self.add_filters(filters)
         else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query],
-                should_clause=[autorativ_dataset_query(), open_data_query()],
-            )
+            self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.DATA_SETS, search_string=search_string, boost=5
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.DATA_SETS,
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.DATA_SETS]), search_string=search_string
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.DATA_SETS]), search_string=search_string
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
-                autorativ_boost=False,
             ),
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
-                boost=0.5,
-                fields_for_index=IndicesKey.DATA_SETS,
-            ),
+                boost=0.02,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-                fields_for_index=IndicesKey.DATA_SETS,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
     def add_aggs(self, fields: list):
         if fields is None:
-            self.body["aggs"]["los"] = query_utils.los_aggregation()
-            self.body["aggs"]["provenance"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
+            self.body["aggs"][
+                "provenance"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="provenance"
             )
-            self.body["aggs"]["orgPath"] = query_utils.org_path_aggregation()
-            self.body["aggs"]["opendata"] = {"filter": open_data_query()}
-            self.body["aggs"]["theme"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "orgPath"
+            ] = query_aggregation_utils.org_path_aggregation()
+            self.body["aggs"]["opendata"] = {"filter": query_utils.open_data_query()}
+            self.body["aggs"][
+                "theme"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="theme"
             )
             self.body["aggs"][
                 "accessRights"
-            ] = query_utils.get_aggregation_term_for_key(
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="accessRights", missing="Ukjent", size=10
             )
-            self.body["aggs"]["spatial"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "spatial"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="spatial"
             )
-            self.body["aggs"]["mediaType"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "mediaType"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="distribution.mediaType.code.keyword"
             )
 
@@ -376,66 +460,80 @@ class ConceptQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
         self.add_aggs(aggs)
         if filters:
             if filters:
-                self.body["query"] = query_utils.query_with_final_boost_template(
-                    must_clause=[self.query], should_clause=[], filter_clause=True
+                self.body["query"] = query_utils.query_with_filter_template(
+                    must_clause=[self.query]
                 )
                 self.add_filters(filters)
         else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[]
-            )
+            self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.exact_match_in_title_query(
-                index_title_fields[IndicesKey.CONCEPTS], search_string=search_string
-            ),
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.CONCEPTS, search_string=search_string, boost=10
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.CONCEPTS,
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.CONCEPTS]), search_string=search_string
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.CONCEPTS]),
                 search_string=search_string,
-                autorativ_boost=False,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.CONCEPTS]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.CONCEPTS]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 boost=0.02,
-                fields_for_index=IndicesKey.CONCEPTS,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.CONCEPTS]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-                fields_for_index=IndicesKey.CONCEPTS,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
     def add_aggs(self, fields: list):
         if fields is None:
-            self.body["aggs"]["los"] = query_utils.los_aggregation()
-            self.body["aggs"]["provenance"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
+            self.body["aggs"][
+                "provenance"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="provenance"
             )
-            self.body["aggs"]["orgPath"] = query_utils.org_path_aggregation()
-            self.body["aggs"]["opendata"] = {"filter": open_data_query()}
-            self.body["aggs"]["theme"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "orgPath"
+            ] = query_aggregation_utils.org_path_aggregation()
+            self.body["aggs"]["opendata"] = {"filter": query_utils.open_data_query()}
+            self.body["aggs"][
+                "theme"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="theme"
             )
             self.body["aggs"][
                 "accessRights"
-            ] = query_utils.get_aggregation_term_for_key(
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="accessRights", missing="Ukjent", size=10
             )
-            self.body["aggs"]["spatial"] = query_utils.get_aggregation_term_for_key(
+            self.body["aggs"][
+                "spatial"
+            ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="spatial"
             )
 
@@ -447,56 +545,63 @@ class PublicServiceQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
         self.add_aggs(aggs)
         if filters:
-            if filters:
-                self.body["query"] = query_utils.query_with_final_boost_template(
-                    must_clause=[self.query], should_clause=[], filter_clause=True
-                )
-                self.add_filters(filters)
-        else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[]
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
             )
+            self.add_filters(filters)
+        else:
+            self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.exact_match_in_title_query(
-                index_title_fields[IndicesKey.PUBLIC_SERVICES],
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-            ),
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.PUBLIC_SERVICES,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                boost=10,
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.PUBLIC_SERVICES,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                autorativ_boost=False,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 boost=0.02,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.has_competent_authority_aggregation()
-            self.body["aggs"]["isGroupedBy"] = query_utils.is_grouped_by_aggregation()
+            ] = query_aggregation_utils.has_competent_authority_aggregation()
+            self.body["aggs"][
+                "isGroupedBy"
+            ] = query_aggregation_utils.is_grouped_by_aggregation()
 
 
 class EventQuery(AbstractSearchQuery):
@@ -506,52 +611,59 @@ class EventQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
         self.add_aggs(aggs)
         if filters:
-            if filters:
-                self.body["query"] = query_utils.query_with_final_boost_template(
-                    must_clause=[self.query], should_clause=[], filter_clause=True
-                )
-                self.add_filters(filters)
-        else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[]
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
             )
+            self.add_filters(filters)
+        else:
+            self.body["query"] = self.query
 
     def add_search_string(self, search_string: str):
-        dismax_queries = [
-            query_utils.exact_match_in_title_query(
-                index_title_fields[IndicesKey.EVENTS], search_string=search_string
-            ),
-            query_utils.index_match_in_title_query(
-                index_key=IndicesKey.EVENTS, search_string=search_string, boost=10
-            ),
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.EVENTS,
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.EVENTS]), search_string=search_string
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.EVENTS]),
                 search_string=search_string,
-                autorativ_boost=False,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_query(search_string)
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.description_query(
+                fields=description_fields([IndicesKey.EVENTS]),
+                search_string=search_string,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.EVENTS]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 boost=0.02,
-            ),
+            )
+        )
+        self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.EVENTS]),
                 search_string=search_string,
-                all_indices_autorativ_boost=False,
                 lenient=True,
-            ),
-        ]
-        self.query["dis_max"]["queries"] = dismax_queries
+            )
+        )
 
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.has_competent_authority_aggregation()
+            ] = query_aggregation_utils.has_competent_authority_aggregation()
 
 
 class PublicServicesAndEventsQuery(AbstractSearchQuery):
@@ -561,70 +673,65 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
         super().__init__(search_string)
 
         if search_string:
-            self.add_search_string(search_string)
+            self.add_search_string(search_string.strip())
         else:
             self.body["indices_boost"] = [{"public_services": 1.2}]
-            self.query = {"match_all": {}}
+            self.query = query_utils.default_query()
         self.add_aggs(aggs)
         if filters:
-            if filters:
-                self.body["query"] = query_utils.query_with_final_boost_template(
-                    must_clause=[self.query], should_clause=[], filter_clause=True
-                )
-                self.add_filters(filters)
-        else:
-            self.body["query"] = query_utils.query_with_final_boost_template(
-                must_clause=[self.query], should_clause=[]
+            self.body["query"] = query_utils.query_with_filter_template(
+                must_clause=[self.query]
             )
+            self.add_filters(filters)
+        else:
+            self.body["query"] = self.query
 
     def add_aggs(self, fields: list):
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
-            ] = query_utils.has_competent_authority_aggregation()
-            self.body["aggs"]["isGroupedBy"] = query_utils.is_grouped_by_aggregation()
+            ] = query_aggregation_utils.has_competent_authority_aggregation()
+            self.body["aggs"][
+                "isGroupedBy"
+            ] = query_aggregation_utils.is_grouped_by_aggregation()
             self.body["aggs"][
                 "associatedBroaderTypesByEvents"
-            ] = query_utils.associated_broader_types_by_events_aggregation()
+            ] = query_aggregation_utils.associated_broader_types_by_events_aggregation()
 
     def add_search_string(self, param: str):
         self.query["dis_max"]["queries"].append(
-            query_utils.exact_match_in_title_query(
-                title_field_names=["prefLabel.*", "title.*", "title"],
+            query_utils.title_exact_match_query(
+                fields=title_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.word_in_title_query(
-                title_field_names=["title.*", "title", "prefLabel.*"],
+            query_utils.title_query(
+                fields=title_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
             )
         )
+        self.query["dis_max"]["queries"].append(query_utils.organization_query(param))
         self.query["dis_max"]["queries"].append(
-            query_utils.match_on_publisher_name_query(param)
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.word_in_description_query(
-                index_key=IndicesKey.ALL, search_string=param
-            )
-        )
-        some_words_in_title = query_utils.some_words_in_title_query(
-            title_fields_list=["title.*", "title", "prefLabel.*"], search_string=param
-        )
-        if some_words_in_title:
-            self.query["dis_max"]["queries"].append(some_words_in_title)
-
-        self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
-                search_string=param, boost=0.0015, all_indices_autorativ_boost=True
+            query_utils.description_query(
+                fields=description_fields(
+                    [IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]
+                ),
+                search_string=param,
             )
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
-                boost=0.001,
+                boost=0.02,
+            )
+        )
+        self.query["dis_max"]["queries"].append(
+            query_utils.simple_query_string(
+                fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
+                search_string=param,
                 lenient=True,
-                all_indices_autorativ_boost=True,
             )
         )
 
@@ -646,10 +753,10 @@ class RecentQuery:
 
 
 class SuggestionQuery:
-    def __init__(self, index_key, search_string):
+    def __init__(self, index_key: IndicesKey, search_string: str):
         self.body = {
-            "_source": index_suggestion_fields[index_key],
-            "query": query_utils.suggestion_title_query(
-                index_key=index_key, search_string=search_string
+            "_source": suggestion_fields([index_key]),
+            "query": query_utils.title_suggestion_query(
+                fields=title_fields([index_key]), search_string=search_string
             ),
         }
