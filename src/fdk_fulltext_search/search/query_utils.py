@@ -397,6 +397,18 @@ def info_model_filter(uri):
     return {"bool": {"filter": [{"term": {"informationModel.uri.keyword": uri}}]}}
 
 
+def dataset_info_model_relations(uri):
+    return {
+        "bool": {
+            "should": [
+                {"match": {"informationModel.uri.keyword": uri}},
+                {"match": {"conformsTo.uri.keyword": uri}},
+            ],
+            "minimum_should_match": 1,
+        }
+    }
+
+
 def required_by_service_filter(uri):
     return {
         "bool": {
