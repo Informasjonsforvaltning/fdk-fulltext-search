@@ -99,6 +99,10 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                 self.body["query"]["bool"]["filter"].append(
                     query_utils.requires_or_relates(f[key])
                 )
+            elif key == "dataset_info_model_relations":
+                self.body["query"]["bool"]["filter"].append(
+                    query_utils.dataset_info_model_relations(f[key])
+                )
             else:
                 self.body["query"]["bool"]["filter"].extend(
                     query_utils.get_term_filter(f)
