@@ -67,7 +67,7 @@ cffi = ">=1.1"
 six = ">=1.4.1"
 
 [package.extras]
-tests = ["pytest (>=3.2.1,!=3.3.0)"]
+tests = ["pytest (>=3.2.1,<3.3.0 || >3.3.0)"]
 typecheck = ["mypy"]
 
 [[package]]
@@ -166,12 +166,12 @@ python-versions = ">=3.6"
 cffi = ">=1.12"
 
 [package.extras]
-docs = ["sphinx (>=1.6.5,!=1.8.0,!=3.1.0,!=3.1.1)", "sphinx-rtd-theme"]
+docs = ["sphinx (>=1.6.5,<1.8.0 || >1.8.0,<3.1.0 || >3.1.0,<3.1.1 || >3.1.1)", "sphinx-rtd-theme"]
 docstest = ["doc8", "pyenchant (>=1.6.11)", "twine (>=1.12.0)", "sphinxcontrib-spelling (>=4.0.1)"]
 pep8test = ["black", "flake8", "flake8-import-order", "pep8-naming"]
 sdist = ["setuptools-rust (>=0.11.4)"]
 ssh = ["bcrypt (>=3.1.5)"]
-test = ["pytest (>=6.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
+test = ["pytest (>=6.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,<3.79.2 || >3.79.2)"]
 
 [[package]]
 name = "decorator"
@@ -231,7 +231,7 @@ texttable = ">=0.9.0,<2"
 websocket-client = ">=0.32.0,<1"
 
 [package.extras]
-socks = ["PySocks (>=1.5.6,!=1.5.7,<2)"]
+socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2)"]
 tests = ["ddt (>=1.2.2,<2)", "pytest (<6)"]
 
 [[package]]
@@ -318,7 +318,7 @@ develop = ["mock", "pytest (>=3.0.0)", "pytest-cov", "pytest-mock (<3.0.0)", "py
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "0.3.2"
+version = "0.3.3"
 description = ""
 category = "main"
 optional = false
@@ -766,7 +766,7 @@ six = "*"
 
 [package.extras]
 docs = ["sphinx (>=1.6.5)", "sphinx-rtd-theme"]
-tests = ["pytest (>=3.2.1,!=3.3.0)", "hypothesis (>=3.27.0)"]
+tests = ["pytest (>=3.2.1,<3.3.0 || >3.3.0)", "hypothesis (>=3.27.0)"]
 
 [[package]]
 name = "pyparsing"
@@ -818,7 +818,7 @@ coverage = ">=5.2.1"
 pytest = ">=4.6"
 
 [package.extras]
-testing = ["fields", "hunter", "process-tests (==2.0.2)", "six", "pytest-xdist", "virtualenv"]
+testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
 name = "pytest-docker"
@@ -947,7 +947,7 @@ urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
 security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
-socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
+socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "safety"
@@ -1041,7 +1041,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 [package.extras]
 brotli = ["brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
-socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [[package]]
 name = "websocket-client"
@@ -1069,7 +1069,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "67e1b3ed140d36f503802e816b4d397bd45f8c486913c56c1e608360ff1f66d6"
+content-hash = "19856c44ff67047f4c6f649de4c190ac4d5983d41f31828308d9e6d6e4582c43"
 
 [metadata.files]
 aniso8601 = [
@@ -1269,8 +1269,8 @@ elasticsearch-dsl = [
     {file = "elasticsearch_dsl-7.3.0-py2.py3-none-any.whl", hash = "sha256:9390d8e5cf82ebad3505e7f656e407259cf703f5a4035f211cef454127672572"},
 ]
 fdk-rdf-parser = [
-    {file = "fdk-rdf-parser-0.3.2.tar.gz", hash = "sha256:5f3271e86d62583bfddebe5883745cd75473c6766b120f992403fbca68a3f253"},
-    {file = "fdk_rdf_parser-0.3.2-py3-none-any.whl", hash = "sha256:dfed1819e7ab810fcf636c27c2c22bfc979af3f17764ec9a98017c63aa94c70d"},
+    {file = "fdk-rdf-parser-0.3.3.tar.gz", hash = "sha256:ee1bb39675b6e662745e4e507bcc2371887bd15e3ed8412ea81173d036a9ebaf"},
+    {file = "fdk_rdf_parser-0.3.3-py3-none-any.whl", hash = "sha256:ab5a48f9c0111cf7297bd0233ad947913aeb52758cc5fce8939defaa92f2afd2"},
 ]
 feedgen = [
     {file = "feedgen-0.9.0.tar.gz", hash = "sha256:8e811bdbbed6570034950db23a4388453628a70e689a6e8303ccec430f5a804a"},
