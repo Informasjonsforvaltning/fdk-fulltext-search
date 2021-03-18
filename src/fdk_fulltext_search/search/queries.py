@@ -210,11 +210,10 @@ class AllIndicesQuery(AbstractSearchQuery):
                     ]
                 ),
                 search_string=param,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields(
                     [
                         IndicesKey.CONCEPTS,
@@ -226,7 +225,6 @@ class AllIndicesQuery(AbstractSearchQuery):
                     ]
                 ),
                 search_string=param,
-                lenient=True,
             ),
         )
 
@@ -276,14 +274,12 @@ class InformationModelQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -353,14 +349,12 @@ class DataServiceQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.DATA_SERVICES]),
                 search_string=search_string,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.DATA_SERVICES]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -408,14 +402,12 @@ class DataSetQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -498,14 +490,12 @@ class ConceptQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.CONCEPTS]),
                 search_string=search_string,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.CONCEPTS]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -583,14 +573,12 @@ class PublicServiceQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.PUBLIC_SERVICES]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -646,16 +634,13 @@ class EventQuery(AbstractSearchQuery):
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
-                fields=fulltext_fields([IndicesKey.EVENTS]),
-                search_string=search_string,
-                boost=0.02,
+                fields=fulltext_fields([IndicesKey.EVENTS]), search_string=search_string
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.EVENTS]),
                 search_string=search_string,
-                lenient=True,
             )
         )
 
@@ -724,14 +709,12 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
-                boost=0.02,
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.simple_query_string(
+            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
-                lenient=True,
             )
         )
 

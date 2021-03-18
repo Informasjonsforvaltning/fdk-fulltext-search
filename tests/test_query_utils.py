@@ -19,6 +19,7 @@ from fdk_fulltext_search.search.query_utils import (
     default_query,
     description_query,
     get_catch_all_query_string,
+    query_string,
     query_template,
     simple_query_string,
     title_exact_match_query,
@@ -123,12 +124,12 @@ def test_title_query():
                             }
                         },
                         {
-                            "simple_query_string": {
-                                "query": "åpne data",
+                            "query_string": {
+                                "query": "*åpne* *data*",
                                 "fields": [
-                                    "title.*",
-                                    "title",
-                                    "prefLabel.*",
+                                    "title.*.raw",
+                                    "title.raw",
+                                    "prefLabel.*.raw",
                                 ],
                             }
                         },
@@ -265,7 +266,7 @@ def test_simple_query_string_query():
                     }
                 },
             ],
-            "boost": 0.001,
+            "boost": 0.02,
         }
     }
     result = simple_query_string(search_string="åpne data")
@@ -289,7 +290,7 @@ def test_simple_query_string_query_special_chars():
                     }
                 },
             ],
-            "boost": 0.001,
+            "boost": 0.02,
         }
     }
     result = simple_query_string(search_string="åpne - !! (data)")
@@ -297,14 +298,10 @@ def test_simple_query_string_query_special_chars():
 
 
 @pytest.mark.unit
-def test_simple_query_lenient():
+def test_query_string():
     expected = {
         "bool": {
-            "must": {
-                "simple_query_string": {
-                    "query": "*mange mange mange* *bekker bekker bekker*"
-                }
-            },
+            "must": {"query_string": {"query": "*mange* *bekker*"}},
             "should": [
                 {"match": {"provenance.code": "NASJONAL"}},
                 {"term": {"nationalComponent": "true"}},
@@ -317,25 +314,23 @@ def test_simple_query_lenient():
                     }
                 },
             ],
-            "boost": 1,
+            "boost": 0.001,
         }
     }
 
-    result = simple_query_string(
+    result = query_string(
         search_string="mange bekker",
-        boost=1,
-        lenient=True,
     )
 
     assert json.dumps(result) == json.dumps(expected)
 
 
-def test_simple_query_with_fields():
+def test_query_string_with_fields():
     expected = {
         "bool": {
             "must": {
-                "simple_query_string": {
-                    "query": "*mange mange mange* *bekker bekker bekker*",
+                "query_string": {
+                    "query": "*mange* *bekker*",
                     "fields": [
                         "accessRights.code",
                         "accessRights.prefLabel.*^3",
@@ -371,37 +366,10 @@ def test_simple_query_with_fields():
         }
     }
 
-    result = simple_query_string(
+    result = query_string(
         search_string="mange bekker",
-        lenient=True,
         fields=fulltext_fields([IndicesKey.DATA_SETS]),
     )
-    assert json.dumps(result) == json.dumps(expected)
-
-
-@pytest.mark.unit
-def test_simple_query_string_query_boost_1():
-    expected = {
-        "bool": {
-            "must": {"simple_query_string": {"query": "åpne+data åpne+data*"}},
-            "should": [
-                {"match": {"provenance.code": "NASJONAL"}},
-                {"term": {"nationalComponent": "true"}},
-                {
-                    "bool": {
-                        "must": [
-                            {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
-                        ]
-                    }
-                },
-            ],
-            "boost": 1,
-        }
-    }
-
-    result = simple_query_string(search_string="åpne data", boost=1)
-
     assert json.dumps(result) == json.dumps(expected)
 
 
@@ -538,7 +506,7 @@ def test_words_only_string():
     assert words_only_string(string_with_special_char4) == "some 9 thing"
     assert words_only_string(string_with_special_char_only) is None
     assert words_only_string(string_with_four_words) == string_with_four_words
-    assert words_only_string(string_with_one_word) is None
+    assert words_only_string(string_with_one_word) == "nothing"
     assert (
         words_only_string(string_with_one_word_and_special_char) == string_with_one_word
     )
@@ -547,16 +515,16 @@ def test_words_only_string():
 @pytest.mark.unit
 def test_words_only_string_in_title_query():
     expected = {
-        "simple_query_string": {
-            "query": "some query to be queried",
-            "fields": ["title"],
+        "query_string": {
+            "query": "*some* *query* *to* *be* *queried*",
+            "fields": ["title.raw"],
         }
     }
 
     expected_one_word = {
-        "simple_query_string": {
-            "query": "nothing",
-            "fields": ["title"],
+        "query_string": {
+            "query": "*nothing*",
+            "fields": ["title.raw"],
         }
     }
 
@@ -598,7 +566,9 @@ def test_words_only_string_in_title_query():
     assert json.dumps(
         string_with_four_words["bool"]["must"]["dis_max"]["queries"][1]
     ) == json.dumps(expected)
-    assert string_with_one_word["bool"]["must"]["dis_max"]["queries"].__len__() == 1
+    assert json.dumps(
+        string_with_one_word["bool"]["must"]["dis_max"]["queries"][1]
+    ) == json.dumps(expected_one_word)
     assert json.dumps(
         string_with_one_word_and_special_char["bool"]["must"]["dis_max"]["queries"][1]
     ) == json.dumps(expected_one_word)
@@ -608,8 +578,8 @@ def test_words_only_string_in_title_query():
 def test_get_catch_all_query_string():
     result = get_catch_all_query_string("oneword")
     result2 = get_catch_all_query_string("two words")
-    assert result == "*oneword oneword oneword*"
-    assert result2 == "*two two two* *words words words*"
+    assert result == "*oneword*"
+    assert result2 == "*two* *words*"
 
 
 @pytest.mark.unit
@@ -664,13 +634,13 @@ def test_match_in_title_info_model():
                             }
                         },
                         {
-                            "simple_query_string": {
-                                "query": "RA 05 string",
+                            "query_string": {
+                                "query": "*RA* *05* *string*",
                                 "fields": [
-                                    "title.en",
-                                    "title.nb",
-                                    "title.nn",
-                                    "title.no",
+                                    "title.en.raw",
+                                    "title.nb.raw",
+                                    "title.nn.raw",
+                                    "title.no.raw",
                                 ],
                             }
                         },
