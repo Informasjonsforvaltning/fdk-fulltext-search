@@ -135,13 +135,13 @@ def test_information_model_with_search_string_query():
                                             }
                                         },
                                         {
-                                            "simple_query_string": {
-                                                "query": "RA 0554 Pris",
+                                            "query_string": {
+                                                "query": "*RA* *0554* *Pris*",
                                                 "fields": [
-                                                    "title.en",
-                                                    "title.nb",
-                                                    "title.nn",
-                                                    "title.no",
+                                                    "title.en.raw",
+                                                    "title.nb.raw",
+                                                    "title.nn.raw",
+                                                    "title.no.raw",
                                                 ],
                                             }
                                         },
@@ -279,8 +279,8 @@ def test_information_model_with_search_string_query():
                     {
                         "bool": {
                             "must": {
-                                "simple_query_string": {
-                                    "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                                "query_string": {
+                                    "query": "*RA* *0554* *Pris*",
                                     "fields": [
                                         "description.*",
                                         "keyword.*^2",
@@ -430,13 +430,13 @@ def test_information_model_add_filter():
                                                         }
                                                     },
                                                     {
-                                                        "simple_query_string": {
-                                                            "query": "RA 0554 Pris",
+                                                        "query_string": {
+                                                            "query": "*RA* *0554* *Pris*",
                                                             "fields": [
-                                                                "title.en",
-                                                                "title.nb",
-                                                                "title.nn",
-                                                                "title.no",
+                                                                "title.en.raw",
+                                                                "title.nb.raw",
+                                                                "title.nn.raw",
+                                                                "title.no.raw",
                                                             ],
                                                         }
                                                     },
@@ -574,8 +574,8 @@ def test_information_model_add_filter():
                                 {
                                     "bool": {
                                         "must": {
-                                            "simple_query_string": {
-                                                "query": "*RA RA RA* *0554 0554 0554* *Pris Pris Pris*",
+                                            "query_string": {
+                                                "query": "*RA* *0554* *Pris*",
                                                 "fields": [
                                                     "description.*",
                                                     "keyword.*^2",
@@ -881,13 +881,13 @@ def test_dataset_with_query_string_query():
                                         }
                                     },
                                     {
-                                        "simple_query_string": {
-                                            "query": "Elbiloversikt i",
+                                        "query_string": {
+                                            "query": "*Elbiloversikt* *i*",
                                             "fields": [
-                                                "title.en",
-                                                "title.nb",
-                                                "title.nn",
-                                                "title.no",
+                                                "title.en.raw",
+                                                "title.nb.raw",
+                                                "title.nn.raw",
+                                                "title.no.raw",
                                             ],
                                         }
                                     },
@@ -1022,8 +1022,8 @@ def test_dataset_with_query_string_query():
                 {
                     "bool": {
                         "must": {
-                            "simple_query_string": {
-                                "query": "*Elbiloversikt Elbiloversikt Elbiloversikt* *i i i*",
+                            "query_string": {
+                                "query": "*Elbiloversikt* *i*",
                                 "fields": [
                                     "accessRights.code",
                                     "accessRights.prefLabel.*^3",
@@ -1159,6 +1159,17 @@ def test_dataset_with_spatial_filter():
                                                             "title.no.ngrams",
                                                             "title.no.ngrams.2_gram",
                                                             "title.no.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "query_string": {
+                                                        "query": "*Ad*",
+                                                        "fields": [
+                                                            "title.en.raw",
+                                                            "title.nb.raw",
+                                                            "title.nn.raw",
+                                                            "title.no.raw",
                                                         ],
                                                     }
                                                 },
@@ -1309,8 +1320,8 @@ def test_dataset_with_spatial_filter():
                             {
                                 "bool": {
                                     "must": {
-                                        "simple_query_string": {
-                                            "query": "*Ad Ad Ad*",
+                                        "query_string": {
+                                            "query": "*Ad*",
                                             "fields": [
                                                 "accessRights.code",
                                                 "accessRights.prefLabel.*^3",
@@ -1457,6 +1468,17 @@ def test_dataset_with_media_type_filter():
                                                             "title.no.ngrams",
                                                             "title.no.ngrams.2_gram",
                                                             "title.no.ngrams.3_gram",
+                                                        ],
+                                                    }
+                                                },
+                                                {
+                                                    "query_string": {
+                                                        "query": "*Fotball*",
+                                                        "fields": [
+                                                            "title.en.raw",
+                                                            "title.nb.raw",
+                                                            "title.nn.raw",
+                                                            "title.no.raw",
                                                         ],
                                                     }
                                                 },
@@ -1607,8 +1629,8 @@ def test_dataset_with_media_type_filter():
                             {
                                 "bool": {
                                     "must": {
-                                        "simple_query_string": {
-                                            "query": "*Fotball Fotball Fotball*",
+                                        "query_string": {
+                                            "query": "*Fotball*",
                                             "fields": [
                                                 "accessRights.code",
                                                 "accessRights.prefLabel.*^3",

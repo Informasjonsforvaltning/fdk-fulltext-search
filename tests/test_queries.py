@@ -31,7 +31,6 @@ def test_recent_query_should_have_size_18():
 
 @pytest.mark.unit
 def test_all_indices_query_should_return_query_with_dis_max():
-    search_str = "stønad"
     expected = {
         "query": {
             "dis_max": {
@@ -40,7 +39,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                         "bool": {
                             "must": {
                                 "multi_match": {
-                                    "query": search_str,
+                                    "query": "stønad",
                                     "fields": [
                                         "prefLabel.en.raw",
                                         "prefLabel.nb.raw",
@@ -83,7 +82,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                     "queries": [
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "prefLabel.en.ngrams",
@@ -94,7 +93,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "prefLabel.nb.ngrams",
@@ -105,7 +104,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "prefLabel.nn.ngrams",
@@ -116,7 +115,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "prefLabel.no.ngrams",
@@ -127,7 +126,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "title.en.ngrams",
@@ -138,7 +137,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "title.nb.ngrams",
@@ -149,7 +148,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "title.nn.ngrams",
@@ -160,12 +159,27 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         },
                                         {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "stønad",
                                                 "type": "bool_prefix",
                                                 "fields": [
                                                     "title.no.ngrams",
                                                     "title.no.ngrams.2_gram",
                                                     "title.no.ngrams.3_gram",
+                                                ],
+                                            }
+                                        },
+                                        {
+                                            "query_string": {
+                                                "query": "*stønad*",
+                                                "fields": [
+                                                    "prefLabel.en.raw",
+                                                    "prefLabel.nb.raw",
+                                                    "prefLabel.nn.raw",
+                                                    "prefLabel.no.raw",
+                                                    "title.en.raw",
+                                                    "title.nb.raw",
+                                                    "title.nn.raw",
+                                                    "title.no.raw",
                                                 ],
                                             }
                                         },
@@ -199,7 +213,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                         "bool": {
                             "must": {
                                 "multi_match": {
-                                    "query": search_str,
+                                    "query": "stønad",
                                     "fields": [
                                         "publisher.prefLabel.*",
                                         "publisher.title.*",
@@ -235,9 +249,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                         "bool": {
                             "must": {
                                 "simple_query_string": {
-                                    "query": "{0} {0}*".format(
-                                        search_str.replace(" ", "+")
-                                    ),
+                                    "query": "stønad stønad*",
                                     "fields": [
                                         "definition.text.en",
                                         "definition.text.nb",
@@ -277,9 +289,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                         "bool": {
                             "must": {
                                 "simple_query_string": {
-                                    "query": "{0} {0}*".format(
-                                        search_str.replace(" ", "+")
-                                    ),
+                                    "query": "stønad stønad*",
                                     "fields": [
                                         "accessRights.code",
                                         "accessRights.prefLabel.*^3",
@@ -335,8 +345,8 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     {
                         "bool": {
                             "must": {
-                                "simple_query_string": {
-                                    "query": "*{0} {0} {0}*".format(search_str),
+                                "query_string": {
+                                    "query": "*stønad*",
                                     "fields": [
                                         "accessRights.code",
                                         "accessRights.prefLabel.*^3",
@@ -609,6 +619,21 @@ def test_all_indices_should_return_query_with_filter():
                                                             ],
                                                         }
                                                     },
+                                                    {
+                                                        "query_string": {
+                                                            "query": "*barnehage*",
+                                                            "fields": [
+                                                                "prefLabel.en.raw",
+                                                                "prefLabel.nb.raw",
+                                                                "prefLabel.nn.raw",
+                                                                "prefLabel.no.raw",
+                                                                "title.en.raw",
+                                                                "title.nb.raw",
+                                                                "title.nn.raw",
+                                                                "title.no.raw",
+                                                            ],
+                                                        }
+                                                    },
                                                 ]
                                             }
                                         },
@@ -771,8 +796,8 @@ def test_all_indices_should_return_query_with_filter():
                                 {
                                     "bool": {
                                         "must": {
-                                            "simple_query_string": {
-                                                "query": "*barnehage barnehage barnehage*",
+                                            "query_string": {
+                                                "query": "*barnehage*",
                                                 "fields": [
                                                     "accessRights.code",
                                                     "accessRights.prefLabel.*^3",
@@ -1025,17 +1050,17 @@ def test_all_indices_with_several_words():
                                             }
                                         },
                                         {
-                                            "simple_query_string": {
-                                                "query": "some string",
+                                            "query_string": {
+                                                "query": "*some* *string*",
                                                 "fields": [
-                                                    "prefLabel.en",
-                                                    "prefLabel.nb",
-                                                    "prefLabel.nn",
-                                                    "prefLabel.no",
-                                                    "title.en",
-                                                    "title.nb",
-                                                    "title.nn",
-                                                    "title.no",
+                                                    "prefLabel.en.raw",
+                                                    "prefLabel.nb.raw",
+                                                    "prefLabel.nn.raw",
+                                                    "prefLabel.no.raw",
+                                                    "title.en.raw",
+                                                    "title.nb.raw",
+                                                    "title.nn.raw",
+                                                    "title.no.raw",
                                                 ],
                                             }
                                         },
@@ -1201,8 +1226,8 @@ def test_all_indices_with_several_words():
                     {
                         "bool": {
                             "must": {
-                                "simple_query_string": {
-                                    "query": "*some some some* *string string string*",
+                                "query_string": {
+                                    "query": "*some* *string*",
                                     "fields": [
                                         "accessRights.code",
                                         "accessRights.prefLabel.*^3",
@@ -1361,7 +1386,6 @@ def test_add_filter_should_add_must_not_filter_for_ukjent():
 
 @pytest.mark.unit
 def test_all_indices_should_return_query_with_must_not():
-    search_str = "barnehage"
     expected = {
         "query": {
             "bool": {
@@ -1373,7 +1397,7 @@ def test_all_indices_should_return_query_with_must_not():
                                     "bool": {
                                         "must": {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "barnehage",
                                                 "fields": [
                                                     "prefLabel.en.raw",
                                                     "prefLabel.nb.raw",
@@ -1416,7 +1440,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                 "queries": [
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "prefLabel.en.ngrams",
@@ -1427,7 +1451,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "prefLabel.nb.ngrams",
@@ -1438,7 +1462,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "prefLabel.nn.ngrams",
@@ -1449,7 +1473,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "prefLabel.no.ngrams",
@@ -1460,7 +1484,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "title.en.ngrams",
@@ -1471,7 +1495,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "title.nb.ngrams",
@@ -1482,7 +1506,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "title.nn.ngrams",
@@ -1493,12 +1517,27 @@ def test_all_indices_should_return_query_with_must_not():
                                                     },
                                                     {
                                                         "multi_match": {
-                                                            "query": search_str,
+                                                            "query": "barnehage",
                                                             "type": "bool_prefix",
                                                             "fields": [
                                                                 "title.no.ngrams",
                                                                 "title.no.ngrams.2_gram",
                                                                 "title.no.ngrams.3_gram",
+                                                            ],
+                                                        }
+                                                    },
+                                                    {
+                                                        "query_string": {
+                                                            "query": "*barnehage*",
+                                                            "fields": [
+                                                                "prefLabel.en.raw",
+                                                                "prefLabel.nb.raw",
+                                                                "prefLabel.nn.raw",
+                                                                "prefLabel.no.raw",
+                                                                "title.en.raw",
+                                                                "title.nb.raw",
+                                                                "title.nn.raw",
+                                                                "title.no.raw",
                                                             ],
                                                         }
                                                     },
@@ -1532,7 +1571,7 @@ def test_all_indices_should_return_query_with_must_not():
                                     "bool": {
                                         "must": {
                                             "multi_match": {
-                                                "query": search_str,
+                                                "query": "barnehage",
                                                 "fields": [
                                                     "publisher.prefLabel.*",
                                                     "publisher.title.*",
@@ -1568,9 +1607,7 @@ def test_all_indices_should_return_query_with_must_not():
                                     "bool": {
                                         "must": {
                                             "simple_query_string": {
-                                                "query": "{0} {0}*".format(
-                                                    search_str.replace(" ", "+")
-                                                ),
+                                                "query": "barnehage barnehage*",
                                                 "fields": [
                                                     "definition.text.en",
                                                     "definition.text.nb",
@@ -1610,9 +1647,7 @@ def test_all_indices_should_return_query_with_must_not():
                                     "bool": {
                                         "must": {
                                             "simple_query_string": {
-                                                "query": "{0} {0}*".format(
-                                                    search_str.replace(" ", "+")
-                                                ),
+                                                "query": "barnehage barnehage*",
                                                 "fields": [
                                                     "accessRights.code",
                                                     "accessRights.prefLabel.*^3",
@@ -1668,10 +1703,8 @@ def test_all_indices_should_return_query_with_must_not():
                                 {
                                     "bool": {
                                         "must": {
-                                            "simple_query_string": {
-                                                "query": "*{0} {0} {0}*".format(
-                                                    search_str
-                                                ),
+                                            "query_string": {
+                                                "query": "*barnehage*",
                                                 "fields": [
                                                     "accessRights.code",
                                                     "accessRights.prefLabel.*^3",
