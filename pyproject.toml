@@ -19,7 +19,7 @@ pika = "1.2.0"
 feedgen = "0.9.0"
 simplejson = "3.17.2"
 python-json-logger = "2.0.1"
-fdk-rdf-parser = "^0.3.3"
+fdk-rdf-parser = "^0.3.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "6.2.2"
