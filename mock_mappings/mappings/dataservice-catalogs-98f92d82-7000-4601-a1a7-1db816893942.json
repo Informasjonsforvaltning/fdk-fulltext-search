@@ -2,7 +2,7 @@
   "id" : "98f92d82-7000-4601-a1a7-1db816893942",
   "name" : "catalogs",
   "request" : {
-    "url" : "/dataservice/catalogs",
+    "url" : "/dataservice/catalogs?catalogrecords=true",
     "method" : "GET"
   },
   "response" : {
