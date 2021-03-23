@@ -219,6 +219,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                         "publisher.title.*",
                                         "hasCompetentAuthority.prefLabel.*",
                                         "hasCompetentAuthority.name.*",
+                                        "keyword.*",
                                     ],
                                 }
                             },
@@ -670,6 +671,7 @@ def test_all_indices_should_return_query_with_filter():
                                                     "publisher.title.*",
                                                     "hasCompetentAuthority.prefLabel.*",
                                                     "hasCompetentAuthority.name.*",
+                                                    "keyword.*",
                                                 ],
                                             }
                                         },
@@ -1100,6 +1102,7 @@ def test_all_indices_with_several_words():
                                         "publisher.title.*",
                                         "hasCompetentAuthority.prefLabel.*",
                                         "hasCompetentAuthority.name.*",
+                                        "keyword.*",
                                     ],
                                 }
                             },
@@ -1577,6 +1580,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                     "publisher.title.*",
                                                     "hasCompetentAuthority.prefLabel.*",
                                                     "hasCompetentAuthority.name.*",
+                                                    "keyword.*",
                                                 ],
                                             }
                                         },
