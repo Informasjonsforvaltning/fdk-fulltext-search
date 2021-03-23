@@ -183,7 +183,10 @@ def fetch_data_sets():
     try:
         logging.info("fetching datasets")
         req = requests.get(
-            url=dataset_url, headers={"Accept": "text/turtle"}, timeout=30
+            url=dataset_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=30,
         )
         req.raise_for_status()
         parsed_rdf = fdk_rdf_parser.parse_datasets(req.text)
@@ -218,7 +221,10 @@ def fetch_data_services():
     logging.info(f"fetching data services from {dataservice_url}")
     try:
         response = requests.get(
-            url=dataservice_url, headers={"Accept": "text/turtle"}, timeout=10
+            url=dataservice_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
         response.raise_for_status()
 
