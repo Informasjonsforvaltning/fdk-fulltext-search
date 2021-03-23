@@ -131,7 +131,7 @@ def description_query(fields: list, search_string: str) -> dict:
     }
 
 
-def organization_query(search_str: str) -> dict:
+def organization_and_keyword_query(search_str: str) -> dict:
     return {
         "bool": {
             "must": {
@@ -142,6 +142,7 @@ def organization_query(search_str: str) -> dict:
                         "publisher.title.*",
                         "hasCompetentAuthority.prefLabel.*",
                         "hasCompetentAuthority.name.*",
+                        "keyword.*",
                     ],
                 }
             },

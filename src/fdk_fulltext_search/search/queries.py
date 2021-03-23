@@ -181,7 +181,9 @@ class AllIndicesQuery(AbstractSearchQuery):
                 search_string=param,
             )
         )
-        self.query["dis_max"]["queries"].append(query_utils.organization_query(param))
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_and_keyword_query(param)
+        )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
                 fields=description_fields(
@@ -262,7 +264,7 @@ class InformationModelQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -337,7 +339,7 @@ class DataServiceQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -390,7 +392,7 @@ class DataSetQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -478,7 +480,7 @@ class ConceptQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -561,7 +563,7 @@ class PublicServiceQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -624,7 +626,7 @@ class EventQuery(AbstractSearchQuery):
             )
         )
         self.query["dis_max"]["queries"].append(
-            query_utils.organization_query(search_string)
+            query_utils.organization_and_keyword_query(search_string)
         )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
@@ -696,7 +698,9 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
                 search_string=param,
             )
         )
-        self.query["dis_max"]["queries"].append(query_utils.organization_query(param))
+        self.query["dis_max"]["queries"].append(
+            query_utils.organization_and_keyword_query(param)
+        )
         self.query["dis_max"]["queries"].append(
             query_utils.description_query(
                 fields=description_fields(

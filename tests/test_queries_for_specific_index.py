@@ -181,6 +181,7 @@ def test_information_model_with_search_string_query():
                                         "publisher.title.*",
                                         "hasCompetentAuthority.prefLabel.*",
                                         "hasCompetentAuthority.name.*",
+                                        "keyword.*",
                                     ],
                                 }
                             },
@@ -476,6 +477,7 @@ def test_information_model_add_filter():
                                                     "publisher.title.*",
                                                     "hasCompetentAuthority.prefLabel.*",
                                                     "hasCompetentAuthority.name.*",
+                                                    "keyword.*",
                                                 ],
                                             }
                                         },
@@ -923,6 +925,7 @@ def test_dataset_with_query_string_query():
                                     "publisher.title.*",
                                     "hasCompetentAuthority.prefLabel.*",
                                     "hasCompetentAuthority.name.*",
+                                    "keyword.*",
                                 ],
                             }
                         },
@@ -1209,6 +1212,7 @@ def test_dataset_with_spatial_filter():
                                                 "publisher.title.*",
                                                 "hasCompetentAuthority.prefLabel.*",
                                                 "hasCompetentAuthority.name.*",
+                                                "keyword.*",
                                             ],
                                         }
                                     },
@@ -1518,6 +1522,7 @@ def test_dataset_with_media_type_filter():
                                                 "publisher.title.*",
                                                 "hasCompetentAuthority.prefLabel.*",
                                                 "hasCompetentAuthority.name.*",
+                                                "keyword.*",
                                             ],
                                         }
                                     },
