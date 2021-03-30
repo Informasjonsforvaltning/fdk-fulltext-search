@@ -1,4 +1,5 @@
 import os
+from typing import Any, Optional
 
 from dotenv import load_dotenv
 from flask import Flask
@@ -8,7 +9,7 @@ from flask_restful import Api
 import fdk_fulltext_search.endpoints as endpoints
 
 
-def create_app(test_config=None):
+def create_app(test_config: Optional[Any] = None) -> Flask:
 
     # Create and configure the app
     load_dotenv(override=True)

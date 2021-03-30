@@ -6,6 +6,7 @@ import logging
 import math
 import os
 import time
+from typing import Any, Dict, Generator, Optional
 
 from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
@@ -37,7 +38,7 @@ MODEL_HARVESTER_URI = os.getenv(
 RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
 
 
-def error_msg(exec_point, reason, count=0):
+def error_msg(exec_point: str, reason: Exception, count: int = 0) -> Dict[str, str]:
     return {
         "count": count,
         "status": "error",
@@ -45,16 +46,16 @@ def error_msg(exec_point, reason, count=0):
     }
 
 
-def result_msg(count):
+def result_msg(count: int) -> Dict[str, str]:
     return {"status": "OK", "count": count}
 
 
-def reindex():
+def reindex() -> Dict:
     result = fetch_all_content()
     return result
 
 
-def fetch_all_content():
+def fetch_all_content() -> Dict:
     start = time.time()
     info_status = fetch_information_models()
     concept_status = fetch_concepts()
@@ -95,7 +96,7 @@ def fetch_all_content():
     return result
 
 
-def fetch_information_models():
+def fetch_information_models() -> Dict[str, str]:
     info_url = f"{MODEL_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching information models from {info_url}")
@@ -134,7 +135,7 @@ def fetch_information_models():
         return result
 
 
-def fetch_concepts():
+def fetch_concepts() -> Dict[str, str]:
     concept_url = API_URL + "concepts"
     try:
         logging.info("fetching concepts")
@@ -178,7 +179,7 @@ def fetch_concepts():
         return result
 
 
-def fetch_data_sets():
+def fetch_data_sets() -> Dict[str, str]:
     dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
     try:
         logging.info("fetching datasets")
@@ -215,7 +216,7 @@ def fetch_data_sets():
         return result
 
 
-def fetch_data_services():
+def fetch_data_services() -> Dict[str, str]:
     dataservice_url = f"{FDK_DATASERVICE_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching data services from {dataservice_url}")
@@ -256,7 +257,7 @@ def fetch_data_services():
         return result
 
 
-def fetch_public_services():
+def fetch_public_services() -> Dict[str, str]:
     event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
     event_response = None
     try:
@@ -313,7 +314,7 @@ def fetch_public_services():
         return result
 
 
-def fetch_events():
+def fetch_events() -> Dict[str, str]:
     event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
 
     logging.info(f"fetching events from {event_url}")
@@ -352,7 +353,7 @@ def fetch_events():
         return result
 
 
-def elasticsearch_ingest(documents, index, id_key):
+def elasticsearch_ingest(documents: Any, index: str, id_key: str) -> Any:
     try:
         result = helpers.bulk(
             client=es_client, actions=yield_documents(documents, index, id_key)
@@ -364,7 +365,7 @@ def elasticsearch_ingest(documents, index, id_key):
         return result
 
 
-def elasticsearch_ingest_from_harvester(documents, index, id_key):
+def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str) -> Any:
     try:
         result = helpers.bulk(
             client=es_client,
@@ -378,13 +379,15 @@ def elasticsearch_ingest_from_harvester(documents, index, id_key):
         return result
 
 
-def yield_documents(documents, index, id_key):
+def yield_documents(documents: Any, index: str, id_key: str) -> Generator:
     """get docs from responses without ES data"""
     for doc in documents:
         yield {"_index": index, "_id": doc[id_key], "_source": doc}
 
 
-def yield_documents_from_harvester(documents, index, id_key):
+def yield_documents_from_harvester(
+    documents: Any, index: str, id_key: str
+) -> Generator:
     """get docs from harvester responses"""
     for doc_index in documents:
         yield {
@@ -396,13 +399,13 @@ def yield_documents_from_harvester(documents, index, id_key):
         }
 
 
-def yield_documents_from_source(documents, index, id_key):
+def yield_documents_from_source(documents: Any, index: str, id_key: str) -> Generator:
     """get docs from responses with ES data"""
     for doc in documents:
         yield {"_index": index, "_id": doc["_id"], "_source": doc["_source"]}
 
 
-def create_index(index_alias, new_index_name):
+def create_index(index_alias: str, new_index_name: str) -> Optional[Dict[str, str]]:
     """create an index with settings and mapping from file"""
     logging.info(f"creating {new_index_name}")
     with open(
@@ -424,7 +427,9 @@ def create_index(index_alias, new_index_name):
         return None
 
 
-def set_alias_for_new_index(index_alias, new_index_name):
+def set_alias_for_new_index(
+    index_alias: str, new_index_name: str
+) -> Optional[Dict[str, str]]:
     """Delete old index and set alias for new index"""
     logging.info(f"set alias {index_alias} for index {new_index_name}")
     try:
@@ -452,7 +457,7 @@ def set_alias_for_new_index(index_alias, new_index_name):
     return None
 
 
-def update_index_info(index_name):
+def update_index_info(index_name: str) -> None:
     now = datetime.now().isoformat()
     if es_client.indices.exists("info"):
         update_query = {
@@ -466,7 +471,7 @@ def update_index_info(index_name):
         init_info_doc(index_name, now)
 
 
-def init_info_doc(index_name, now):
+def init_info_doc(index_name: str, now: str) -> None:
     init_doc = {"name": index_name, "lastUpdate": now}
     if not es_client.indices.exists("info"):
         es_client.indices.create(index="info")

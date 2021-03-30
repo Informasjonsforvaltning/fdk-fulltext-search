@@ -1,15 +1,16 @@
 import re
+from typing import Dict, List, Optional
 
 
-def autorativ_data_service_query() -> dict:
+def autorativ_data_service_query() -> Dict[str, Dict[str, str]]:
     return {"term": {"nationalComponent": "true"}}
 
 
-def autorativ_dataset_query() -> dict:
+def autorativ_dataset_query() -> Dict[str, Dict[str, str]]:
     return {"match": {"provenance.code": "NASJONAL"}}
 
 
-def open_data_query():
+def open_data_query() -> Dict[str, Dict[str, List[Dict[str, Dict[str, str]]]]]:
     return {
         "bool": {
             "must": [
@@ -20,7 +21,7 @@ def open_data_query():
     }
 
 
-def default_query():
+def default_query() -> Dict:
     return {
         "bool": {
             "must": {"match_all": {}},
@@ -33,7 +34,7 @@ def default_query():
     }
 
 
-def title_exact_match_query(fields: list, search_string: str):
+def title_exact_match_query(fields: List, search_string: str) -> Dict:
     return {
         "bool": {
             "must": {
@@ -52,7 +53,7 @@ def title_exact_match_query(fields: list, search_string: str):
     }
 
 
-def title_query(fields: list, search_string: str):
+def title_query(fields: List, search_string: str) -> Dict:
     dismax_queries = []
     for field in fields:
         title_match_query = {
@@ -92,7 +93,7 @@ def title_query(fields: list, search_string: str):
     }
 
 
-def title_suggestion_query(fields: list, search_string: str) -> dict:
+def title_suggestion_query(fields: List, search_string: str) -> Dict:
     query_list = []
     for field in fields:
         fields_list = [
@@ -112,7 +113,7 @@ def title_suggestion_query(fields: list, search_string: str) -> dict:
     return {"dis_max": {"queries": query_list}}
 
 
-def description_query(fields: list, search_string: str) -> dict:
+def description_query(fields: List, search_string: str) -> Dict:
     query_string = search_string.replace(" ", "+")
     return {
         "bool": {
@@ -131,7 +132,7 @@ def description_query(fields: list, search_string: str) -> dict:
     }
 
 
-def organization_and_keyword_query(search_str: str) -> dict:
+def organization_and_keyword_query(search_str: str) -> Dict:
     return {
         "bool": {
             "must": {
@@ -158,7 +159,7 @@ def organization_and_keyword_query(search_str: str) -> dict:
 
 def simple_query_string(
     search_string: str,
-    fields=None,
+    fields: Optional[List] = None,
 ) -> dict:
     words_only = words_only_string(search_string)
     final_search_string = words_only or search_string
@@ -187,8 +188,8 @@ def simple_query_string(
 
 def query_string(
     search_string: str,
-    fields=None,
-) -> dict:
+    fields: Optional[List] = None,
+) -> Dict:
     words_only = words_only_string(search_string)
     final_search_string = words_only or search_string
 
@@ -209,27 +210,27 @@ def query_string(
     }
 
 
-def get_catch_all_query_string(original_string) -> str:
+def get_catch_all_query_string(original_string: str) -> str:
     new_string_list = []
     for word in original_string.split():
         new_string_list.append("*{0}* ".format(word))
     return "".join(new_string_list).strip()
 
 
-def query_with_filter_template(must_clause: list) -> dict:
+def query_with_filter_template(must_clause: List) -> Dict[str, Dict[str, List]]:
     return {"bool": {"must": must_clause, "filter": []}}
 
 
-def query_template():
+def query_template() -> Dict[str, Dict]:
     template = {"query": {}, "aggs": {}}
     return template
 
 
-def dismax_template():
+def dismax_template() -> Dict[str, Dict[str, List]]:
     return {"dis_max": {"queries": []}}
 
 
-def words_only_string(query_string: str):
+def words_only_string(query_string: str) -> Optional[str]:
     """ Returns a string with words only, where words are defined as any sequence of digits or letters """
     words = re.findall(r"\w+", query_string)
     if words.__len__() > 0:
