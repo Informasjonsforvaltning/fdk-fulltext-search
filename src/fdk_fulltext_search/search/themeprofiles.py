@@ -1,15 +1,17 @@
+from typing import Any, Dict
+
 from fdk_fulltext_search.search.query_filter_utils import get_field_by_filter_key
 
 
 class ThemeProfileKeys:
     TRANSPORT = "transport"
 
-    def __init__(self, key_string: str):
+    def __init__(self: Any, key_string: str) -> None:
         if key_string == self.TRANSPORT:
             self.value = self.TRANSPORT
 
 
-def theme_profile_filter(key: str) -> dict:
+def theme_profile_filter(key: str) -> Dict:
     terms_list = []
     los_filter_key = get_field_by_filter_key("los")
     for path in theme_profile_los_paths[ThemeProfileKeys(key).value]:

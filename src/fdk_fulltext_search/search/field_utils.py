@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import Dict, List
 
 from fdk_fulltext_search.search.fields import (
     index_description_fields,
@@ -8,7 +9,7 @@ from fdk_fulltext_search.search.fields import (
 )
 
 
-def _fields(indices: list, index_fields: dict):
+def _fields(indices: List, index_fields: Dict) -> List:
     field_list = []
     for index in indices:
         field_list = field_list + index_fields[index]
@@ -17,17 +18,17 @@ def _fields(indices: list, index_fields: dict):
     return field_list
 
 
-def title_fields(indices: list):
+def title_fields(indices: List) -> List:
     return _fields(indices, index_title_fields)
 
 
-def description_fields(indices: list):
+def description_fields(indices: List) -> List:
     return _fields(indices, index_description_fields)
 
 
-def fulltext_fields(indices: list):
+def fulltext_fields(indices: List) -> List:
     return _fields(indices, index_fulltext_fields)
 
 
-def suggestion_fields(indices: list):
+def suggestion_fields(indices: List) -> List:
     return _fields(indices, index_suggestion_fields)

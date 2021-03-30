@@ -1,7 +1,9 @@
+from typing import Dict, List, Union
+
 from fdk_fulltext_search.ingest.utils import IndicesKey
 
 
-def get_field_by_filter_key(filter_key: str):
+def get_field_by_filter_key(filter_key: str) -> str:
     """ Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":
         return "publisher.orgPath"
@@ -25,7 +27,7 @@ def get_field_by_filter_key(filter_key: str):
         return filter_key
 
 
-def get_index_filter_for_key(filter_key):
+def get_index_filter_for_key(filter_key: str) -> Union[str, bool]:
     """get indexes containing filter_key """
     if filter_key == "accessRights" or filter_key == "theme":
         return IndicesKey.DATA_SETS
@@ -33,7 +35,7 @@ def get_index_filter_for_key(filter_key):
         return False
 
 
-def term_filter(request_item):
+def term_filter(request_item: Dict) -> List[Dict[str, Dict]]:
     """ map request filter for one key to ES term queries"""
     filters = []
     key = list(request_item.keys())[0]
@@ -45,7 +47,7 @@ def term_filter(request_item):
     return filters
 
 
-def term_filter_from_collection(key: str, collection: list):
+def term_filter_from_collection(key: str, collection: List) -> List[Dict[str, Dict]]:
     """ map request filter for one key to ES term queries"""
     filters = []
     for term in collection:
@@ -54,7 +56,7 @@ def term_filter_from_collection(key: str, collection: list):
     return filters
 
 
-def exists_filter(request_item):
+def exists_filter(request_item: Dict) -> List[Dict[str, Dict]]:
     """ map request filter for fields to ES exists queries"""
     filters = []
     key = list(request_item.keys())[0]
@@ -66,12 +68,12 @@ def exists_filter(request_item):
     return filters
 
 
-def last_x_days_filter(request_item):
+def last_x_days_filter(request_item: Dict) -> Dict[str, Dict[str, Dict[str, str]]]:
     range_str = f"now-{request_item['last_x_days']}d/d"
     return {"range": {"harvest.firstHarvested": {"gte": range_str, "lt": "now+1d/d"}}}
 
 
-def catalogs_by_name_filter(cat_name):
+def catalogs_by_name_filter(cat_name: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [
@@ -85,7 +87,7 @@ def catalogs_by_name_filter(cat_name):
     }
 
 
-def information_model_by_relation_filter(model_uri):
+def information_model_by_relation_filter(model_uri: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [
@@ -100,7 +102,7 @@ def information_model_by_relation_filter(model_uri):
     }
 
 
-def requires_or_relates_filter(model_uri):
+def requires_or_relates_filter(model_uri: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [
@@ -112,7 +114,7 @@ def requires_or_relates_filter(model_uri):
     }
 
 
-def must_not_filter(filter_key: str):
+def must_not_filter(filter_key: str) -> Dict[str, Dict]:
     missing_filter = {
         "bool": {"must_not": {"exists": {"field": get_field_by_filter_key(filter_key)}}}
     }
@@ -124,7 +126,7 @@ def must_not_filter(filter_key: str):
     return missing_filter
 
 
-def collection_filter(filter_obj: dict):
+def collection_filter(filter_obj: Dict) -> Dict[str, Dict]:
     collection = term_filter_from_collection(
         key=filter_obj["field"], collection=filter_obj["values"]
     )
@@ -137,7 +139,7 @@ def collection_filter(filter_obj: dict):
     return {"bool": {"should": collection}}
 
 
-def keyword_filter(keyword):
+def keyword_filter(keyword: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [
@@ -151,11 +153,11 @@ def keyword_filter(keyword):
     }
 
 
-def info_model_filter(uri):
+def info_model_filter(uri: str) -> Dict[str, Dict]:
     return {"bool": {"filter": [{"term": {"informationModel.uri.keyword": uri}}]}}
 
 
-def required_by_service_filter(uri):
+def required_by_service_filter(uri: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [{"match": {"requires.uri.keyword": uri}}],
@@ -164,7 +166,7 @@ def required_by_service_filter(uri):
     }
 
 
-def related_by_service_filter(uri):
+def related_by_service_filter(uri: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [{"match": {"relation.uri.keyword": uri}}],
@@ -173,7 +175,7 @@ def related_by_service_filter(uri):
     }
 
 
-def event_filter(filter_values):
+def event_filter(filter_values: List[str]) -> Dict[str, Dict]:
     is_grouped_by_list = []
     uri_list = []
     for uri in filter_values:
@@ -191,7 +193,7 @@ def event_filter(filter_values):
     }
 
 
-def event_type_filter(filter_values):
+def event_type_filter(filter_values: List[str]) -> Dict[str, Dict]:
     associated_broader_types_by_events_list = []
     associated_broader_types_list = []
     for uri in filter_values:
@@ -212,7 +214,7 @@ def event_type_filter(filter_values):
     }
 
 
-def dataset_info_model_relations_filter(uri):
+def dataset_info_model_relations_filter(uri: str) -> Dict[str, Dict]:
     return {
         "bool": {
             "should": [

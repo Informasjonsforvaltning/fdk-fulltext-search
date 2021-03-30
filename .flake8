@@ -1,5 +1,5 @@
 [flake8]
 max-line-length = 130
 application-import-names = fdk_fulltext_search, tests
-per-file-ignores = tests/*:S101,tests/mock_data/*:E501
+per-file-ignores = tests/*:S101,ANN,tests/mock_data/*:E501
 import-order-style = google

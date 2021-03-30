@@ -1,9 +1,11 @@
+from typing import Dict, Optional
+
 from fdk_fulltext_search.search.query_filter_utils import (
     get_field_by_filter_key,
 )
 
 
-def default_all_indices_aggs():
+def default_all_indices_aggs() -> Dict:
     """ Return a dict with default aggregation for all indices search"""
     return {
         "los": los_aggregation(),
@@ -43,11 +45,11 @@ def default_all_indices_aggs():
     }
 
 
-def los_aggregation():
+def los_aggregation() -> Dict[str, Dict]:
     return {"terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}}
 
 
-def org_path_aggregation():
+def org_path_aggregation() -> Dict[str, Dict]:
     return {
         "terms": {
             "field": "publisher.orgPath",
@@ -57,7 +59,7 @@ def org_path_aggregation():
     }
 
 
-def has_competent_authority_aggregation():
+def has_competent_authority_aggregation() -> Dict[str, Dict]:
     return {
         "terms": {
             "field": "hasCompetentAuthority.orgPath",
@@ -67,19 +69,19 @@ def has_competent_authority_aggregation():
     }
 
 
-def is_grouped_by_aggregation():
+def is_grouped_by_aggregation() -> Dict[str, Dict]:
     return {"terms": {"field": "isGroupedBy.keyword", "size": 1000000000}}
 
 
-def associated_broader_types_by_events_aggregation():
+def associated_broader_types_by_events_aggregation() -> Dict[str, Dict]:
     return {
         "terms": {"field": "associatedBroaderTypesByEvents.keyword", "size": 1000000000}
     }
 
 
 def get_aggregation_term_for_key(
-    aggregation_key: str, missing: str = None, size: int = None
-) -> dict:
+    aggregation_key: str, missing: Optional[str] = None, size: Optional[int] = None
+) -> Dict[str, Dict[str, str]]:
     query = {"terms": {"field": get_field_by_filter_key(aggregation_key)}}
     if missing:
         query["terms"]["missing"] = missing

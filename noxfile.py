@@ -103,6 +103,7 @@ def lint(session: Session) -> None:
         "flake8-bugbear",
         "flake8-import-order",
         "pep8-naming",
+        "flake8-annotations",
     )
     session.run("flake8", *args)
 

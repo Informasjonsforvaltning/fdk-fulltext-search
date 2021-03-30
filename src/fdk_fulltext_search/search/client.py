@@ -1,3 +1,5 @@
+from typing import Any, Dict, Optional, Union
+
 from elasticsearch.exceptions import ConnectionError
 
 from .queries import (
@@ -24,7 +26,7 @@ query_builder = {
 }
 
 
-def search_all(request: dict = None):
+def search_all(request: Optional[Dict] = None) -> Dict[str, Union[int, str]]:
     try:
         aggs = None
         search_str = None
@@ -64,7 +66,7 @@ def search_all(request: dict = None):
         }
 
 
-def search_in_index(index: str, request: dict = None):
+def search_in_index(index: str, request: Optional[Dict] = None) -> Dict:
     try:
         aggs = None
         search_str = None
@@ -100,7 +102,9 @@ def search_in_index(index: str, request: dict = None):
         }
 
 
-def search_public_services_and_events(request: dict = None):
+def search_public_services_and_events(
+    request: Optional[Dict] = None,
+) -> Dict[str, Union[int, str]]:
     try:
         aggs = None
         search_str = None
@@ -140,7 +144,7 @@ def search_public_services_and_events(request: dict = None):
         }
 
 
-def count(index=None):
+def count(index: Optional[str] = None) -> Dict[str, Union[int, str]]:
     try:
         if index:
             return es_client.count(index=index)
@@ -155,12 +159,12 @@ def count(index=None):
         }
 
 
-def get_recent(size=None):
+def get_recent(size: Optional[int] = None) -> Any:
     q = RecentQuery(size).query
     return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=q)
 
 
-def get_indices(index_name=None):
+def get_indices(index_name: Optional[str] = None) -> Any:
     req_body = {"query": {}}
     if index_name:
         req_body["query"]["term"] = {"name": index_name}
@@ -172,6 +176,6 @@ def get_indices(index_name=None):
         return None
 
 
-def get_suggestions(search_string: str, index_key: IndicesKey.DATA_SETS):
+def get_suggestions(search_string: str, index_key: str = IndicesKey.DATA_SETS) -> Any:
     query = SuggestionQuery(index_key=index_key, search_string=search_string)
     return es_client.search(index=index_key, body=query.body)

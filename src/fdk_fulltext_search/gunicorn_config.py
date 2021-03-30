@@ -2,6 +2,7 @@ import logging
 import multiprocessing
 from os import environ as env
 import sys
+from typing import Any, Dict
 
 from dotenv import load_dotenv
 from gunicorn import glogging
@@ -24,10 +25,16 @@ accesslog = "-"
 class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
     """json log formatter."""
 
-    def __init__(self, fmt="%(levelname) %(message)", style="%", *args, **kwargs):
+    def __init__(
+        self: Any,
+        fmt: str = "%(levelname) %(message)",
+        style: str = "%",
+        *args: Any,
+        **kwargs: Any
+    ) -> None:
         jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
 
-    def process_log_record(self, log_record):
+    def process_log_record(self: Any, log_record: Dict) -> Any:
         log_record["severity"] = log_record["levelname"]
         del log_record["levelname"]
         return super(StackdriverJsonFormatter, self).process_log_record(log_record)
@@ -35,7 +42,7 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
 
 # Override the logger to remove healthcheck (ping) from the access log and format logs as json
 class CustomGunicornLogger(glogging.Logger):
-    def setup(self, cfg):
+    def setup(self: Any, cfg: Any) -> None:
         super().setup(cfg)
 
         # Add filters to Gunicorn logger
@@ -66,12 +73,12 @@ class CustomGunicornLogger(glogging.Logger):
 
 
 class PingFilter(logging.Filter):
-    def filter(self, record):
+    def filter(self: Any, record: logging.LogRecord) -> bool:
         return "GET /ping" not in record.getMessage()
 
 
 class ReadyFilter(logging.Filter):
-    def filter(self, record):
+    def filter(self: Any, record: logging.LogRecord) -> bool:
         return "GET /ready" not in record.getMessage()
 
 

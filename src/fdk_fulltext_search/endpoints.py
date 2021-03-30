@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Any, Dict, List
 
 from flask import request, Response
 from flask_restful import abort, Resource
@@ -20,7 +21,7 @@ from .service.feed import create_feed, FeedType
 
 
 class Search(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_all()
@@ -36,7 +37,7 @@ class Search(Resource):
 
 
 class SearchDataServices(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         body = request.get_json()
 
         page = 0
@@ -51,7 +52,7 @@ class SearchDataServices(Resource):
 
 
 class SearchInformationModels(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_in_index(index=IndicesKey.INFO_MODEL)
@@ -67,7 +68,7 @@ class SearchInformationModels(Resource):
 
 
 class SearchDataSet(Resource):
-    def get(self) -> Response:
+    def get(self: Any) -> Response:
         mimetype = request.accept_mimetypes.best
 
         if mimetype == "application/rss+xml":
@@ -78,7 +79,7 @@ class SearchDataSet(Resource):
 
         return abort(http_status_code=415, description="Unsupported media type")
 
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_in_index(index=IndicesKey.DATA_SETS)
@@ -94,7 +95,7 @@ class SearchDataSet(Resource):
 
 
 class SearchConcepts(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_in_index(index=IndicesKey.CONCEPTS)
@@ -110,7 +111,7 @@ class SearchConcepts(Resource):
 
 
 class SearchPublicServices(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_in_index(index=IndicesKey.PUBLIC_SERVICES)
@@ -128,7 +129,7 @@ class SearchPublicServices(Resource):
 
 
 class SearchEvents(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_in_index(index=IndicesKey.EVENTS)
@@ -144,7 +145,7 @@ class SearchEvents(Resource):
 
 
 class SearchPublicServicesAndEvents(Resource):
-    def post(self):
+    def post(self: Any) -> Dict:
         page = 0
         if len(request.data) == 0:
             result = client.search_public_services_and_events()
@@ -160,7 +161,7 @@ class SearchPublicServicesAndEvents(Resource):
 
 
 class Count(Resource):
-    def get(self):
+    def get(self: Any) -> Dict:
         return client.count()
 
 
@@ -175,7 +176,7 @@ class Indices(Resource):
         "events": fetch_events,
     }
 
-    def get(self):
+    def get(self: Any) -> List:
         """Get information about specific index or all indices"""
 
         index_name = request.args.get("name")
@@ -211,7 +212,7 @@ class Indices(Resource):
             )
         return IndicesInfoResponse(es_result).map_response()
 
-    def post(self):
+    def post(self: Any) -> Response:
         api_key = request.headers.get("X-API-KEY")
         if not api_key or os.getenv("API_KEY", "test-key") != api_key:
             abort(http_status_code=403, description="Forbidden")
@@ -244,17 +245,17 @@ class Indices(Resource):
 
 
 class Ping(Resource):
-    def get(self):
+    def get(self: Any) -> Dict:
         return {}
 
 
 class Ready(Resource):
-    def get(self):
+    def get(self: Any) -> Dict:
         return {}
 
 
 class Recent(Resource):
-    def get(self):
+    def get(self: Any) -> Dict:
         args = request.args
         size = 5
         if "size" in args:
@@ -264,7 +265,7 @@ class Recent(Resource):
 
 
 class Suggestion(Resource):
-    def get(self, content_type):
+    def get(self: Any, content_type: str) -> Dict:
         if content_type not in (
             IndicesKey.DATA_SETS,
             IndicesKey.CONCEPTS,
@@ -293,7 +294,7 @@ class Suggestion(Resource):
 
 
 class SuggestionAllIndices(Resource):
-    def get(self):
+    def get(self: Any) -> None:
         abort(
             http_status_code=501,
             description="fulltext-search does not yet support autocomplete search for all content",

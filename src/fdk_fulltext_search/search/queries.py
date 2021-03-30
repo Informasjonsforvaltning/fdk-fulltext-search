@@ -1,5 +1,6 @@
 import abc
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 from fdk_fulltext_search.ingest.utils import IndicesKey
 from fdk_fulltext_search.search.field_utils import (
@@ -20,19 +21,19 @@ class Direction(Enum):
 
 
 class AbstractSearchQuery(metaclass=abc.ABCMeta):
-    def __init__(self, search_string: str = None):
+    def __init__(self: Any, search_string: Optional[str] = None) -> None:
         self.body = query_utils.query_template()
         if search_string:
             self.query = query_utils.dismax_template()
 
-    def add_page(self, size: int = 10, page: int = None) -> dict:
+    def add_page(self: Any, size: int = 10, page: Optional[int] = None) -> Dict:
         if size is None:
             size = 10
         self.body["size"] = size
         if page is not None:
             self.body["from"] = page * size
 
-    def add_filters(self, filters: list):
+    def add_filters(self: Any, filters: List) -> None:
         self.body["query"]["bool"]["filter"] = []
         for f in filters:
             key = list(f.keys())[0]
@@ -110,7 +111,7 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                     query_filter_utils.term_filter(f)
                 )
 
-    def add_sorting(self, param: dict):
+    def add_sorting(self: Any, param: Dict) -> None:
         self.body["sort"] = {
             param.get("field"): {
                 "order": param.get("direction"),
@@ -119,16 +120,21 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
         }
 
     @abc.abstractmethod
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         pass
 
     @abc.abstractmethod
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         pass
 
 
 class AllIndicesQuery(AbstractSearchQuery):
-    def __init__(self, search_string=None, aggs=None, filters=None):
+    def __init__(
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
         if search_string:
             self.add_search_string(search_string.strip())
@@ -145,12 +151,12 @@ class AllIndicesQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_aggs(self, fields=None):
+    def add_aggs(self: Any, fields: Optional[List] = None) -> Any:
         # TODO user defined aggs
         if fields is None:
             self.body["aggs"] = query_aggregation_utils.default_all_indices_aggs()
 
-    def add_search_string(self, param: str):
+    def add_search_string(self: Any, param: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields(
@@ -233,8 +239,11 @@ class AllIndicesQuery(AbstractSearchQuery):
 
 class InformationModelQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
         if search_string:
             self.add_search_string(search_string.strip())
@@ -250,7 +259,7 @@ class InformationModelQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.INFO_MODEL]),
@@ -285,7 +294,7 @@ class InformationModelQuery(AbstractSearchQuery):
             )
         )
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
             self.body["aggs"][
@@ -296,8 +305,11 @@ class InformationModelQuery(AbstractSearchQuery):
 
 class DataServiceQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -314,7 +326,7 @@ class DataServiceQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"][
                 "orgPath"
@@ -325,7 +337,7 @@ class DataServiceQuery(AbstractSearchQuery):
                 aggregation_key="mediaType.code.keyword"
             )
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.DATA_SERVICES]),
@@ -363,8 +375,11 @@ class DataServiceQuery(AbstractSearchQuery):
 
 class DataSetQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -380,7 +395,7 @@ class DataSetQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.DATA_SETS]), search_string=search_string
@@ -413,7 +428,7 @@ class DataSetQuery(AbstractSearchQuery):
             )
         )
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
             self.body["aggs"][
@@ -449,8 +464,11 @@ class DataSetQuery(AbstractSearchQuery):
 
 class ConceptQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -467,7 +485,7 @@ class ConceptQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.CONCEPTS]), search_string=search_string
@@ -501,7 +519,7 @@ class ConceptQuery(AbstractSearchQuery):
             )
         )
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: list) -> Any:
         if fields is None:
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
             self.body["aggs"][
@@ -532,8 +550,11 @@ class ConceptQuery(AbstractSearchQuery):
 
 class PublicServiceQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -549,7 +570,7 @@ class PublicServiceQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.PUBLIC_SERVICES]),
@@ -584,7 +605,7 @@ class PublicServiceQuery(AbstractSearchQuery):
             )
         )
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
@@ -596,8 +617,11 @@ class PublicServiceQuery(AbstractSearchQuery):
 
 class EventQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -613,7 +637,7 @@ class EventQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_search_string(self, search_string: str):
+    def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.EVENTS]), search_string=search_string
@@ -646,7 +670,7 @@ class EventQuery(AbstractSearchQuery):
             )
         )
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
@@ -655,8 +679,11 @@ class EventQuery(AbstractSearchQuery):
 
 class PublicServicesAndEventsQuery(AbstractSearchQuery):
     def __init__(
-        self, search_string: str = None, aggs: list = None, filters: list = None
-    ):
+        self: Any,
+        search_string: Optional[str] = None,
+        aggs: Optional[List] = None,
+        filters: Optional[List] = None,
+    ) -> None:
         super().__init__(search_string)
 
         if search_string:
@@ -673,7 +700,7 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
         else:
             self.body["query"] = self.query
 
-    def add_aggs(self, fields: list):
+    def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
             self.body["aggs"][
                 "hasCompetentAuthority"
@@ -685,7 +712,7 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
                 "associatedBroaderTypesByEvents"
             ] = query_aggregation_utils.associated_broader_types_by_events_aggregation()
 
-    def add_search_string(self, param: str):
+    def add_search_string(self: Any, param: str) -> Any:
         self.query["dis_max"]["queries"].append(
             query_utils.title_exact_match_query(
                 fields=title_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
@@ -724,7 +751,7 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
 
 
 class RecentQuery:
-    def __init__(self, size=None):
+    def __init__(self: Any, size: Optional[int] = None) -> None:
         self.query = {
             "size": 5,
             "sort": {
@@ -740,7 +767,7 @@ class RecentQuery:
 
 
 class SuggestionQuery:
-    def __init__(self, index_key: IndicesKey, search_string: str):
+    def __init__(self: Any, index_key: str, search_string: str) -> None:
         self.body = {
             "_source": suggestion_fields([index_key]),
             "query": query_utils.title_suggestion_query(
