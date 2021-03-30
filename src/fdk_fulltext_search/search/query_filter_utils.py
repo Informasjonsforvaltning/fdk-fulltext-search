@@ -68,7 +68,7 @@ def exists_filter(request_item):
 
 def last_x_days_filter(request_item):
     range_str = f"now-{request_item['last_x_days']}d/d"
-    return {"range": {"harvest.firstHarvested": {"gte": range_str, "lt": "now/d"}}}
+    return {"range": {"harvest.firstHarvested": {"gte": range_str, "lt": "now+1d/d"}}}
 
 
 def catalogs_by_name_filter(cat_name):
