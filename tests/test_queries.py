@@ -1827,7 +1827,7 @@ def test_add_filter_should_add_x_last_days_filter():
     has_x_last_days = False
     for f in builder.body["query"]["bool"]["filter"]:
         if f == {
-            "range": {"harvest.firstHarvested": {"gte": "now-6d/d", "lt": "now/d"}}
+            "range": {"harvest.firstHarvested": {"gte": "now-6d/d", "lt": "now+1d/d"}}
         }:
             has_x_last_days = True
             break

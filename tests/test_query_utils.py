@@ -687,13 +687,13 @@ def test_get_aggregation_term_for_key():
 
 def test_last_x_days_filter():
     expected_1 = {
-        "range": {"harvest.firstHarvested": {"gte": "now-3d/d", "lt": "now/d"}}
+        "range": {"harvest.firstHarvested": {"gte": "now-3d/d", "lt": "now+1d/d"}}
     }
     result_1 = last_x_days_filter({"last_x_days": 3})
     assert result_1 == expected_1
 
     expected_2 = {
-        "range": {"harvest.firstHarvested": {"gte": "now-672d/d", "lt": "now/d"}}
+        "range": {"harvest.firstHarvested": {"gte": "now-672d/d", "lt": "now+1d/d"}}
     }
     result_2 = last_x_days_filter({"last_x_days": "672"})
     assert result_2 == expected_2
