@@ -1,25 +1,24 @@
 import json
 import re
 
+from flask import Flask
 from jsonpath_ng import parse
 import pytest
-import requests
 
-from tests.contract.search_all_contract_test import service_url
 from tests.utils import expected_page_keys
 
 indices_name = "concepts"
 data_type = "concept"
-concept_url = service_url + f"/{indices_name}"
+concept_url = "/concepts"
 
 
 class TestConceptSearch:
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_response_should_have_correct_content(
-        self, docker_service, api, wait_for_concepts
+        self, client: Flask, docker_service, api, wait_for_concepts
     ):
-        result = requests.post(concept_url)
-        result_json = result.json()
+        result = client.post(concept_url)
+        result_json = result.json
         content_keys = result_json.keys()
         assert result.status_code == 200
         assert "hits" in content_keys
@@ -38,9 +37,9 @@ class TestConceptSearch:
         assert "los" in agg_keys
         assert "orgPath" in agg_keys
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_hits_should_be_correctly_sorted_on_title(
-        self, docker_service, api, wait_for_concepts
+        self, client: Flask, docker_service, api, wait_for_concepts
     ):
         """
         1. exact match
@@ -48,9 +47,9 @@ class TestConceptSearch:
         """
         search_str = "skattefri inntekt"
         body = {"q": search_str, "size": 300}
-        result = requests.post(url=concept_url, json=body)
+        result = client.post(concept_url, json=body)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         exact_match_exists = False
         last_was_exact_match = True
         last_was_partial_match_in_title = False
@@ -69,27 +68,29 @@ class TestConceptSearch:
 
         assert exact_match_exists
 
-    @pytest.mark.contract
-    def test_should_filter_on_org_path(self, docker_service, api, wait_for_concepts):
+    @pytest.mark.integration
+    def test_should_filter_on_org_path(
+        self, client: Flask, docker_service, api, wait_for_concepts
+    ):
         org_path = "/STAT/972417807/974761076"
         body = {"filters": [{"orgPath": org_path}]}
-        result = requests.post(url=concept_url, json=body)
+        result = client.post(concept_url, json=body)
         assert result.status_code == 200
-        result_json_hits = result.json()["hits"]
+        result_json_hits = result.json["hits"]
         assert len(result_json_hits) > 0
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_have_correct_size_and_page(
-        self, docker_service, api, wait_for_concepts
+        self, client: Flask, docker_service, api, wait_for_concepts
     ):
-        default_result = requests.post(concept_url).json()
+        default_result = client.post(concept_url).json
         assert default_result["page"]["size"] == 10
         assert default_result["page"]["currentPage"] == 0
 
         page_request_body = {"page": 5}
-        page_result = requests.post(url=concept_url, json=page_request_body).json()
+        page_result = client.post(concept_url, json=page_request_body).json
         assert page_result["page"]["size"] == 10
         assert page_result["page"]["currentPage"] == 5
 

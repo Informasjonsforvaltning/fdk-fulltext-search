@@ -2,26 +2,25 @@ from datetime import datetime
 import json
 import re
 
+from flask import Flask
 from jsonpath_ng import parse
 import pytest
-import requests
 
-from tests.contract.search_all_contract_test import service_url
 from tests.utils import expected_page_keys
 
 indices_name = "datasets"
 data_type = "dataset"
-datasets_url = service_url + f"/{indices_name}"
+datasets_url = "/datasets"
 
 
 class TestDataSetSearch:
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_response_should_have_correct_content(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        result = requests.post(datasets_url)
+        result = client.post(datasets_url)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         content_keys = result_json.keys()
         assert "hits" in content_keys
         result_data_types = [
@@ -53,19 +52,19 @@ class TestDataSetSearch:
         assert "spatial" in agg_keys
         assert len(aggregations["spatial"]["buckets"]) > 0
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_have_correct_size_and_page(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        result = requests.post(datasets_url)
+        result = client.post(datasets_url)
         assert result.status_code == 200
-        default_result_json = result.json()
+        default_result_json = result.json
         assert default_result_json["page"]["size"] == 10
         assert default_result_json["page"]["currentPage"] == 0
         page_request_body = {"page": 5}
-        page_result = requests.post(url=datasets_url, json=page_request_body)
+        page_result = client.post(datasets_url, json=page_request_body)
         assert page_result.status_code == 200
-        page_result_json = page_result.json()
+        page_result_json = page_result.json
 
         assert page_result_json["page"]["size"] == 10
         assert page_result_json["page"]["currentPage"] == 5
@@ -73,13 +72,15 @@ class TestDataSetSearch:
             page_result_json["hits"][0]
         )
 
-    @pytest.mark.contract
-    def test_should_sort_on_date(self, docker_service, api, wait_for_datasets_ready):
+    @pytest.mark.integration
+    def test_should_sort_on_date(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
         body = {"sorting": {"field": "harvest.firstHarvested", "direction": "desc"}}
-        result = requests.post(url=datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
         last_date = None
-        for hit in result.json()["hits"]:
+        for hit in result.json["hits"]:
             date = hit["harvest"]["firstHarvested"].split("+")[0]
             if last_date:
                 assert datetime.strptime(
@@ -87,9 +88,9 @@ class TestDataSetSearch:
                 ) <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_search_without_query_should_have_correct_sorting(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         """
         1. open authoritative datasets
@@ -97,11 +98,11 @@ class TestDataSetSearch:
         3. open datasets
         """
         body = {"size": 500}
-        result = requests.post(datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
         previous_was_open_data = True
         previous_was_authoritative = True
-        for hit in result.json()["hits"]:
+        for hit in result.json["hits"]:
             if "provenance" in hit.keys():
                 if hit.get("provenance") and hit["provenance"]["code"] == "NASJONAL":
                     assert previous_was_authoritative is True, (
@@ -135,9 +136,9 @@ class TestDataSetSearch:
                 previous_was_open_data = False
                 previous_was_authoritative = False
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_hits_should_be_correctly_sorted_on_title(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         """
         1. exact match
@@ -145,9 +146,9 @@ class TestDataSetSearch:
         """
         search_str = "Elbiloversikt i Norge"
         body = {"q": search_str, "size": 1000}
-        result = requests.post(url=datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         last_was_exact_match = True
         last_was_partial_match_in_title = False
         for hit in result_json["hits"]:
@@ -162,27 +163,27 @@ class TestDataSetSearch:
                 last_was_exact_match = False
                 last_was_partial_match_in_title = False
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_org_path(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         org_path = "STAT/972417858/971040238"
         body = {"filters": [{"orgPath": org_path}]}
-        result = requests.post(url=datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
-        result_json_hits = result.json()["hits"]
+        result_json_hits = result.json["hits"]
         assert len(result_json_hits) > 0
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_spatial(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         expected_spatial = "Norge"
         body = {"filters": [{"spatial": expected_spatial}]}
-        result = requests.post(url=datasets_url, json=body)
-        result_json = result.json()
+        result = client.post(datasets_url, json=body)
+        result_json = result.json
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
@@ -194,20 +195,24 @@ class TestDataSetSearch:
                 match.value for match in spatial_path_no.find(hit)
             ]
 
-    @pytest.mark.contract
-    def test_filter_on_eu_theme(self, docker_service, api, wait_for_datasets_ready):
+    @pytest.mark.integration
+    def test_filter_on_eu_theme(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
         body = {"filters": [{"theme": "GOVE"}], "size": 100}
-        result = requests.post(url=service_url + "/search", json=body).json()
+        result = client.post("/search", json=body).json
         assert len(result["hits"]) > 0
         for hit in result["hits"]:
             assert "theme" in hit.keys()
             id_path = parse("theme[*].code")
             assert "GOVE" in [match.value for match in id_path.find(hit)]
 
-    @pytest.mark.contract
-    def test_filter_on_open_data(self, docker_service, api, wait_for_datasets_ready):
+    @pytest.mark.integration
+    def test_filter_on_open_data(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
         body = {"filters": [{"opendata": "true"}]}
-        result = requests.post(url=service_url + "/search", json=body).json()
+        result = client.post("/search", json=body).json
         assert len(result["hits"]) > 0
         assert (
             result["page"]["totalElements"]
@@ -222,23 +227,23 @@ class TestDataSetSearch:
                     break
         assert has_open_licence_distribution is True
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_filter_on_access_rights_non_public(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         body = {"filters": [{"accessRights": "NON_PUBLIC"}]}
-        result = requests.post(url=service_url + "/search", json=body)
-        for hit in result.json()["hits"]:
+        result = client.post("/search", json=body)
+        for hit in result.json["hits"]:
             assert hit["accessRights"]["code"] == "NON_PUBLIC"
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_provenance(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         expected_provenance = "TREDJEPART"
         body = {"filters": [{"provenance": expected_provenance}]}
-        result = requests.post(url=datasets_url, json=body)
-        result_json = result.json()
+        result = client.post(datasets_url, json=body)
+        result_json = result.json
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
@@ -247,13 +252,15 @@ class TestDataSetSearch:
                 match.value for match in provenance_path.find(hit)
             ]
 
-    @pytest.mark.contract
-    def test_should_filter_on_los(self, docker_service, api, wait_for_datasets_ready):
+    @pytest.mark.integration
+    def test_should_filter_on_los(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
         los_path = "bygg-og-eiendom"
         body = {"filters": [{"los": los_path}]}
-        result = requests.post(url=datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
-        result_hits = result.json()["hits"]
+        result_hits = result.json["hits"]
         assert len(result_hits) > 0
         for hit in result_hits:
             los_paths = ",".join(
@@ -261,16 +268,16 @@ class TestDataSetSearch:
             )
             assert los_path in los_paths
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_org_path_and_spatial(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         expected_org_path = "PRIVAT"
         expected_spatial = "Norge"
         body = {"filters": [{"orgPath": "PRIVAT"}, {"spatial": "Norge"}]}
-        result = requests.post(url=datasets_url, json=body)
+        result = client.post(datasets_url, json=body)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
             assert expected_org_path in hit["publisher"]["orgPath"]
@@ -283,8 +290,10 @@ class TestDataSetSearch:
             ]
             assert has_correct_spatial
 
-    @pytest.mark.contract
-    def test_filter_with_transport_profile(self, wait_for_datasets_ready):
+    @pytest.mark.integration
+    def test_filter_with_transport_profile(
+        self, client: Flask, wait_for_datasets_ready
+    ):
 
         default_profile_body = {
             "filters": [
@@ -296,18 +305,14 @@ class TestDataSetSearch:
             ]
         }
 
-        default_profile_result = requests.post(
-            url=service_url + "/datasets", json=default_profile_body
-        )
+        default_profile_result = client.post("/datasets", json=default_profile_body)
         transport_profile_body = {
             "filters": [{"accessRights": "PUBLIC"}, {"themeprofile": "transport"}]
         }
-        transport_profile_result = requests.post(
-            url=service_url + "/datasets", json=transport_profile_body
-        )
+        transport_profile_result = client.post("/datasets", json=transport_profile_body)
         assert transport_profile_result.status_code == 200
-        assert len(transport_profile_result.json()["hits"]) > len(
-            default_profile_result.json()["hits"]
+        assert len(transport_profile_result.json["hits"]) > len(
+            default_profile_result.json["hits"]
         )
 
         los_key_1 = "trafikk-og-transport/mobilitetstilbud"
@@ -315,7 +320,7 @@ class TestDataSetSearch:
         los_key_3 = "trafikk-og-transport/veg-og-vegregulering"
         los_key_4 = "trafikk-og-transport/yrkestransport"
         partial_hits = 0
-        for hit in transport_profile_result.json()["hits"]:
+        for hit in transport_profile_result.json["hits"]:
             los_key_path = parse("losTheme[*].losPaths[*]")
             los_keys = [match.value for match in los_key_path.find(hit)]
             matches = union_los_lists(
