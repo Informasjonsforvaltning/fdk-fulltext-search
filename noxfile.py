@@ -8,6 +8,7 @@ import nox_poetry
 locations = "src", "tests", "noxfile.py"
 nox.options.sessions = (
     "lint",
+    "mypy",
     "safety",
     "tests",
 )
@@ -114,6 +115,14 @@ def coverage(session: Session) -> None:
     session.install("coverage[toml]", "codecov")
     session.run("coverage", "xml", "--fail-under=0")
     session.run("codecov", *session.posargs)
+
+
+@nox_poetry.session
+def mypy(session: Session) -> None:
+    """Type-check using mypy."""
+    args = session.posargs or locations
+    session.install("mypy")
+    session.run("mypy", *args)
 
 
 @nox_poetry.session

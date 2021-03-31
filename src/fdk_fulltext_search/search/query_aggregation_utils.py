@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from fdk_fulltext_search.search.query_filter_utils import (
     get_field_by_filter_key,
@@ -81,8 +81,10 @@ def associated_broader_types_by_events_aggregation() -> Dict[str, Dict]:
 
 def get_aggregation_term_for_key(
     aggregation_key: str, missing: Optional[str] = None, size: Optional[int] = None
-) -> Dict[str, Dict[str, str]]:
-    query = {"terms": {"field": get_field_by_filter_key(aggregation_key)}}
+) -> Dict[str, Dict[str, Union[str, int]]]:
+    query: Dict[str, Dict[str, Union[str, int]]] = {
+        "terms": {"field": get_field_by_filter_key(aggregation_key)}
+    }
     if missing:
         query["terms"]["missing"] = missing
     if size:

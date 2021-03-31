@@ -164,7 +164,7 @@ def simple_query_string(
     words_only = words_only_string(search_string)
     final_search_string = words_only or search_string
 
-    simple_query = {
+    simple_query: Dict = {
         "simple_query_string": {
             "query": "{0} {0}*".format(final_search_string.replace(" ", "+"))
         }
@@ -193,7 +193,9 @@ def query_string(
     words_only = words_only_string(search_string)
     final_search_string = words_only or search_string
 
-    query = {"query_string": {"query": get_catch_all_query_string(final_search_string)}}
+    query: Dict = {
+        "query_string": {"query": get_catch_all_query_string(final_search_string)}
+    }
     if fields:
         query["query_string"]["fields"] = fields
 
@@ -222,7 +224,7 @@ def query_with_filter_template(must_clause: List) -> Dict[str, Dict[str, List]]:
 
 
 def query_template() -> Dict[str, Dict]:
-    template = {"query": {}, "aggs": {}}
+    template: Dict[str, Dict] = {"query": {}, "aggs": {}}
     return template
 
 

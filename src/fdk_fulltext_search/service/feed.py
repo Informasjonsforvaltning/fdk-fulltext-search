@@ -1,6 +1,6 @@
 from enum import Enum
 import os
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, List
 from urllib.parse import urlencode
 
 from feedgen.feed import FeedGenerator
@@ -100,7 +100,7 @@ def extract_search_params(params: Dict[str, str]) -> Dict[str, str]:
 
 
 def map_search_params_to_search_request_body(params: Dict[str, str]) -> Dict[str, Any]:
-    filters = []
+    filters: List[Dict[str, Any]] = []
 
     if "losTheme" in params:
         filters.append({"los": params["losTheme"]})

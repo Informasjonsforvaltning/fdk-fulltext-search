@@ -10,7 +10,7 @@ from fdk_fulltext_search.search.fields import (
 
 
 def _fields(indices: List, index_fields: Dict) -> List:
-    field_list = []
+    field_list: List = []
     for index in indices:
         field_list = field_list + index_fields[index]
     field_list = list(OrderedDict.fromkeys(field_list))
