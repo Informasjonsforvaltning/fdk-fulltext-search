@@ -1,26 +1,25 @@
 from datetime import datetime
 import json
 
+from flask import Flask
 from jsonpath_ng import parse
 import pytest
-import requests
 
-from tests.contract.search_all_contract_test import service_url
 from tests.utils import expected_page_keys
 
 indices_name = "dataservices"
 data_type = "dataservice"
-data_services_url = service_url + f"/{indices_name}"
+data_services_url = "/dataservices"
 
 
 class TestDataServiceSearch:
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_response_should_have_correct_content(
-        self, docker_service, api, wait_for_dataservice_ready
+        self, client: Flask, docker_service, api, wait_for_dataservice_ready
     ):
-        result = requests.post(data_services_url)
+        result = client.post(data_services_url)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         content_keys = result_json.keys()
         assert "hits" in content_keys
         result_data_types = [
@@ -41,19 +40,19 @@ class TestDataServiceSearch:
         assert "formats" in agg_keys
         assert len(aggregations["formats"]["buckets"]) > 0
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_have_correct_size_and_page(
-        self, docker_service, api, wait_for_dataservice_ready
+        self, client: Flask, docker_service, api, wait_for_dataservice_ready
     ):
-        result = requests.post(data_services_url)
+        result = client.post(data_services_url)
         assert result.status_code == 200
-        default_result_json = result.json()
+        default_result_json = result.json
         assert default_result_json["page"]["size"] == 10
         assert default_result_json["page"]["currentPage"] == 0
         page_request_body = {"page": 1}
-        page_result = requests.post(url=data_services_url, json=page_request_body)
+        page_result = client.post(data_services_url, json=page_request_body)
         assert page_result.status_code == 200
-        page_result_json = page_result.json()
+        page_result_json = page_result.json
 
         assert page_result_json["page"]["size"] == 3
         assert page_result_json["page"]["currentPage"] == 1
@@ -61,13 +60,15 @@ class TestDataServiceSearch:
             page_result_json["hits"][0]
         )
 
-    @pytest.mark.contract
-    def test_should_sort_on_date(self, docker_service, api, wait_for_dataservice_ready):
+    @pytest.mark.integration
+    def test_should_sort_on_date(
+        self, client: Flask, docker_service, api, wait_for_dataservice_ready
+    ):
         body = {"sorting": {"field": "harvest.firstHarvested", "direction": "desc"}}
-        result = requests.post(url=data_services_url, json=body)
+        result = client.post(data_services_url, json=body)
         assert result.status_code == 200
         last_date = None
-        for hit in result.json()["hits"]:
+        for hit in result.json["hits"]:
             date = hit["harvest"]["firstHarvested"].split("+")[0]
             if last_date:
                 assert datetime.strptime(
@@ -75,27 +76,27 @@ class TestDataServiceSearch:
                 ) <= datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%SZ")
             last_date = date
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_org_path(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         org_path = "PRIVAT/910244132"
         body = {"filters": [{"orgPath": org_path}]}
-        result = requests.post(url=data_services_url, json=body)
+        result = client.post(data_services_url, json=body)
         assert result.status_code == 200
-        result_json_hits = result.json()["hits"]
+        result_json_hits = result.json["hits"]
         assert len(result_json_hits) == 5
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_get_single_data_service_with_id_search(
-        self, docker_service, api, wait_for_datasets_ready
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         body = {"filters": [{"_id": "d1d698ef-267a-3d57-949f-b2bc44657f3e"}]}
-        result = requests.post(url=data_services_url, json=body)
+        result = client.post(data_services_url, json=body)
         assert result.status_code == 200
-        result_json_hits = result.json()["hits"]
+        result_json_hits = result.json["hits"]
         assert len(result_json_hits) == 1
         assert result_json_hits[0].get("id") == "d1d698ef-267a-3d57-949f-b2bc44657f3e"
 

@@ -3,12 +3,15 @@ import re
 import time
 
 from dotenv import load_dotenv
+from flask import Flask
+from flask.testing import FlaskClient
 import pytest
 import requests
 from requests import get
 from urllib3.exceptions import MaxRetryError, NewConnectionError
 
-from tests.contract.contract_utils import populate, wait_for_es
+from fdk_fulltext_search import create_app
+from tests.utils import populate, wait_for_es
 
 json_concepts = {
     "page": {"totalElements": 2},
@@ -301,6 +304,98 @@ def wait_for_ready():
                     "was {0}".format(response.json()["count"])
                 )
             time.sleep(5)
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
+    yield
+
+
+@pytest.mark.integration
+@pytest.fixture
+def app():
+    """Returns a Flask app for integration testing."""
+    app = create_app({"TESTING": True})
+
+    yield app
+
+
+@pytest.mark.integration
+@pytest.fixture
+def client(app: Flask) -> FlaskClient:
+    """Returns a client for integration testing."""
+    return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def wait_for_concepts():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = get("http://localhost:8000/indices?name=concepts")
+            if response.json()[0]["count"] >= 530:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    "Test function setup: timed out while waiting for fulltext-search, last response "
+                    "was {0}".format(response.json()["count"])
+                )
+            time.sleep(1)
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail(
+            "Test function setup: could not contact fdk-fulltext-search container"
+        )
+    yield
+
+
+@pytest.fixture(scope="function")
+def wait_for_dataservice_ready():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = requests.get("http://localhost:9200/dataservices/_count")
+            if response.json()["count"] >= 13:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    "Test function setup: timed out while waiting for poupulation of ElasticSearch, last response "
+                    "was {0}".format(response.json()["count"])
+                )
+            time.sleep(1)
+    except (
+        requests.exceptions.ConnectionError,
+        ConnectionRefusedError,
+        MaxRetryError,
+        NewConnectionError,
+    ):
+        pytest.fail("Test function setup: could not contact elasticsearch container")
+    yield
+
+
+@pytest.fixture(scope="function")
+def wait_for_information_models():
+    timeout = time.time() + 90
+    try:
+        while True:
+            response = get("http://localhost:8000/indices?name=informationmodels")
+            if response.json()[0]["count"] >= 4:
+                break
+            if time.time() > timeout:
+                pytest.fail(
+                    "Test function setup: timed out while waiting for fulltext-search, last response "
+                    "was {0}".format(response.json()["count"])
+                )
+            time.sleep(1)
     except (
         requests.exceptions.ConnectionError,
         ConnectionRefusedError,

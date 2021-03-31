@@ -2,26 +2,25 @@ from datetime import datetime
 import json
 import re
 
+from flask import Flask
 from jsonpath_ng import parse
 import pytest
-import requests
 
-from tests.contract.search_all_contract_test import service_url
 from tests.utils import expected_page_keys
 
 
 indices_name = "informationmodels"
 data_type = "informationmodel"
-informationmodel_url = service_url + f"/{indices_name}"
+informationmodel_url = "/informationmodels"
 
 
 class TestInformationModelSearch:
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_response_should_have_correct_content(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
-        result = requests.post(informationmodel_url)
-        result_json = result.json()
+        result = client.post(informationmodel_url)
+        result_json = result.json
         content_keys = result_json.keys()
         assert result.status_code == 200
         assert "hits" in content_keys
@@ -40,9 +39,9 @@ class TestInformationModelSearch:
         assert "los" in agg_keys
         assert "orgPath" in agg_keys
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_hits_should_be_correctly_sorted_on_title(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         """
         1. exact match
@@ -50,9 +49,9 @@ class TestInformationModelSearch:
         """
         search_str = "di"
         body = {"q": search_str, "size": 300}
-        result = requests.post(url=informationmodel_url, json=body)
+        result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
-        result_json = result.json()
+        result_json = result.json
         last_was_exact_match = True
         last_was_partial_match_in_title = False
         for hit in result_json["hits"]:
@@ -67,28 +66,28 @@ class TestInformationModelSearch:
                 last_was_exact_match = False
                 last_was_partial_match_in_title = False
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_org_path(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         org_path = "STAT/972417858/991825827"
         body = {"filters": [{"orgPath": org_path}]}
-        result = requests.post(url=informationmodel_url, json=body)
+        result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
-        result_json_hits = result.json()["hits"]
+        result_json_hits = result.json["hits"]
         assert len(result_json_hits) > 0
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_los(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         los_path = "bygg-og-eiendom"
         body = {"filters": [{"los": los_path}]}
-        result = requests.post(url=informationmodel_url, json=body)
+        result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
-        result_hits = result.json()["hits"]
+        result_hits = result.json["hits"]
         assert len(result_hits) == 2
         for hit in result_hits:
             los_paths = ",".join(
@@ -96,16 +95,16 @@ class TestInformationModelSearch:
             )
             assert los_path in los_paths
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_several_los_themes(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         los_path_1 = "helse-og-omsorg"
         los_path_2 = "bygg-og-eiendom"
         body = {"filters": [{"los": f"{los_path_1},{los_path_2}"}]}
 
-        result = requests.post(url=informationmodel_url, json=body)
-        result_json = result.json()
+        result = client.post(informationmodel_url, json=body)
+        result_json = result.json
         assert result.status_code == 200
         assert len(result_json["hits"]) == 1
         for hit in result_json["hits"]:
@@ -115,32 +114,30 @@ class TestInformationModelSearch:
             assert los_path_1 in los_paths
             assert los_path_2 in los_paths
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_filter_on_los_and_org_path(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         org_path = "STAT"
         los_path = "bygg-og-eiendom"
         body = {"filters": [{"orgPath": org_path}, {"los": los_path}]}
-        result = requests.post(url=informationmodel_url, json=body)
-        result_json = result.json()
+        result = client.post(informationmodel_url, json=body)
+        result_json = result.json
         assert result.status_code == 200
         assert len(result_json["hits"]) > 0
         for hit in result_json["hits"]:
             assert org_path in hit["publisher"]["orgPath"]
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_have_correct_size_and_page(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
-        default_result = requests.post(informationmodel_url).json()
+        default_result = client.post(informationmodel_url).json
         assert default_result["page"]["size"] == 4
         assert default_result["page"]["currentPage"] == 0
 
         page_request_body = {"page": 1, "size": 2}
-        page_result = requests.post(
-            url=informationmodel_url, json=page_request_body
-        ).json()
+        page_result = client.post(informationmodel_url, json=page_request_body).json
         assert page_result["page"]["size"] == 2
         assert page_result["page"]["currentPage"] == 1
 
@@ -148,15 +145,15 @@ class TestInformationModelSearch:
             page_result["hits"][0]
         )
 
-    @pytest.mark.contract
+    @pytest.mark.integration
     def test_should_sort_on_date(
-        self, docker_service, api, wait_for_information_models
+        self, client: Flask, docker_service, api, wait_for_information_models
     ):
         body = {"sorting": {"field": "harvest.firstHarvested", "direction": "desc"}}
-        result = requests.post(url=informationmodel_url, json=body)
+        result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
         last_date = None
-        for hit in result.json()["hits"]:
+        for hit in result.json["hits"]:
             date = hit["harvest"]["firstHarvested"]
             if last_date:
                 assert datetime.strptime(
