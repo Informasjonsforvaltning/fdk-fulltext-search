@@ -115,7 +115,7 @@ def requires_or_relates_filter(model_uri: str) -> Dict[str, Dict]:
 
 
 def must_not_filter(filter_key: str) -> Dict[str, Dict]:
-    missing_filter = {
+    missing_filter: Dict = {
         "bool": {"must_not": {"exists": {"field": get_field_by_filter_key(filter_key)}}}
     }
     index = get_index_filter_for_key(filter_key)

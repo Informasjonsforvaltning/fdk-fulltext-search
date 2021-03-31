@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import re
+from typing import List, Optional
 
 from jsonpath_ng import parse
 import pytest
@@ -691,17 +692,17 @@ def is_match_in_descriptive_texts(match_str: str, hit: dict) -> bool:
         )
 
 
-def get_descriptive_texts(hit: dict) -> str:
+def get_descriptive_texts(hit: dict) -> Optional[str]:
     data_type = hit.get("type")
     try:
         if data_type == "concept":
-            return json.dumps(hit.get("definition").get("text"))
+            return json.dumps(hit.get("definition").get("text"))  # type: ignore
         elif data_type == "dataset":
-            return json.dumps(hit.get("description").get("text"))
+            return json.dumps(hit.get("description").get("text"))  # type: ignore
         elif data_type == "dataservice":
             return json.dumps(hit.get("description"))
         elif data_type == "informationmodel":
-            return hit.get("schema")
+            return str(hit.get("schema"))
         else:
             return None
     except AttributeError:
@@ -709,7 +710,7 @@ def get_descriptive_texts(hit: dict) -> str:
 
 
 def get_matches_with_stemming_regex(match_str: str):
-    all_matches = []
+    all_matches: List = []
     all_matches.extend(
         m.lower() for m in match_str.split("en") if len(m) > 1 and m != ""
     )

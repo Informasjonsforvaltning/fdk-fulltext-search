@@ -87,7 +87,7 @@ def search_in_index(index: str, request: Optional[Dict] = None) -> Dict:
                 size = request.get("size")
             if "sorting" in request:
                 sorting = request.get("sorting")
-        q = query_builder[index](search_string=search_str, aggs=aggs, filters=f)
+        q = query_builder[index](search_string=search_str, aggs=aggs, filters=f)  # type: ignore
         if size or page:
             q.add_page(size=size, page=page)
         if sorting:
@@ -165,7 +165,7 @@ def get_recent(size: Optional[int] = None) -> Any:
 
 
 def get_indices(index_name: Optional[str] = None) -> Any:
-    req_body = {"query": {}}
+    req_body: Dict[str, Dict] = {"query": {}}
     if index_name:
         req_body["query"]["term"] = {"name": index_name}
     else:

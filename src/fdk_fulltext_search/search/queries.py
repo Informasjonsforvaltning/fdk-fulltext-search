@@ -26,7 +26,9 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
         if search_string:
             self.query = query_utils.dismax_template()
 
-    def add_page(self: Any, size: int = 10, page: Optional[int] = None) -> Dict:
+    def add_page(
+        self: Any, size: Optional[int] = None, page: Optional[int] = None
+    ) -> None:
         if size is None:
             size = 10
         self.body["size"] = size

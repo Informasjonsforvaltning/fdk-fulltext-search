@@ -6,7 +6,7 @@ import logging
 import math
 import os
 import time
-from typing import Any, Dict, Generator, Optional
+from typing import Any, Dict, Generator, Optional, Union
 
 from elasticsearch import Elasticsearch, helpers
 from elasticsearch.helpers import BulkIndexError
@@ -38,7 +38,9 @@ MODEL_HARVESTER_URI = os.getenv(
 RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
 
 
-def error_msg(exec_point: str, reason: Exception, count: int = 0) -> Dict[str, str]:
+def error_msg(
+    exec_point: str, reason: Union[str, BaseException], count: int = 0
+) -> Dict[str, Union[str, int]]:
     return {
         "count": count,
         "status": "error",
@@ -46,7 +48,7 @@ def error_msg(exec_point: str, reason: Exception, count: int = 0) -> Dict[str, s
     }
 
 
-def result_msg(count: int) -> Dict[str, str]:
+def result_msg(count: int) -> Dict[str, Union[str, int]]:
     return {"status": "OK", "count": count}
 
 
@@ -65,11 +67,11 @@ def fetch_all_content() -> Dict:
     events_status = fetch_events()
     total_time = time.time() - start
     total_elements = (
-        info_status["count"]
-        + concept_status["count"]
-        + service_status["count"]
-        + datasets_status["count"]
-        + public_services_status["count"]
+        int(info_status["count"])
+        + int(concept_status["count"])
+        + int(service_status["count"])
+        + int(datasets_status["count"])
+        + int(public_services_status["count"])
     )
     status = "erros occured"
     if (
@@ -96,7 +98,7 @@ def fetch_all_content() -> Dict:
     return result
 
 
-def fetch_information_models() -> Dict[str, str]:
+def fetch_information_models() -> Dict[str, Union[str, int]]:
     info_url = f"{MODEL_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching information models from {info_url}")
@@ -129,13 +131,17 @@ def fetch_information_models() -> Dict[str, str]:
             return result_msg(result[0])
         else:
             logging.error("could not parse data services")
+            return error_msg(
+                f"fetch information models from {info_url} ",
+                "could not parse data services",
+            )
     except Exception as err:
         result = error_msg(f"fetch information models from {info_url} ", err)
         logging.error(result["message"])
         return result
 
 
-def fetch_concepts() -> Dict[str, str]:
+def fetch_concepts() -> Dict[str, Union[str, int]]:
     concept_url = API_URL + "concepts"
     try:
         logging.info("fetching concepts")
@@ -179,7 +185,7 @@ def fetch_concepts() -> Dict[str, str]:
         return result
 
 
-def fetch_data_sets() -> Dict[str, str]:
+def fetch_data_sets() -> Dict[str, Union[str, int]]:
     dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
     try:
         logging.info("fetching datasets")
@@ -210,13 +216,16 @@ def fetch_data_sets() -> Dict[str, str]:
             return result_msg(result[0])
         else:
             logging.error("could not parse datasets")
+            return error_msg(
+                f"fetch datasets from {dataset_url}", "could not parse datasets"
+            )
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
         logging.error(result["message"])
         return result
 
 
-def fetch_data_services() -> Dict[str, str]:
+def fetch_data_services() -> Dict[str, Union[str, int]]:
     dataservice_url = f"{FDK_DATASERVICE_HARVESTER_URI}/catalogs"
 
     logging.info(f"fetching data services from {dataservice_url}")
@@ -251,13 +260,17 @@ def fetch_data_services() -> Dict[str, str]:
             return result_msg(result[0])
         else:
             logging.error("could not parse data services")
+            return error_msg(
+                f"fetch dataservices from {dataservice_url}",
+                "could not parse data services",
+            )
     except Exception as err:
         result = error_msg(f"fetch dataservices from {dataservice_url}", err)
         logging.error(result["message"])
         return result
 
 
-def fetch_public_services() -> Dict[str, str]:
+def fetch_public_services() -> Dict[str, Union[str, int]]:
     event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
     event_response = None
     try:
@@ -269,8 +282,8 @@ def fetch_public_services() -> Dict[str, str]:
         )
         event_response.raise_for_status()
     except Exception as err:
-        result = error_msg(f"fetch events from {event_url}", err)
-        logging.error(result["message"])
+        event_result = error_msg(f"fetch events from {event_url}", err)
+        logging.error(event_result["message"])
 
     public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services"
 
@@ -308,13 +321,17 @@ def fetch_public_services() -> Dict[str, str]:
             return result_msg(result[0])
         else:
             logging.error("could not parse public_services")
+            return error_msg(
+                f"fetch public_services from {public_service_url}",
+                "could not parse public_services",
+            )
     except Exception as err:
         result = error_msg(f"fetch public_services from {public_service_url}", err)
         logging.error(result["message"])
         return result
 
 
-def fetch_events() -> Dict[str, str]:
+def fetch_events() -> Dict[str, Union[str, int]]:
     event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
 
     logging.info(f"fetching events from {event_url}")
@@ -347,6 +364,7 @@ def fetch_events() -> Dict[str, str]:
             return result_msg(result[0])
         else:
             logging.error("could not parse events")
+            return error_msg(f"fetch events from {event_url}", "could not parse events")
     except Exception as err:
         result = error_msg(f"fetch events from {event_url}", err)
         logging.error(result["message"])
@@ -405,7 +423,9 @@ def yield_documents_from_source(documents: Any, index: str, id_key: str) -> Gene
         yield {"_index": index, "_id": doc["_id"], "_source": doc["_source"]}
 
 
-def create_index(index_alias: str, new_index_name: str) -> Optional[Dict[str, str]]:
+def create_index(
+    index_alias: str, new_index_name: str
+) -> Optional[Dict[str, Union[str, int]]]:
     """create an index with settings and mapping from file"""
     logging.info(f"creating {new_index_name}")
     with open(
@@ -423,13 +443,13 @@ def create_index(index_alias: str, new_index_name: str) -> Optional[Dict[str, st
             update_index_info(index_alias)
         except BaseException as err:
             logging.error(f"error when attempting to create {new_index_name}")
-            return error_msg(f"create index '{new_index_name}'", err.error)
+            return error_msg(f"create index '{new_index_name}'", err)
         return None
 
 
 def set_alias_for_new_index(
     index_alias: str, new_index_name: str
-) -> Optional[Dict[str, str]]:
+) -> Optional[Dict[str, Union[str, int]]]:
     """Delete old index and set alias for new index"""
     logging.info(f"set alias {index_alias} for index {new_index_name}")
     try:
@@ -453,7 +473,7 @@ def set_alias_for_new_index(
         logging.error(
             f"error when attempting to set alias {index_alias} for index {new_index_name}"
         )
-        return error_msg(f"set alias '{index_alias}'", err.error)
+        return error_msg(f"set alias '{index_alias}'", err)
     return None
 
 
