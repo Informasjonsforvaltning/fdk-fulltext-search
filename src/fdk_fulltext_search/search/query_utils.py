@@ -233,7 +233,7 @@ def dismax_template() -> Dict[str, Dict[str, List]]:
 
 
 def words_only_string(query_string: str) -> Optional[str]:
-    """ Returns a string with words only, where words are defined as any sequence of digits or letters """
+    """Returns a string with words only, where words are defined as any sequence of digits or letters"""
     words = re.findall(r"\w+", query_string)
     if words.__len__() > 0:
         return " ".join(words)
