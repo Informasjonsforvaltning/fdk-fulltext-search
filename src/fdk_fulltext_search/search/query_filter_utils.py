@@ -4,7 +4,7 @@ from fdk_fulltext_search.ingest.utils import IndicesKey
 
 
 def get_field_by_filter_key(filter_key: str) -> str:
-    """ Map the request filter key to keys in the elasticsearch mapping"""
+    """Map the request filter key to keys in the elasticsearch mapping"""
     if filter_key == "orgPath":
         return "publisher.orgPath"
     elif filter_key == "accessRights":
@@ -28,7 +28,7 @@ def get_field_by_filter_key(filter_key: str) -> str:
 
 
 def get_index_filter_for_key(filter_key: str) -> Union[str, bool]:
-    """get indexes containing filter_key """
+    """get indexes containing filter_key"""
     if filter_key == "accessRights" or filter_key == "theme":
         return IndicesKey.DATA_SETS
     else:
@@ -36,7 +36,7 @@ def get_index_filter_for_key(filter_key: str) -> Union[str, bool]:
 
 
 def term_filter(request_item: Dict) -> List[Dict[str, Dict]]:
-    """ map request filter for one key to ES term queries"""
+    """map request filter for one key to ES term queries"""
     filters = []
     key = list(request_item.keys())[0]
     # get all values in request filter
@@ -48,7 +48,7 @@ def term_filter(request_item: Dict) -> List[Dict[str, Dict]]:
 
 
 def term_filter_from_collection(key: str, collection: List) -> List[Dict[str, Dict]]:
-    """ map request filter for one key to ES term queries"""
+    """map request filter for one key to ES term queries"""
     filters = []
     for term in collection:
         q = {"term": {get_field_by_filter_key(key): term}}
@@ -57,7 +57,7 @@ def term_filter_from_collection(key: str, collection: List) -> List[Dict[str, Di
 
 
 def exists_filter(request_item: Dict) -> List[Dict[str, Dict]]:
-    """ map request filter for fields to ES exists queries"""
+    """map request filter for fields to ES exists queries"""
     filters = []
     key = list(request_item.keys())[0]
     # get all values in request filter

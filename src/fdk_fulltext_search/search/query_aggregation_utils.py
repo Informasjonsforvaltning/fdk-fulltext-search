@@ -6,7 +6,7 @@ from fdk_fulltext_search.search.query_filter_utils import (
 
 
 def default_all_indices_aggs() -> Dict:
-    """ Return a dict with default aggregation for all indices search"""
+    """Return a dict with default aggregation for all indices search"""
     return {
         "los": los_aggregation(),
         "orgPath": org_path_aggregation(),

@@ -912,7 +912,7 @@ def test_all_indices_should_return_query_with_filter():
 
 @pytest.mark.unit
 def test_all_indices_with_several_words():
-    """ should return query with simple query string query for title"""
+    """should return query with simple query string query for title"""
     search_string = "some string"
     expected = {
         "query": {
