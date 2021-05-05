@@ -7,7 +7,7 @@ authors = ["NilsOveTen <nils.ove.tendenes@digdir.no>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 flask = "1.1.2"
-python-dotenv = "0.17.0"
+python-dotenv = "0.17.1"
 flask-restful = "0.3.8"
 elasticsearch = "7.12.1"
 elasticsearch-dsl = "7.3.0"
@@ -19,10 +19,10 @@ pika = "1.2.0"
 feedgen = "0.9.0"
 simplejson = "3.17.2"
 python-json-logger = "2.0.1"
-fdk-rdf-parser = "0.3.9"
+fdk-rdf-parser = "0.3.10"
 
 [tool.poetry.dev-dependencies]
-pytest = "6.2.3"
+pytest = "6.2.4"
 pytest-cov = "2.11.1"
 pytest-mock = "3.6.0"
 mock = "4.0.3"

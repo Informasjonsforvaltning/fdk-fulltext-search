@@ -13,29 +13,22 @@ from urllib3.exceptions import MaxRetryError, NewConnectionError
 from fdk_fulltext_search import create_app
 from tests.utils import populate, wait_for_es
 
-json_concepts = {
-    "page": {"totalElements": 2},
-    "_embedded": {"concepts": [{"id": 1234566}]},
-}
-json_data_services = {
-    "total": 2,
-    "hits": [
-        {
-            "nationalComponent": "true",
-            "isOpenAccess": "true",
-            "isOpenLicense": "true",
-            "isFree": "true",
-            "statusCode": "EXPERIMENTAL",
-            "id": "baaeeaf2-a2d0-44d0-a5a9-d040a66993e2",
-            "title": "Sindres nasjonale opplæringskontorregister API",
-            "publisher": {
-                "id": "910244132",
-                "name": "RAMSUND OG ROGNAN REVISJON",
-                "orgPath": "/ANNET/910244132",
-            },
-        }
-    ],
-}
+turtle_concept = """@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://testutgiver.no/begrep/111>
+        a                             skos:Concept .
+
+<https://testdirektoratet.no/concepts/321>
+        a               dcat:CatalogRecord ;
+        dct:identifier  "321" ;
+        dct:issued      "2020-07-03T10:04:39.738Z"^^xsd:dateTime ;
+        dct:modified    "2021-02-23T12:00:21.354Z"^^xsd:dateTime ;
+        foaf:primaryTopic <http://testutgiver.no/begrep/111> .
+"""
 
 turtle_datasets = """
 @prefix dct:   <http://purl.org/dc/terms/> .
@@ -194,7 +187,7 @@ def mocked_requests_get(*args, **kwargs):
     if re.findall("infomodel", req_url).__len__() > 0:
         response_text = turtle_models
     elif re.findall("concept", req_url).__len__() > 0:
-        response_json = json_concepts
+        response_text = turtle_concept
     elif re.findall("dataset", req_url).__len__() > 0:
         response_text = turtle_datasets
     elif re.findall("dataservice", req_url).__len__() > 0:
