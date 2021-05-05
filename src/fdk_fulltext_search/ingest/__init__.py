@@ -3,7 +3,6 @@ from datetime import datetime
 import json
 from json import JSONDecodeError
 import logging
-import math
 import os
 import time
 from typing import Any, Dict, Generator, Optional, Union
@@ -33,6 +32,9 @@ FDK_SERVICE_HARVESTER_URI = os.getenv(
 FDK_EVENT_HARVESTER_URI = os.getenv("FDK_EVENT_HARVESTER_URI", "http://localhost:8080")
 MODEL_HARVESTER_URI = os.getenv(
     "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
+)
+FDK_CONCEPT_HARVESTER_URI = os.getenv(
+    "FDK_CONCEPT_HARVESTER_URI", "http://localhost:8080/concept"
 )
 
 RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
@@ -142,44 +144,41 @@ def fetch_information_models() -> Dict[str, Union[str, int]]:
 
 
 def fetch_concepts() -> Dict[str, Union[str, int]]:
-    concept_url = API_URL + "concepts"
+    concept_url = f"{FDK_CONCEPT_HARVESTER_URI}/collections"
+    logging.info(f"fetching concepts from {concept_url}")
     try:
-        logging.info("fetching concepts")
-        size = requests.get(url=concept_url, timeout=5)
-        size.raise_for_status()
-        total_elements = size.json()["page"]["totalElements"]
-        do_request = math.ceil(total_elements / 1000)
-        # repeat request if total_elements exceeds max size of response
-        concepts = []
-        if do_request > 1:
-            for x in range(do_request):
-                r = requests.get(
-                    url=concept_url, params={"size": "1000", "page": str(x)}, timeout=5
-                )
-                r.raise_for_status()
-                concepts.extend(r.json()["_embedded"]["concepts"])
-        else:
-            r = requests.get(url=concept_url, params={"size": "1000"}, timeout=5)
-            r.raise_for_status()
-            concepts = r.json()["_embedded"]["concepts"]
-
-        new_index_name = f"{IndicesKey.CONCEPTS}-{os.urandom(4).hex()}"
-
-        create_error = create_index(IndicesKey.CONCEPTS, new_index_name)
-        if create_error:
-            return create_error
-
-        result = elasticsearch_ingest(
-            concepts, new_index_name, IndicesKey.CONCEPTS_ID_KEY
+        response = requests.get(
+            url=concept_url,
+            params=RECORDS_PARAM_TRUE,
+            headers={"Accept": "text/turtle"},
+            timeout=10,
         )
+        response.raise_for_status()
 
-        alias_error = set_alias_for_new_index(IndicesKey.CONCEPTS, new_index_name)
-        if alias_error:
-            return alias_error
+        parsed_rdf = fdk_rdf_parser.parse_concepts(response.text)
+        if parsed_rdf is not None:
+            new_index_name = f"{IndicesKey.CONCEPTS}-{os.urandom(4).hex()}"
 
-        return result_msg(result[0])
+            create_error = create_index(IndicesKey.CONCEPTS, new_index_name)
+            if create_error:
+                return create_error
 
-    except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
+            logging.info("ingesting parsed concepts")
+            result = elasticsearch_ingest_from_harvester(
+                parsed_rdf, new_index_name, IndicesKey.CONCEPTS_ID_KEY
+            )
+
+            alias_error = set_alias_for_new_index(IndicesKey.CONCEPTS, new_index_name)
+            if alias_error:
+                return alias_error
+
+            return result_msg(result[0])
+        else:
+            logging.error("could not parse concepts")
+            return error_msg(
+                f"fetch concepts from {concept_url}", "could not parse concepts"
+            )
+    except Exception as err:
         result = error_msg(f"fetch concepts from {concept_url}", err)
         logging.error(result["message"])
         return result
@@ -371,18 +370,6 @@ def fetch_events() -> Dict[str, Union[str, int]]:
         return result
 
 
-def elasticsearch_ingest(documents: Any, index: str, id_key: str) -> Any:
-    try:
-        result = helpers.bulk(
-            client=es_client, actions=yield_documents(documents, index, id_key)
-        )
-        return result
-    except BulkIndexError as err:
-        result = error_msg(f"ingest {index}", err.errors)
-        logging.error(result)
-        return result
-
-
 def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str) -> Any:
     try:
         result = helpers.bulk(
@@ -397,12 +384,6 @@ def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str)
         return result
 
 
-def yield_documents(documents: Any, index: str, id_key: str) -> Generator:
-    """get docs from responses without ES data"""
-    for doc in documents:
-        yield {"_index": index, "_id": doc[id_key], "_source": doc}
-
-
 def yield_documents_from_harvester(
     documents: Any, index: str, id_key: str
 ) -> Generator:
@@ -415,12 +396,6 @@ def yield_documents_from_harvester(
                 asdict(documents[doc_index]), iterable_as_array=True
             ),
         }
-
-
-def yield_documents_from_source(documents: Any, index: str, id_key: str) -> Generator:
-    """get docs from responses with ES data"""
-    for doc in documents:
-        yield {"_index": index, "_id": doc["_id"], "_source": doc["_source"]}
 
 
 def create_index(

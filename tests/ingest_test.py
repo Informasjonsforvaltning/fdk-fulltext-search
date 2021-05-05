@@ -36,11 +36,11 @@ def test_fetch_info_models_should_create_index_and_update_alias(
 
 @pytest.mark.unit
 def test_fetch_concepts_should_create_index_and_update_alias(
-    mock_env, mock_ingest, mock_get, mock_single_reindex, mock_set_alias
+    mock_env, mock_ingest_from_harvester, mock_get, mock_single_reindex, mock_set_alias
 ):
     fetch_concepts()
-    assert mock_ingest.call_count == 1
-    ingest_calls = mock_ingest.call_args_list[0][0]
+    assert mock_ingest_from_harvester.call_count == 1
+    ingest_calls = mock_ingest_from_harvester.call_args_list[0][0]
     assert "concepts-" in ingest_calls[1]
     assert ingest_calls[2] == "id"
     assert mock_single_reindex.call_count == 1
