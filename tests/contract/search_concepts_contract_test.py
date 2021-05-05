@@ -71,7 +71,7 @@ class TestConceptSearch:
 
     @pytest.mark.contract
     def test_should_filter_on_org_path(self, docker_service, api, wait_for_concepts):
-        org_path = "/STAT/972417807/974761076"
+        org_path = "STAT/912660680/974760673"
         body = {"filters": [{"orgPath": org_path}]}
         result = requests.post(url=concept_url, json=body)
         assert result.status_code == 200
