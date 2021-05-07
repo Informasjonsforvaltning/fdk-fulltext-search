@@ -120,11 +120,11 @@ def has_prefix_in_title_all_languages(title, prefix):
     has_match_in_prefix = False
     if "nb" in keys and title["nb"].startswith(prefix):
         has_match_in_prefix = True
-    if "nn" in keys and title["nb"].startswith(prefix):
+    if "nn" in keys and title["nn"].startswith(prefix):
         has_match_in_prefix = True
-    if "no" in keys and title["nb"].startswith(prefix):
+    if "no" in keys and title["no"].startswith(prefix):
         has_match_in_prefix = True
-    if "en" in keys and title["nb"].startswith(prefix):
+    if "en" in keys and title["en"].startswith(prefix):
         has_match_in_prefix = True
     return has_match_in_prefix
 
