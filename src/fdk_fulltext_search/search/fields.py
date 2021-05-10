@@ -24,7 +24,7 @@ index_suggestion_fields = {
         "prefLabel",
         "publisher",
     ],
-    IndicesKey.DATA_SETS: ["title", "uri"],
+    IndicesKey.DATA_SETS: ["uri", "title", "publisher"],
     IndicesKey.DATA_SERVICES: ["id", "uri", "title", "publisher"],
     IndicesKey.INFO_MODEL: ["id", "uri", "title", "publisher"],
 }

@@ -1837,7 +1837,7 @@ def test_add_filter_should_add_x_last_days_filter():
 @pytest.mark.unit
 def test_suggestion_query_data_sett():
     expected_body = {
-        "_source": ["title", "uri"],
+        "_source": ["publisher", "title", "uri"],
         "query": {
             "dis_max": {
                 "queries": [
