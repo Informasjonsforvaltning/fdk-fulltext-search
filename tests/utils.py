@@ -33,26 +33,31 @@ def wait_for_es():
 
 
 def populate():
-    start_reindex("all")
-    timeout = time.time() + 90
-    try:
-        while True:
-            response = requests.get("http://localhost:8000/count")
-            if response.json()["count"] >= 5537:
-                break
-            if time.time() > timeout:
-                pytest.fail(
-                    "Test containers: timed out while waiting for poupulation of ElasticSearch, last response "
-                    "was {0}".format(response.json()["count"])
-                )
-            time.sleep(1)
-    except (
-        requests.exceptions.ConnectionError,
-        ConnectionRefusedError,
-        MaxRetryError,
-        NewConnectionError,
-    ):
-        pytest.fail("Test containers: could not contact fdk-fulltext-search container")
+    min_documents = 5537
+    initial = requests.get("http://localhost:8000/count")
+    if initial.json()["count"] < min_documents:
+        start_reindex("all")
+        timeout = time.time() + 90
+        try:
+            while True:
+                response = requests.get("http://localhost:8000/count")
+                if response.json()["count"] >= min_documents:
+                    break
+                if time.time() > timeout:
+                    pytest.fail(
+                        "Test containers: timed out while waiting for poupulation of ElasticSearch, last response "
+                        "was {0}".format(response.json()["count"])
+                    )
+                time.sleep(1)
+        except (
+            requests.exceptions.ConnectionError,
+            ConnectionRefusedError,
+            MaxRetryError,
+            NewConnectionError,
+        ):
+            pytest.fail(
+                "Test containers: could not contact fdk-fulltext-search container"
+            )
 
 
 def start_reindex(data_type):

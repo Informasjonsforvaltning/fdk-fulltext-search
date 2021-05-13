@@ -1,8 +1,6 @@
 import pytest
 import requests
 
-from tests.contract.search_all_contract_test import service_url
-
 indices_name = [
     "dataservices",
     "datasets",
@@ -11,7 +9,7 @@ indices_name = [
     "public_services",
 ]
 
-index_url = service_url + "/indices"
+index_url = "http://localhost:8000/indices"
 
 
 class TestSearchAll:
