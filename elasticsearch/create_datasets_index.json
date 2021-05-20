@@ -45,6 +45,15 @@
                                         "ignore_above": 256
                                     }
                                 }
+                            },
+                            "no": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
                             }
                         }
                     },
@@ -1165,6 +1174,15 @@
                                 "ignore_above": 256
                             }
                         }
+                    },
+                    "no": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
                     }
                 }
             },
@@ -1294,6 +1312,15 @@
                                         "ignore_above": 256
                                     }
                                 }
+                            },
+                            "no": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
                             }
                         }
                     },
@@ -1384,6 +1411,15 @@
                                 }
                             },
                             "nn": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "no": {
                                 "type": "text",
                                 "fields": {
                                     "keyword": {
@@ -1593,6 +1629,15 @@
                                                 "ignore_above": 256
                                             }
                                         }
+                                    },
+                                    "no": {
+                                        "type": "text",
+                                        "fields": {
+                                            "keyword": {
+                                                "type": "keyword",
+                                                "ignore_above": 256
+                                            }
+                                        }
                                     }
                                 }
                             },
@@ -1740,6 +1785,24 @@
                                 }
                             },
                             "nn": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "no": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "en": {
                                 "type": "text",
                                 "fields": {
                                     "keyword": {
@@ -2099,6 +2162,18 @@
                         }
                     },
                     "nn": {
+                        "type": "text",
+                        "fields": {
+                            "ngrams": {
+                                "type": "search_as_you_type"
+                            },
+                            "raw": {
+                                "type": "keyword",
+                                "normalizer": "exact_normalizer"
+                            }
+                        }
+                    },
+                    "no": {
                         "type": "text",
                         "fields": {
                             "ngrams": {
