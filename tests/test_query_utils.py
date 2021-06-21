@@ -727,3 +727,65 @@ def test_collection_filter():
 
     result = collection_filter(filter_obj)
     assert result == expected
+
+
+def test_collection_filter_with_and_operator():
+    expected = {
+        "bool": {
+            "must": [
+                {
+                    "term": {
+                        "uri.keyword": "https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc"
+                    }
+                },
+                {
+                    "term": {
+                        "uri.keyword": "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
+                    }
+                },
+            ]
+        }
+    }
+
+    filter_obj = {
+        "field": "uri",
+        "values": [
+            "https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc",
+            "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2",
+        ],
+        "operator": "AND",
+    }
+
+    result = collection_filter(filter_obj)
+    assert result == expected
+
+
+def test_collection_filter_with_or_operator():
+    expected = {
+        "bool": {
+            "should": [
+                {
+                    "term": {
+                        "uri.keyword": "https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc"
+                    }
+                },
+                {
+                    "term": {
+                        "uri.keyword": "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
+                    }
+                },
+            ]
+        }
+    }
+
+    filter_obj = {
+        "field": "uri",
+        "values": [
+            "https://fellesdatakatalog.brreg.no/api/concepts/a8ea479a-9b61-4cc2-86e8-650a03a322cc",
+            "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2",
+        ],
+        "operator": "OR",
+    }
+
+    result = collection_filter(filter_obj)
+    assert result == expected
