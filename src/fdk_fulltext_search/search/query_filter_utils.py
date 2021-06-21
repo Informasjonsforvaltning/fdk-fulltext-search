@@ -131,12 +131,16 @@ def collection_filter(filter_obj: Dict) -> Dict[str, Dict]:
         key=filter_obj["field"], collection=filter_obj["values"]
     )
 
-    if get_field_by_filter_key("datasetMediaType") == filter_obj["field"]:
-        return {"bool": {"must": collection}}
-    if get_field_by_filter_key("formats") == filter_obj["field"]:
-        return {"bool": {"must": collection}}
+    clause = "should"
+    if (get_field_by_filter_key("datasetMediaType") == filter_obj["field"]) or (
+        get_field_by_filter_key("formats") == filter_obj["field"]
+    ):
+        clause = "must"
 
-    return {"bool": {"should": collection}}
+    if "operator" in filter_obj:
+        clause = "must" if filter_obj["operator"] == "AND" else "should"
+
+    return {"bool": {clause: collection}}
 
 
 def keyword_filter(keyword: str) -> Dict[str, Dict]:
