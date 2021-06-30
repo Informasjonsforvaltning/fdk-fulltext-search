@@ -10,9 +10,9 @@ fdk-fulltext-search
 
 ### Install software:
 ```
-% pip install poetry==1.1.4
-% pip install nox==2020.12.31
-% pip install nox-poetry==0.8.1
+% pip install poetry==1.1.7
+% pip install nox==2021.6.12
+% pip install nox-poetry==0.8.6
 % poetry install
 ```
 #### Env variables:
