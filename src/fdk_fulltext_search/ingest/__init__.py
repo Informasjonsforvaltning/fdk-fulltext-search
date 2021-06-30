@@ -5,6 +5,7 @@ from json import JSONDecodeError
 import logging
 import os
 import time
+import traceback
 from typing import Any, Dict, Generator, Optional, Union
 
 from elasticsearch import Elasticsearch, helpers
@@ -132,14 +133,17 @@ def fetch_information_models() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse data services")
+            try:
+                raise Exception("could not parse data services")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(
                 f"fetch information models from {info_url} ",
                 "could not parse data services",
             )
     except Exception as err:
         result = error_msg(f"fetch information models from {info_url} ", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -174,13 +178,16 @@ def fetch_concepts() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse concepts")
+            try:
+                raise Exception("could not parse concepts")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(
                 f"fetch concepts from {concept_url}", "could not parse concepts"
             )
     except Exception as err:
         result = error_msg(f"fetch concepts from {concept_url}", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -214,13 +221,16 @@ def fetch_data_sets() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse datasets")
+            try:
+                raise Exception("could not parse datasets")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(
                 f"fetch datasets from {dataset_url}", "could not parse datasets"
             )
     except (HTTPError, RequestException, JSONDecodeError, Timeout, KeyError) as err:
         result = error_msg(f"fetch datasets from {dataset_url}", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -258,14 +268,17 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse data services")
+            try:
+                raise Exception("could not parse data services")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(
                 f"fetch dataservices from {dataservice_url}",
                 "could not parse data services",
             )
     except Exception as err:
         result = error_msg(f"fetch dataservices from {dataservice_url}", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -282,7 +295,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
         event_response.raise_for_status()
     except Exception as err:
         event_result = error_msg(f"fetch events from {event_url}", err)
-        logging.error(event_result["message"])
+        logging.error(f"{traceback.format_exc()} {event_result['message']}")
 
     public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services"
 
@@ -319,14 +332,17 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse public_services")
+            try:
+                raise Exception("could not parse public_services")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(
                 f"fetch public_services from {public_service_url}",
                 "could not parse public_services",
             )
     except Exception as err:
         result = error_msg(f"fetch public_services from {public_service_url}", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -362,11 +378,14 @@ def fetch_events() -> Dict[str, Union[str, int]]:
 
             return result_msg(result[0])
         else:
-            logging.error("could not parse events")
+            try:
+                raise Exception("could not parse events")
+            except Exception:
+                logging.error(traceback.format_exc())
             return error_msg(f"fetch events from {event_url}", "could not parse events")
     except Exception as err:
         result = error_msg(f"fetch events from {event_url}", err)
-        logging.error(result["message"])
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -380,7 +399,7 @@ def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str)
         return result
     except BulkIndexError as err:
         result = error_msg(f"ingest {index}", err.errors)
-        logging.error(result)
+        logging.error(f"{traceback.format_exc()} {result['message']}")
         return result
 
 
@@ -417,7 +436,9 @@ def create_index(
 
             update_index_info(index_alias)
         except BaseException as err:
-            logging.error(f"error when attempting to create {new_index_name}")
+            logging.error(
+                f"{traceback.format_exc()}: error when attempting to create {new_index_name}"
+            )
             return error_msg(f"create index '{new_index_name}'", err)
         return None
 
@@ -446,7 +467,7 @@ def set_alias_for_new_index(
 
     except BaseException as err:
         logging.error(
-            f"error when attempting to set alias {index_alias} for index {new_index_name}"
+            f"{traceback.format_exc()}: error when attempting to set alias {index_alias} for index {new_index_name}"
         )
         return error_msg(f"set alias '{index_alias}'", err)
     return None
