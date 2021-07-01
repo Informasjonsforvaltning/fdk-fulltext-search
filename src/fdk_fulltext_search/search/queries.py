@@ -55,9 +55,14 @@ class AbstractSearchQuery(metaclass=abc.ABCMeta):
                     query_filter_utils.must_not_filter(f.get(key).get("field"))
                 )
             elif key == "opendata":
-                self.body["query"]["bool"]["filter"].append(
-                    query_utils.open_data_query()
-                )
+                if f[key] == "false":
+                    self.body["query"]["bool"]["filter"].append(
+                        query_utils.must_not_be_open_data_query()
+                    )
+                else:
+                    self.body["query"]["bool"]["filter"].append(
+                        query_utils.open_data_query()
+                    )
             elif key == "exists":
                 self.body["query"]["bool"]["filter"].extend(
                     query_filter_utils.exists_filter(f)
