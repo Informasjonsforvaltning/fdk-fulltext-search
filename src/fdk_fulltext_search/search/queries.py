@@ -339,10 +339,8 @@ class DataServiceQuery(AbstractSearchQuery):
                 "orgPath"
             ] = query_aggregation_utils.org_path_aggregation()
             self.body["aggs"][
-                "formats"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="mediaType.code.keyword"
-            )
+                "format"
+            ] = query_aggregation_utils.fdk_format_aggregation()
 
     def add_search_string(self: Any, search_string: str) -> Any:
         self.query["dis_max"]["queries"].append(
@@ -437,6 +435,9 @@ class DataSetQuery(AbstractSearchQuery):
 
     def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
+            self.body["aggs"][
+                "format"
+            ] = query_aggregation_utils.fdk_format_aggregation()
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
             self.body["aggs"][
                 "provenance"
@@ -461,11 +462,6 @@ class DataSetQuery(AbstractSearchQuery):
                 "spatial"
             ] = query_aggregation_utils.get_aggregation_term_for_key(
                 aggregation_key="spatial"
-            )
-            self.body["aggs"][
-                "mediaType"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="distribution.mediaType.code.keyword"
             )
 
 

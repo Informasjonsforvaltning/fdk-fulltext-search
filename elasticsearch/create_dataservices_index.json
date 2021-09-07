@@ -1,5 +1,13 @@
 {
   "mappings": {
+    "runtime": {
+      "fdkFormatPrefixed": {
+        "type": "keyword",
+        "script": {
+          "source": "if (doc['fdkFormat.fdkType'].size() > 0){ if(doc['fdkFormat.fdkType'].value == 'UNKNOWN') {emit('UNKNOWN')} else {emit(doc['fdkFormat.fdkType'].value + ' ' + doc['fdkFormat.code'].value)}}"
+        }
+      }
+    },
     "properties": {
       "conformsTo": {
         "properties": {
@@ -874,6 +882,22 @@
             }
           }
         }
+      },
+      "fdkFormat": {
+          "properties": {
+            "code": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "uri": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "fdkType": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
       },
       "servesDataset": {
         "type": "text",

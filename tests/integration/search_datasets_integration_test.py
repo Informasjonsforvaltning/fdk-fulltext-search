@@ -51,6 +51,8 @@ class TestDataSetSearch:
         assert len(aggregations["accessRights"]["buckets"]) > 0
         assert "spatial" in agg_keys
         assert len(aggregations["spatial"]["buckets"]) > 0
+        assert "format" in agg_keys
+        assert len(aggregations["format"]["buckets"]) > 0
 
     @pytest.mark.integration
     def test_should_have_correct_size_and_page(
@@ -175,6 +177,27 @@ class TestDataSetSearch:
         assert len(result_json_hits) > 0
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
+
+    @pytest.mark.integration
+    def test_should_filter_on_fdk_format(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
+        body = {
+            "filters": [
+                {"collection": {"field": "fdkFormatPrefixed", "values": ["UNKNOWN"]}}
+            ]
+        }
+        result = client.post(datasets_url, json=body)
+        assert result.status_code == 200
+        result_json_hits = result.json["hits"]
+        assert len(result_json_hits) == 10
+        for hit in result_json_hits:
+            if hit["distribution"] is not None:
+                for distr in hit["distribution"]:
+                    if distr["fdkFormat"] is not None:
+                        assert all(
+                            f["fdkType"] == "UNKNOWN" for f in distr["fdkFormat"]
+                        )
 
     @pytest.mark.integration
     def test_should_filter_on_spatial(

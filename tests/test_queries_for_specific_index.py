@@ -695,6 +695,7 @@ def test_information_model_should_return_query_with_must_not_for_missing():
 @pytest.mark.unit
 def test_dataset_default_aggregations():
     expected_aggs = {
+        "format": {"terms": {"field": "fdkFormatPrefixed", "size": 1000000000}},
         "los": {"terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}},
         "provenance": {"terms": {"field": "provenance.code.keyword"}},
         "orgPath": {
@@ -723,10 +724,10 @@ def test_dataset_default_aggregations():
             }
         },
         "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
-        "mediaType": {"terms": {"field": "distribution.mediaType.code.keyword"}},
     }
     result = DataSetQuery().body["aggs"]
     agg_keys = result.keys()
+    assert "format" in agg_keys
     assert "los" in agg_keys
     assert "provenance" in agg_keys
     assert "orgPath" in agg_keys
@@ -734,7 +735,6 @@ def test_dataset_default_aggregations():
     assert "theme" in agg_keys
     assert "accessRights" in agg_keys
     assert "spatial" in agg_keys
-    assert "mediaType" in agg_keys
 
     assert json.dumps(result) == json.dumps(expected_aggs)
 
@@ -760,6 +760,7 @@ def test_dataset_empty_query():
             }
         },
         "aggs": {
+            "format": {"terms": {"field": "fdkFormatPrefixed", "size": 1000000000}},
             "los": {
                 "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
@@ -790,7 +791,6 @@ def test_dataset_empty_query():
                 }
             },
             "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
-            "mediaType": {"terms": {"field": "distribution.mediaType.code.keyword"}},
         },
     }
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)

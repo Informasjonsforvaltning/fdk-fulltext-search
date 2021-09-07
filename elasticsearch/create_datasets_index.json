@@ -1,5 +1,13 @@
 {
     "mappings": {
+        "runtime": {
+            "fdkFormatPrefixed": {
+                "type": "keyword",
+                "script": {
+                    "source": "if (doc['distribution.fdkFormat.fdkType'].size() > 0){ if(doc['distribution.fdkFormat.fdkType'].value == 'UNKNOWN') {emit('UNKNOWN')} else {emit(doc['distribution.fdkFormat.fdkType'].value + ' ' + doc['distribution.fdkFormat.code'].value)}}"
+                }
+            }
+        },
         "properties": {
             "euTheme": {
                 "type": "alias",
@@ -829,6 +837,22 @@
                                 "ignore_above": 256
                               }
                             }
+                          }
+                        }
+                    },
+                    "fdkFormat": {
+                        "properties": {
+                          "code": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          },
+                          "uri": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          },
+                          "fdkType": {
+                            "type": "keyword",
+                            "ignore_above": 256
                           }
                         }
                     },
