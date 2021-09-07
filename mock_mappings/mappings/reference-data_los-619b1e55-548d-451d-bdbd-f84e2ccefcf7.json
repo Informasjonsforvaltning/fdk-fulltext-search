@@ -2,19 +2,19 @@
   "id" : "619b1e55-548d-451d-bdbd-f84e2ccefcf7",
   "name" : "reference-data_los",
   "request" : {
-    "url" : "/reference-data/los",
+    "url" : "/new-reference-data/los/themes-and-words",
     "method" : "GET"
   },
   "response" : {
     "status" : 200,
-    "jsonBody" : [
+    "jsonBody" : { "losNodes" :  [
       {
           "internalId": null,
           "children": null,
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/festival"
           ],
@@ -43,7 +43,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/priser-og-gebyr-for-bygg-og-eiendom"
           ],
@@ -65,7 +65,7 @@
               "https://psi.norge.no/los/tema/kjop-og-salg",
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/kjop-og-salg/boligfinansiering",
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/boligfinansiering"
@@ -107,7 +107,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnevern-og-foreldrestotte/bekymringsmelding-til-barnevernet"
           ],
@@ -128,7 +128,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/pass-og-visum"
           ],
@@ -158,7 +158,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/feiing-og-stroing"
           ],
@@ -184,7 +184,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikkinformasjon"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/trafikksikkerhet"
           ],
@@ -218,7 +218,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/reiseutgifter"
           ],
@@ -244,7 +244,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/varslingstjenester/lynvarsel"
           ],
@@ -265,7 +265,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lotteri-og-pengespill"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/lotteri-og-pengespill/bingo"
           ],
@@ -292,7 +292,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjop-og-salg"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/kjop-og-salg/tinglysing"
           ],
@@ -324,7 +324,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/akutt-hjelp"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/akutt-hjelp/legevakt"
           ],
@@ -347,7 +347,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/langvarige-helsetjenester"
           ],
@@ -370,7 +370,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/privatskole"
           ],
@@ -396,7 +396,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forurensning-og-straling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/utslippstillatelse"
           ],
@@ -420,7 +420,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/fritidsskippersertifikat"
           ],
@@ -444,7 +444,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/eiendomsregister"
           ],
@@ -474,7 +474,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/sykehjem"
           ],
@@ -518,7 +518,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/aksellastrestriksjoner"
           ],
@@ -542,7 +542,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/kjoretoykontroll"
           ],
@@ -574,7 +574,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/lekeplass"
           ],
@@ -606,7 +606,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur"
           ],
@@ -628,7 +628,7 @@
               "https://psi.norge.no/los/tema/grunnskole",
               "https://psi.norge.no/los/tema/voksenopplaring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/spesialundervisning",
               "skole-og-utdanning/voksenopplaring/spesialundervisning"
@@ -665,7 +665,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naring"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring/naringsliv"
           ],
@@ -687,7 +687,7 @@
               "https://psi.norge.no/los/tema/foreldre-og-foresatte",
               "https://psi.norge.no/los/tema/permisjonsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/foreldrepermisjon",
               "arbeid/permisjonsordninger/foreldrepermisjon"
@@ -721,7 +721,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/forhandskonferanse"
           ],
@@ -745,7 +745,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lotteri-og-pengespill"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/lotteri-og-pengespill/lotteri"
           ],
@@ -774,7 +774,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naring"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring/naringsutvikling"
           ],
@@ -795,7 +795,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/arbeidsavtale"
           ],
@@ -833,7 +833,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring"
           ],
@@ -854,7 +854,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kvalifisering-til-arbeid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/kvalifisering-til-arbeid/larling"
           ],
@@ -875,7 +875,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/plantevern"
           ],
@@ -908,7 +908,7 @@
               "https://psi.norge.no/los/tema/permisjonsordninger",
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/permisjonsordninger/omsorgspermisjon",
               "familie-og-barn/foreldre-og-foresatte/omsorgspermisjon"
@@ -932,7 +932,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/dodsfall-og-gravferd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd/skifte-ved-dodsfall"
           ],
@@ -967,7 +967,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/ruteplanlegger"
           ],
@@ -999,7 +999,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima"
           ],
@@ -1020,7 +1020,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/vann-og-avlop"
           ],
@@ -1041,7 +1041,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avgift"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/toll"
           ],
@@ -1074,7 +1074,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/fastsettelse-av-foreldreskap"
           ],
@@ -1101,7 +1101,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/arbeidstvist"
           ],
@@ -1136,7 +1136,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/livsstil"
           ],
@@ -1161,7 +1161,7 @@
               "https://psi.norge.no/los/tema/apenhet",
               "https://psi.norge.no/los/tema/personopplysninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/apenhet/personvern",
               "demokrati-og-innbyggerrettigheter/personopplysninger/personvern"
@@ -1196,7 +1196,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntekt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntekt/lonn"
           ],
@@ -1231,7 +1231,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kvalifisering-til-arbeid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/kvalifisering-til-arbeid/kvalifiseringsprogram"
           ],
@@ -1252,7 +1252,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/klage-pa-byggesak"
           ],
@@ -1273,7 +1273,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/personopplysninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger/d-nummer"
           ],
@@ -1297,7 +1297,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/skolehverdag"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/skoleskyss",
               "skole-og-utdanning/grunnskole/skoleskyss",
@@ -1331,7 +1331,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/fylkesdelplan"
           ],
@@ -1355,7 +1355,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/personskadetrygd"
           ],
@@ -1381,7 +1381,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/samliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/samliv/samboerskap"
           ],
@@ -1407,7 +1407,7 @@
               "https://psi.norge.no/los/tema/arbeidsliv",
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/skolemiljo/innemiljo",
               "arbeid/arbeidsliv/innemiljo",
@@ -1436,7 +1436,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avfallshandtering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/avfallshandtering/kompostering"
           ],
@@ -1460,7 +1460,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/sertifisering-og-autorisasjon"
           ],
@@ -1485,7 +1485,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/priser-og-gebyr-for-bygg-og-eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/priser-og-gebyr-for-bygg-og-eiendom/renovasjonsavgift"
           ],
@@ -1511,7 +1511,7 @@
               "https://psi.norge.no/los/tema/var-og-klima",
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/skredvarsel",
               "samfunnssikkerhet-og-beredskap/varslingstjenester/skredvarsel"
@@ -1543,7 +1543,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/skogbruk"
           ],
@@ -1578,7 +1578,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/botilbud/trygde-og-servicebolig"
           ],
@@ -1604,7 +1604,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/rettssak"
           ],
@@ -1644,7 +1644,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/samliv"
           ],
@@ -1665,7 +1665,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/varslingstjenester/flyalarm"
           ],
@@ -1686,7 +1686,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnevern-og-foreldrestotte/barnevern"
           ],
@@ -1730,7 +1730,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/sosiale-tjenester"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning"
           ],
@@ -1751,7 +1751,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/fritidstilbud"
           ],
@@ -1777,7 +1777,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lotteri-og-pengespill"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/lotteri-og-pengespill/spilleautomat"
           ],
@@ -1805,7 +1805,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/samfunnsstraff"
           ],
@@ -1830,7 +1830,7 @@
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring",
               "https://psi.norge.no/los/tema/naringsutvikling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/stotte-til-bedrifter",
               "naring/naringsutvikling/stotte-til-bedrifter"
@@ -1854,7 +1854,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/pasientrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/pasientrettigheter/klage-pa-helse--og-omsorgstjenester"
           ],
@@ -1877,7 +1877,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bat-havn-og-kyst"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst/kystforvaltning"
           ],
@@ -1905,7 +1905,7 @@
               "https://psi.norge.no/los/tema/naturforvaltning",
               "https://psi.norge.no/los/tema/friluftsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/balbrenning",
               "kultur-idrett-og-fritid/friluftsliv/balbrenning"
@@ -1937,7 +1937,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/sosialhjelp"
           ],
@@ -1976,7 +1976,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hjelpemidler"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/hjelpemidler/hørselshjelpemidler"
           ],
@@ -1997,7 +1997,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/energi"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/energi/energimerking"
           ],
@@ -2018,7 +2018,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/bioteknologi"
           ],
@@ -2046,7 +2046,7 @@
               "https://psi.norge.no/los/tema/voksenopplaring",
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/etterutdanning-og-videreutdanning",
               "skole-og-utdanning/hoyere-utdanning/etterutdanning-og-videreutdanning"
@@ -2070,7 +2070,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/var-og-klima"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/klimatiltak"
           ],
@@ -2092,7 +2092,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/ferie-og-fridager",
               "skole-og-utdanning/grunnskole/ferie-og-fridager"
@@ -2114,7 +2114,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/trygghet-i-hjemmet"
           ],
@@ -2153,7 +2153,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/egenbetaling"
           ],
@@ -2177,7 +2177,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forurensning-og-straling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/vannforurensning"
           ],
@@ -2212,7 +2212,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/barnevern-og-foreldrestotte"
           ],
@@ -2233,7 +2233,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skatt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/skatt/betaling-av-skatt"
           ],
@@ -2260,7 +2260,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd"
           ],
@@ -2283,7 +2283,7 @@
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap"
           ],
@@ -2304,7 +2304,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/rehabilitering"
           ],
@@ -2327,7 +2327,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/energi"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/energi/energibruk"
           ],
@@ -2366,7 +2366,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon"
           ],
@@ -2400,7 +2400,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester"
           ],
@@ -2421,7 +2421,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/jakt-og-fangst"
           ],
@@ -2459,7 +2459,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/skogbrukstilskudd"
           ],
@@ -2481,7 +2481,7 @@
               "https://psi.norge.no/los/tema/botilbud",
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/botilbud/omsorgsbolig",
               "helse-og-omsorg/omsorgstjenester/omsorgsbolig"
@@ -2511,7 +2511,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/rus-og-avhengighet"
           ],
@@ -2533,7 +2533,7 @@
               "https://psi.norge.no/los/tema/brann",
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann/feiing",
               "bygg-og-eiendom/eiendom/feiing"
@@ -2561,7 +2561,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/fag--og-yrkesopplaring"
           ],
@@ -2591,7 +2591,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naring"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring"
           ],
@@ -2615,7 +2615,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/utlan-og-leie"
           ],
@@ -2636,7 +2636,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/namsmyndighet"
           ],
@@ -2666,7 +2666,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/seniortilbud"
           ],
@@ -2689,7 +2689,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/helsesykepleier"
           ],
@@ -2711,7 +2711,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/skolemiljo",
               "skole-og-utdanning/grunnskole/skolemiljo"
@@ -2734,7 +2734,7 @@
               "https://psi.norge.no/los/tema/arbeidsliv",
               "https://psi.norge.no/los/tema/arbeidssoking"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/arbeidstillatelse",
               "arbeid/arbeidssoking/arbeidstillatelse"
@@ -2760,7 +2760,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/bruksenhetsnummer"
           ],
@@ -2787,7 +2787,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/samliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/samliv/samlivsbrudd"
           ],
@@ -2818,7 +2818,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/blodgiving"
           ],
@@ -2844,7 +2844,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/yrkestransport"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/yrkestransport/persontransport"
           ],
@@ -2880,7 +2880,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/legehjelp"
           ],
@@ -2917,7 +2917,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/stottekontakt"
           ],
@@ -2950,7 +2950,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid/arbeidssoking"
           ],
@@ -2971,7 +2971,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/varslingstjenester/blaskjellvarsel"
           ],
@@ -2992,7 +2992,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnehage"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnehage/tilsyn-og-godkjenning-av-barnehager"
           ],
@@ -3013,7 +3013,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/tjenestepensjon"
           ],
@@ -3040,7 +3040,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/lotteri-og-pengespill"
           ],
@@ -3061,7 +3061,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forsvaret"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/forsvaret/repetisjonstjeneste"
           ],
@@ -3082,7 +3082,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/yrkesskadedekning"
           ],
@@ -3113,7 +3113,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/film-og-kino"
           ],
@@ -3140,7 +3140,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/permisjonsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/permisjonsordninger/utdanningspermisjon"
           ],
@@ -3163,7 +3163,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/reindrift"
           ],
@@ -3191,7 +3191,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/jordbrukstilskudd"
           ],
@@ -3212,7 +3212,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/akvakultur"
           ],
@@ -3240,7 +3240,7 @@
               "https://psi.norge.no/los/tema/omsorgstjenester",
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/bofellesskap",
               "sosiale-tjenester/botilbud/bofellesskap"
@@ -3264,7 +3264,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/flyktninger-og-beskyttelse"
           ],
@@ -3293,7 +3293,7 @@
               "https://psi.norge.no/los/tema/ekteskap",
               "https://psi.norge.no/los/tema/akutt-hjelp"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/samliv/krisesenter",
               "familie-og-barn/ekteskap/krisesenter",
@@ -3316,7 +3316,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/byggesak"
           ],
@@ -3381,7 +3381,7 @@
               "https://psi.norge.no/los/tema/lotteri-og-pengespill"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid"
           ],
@@ -3403,7 +3403,7 @@
               "https://psi.norge.no/los/tema/akutt-hjelp",
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/akutt-hjelp/hjelp-ved-overgrep",
               "familie-og-barn/barnevern-og-foreldrestotte/hjelp-ved-overgrep"
@@ -3433,7 +3433,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnehage"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnehage/barnehage-innhold-og-kvalitet"
           ],
@@ -3454,7 +3454,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/drivstoff-og-ladestasjoner"
           ],
@@ -3480,7 +3480,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/ferierettigheter"
           ],
@@ -3506,7 +3506,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/alderspensjon"
           ],
@@ -3543,7 +3543,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/avlosertilskudd"
           ],
@@ -3568,7 +3568,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/mobbing-i-skolen",
               "skole-og-utdanning/grunnskole/mobbing-i-skolen"
@@ -3590,7 +3590,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/broyting"
           ],
@@ -3616,7 +3616,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntekt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntekt/feriepenger"
           ],
@@ -3639,7 +3639,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/bevilling-og-tillatelser"
           ],
@@ -3670,7 +3670,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/hoyere-utdanning/samordna-opptak"
           ],
@@ -3713,7 +3713,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/grunnskole"
           ],
@@ -3734,7 +3734,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bibliotek"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/bibliotek/utlan-og-reservasjon"
           ],
@@ -3755,7 +3755,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hjelpemidler"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/hjelpemidler/bevegelseshjelpemidler"
           ],
@@ -3782,7 +3782,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/samfunnssikkerhet-og-beredskap"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/forsvaret"
           ],
@@ -3803,7 +3803,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/notarius-publicus"
           ],
@@ -3839,7 +3839,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/flytting"
           ],
@@ -3864,7 +3864,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid/inntekt"
           ],
@@ -3885,7 +3885,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/luftfart"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/luftfart/fly-og-helikopter"
           ],
@@ -3916,7 +3916,7 @@
               "https://psi.norge.no/los/tema/leie-og-utleie",
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/leie-og-utleie/kommunal-bolig",
               "sosiale-tjenester/botilbud/kommunal-bolig"
@@ -3947,7 +3947,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/yrkestransport"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/yrkestransport/godstransport"
           ],
@@ -3982,7 +3982,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/skolemiljo"
           ],
@@ -4003,7 +4003,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rus-og-avhengighet"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/rus-og-avhengighet/aktiviteter-og-livsmestring-for-rusavhengige"
           ],
@@ -4024,7 +4024,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/tilpasset-opplaring"
           ],
@@ -4048,7 +4048,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rus-og-avhengighet"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/rus-og-avhengighet/hjelp-ved-rusavhengighet"
           ],
@@ -4071,7 +4071,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/fraver"
           ],
@@ -4092,7 +4092,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/barnebidrag"
           ],
@@ -4116,7 +4116,7 @@
               "https://psi.norge.no/los/tema/skatt",
               "https://psi.norge.no/los/tema/priser-og-gebyr-for-bygg-og-eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/skatt/eiendomsskatt",
               "bygg-og-eiendom/priser-og-gebyr-for-bygg-og-eiendom/eiendomsskatt"
@@ -4138,7 +4138,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/pataleunnlatelse"
           ],
@@ -4159,7 +4159,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/lag-og-foreninger"
           ],
@@ -4187,7 +4187,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/organdonasjon"
           ],
@@ -4218,7 +4218,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/energi"
           ],
@@ -4243,7 +4243,7 @@
               "https://psi.norge.no/los/tema/inntekt"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid"
           ],
@@ -4264,7 +4264,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/adopsjon"
           ],
@@ -4292,7 +4292,7 @@
               "https://psi.norge.no/los/tema/personopplysninger",
               "https://psi.norge.no/los/tema/flytting"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger/flyttemelding",
               "bygg-og-eiendom/flytting/flyttemelding"
@@ -4320,7 +4320,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/piggdekk"
           ],
@@ -4352,7 +4352,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/skadedyr"
           ],
@@ -4391,7 +4391,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/botilbud/tilrettelagte-botilbud"
           ],
@@ -4414,7 +4414,7 @@
               "https://psi.norge.no/los/tema/veg-og-vegregulering",
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/yrkestransport/parkering-og-hvileplasser",
               "trafikk-og-transport/veg-og-vegregulering/parkering-og-hvileplasser",
@@ -4450,7 +4450,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/kiropraktikk"
           ],
@@ -4475,7 +4475,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidssoking"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidssoking/yrkesautorisasjon"
           ],
@@ -4500,7 +4500,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/tilsyn-og-kontroll-med-naringsvirksomhet"
           ],
@@ -4527,7 +4527,7 @@
               "https://psi.norge.no/los/tema/barnehage"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn"
           ],
@@ -4548,7 +4548,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bat-havn-og-kyst"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst/batplass"
           ],
@@ -4572,7 +4572,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/frikort-for-helsetjenester"
           ],
@@ -4601,7 +4601,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/dagpenger"
           ],
@@ -4629,7 +4629,7 @@
               "https://psi.norge.no/los/tema/pasientrettigheter",
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/pasientrettigheter/pasient-og-brukerombud",
               "helse-og-omsorg/omsorgstjenester/pasient-og-brukerombud"
@@ -4659,7 +4659,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/helsestasjon-for-ungdom"
           ],
@@ -4680,7 +4680,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/europeisk-helsetrygdkort"
           ],
@@ -4712,7 +4712,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/samfunnssikkerhet-og-beredskap"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/varslingstjenester"
           ],
@@ -4733,7 +4733,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/heftelser-i-motorvogn"
           ],
@@ -4754,7 +4754,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/apenhet"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/apenhet/innsynsrett"
           ],
@@ -4777,7 +4777,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/truckforerbevis"
           ],
@@ -4798,7 +4798,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/svangerskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/svangerskap/ufrivillig-barnloshet"
           ],
@@ -4835,7 +4835,7 @@
               "https://psi.norge.no/los/tema/eiendom"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom"
           ],
@@ -4857,7 +4857,7 @@
               "https://psi.norge.no/los/tema/var-og-klima",
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/varvarsel",
               "samfunnssikkerhet-og-beredskap/varslingstjenester/varvarsel"
@@ -4893,7 +4893,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/stonad-ved-arbeidsmarkedstiltak"
           ],
@@ -4931,7 +4931,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naring"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring/handel-og-service"
           ],
@@ -4952,7 +4952,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/voksenopplaring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/videregaende-skole-for-voksne"
           ],
@@ -4973,7 +4973,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/politikk-og-valg"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/politikk-og-valg/valg"
           ],
@@ -5023,7 +5023,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/kommunedelplan"
           ],
@@ -5044,7 +5044,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/handel-og-service"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/handel-og-service/offentlig-innkjop"
           ],
@@ -5069,7 +5069,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/apenhet"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/apenhet/elevrettigheter"
           ],
@@ -5095,7 +5095,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/barnehage"
           ],
@@ -5116,7 +5116,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/miljotilskudd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/miljotilskudd/tilskudd-til-miljotiltak"
           ],
@@ -5137,7 +5137,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/voksenopplaring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/norskopplaring"
           ],
@@ -5161,7 +5161,7 @@
               "https://psi.norge.no/los/tema/arbeidsliv",
               "https://psi.norge.no/los/tema/arbeidssoking"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/cv",
               "arbeid/arbeidssoking/cv"
@@ -5188,7 +5188,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/gangveg"
           ],
@@ -5217,7 +5217,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/tilskudd-til-okologisk-landbruk"
           ],
@@ -5242,7 +5242,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/pasientrettigheter"
           ],
@@ -5264,7 +5264,7 @@
               "https://psi.norge.no/los/tema/voksenopplaring",
               "https://psi.norge.no/los/tema/kvalifisering-til-arbeid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/introduksjonsprogram-for-innvandrere",
               "sosiale-tjenester/kvalifisering-til-arbeid/introduksjonsprogram-for-innvandrere"
@@ -5290,7 +5290,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/ekteskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/ekteskap/tvangsekteskap"
           ],
@@ -5311,7 +5311,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/arbeidsmiljo"
           ],
@@ -5360,7 +5360,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skatt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/skatt/skattemelding-for-formue-og-inntektsskatt"
           ],
@@ -5384,7 +5384,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avgift"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/arbeidsgiveravgift"
           ],
@@ -5412,7 +5412,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/vegnett"
           ],
@@ -5444,7 +5444,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/dodsfall-og-gravferd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd/gravferd"
           ],
@@ -5479,7 +5479,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/boplikt"
           ],
@@ -5508,7 +5508,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/apenhet"
           ],
@@ -5530,7 +5530,7 @@
               "https://psi.norge.no/los/tema/forurensning-og-straling",
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/stralevern",
               "helse-og-omsorg/folkehelse/stralevern"
@@ -5574,7 +5574,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering"
           ],
@@ -5597,7 +5597,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/gatelys"
           ],
@@ -5625,7 +5625,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/priser-og-gebyr-for-bygg-og-eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/priser-og-gebyr-for-bygg-og-eiendom/betalingssatser-for-kommunale-tjenester"
           ],
@@ -5646,7 +5646,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/dagtilbud"
           ],
@@ -5677,7 +5677,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/bibliotek"
           ],
@@ -5699,7 +5699,7 @@
               "https://psi.norge.no/los/tema/avlastning-og-stotte",
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/tilrettelagt-fritid",
               "kultur-idrett-og-fritid/fritid/tilrettelagt-fritid"
@@ -5730,7 +5730,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/oppmaling"
           ],
@@ -5782,7 +5782,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikkinformasjon"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/vegarbeid"
           ],
@@ -5807,7 +5807,7 @@
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning",
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/arbeidsavklaringspenger",
               "arbeid/inntektssikring/arbeidsavklaringspenger"
@@ -5842,7 +5842,7 @@
               "https://psi.norge.no/los/tema/trafikkinformasjon",
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/trafikksignaler-og-reguleringer",
               "trafikk-og-transport/veg-og-vegregulering/trafikksignaler-og-reguleringer"
@@ -5872,7 +5872,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/brann"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann/fyrverkeri"
           ],
@@ -5897,7 +5897,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/stonad-til-enslig-forsorger"
           ],
@@ -5922,7 +5922,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/forsorgingstillegg"
           ],
@@ -5944,7 +5944,7 @@
               "https://psi.norge.no/los/tema/avfallshandtering",
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/avfallshandtering/renovasjon",
               "bygg-og-eiendom/eiendom/renovasjon"
@@ -6000,7 +6000,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole"
           ],
@@ -6027,7 +6027,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/allergi"
           ],
@@ -6052,7 +6052,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikkinformasjon"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/bominformasjon"
           ],
@@ -6081,7 +6081,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/ernaring"
           ],
@@ -6116,7 +6116,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/fritidsfiske"
           ],
@@ -6142,7 +6142,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/oppholdstillatelse"
           ],
@@ -6173,7 +6173,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/luftfart"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/luftfart/lufthavn"
           ],
@@ -6203,7 +6203,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/akutt-hjelp"
           ],
@@ -6224,7 +6224,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/kulturbygg"
           ],
@@ -6252,7 +6252,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/vapentillatelse"
           ],
@@ -6280,7 +6280,7 @@
               "https://psi.norge.no/los/tema/samliv",
               "https://psi.norge.no/los/tema/ekteskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/samliv/vielse",
               "familie-og-barn/ekteskap/vielse"
@@ -6332,7 +6332,7 @@
               "https://psi.norge.no/los/tema/kultur",
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/bibliotek/bibliotektjenester",
               "kultur-idrett-og-fritid/kultur/bibliotektjenester",
@@ -6369,7 +6369,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/flytting"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/flytting/bostedsattest"
           ],
@@ -6393,7 +6393,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/tilrettelegging-pa-arbeidsplassen"
           ],
@@ -6428,7 +6428,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid/inntektssikring"
           ],
@@ -6450,7 +6450,7 @@
               "https://psi.norge.no/los/tema/avlastning-og-stotte",
               "https://psi.norge.no/los/tema/medvirkning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/tolketjeneste",
               "demokrati-og-innbyggerrettigheter/medvirkning/tolketjeneste"
@@ -6493,7 +6493,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud"
           ],
@@ -6518,7 +6518,7 @@
               "https://psi.norge.no/los/tema/forurensning-og-straling",
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/radonmaling",
               "helse-og-omsorg/folkehelse/radonmaling"
@@ -6540,7 +6540,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/medvirkning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/medvirkning/innbyggerforslag"
           ],
@@ -6562,7 +6562,7 @@
               "https://psi.norge.no/los/tema/avlastning-og-stotte",
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/stotte-til-familier",
               "familie-og-barn/barnevern-og-foreldrestotte/stotte-til-familier"
@@ -6596,7 +6596,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/arkiv"
           ],
@@ -6623,7 +6623,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/bostotte"
           ],
@@ -6651,7 +6651,7 @@
               "https://psi.norge.no/los/tema/inntektssikring",
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/gjenlevendepensjon",
               "familie-og-barn/familieytelser/gjenlevendepensjon"
@@ -6679,7 +6679,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bat-havn-og-kyst"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst/sjofart"
           ],
@@ -6702,7 +6702,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/idrettsmidler"
           ],
@@ -6735,7 +6735,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/ytelser-til-gjenlevende"
           ],
@@ -6756,7 +6756,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forsvaret"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/forsvaret/verneplikt"
           ],
@@ -6803,7 +6803,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat"
           ],
@@ -6824,7 +6824,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/botilbud/midlertidig-botilbud"
           ],
@@ -6845,7 +6845,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/standarder"
           ],
@@ -6866,7 +6866,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/studiefinansiering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/studiefinansiering/stipend"
           ],
@@ -6894,7 +6894,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/brann"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann/melding-om-overnatting"
           ],
@@ -6915,7 +6915,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/flysertifikat"
           ],
@@ -6945,7 +6945,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/samfunnssikkerhet-og-beredskap"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann"
           ],
@@ -6975,7 +6975,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/erstatningsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/erstatningsordninger/menerstatning"
           ],
@@ -6998,7 +6998,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/skoletilhorighet"
           ],
@@ -7028,7 +7028,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte"
           ],
@@ -7049,7 +7049,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/legemiddel"
           ],
@@ -7084,7 +7084,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/vaksine"
           ],
@@ -7108,7 +7108,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/brann"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann/bekymringsmelding-om-brannsikkerhet"
           ],
@@ -7129,7 +7129,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/okonomisk-radgiving"
           ],
@@ -7152,7 +7152,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/kommuneplan"
           ],
@@ -7187,7 +7187,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/reisebillett"
           ],
@@ -7230,7 +7230,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/dodsfall-og-gravferd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd/dodsattest"
           ],
@@ -7257,7 +7257,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikkinformasjon"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/sanntids-trafikkinformasjon"
           ],
@@ -7287,7 +7287,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/fylkesplan"
           ],
@@ -7311,7 +7311,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/melding-om-ulovlige-tiltak"
           ],
@@ -7333,7 +7333,7 @@
               "https://psi.norge.no/los/tema/skatt",
               "https://psi.norge.no/los/tema/inntekt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/skatt/skattekort",
               "arbeid/inntekt/skattekort"
@@ -7360,7 +7360,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/fysisk-aktivitet"
           ],
@@ -7388,7 +7388,7 @@
               "https://psi.norge.no/los/tema/forurensning-og-straling",
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/forurenset-grunn",
               "bygg-og-eiendom/bygging/forurenset-grunn"
@@ -7428,7 +7428,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lov-og-rett"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "lov-og-rett/erstatningsordninger"
           ],
@@ -7453,7 +7453,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/luftfart"
           ],
@@ -7474,7 +7474,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/vrakpant"
           ],
@@ -7507,7 +7507,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/familieytelser"
           ],
@@ -7538,7 +7538,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naring"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring/landbruk"
           ],
@@ -7563,7 +7563,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/sosiale-tjenester"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "sosiale-tjenester/kvalifisering-til-arbeid"
           ],
@@ -7584,7 +7584,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/kjoreseddel"
           ],
@@ -7611,7 +7611,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning"
           ],
@@ -7632,7 +7632,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/idrett"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/idrett/svommehall"
           ],
@@ -7658,7 +7658,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/skolehverdag"
           ],
@@ -7682,7 +7682,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/studiefinansiering"
           ],
@@ -7703,7 +7703,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/dyrehelse"
           ],
@@ -7726,7 +7726,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/medmorskap"
           ],
@@ -7754,7 +7754,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lov-og-rett"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff"
           ],
@@ -7775,7 +7775,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/smittevern"
           ],
@@ -7811,7 +7811,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnevern-og-foreldrestotte/fosterhjem"
           ],
@@ -7841,7 +7841,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/fredet-eiendom"
           ],
@@ -7869,7 +7869,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skatt-og-avgift"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skatt-og-avgift/avgift"
           ],
@@ -7890,7 +7890,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/nabovarsel"
           ],
@@ -7911,7 +7911,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/erstatningsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/erstatningsordninger/voldsoffererstatning"
           ],
@@ -7932,7 +7932,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/videregaende-opplaring"
           ],
@@ -7954,7 +7954,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/brukermedvirkning-i-skolen",
               "skole-og-utdanning/grunnskole/brukermedvirkning-i-skolen"
@@ -7992,7 +7992,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/eiendom"
           ],
@@ -8013,7 +8013,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/idrett"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/idrett/idrettsarrangement"
           ],
@@ -8034,7 +8034,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/kulturminner"
           ],
@@ -8067,7 +8067,7 @@
               "https://psi.norge.no/los/tema/avgift"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skatt-og-avgift"
           ],
@@ -8088,7 +8088,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/elbil"
           ],
@@ -8113,7 +8113,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/private-reguleringsplaner"
           ],
@@ -8149,7 +8149,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avfallshandtering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/avfallshandtering/returordninger"
           ],
@@ -8170,7 +8170,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/studiefinansiering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/studiefinansiering/studielan"
           ],
@@ -8198,7 +8198,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avfallshandtering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/avfallshandtering/farlig-avfall"
           ],
@@ -8239,7 +8239,7 @@
               "https://psi.norge.no/los/tema/akutt-hjelp"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg"
           ],
@@ -8260,7 +8260,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/mekling"
           ],
@@ -8292,7 +8292,7 @@
               "https://psi.norge.no/los/tema/avlastning-og-stotte",
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/omsorgsstonad",
               "helse-og-omsorg/avlastning-og-stotte/omsorgsstonad",
@@ -8323,7 +8323,7 @@
               "https://psi.norge.no/los/tema/var-og-klima",
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/flomvarsel",
               "samfunnssikkerhet-og-beredskap/varslingstjenester/flomvarsel"
@@ -8350,7 +8350,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/sykehus"
           ],
@@ -8383,7 +8383,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/alternativ-behandling"
           ],
@@ -8405,7 +8405,7 @@
               "https://psi.norge.no/los/tema/friluftsliv",
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/friluftsliv/friomrade",
               "natur-klima-og-miljo/naturforvaltning/friomrade"
@@ -8443,7 +8443,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnehage"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnehage/barnehageplass"
           ],
@@ -8475,7 +8475,7 @@
               "https://psi.norge.no/los/tema/inntektssikring",
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/sykepenger",
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/sykepenger"
@@ -8499,7 +8499,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/oppsigelse"
           ],
@@ -8528,7 +8528,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/eksamen"
           ],
@@ -8554,7 +8554,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/svangerskap"
           ],
@@ -8575,7 +8575,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/veterinar"
           ],
@@ -8596,7 +8596,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/sykefravar"
           ],
@@ -8634,7 +8634,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger"
           ],
@@ -8659,7 +8659,7 @@
               "https://psi.norge.no/los/tema/medvirkning"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter"
           ],
@@ -8680,7 +8680,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/deling-av-eiendom"
           ],
@@ -8701,7 +8701,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/personopplysninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger/fodselsattest"
           ],
@@ -8724,7 +8724,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/internasjonalt-batsertifikat"
           ],
@@ -8745,7 +8745,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/reisegaranti"
           ],
@@ -8774,7 +8774,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling"
           ],
@@ -8796,7 +8796,7 @@
               "https://psi.norge.no/los/tema/helsetjenester",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/skolehelsetjeneste",
               "skole-og-utdanning/grunnskole/skolehelsetjeneste"
@@ -8823,7 +8823,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/idrett"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/idrett/idrettsanlegg"
           ],
@@ -8866,7 +8866,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/priser-og-gebyr-for-bygg-og-eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/priser-og-gebyr-for-bygg-og-eiendom/gebyr-for-byggesak"
           ],
@@ -8897,7 +8897,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid"
           ],
@@ -8918,7 +8918,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/rettshjelp"
           ],
@@ -8948,7 +8948,7 @@
               "https://psi.norge.no/los/tema/personopplysninger",
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/samliv/personnavn",
               "demokrati-og-innbyggerrettigheter/personopplysninger/personnavn",
@@ -8985,7 +8985,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/seksjonering"
           ],
@@ -9010,7 +9010,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/uforetrygd"
           ],
@@ -9036,7 +9036,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/inkluderende-arbeidsliv"
           ],
@@ -9068,7 +9068,7 @@
               "https://psi.norge.no/los/tema/handel-og-service"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "naring"
           ],
@@ -9089,7 +9089,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/friluftsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/friluftsliv/badeplass"
           ],
@@ -9124,7 +9124,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/dodsfall-og-gravferd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd/gravplass"
           ],
@@ -9161,7 +9161,7 @@
               "https://psi.norge.no/los/tema/arbeidssoking",
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidssoking/arbeidsmarkedstiltak",
               "arbeid/arbeidsliv/arbeidsmarkedstiltak"
@@ -9193,7 +9193,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/tjenester-og-krav-til-enkeltbransjer"
           ],
@@ -9219,7 +9219,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/avfallshandtering"
           ],
@@ -9240,7 +9240,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/luftfart"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/luftfart/drone"
           ],
@@ -9264,7 +9264,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/motorferdsel-i-utmark"
           ],
@@ -9307,7 +9307,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/svangerskapspenger"
           ],
@@ -9328,7 +9328,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/utdannings--og-yrkesveiledning"
           ],
@@ -9349,7 +9349,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/ungdomsmidler"
           ],
@@ -9382,7 +9382,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/hjelpemidler"
           ],
@@ -9403,7 +9403,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/behandlingsreise"
           ],
@@ -9427,7 +9427,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/psykisk-helse"
           ],
@@ -9461,7 +9461,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/ergoterapi"
           ],
@@ -9484,7 +9484,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsutvikling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsutvikling/naringsareal"
           ],
@@ -9509,7 +9509,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/soke-skole"
           ],
@@ -9530,7 +9530,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/forelegg"
           ],
@@ -9556,7 +9556,7 @@
               "https://psi.norge.no/los/tema/miljotilskudd",
               "https://psi.norge.no/los/tema/friluftsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/tilskudd-til-friluftsliv",
               "natur-klima-og-miljo/miljotilskudd/tilskudd-til-friluftsliv",
@@ -9582,7 +9582,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/rapportering-for-naringsdrivende"
           ],
@@ -9605,7 +9605,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/anmeldelse"
           ],
@@ -9635,7 +9635,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/tilskudd-til-helse-og-eldre"
           ],
@@ -9662,7 +9662,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/viltforvaltning"
           ],
@@ -9725,7 +9725,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/helsetjenester"
           ],
@@ -9746,7 +9746,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/temaplan"
           ],
@@ -9770,7 +9770,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/hjemmehjelp"
           ],
@@ -9796,7 +9796,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/dodsfall-og-gravferd"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/dodsfall-og-gravferd/gravferdsstonad"
           ],
@@ -9821,7 +9821,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/kjop-og-salg"
           ],
@@ -9842,7 +9842,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/erstatningsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/erstatningsordninger/rettferdsvederlag"
           ],
@@ -9870,7 +9870,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/korttidsopphold"
           ],
@@ -9900,7 +9900,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/barnetrygd"
           ],
@@ -9924,7 +9924,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/vergemal"
           ],
@@ -9956,7 +9956,7 @@
               "https://psi.norge.no/los/tema/energi"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo"
           ],
@@ -9977,7 +9977,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/helsestasjon"
           ],
@@ -10021,7 +10021,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid/arbeidsliv"
           ],
@@ -10042,7 +10042,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/ledsagerbevis"
           ],
@@ -10066,7 +10066,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/ytelser-ved-sykdom-i-familien"
           ],
@@ -10097,7 +10097,7 @@
               "https://psi.norge.no/los/tema/avgift",
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/kommunale-avgifter-og-gebyr",
               "bygg-og-eiendom/eiendom/kommunale-avgifter-og-gebyr"
@@ -10144,7 +10144,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/tilskudd-til-tro-og-livssyn"
           ],
@@ -10170,7 +10170,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/syketransport"
           ],
@@ -10206,7 +10206,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avgift"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/merverdiavgift"
           ],
@@ -10233,7 +10233,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/utlan-og-leie"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/utlan-og-leie/fritidsutstyr"
           ],
@@ -10259,7 +10259,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "arbeid/permisjonsordninger"
           ],
@@ -10280,7 +10280,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/tilleggsstonader-til-arbeidsrettede-tiltak"
           ],
@@ -10301,7 +10301,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/brann"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/brann/branntilsyn"
           ],
@@ -10322,7 +10322,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/leie-og-utleie"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/leie-og-utleie/leieforhold"
           ],
@@ -10350,7 +10350,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forsvaret"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "samfunnssikkerhet-og-beredskap/forsvaret/sesjon"
           ],
@@ -10372,7 +10372,7 @@
               "https://psi.norge.no/los/tema/svangerskap",
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/svangerskap/svangerskapsomsorg",
               "helse-og-omsorg/helsetjenester/svangerskapsomsorg"
@@ -10416,7 +10416,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/planer"
           ],
@@ -10437,7 +10437,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/var-og-klima"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/klimakvote"
           ],
@@ -10465,7 +10465,7 @@
               "https://psi.norge.no/los/tema/kjoretoy",
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/firehjuling",
               "trafikk-og-transport/forerkort-og-sertifikat/firehjuling"
@@ -10497,7 +10497,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/idrett"
           ],
@@ -10521,7 +10521,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/medvirkning"
           ],
@@ -10542,7 +10542,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/naturvern"
           ],
@@ -10588,7 +10588,7 @@
               "https://psi.norge.no/los/tema/kjoretoy",
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/vannskuter",
               "trafikk-og-transport/forerkort-og-sertifikat/vannskuter"
@@ -10610,7 +10610,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/matlevering"
           ],
@@ -10644,7 +10644,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter"
           ],
@@ -10665,7 +10665,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hjelpemidler"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/hjelpemidler/synshjelpemidler"
           ],
@@ -10689,7 +10689,7 @@
               "https://psi.norge.no/los/tema/familieytelser",
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/barnepensjon",
               "arbeid/inntektssikring/barnepensjon"
@@ -10715,7 +10715,7 @@
               "https://psi.norge.no/los/tema/miljotilskudd",
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/friluftsliv/tilskudd-til-viltformal",
               "natur-klima-og-miljo/miljotilskudd/tilskudd-til-viltformal",
@@ -10740,7 +10740,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/permisjonsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/permisjonsordninger/velferdspermisjon"
           ],
@@ -10761,7 +10761,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/takster-og-kjopsinformasjon"
           ],
@@ -10787,7 +10787,7 @@
               "https://psi.norge.no/los/tema/voksenopplaring",
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/fjernundervisning",
               "skole-og-utdanning/hoyere-utdanning/fjernundervisning"
@@ -10809,7 +10809,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bibliotek"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/bibliotek/lanekort"
           ],
@@ -10831,7 +10831,7 @@
               "https://psi.norge.no/los/tema/veg-og-vegregulering",
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/miljovennlig-transport",
               "trafikk-og-transport/mobilitetstilbud/miljovennlig-transport"
@@ -10853,7 +10853,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/menneskerettigheter"
           ],
@@ -10877,7 +10877,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygging"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/melding-om-bygging"
           ],
@@ -10898,7 +10898,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/batforerbevis"
           ],
@@ -10922,7 +10922,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/permittering"
           ],
@@ -10945,7 +10945,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjop-og-salg"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/kjop-og-salg/eiendomsomsetning"
           ],
@@ -10986,7 +10986,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/politikk-og-valg"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/politikk-og-valg/politiske-partier"
           ],
@@ -11012,7 +11012,7 @@
               "https://psi.norge.no/los/tema/landbruk",
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/vegbygging",
               "trafikk-og-transport/veg-og-vegregulering/vegbygging"
@@ -11058,7 +11058,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skatt"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/skatt/skatteattest"
           ],
@@ -11079,7 +11079,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/forerkort"
           ],
@@ -11125,7 +11125,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/personlig-assistent"
           ],
@@ -11151,7 +11151,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/hoyere-utdanning/fagskoleutdanning"
           ],
@@ -11177,7 +11177,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/akutt-hjelp"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/akutt-hjelp/livskriser"
           ],
@@ -11198,7 +11198,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/personopplysninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger/politiattest"
           ],
@@ -11225,7 +11225,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/miljotilskudd"
           ],
@@ -11246,7 +11246,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/allemannsrett"
           ],
@@ -11271,7 +11271,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/foreldre-og-foresatte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/farskapserklaring"
           ],
@@ -11295,7 +11295,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/domstol"
           ],
@@ -11354,7 +11354,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/sosiale-tjenester"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "sosiale-tjenester/botilbud"
           ],
@@ -11375,7 +11375,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/likestilling"
           ],
@@ -11398,7 +11398,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/idrett"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/idrett/idrettslag"
           ],
@@ -11425,7 +11425,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/leie-og-utleie"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/leie-og-utleie/tomtefeste"
           ],
@@ -11450,7 +11450,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/forurensning-og-straling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/luftkvalitet"
           ],
@@ -11489,7 +11489,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/arbeidsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/arbeidsliv/arbeidsgiver"
           ],
@@ -11537,7 +11537,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/natur-klima-og-miljo"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning"
           ],
@@ -11561,7 +11561,7 @@
               "https://psi.norge.no/los/tema/barnehage",
               "https://psi.norge.no/los/tema/videregaende-skole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/pedagogisk-psykologisk-tjeneste",
               "skole-og-utdanning/voksenopplaring/pedagogisk-psykologisk-tjeneste",
@@ -11593,7 +11593,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bat-havn-og-kyst"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst/havn"
           ],
@@ -11619,7 +11619,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avgift"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/dokumentavgift"
           ],
@@ -11650,7 +11650,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid"
           ],
@@ -11671,7 +11671,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/gift"
           ],
@@ -11701,7 +11701,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rus-og-avhengighet"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/rus-og-avhengighet/spilleavhengighet"
           ],
@@ -11730,7 +11730,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/karakterer-og-evaluering",
               "skole-og-utdanning/grunnskole/karakterer-og-evaluering"
@@ -11752,7 +11752,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/svangerskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/svangerskap/prevensjon"
           ],
@@ -11775,7 +11775,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/voksenopplaring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/voksenopplaring/grunnskole-for-voksne"
           ],
@@ -11809,7 +11809,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lov-og-rett"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "lov-og-rett/rettsvesen"
           ],
@@ -11846,7 +11846,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/folkehelse"
           ],
@@ -11868,7 +11868,7 @@
               "https://psi.norge.no/los/tema/foreldre-og-foresatte",
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/foreldre-og-foresatte/ytelser-til-foreldre-og-foresatte",
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/ytelser-til-foreldre-og-foresatte"
@@ -11921,7 +11921,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skole-og-utdanning"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skole-og-utdanning/hoyere-utdanning"
           ],
@@ -11942,7 +11942,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikkinformasjon"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/trafikkinformasjon/veg--og-foreforhold"
           ],
@@ -11970,7 +11970,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/rettighetsregister"
           ],
@@ -11996,7 +11996,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/friluftsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/friluftsliv/turloyper"
           ],
@@ -12032,7 +12032,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/friskliv-og-mestring"
           ],
@@ -12061,7 +12061,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur-idrett-og-fritid"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "kultur-idrett-og-fritid/friluftsliv"
           ],
@@ -12082,7 +12082,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/kjoretoy/registrering-av-kjoretoy"
           ],
@@ -12116,7 +12116,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/fengselshelsetjeneste"
           ],
@@ -12137,7 +12137,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hjelpemidler"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/hjelpemidler/kommunikasjon-og-kognisjon"
           ],
@@ -12161,7 +12161,7 @@
               "https://psi.norge.no/los/tema/helsetjenester",
               "https://psi.norge.no/los/tema/omsorgstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/hjemmesykepleie",
               "helse-og-omsorg/omsorgstjenester/hjemmesykepleie"
@@ -12190,7 +12190,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/svangerskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/svangerskap/abort"
           ],
@@ -12214,7 +12214,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/ekteskap"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/ekteskap/separasjon-og-skilsmisse"
           ],
@@ -12235,7 +12235,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/frivilligsentral"
           ],
@@ -12263,7 +12263,7 @@
               "https://psi.norge.no/los/tema/erstatningsordninger"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "lov-og-rett"
           ],
@@ -12290,7 +12290,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst"
           ],
@@ -12312,7 +12312,7 @@
               "https://psi.norge.no/los/tema/rus-og-avhengighet",
               "https://psi.norge.no/los/tema/idrett"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/rus-og-avhengighet/doping",
               "kultur-idrett-og-fritid/idrett/doping"
@@ -12337,7 +12337,7 @@
               "https://psi.norge.no/los/tema/eiendom",
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/privat-vei",
               "trafikk-og-transport/veg-og-vegregulering/privat-vei"
@@ -12364,7 +12364,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/bot"
           ],
@@ -12387,7 +12387,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskuddsordninger-for-naring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/tilskuddsordninger-for-naring/produksjonstilskudd"
           ],
@@ -12408,7 +12408,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/rettsvesen"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/rettsvesen/dom"
           ],
@@ -12441,7 +12441,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/folkehelse/tobakk"
           ],
@@ -12472,7 +12472,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/slektsforskning"
           ],
@@ -12496,7 +12496,7 @@
               "https://psi.norge.no/los/tema/kultur",
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/musikk-og-kulturskole",
               "kultur-idrett-og-fritid/fritid/musikk-og-kulturskole"
@@ -12528,7 +12528,7 @@
               "https://psi.norge.no/los/tema/forurensning-og-straling",
               "https://psi.norge.no/los/tema/folkehelse"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/forurensning-og-straling/stoy",
               "helse-og-omsorg/folkehelse/stoy"
@@ -12567,7 +12567,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helse-og-omsorg"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte"
           ],
@@ -12588,7 +12588,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/utenlandsk-bedrift"
           ],
@@ -12614,7 +12614,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familie-og-barn"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "familie-og-barn/ekteskap"
           ],
@@ -12639,7 +12639,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/leie-og-utleie"
           ],
@@ -12660,7 +12660,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/omsorgsavlastning"
           ],
@@ -12687,7 +12687,7 @@
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat",
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/beltekjoretoy",
               "trafikk-og-transport/kjoretoy/beltekjoretoy"
@@ -12715,7 +12715,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/inntektssikring"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "arbeid/inntektssikring/pensjonskalkulator"
           ],
@@ -12739,7 +12739,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/rehabiliteringspenger"
           ],
@@ -12762,7 +12762,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/okonomiske-ytelser-og-radgivning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/okonomiske-ytelser-og-radgivning/ventelonn"
           ],
@@ -12790,7 +12790,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/vegvedlikehold"
           ],
@@ -12824,7 +12824,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/energi"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/energi/fornybar-energi"
           ],
@@ -12861,7 +12861,7 @@
               "https://psi.norge.no/los/tema/var-og-klima",
               "https://psi.norge.no/los/tema/varslingstjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/skogbrannvarsel",
               "samfunnssikkerhet-og-beredskap/varslingstjenester/skogbrannvarsel"
@@ -12886,7 +12886,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/grunnskole"
           ],
@@ -12936,7 +12936,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/tilrettelagt-arbeidstilbud"
           ],
@@ -12960,7 +12960,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/sarskilt-sprakopplaring"
           ],
@@ -12981,7 +12981,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/hoyere-utdanning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/hoyere-utdanning/hogskole-og-universitet"
           ],
@@ -13008,7 +13008,7 @@
               "https://psi.norge.no/los/tema/omsorgstjenester",
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/omsorgstjenester/tilrettelagt-transport",
               "trafikk-og-transport/mobilitetstilbud/tilrettelagt-transport"
@@ -13039,7 +13039,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naturforvaltning"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/vassdrag"
           ],
@@ -13067,7 +13067,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/museum"
           ],
@@ -13095,7 +13095,7 @@
               "https://psi.norge.no/los/tema/videregaende-skole",
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/videregaende-skole/permisjon-og-fritak",
               "skole-og-utdanning/grunnskole/permisjon-og-fritak"
@@ -13117,7 +13117,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/narmiljotilskudd"
           ],
@@ -13145,7 +13145,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/hjemmeundervisning"
           ],
@@ -13166,7 +13166,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/barnevern-og-foreldrestotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/barnevern-og-foreldrestotte/besokshjem"
           ],
@@ -13191,7 +13191,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsutvikling"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsutvikling/naringsklynger"
           ],
@@ -13212,7 +13212,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/lokasjonstjenester"
           ],
@@ -13236,7 +13236,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/avlastning-og-stotte"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/avlastning-og-stotte/radgivning-og-kurs"
           ],
@@ -13260,7 +13260,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/tannhelsetjeneste"
           ],
@@ -13294,7 +13294,7 @@
               "https://psi.norge.no/los/tema/bygging",
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/bygging/gravemelding",
               "trafikk-og-transport/veg-og-vegregulering/gravemelding"
@@ -13320,7 +13320,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/tjenester-og-krav-til-arbeidsgiver"
           ],
@@ -13341,7 +13341,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/helsetjenester"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "helse-og-omsorg/helsetjenester/fysioterapi"
           ],
@@ -13368,7 +13368,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/fritid/dyrehold"
           ],
@@ -13392,7 +13392,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/lovbrudd-og-straff"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/lovbrudd-og-straff/soning"
           ],
@@ -13418,7 +13418,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/tilskudd-til-kultur-idrett-og-fritid"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/tilskudd-til-kultur-idrett-og-fritid/kulturmidler"
           ],
@@ -13465,7 +13465,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/kontantstotte"
           ],
@@ -13488,7 +13488,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/patent-design-og-varemerke"
           ],
@@ -13515,7 +13515,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/erstatningsordninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/erstatningsordninger/naturskadeerstatning"
           ],
@@ -13536,7 +13536,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/adressetildeling"
           ],
@@ -13566,7 +13566,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/innbyggerrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/innbyggerrettigheter/statsborgerskap"
           ],
@@ -13589,7 +13589,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/erstatningsordninger-i-landbruket"
           ],
@@ -13612,7 +13612,7 @@
               "https://psi.norge.no/los/tema/botilbud"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "sosiale-tjenester"
           ],
@@ -13637,7 +13637,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/yrkestransport"
           ],
@@ -13658,7 +13658,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/grunnskole"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skole-og-utdanning/grunnskole/skolefritidsordning"
           ],
@@ -13683,7 +13683,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/reguleringsplan"
           ],
@@ -13723,7 +13723,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/politikk-og-valg"
           ],
@@ -13745,7 +13745,7 @@
               "https://psi.norge.no/los/tema/naturforvaltning",
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/naturforvaltning/plantedyrking",
               "naring/landbruk/plantedyrking"
@@ -13791,7 +13791,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bat-havn-og-kyst"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/bat-havn-og-kyst/sjosikkerhet"
           ],
@@ -13814,7 +13814,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/landbruk"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/landbruk/landbrukseiendom"
           ],
@@ -13846,7 +13846,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/naringsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/naringsliv/starte-eller-avslutte-bedrift"
           ],
@@ -13870,7 +13870,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/utlan-og-leie"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/utlan-og-leie/lokaler-og-idrettsanlegg"
           ],
@@ -13891,7 +13891,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/personopplysninger"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "demokrati-og-innbyggerrettigheter/personopplysninger/fodselsnummer"
           ],
@@ -13916,7 +13916,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/eiendom"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/eiendom/heftelser-pa-eiendom"
           ],
@@ -13938,7 +13938,7 @@
               "https://psi.norge.no/los/tema/erstatningsordninger",
               "https://psi.norge.no/los/tema/pasientrettigheter"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "lov-og-rett/erstatningsordninger/pasientskadeerstatning",
               "helse-og-omsorg/pasientrettigheter/pasientskadeerstatning"
@@ -13976,7 +13976,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/bygg-og-eiendom"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "bygg-og-eiendom/bygging"
           ],
@@ -13997,7 +13997,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/botilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "sosiale-tjenester/botilbud/akuttovernatting"
           ],
@@ -14025,7 +14025,7 @@
               "https://psi.norge.no/los/tema/veg-og-vegregulering"
           ],
           "parents": null,
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport"
           ],
@@ -14046,7 +14046,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/mobilitetstilbud"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/mobilitetstilbud/ruteinformasjon"
           ],
@@ -14102,7 +14102,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/trafikk-og-transport"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "trafikk-og-transport/kjoretoy"
           ],
@@ -14124,7 +14124,7 @@
               "https://psi.norge.no/los/tema/veg-og-vegregulering",
               "https://psi.norge.no/los/tema/friluftsliv"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/veg-og-vegregulering/sykkel",
               "kultur-idrett-og-fritid/friluftsliv/sykkel"
@@ -14155,7 +14155,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/var-og-klima"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "natur-klima-og-miljo/var-og-klima/klima"
           ],
@@ -14191,7 +14191,7 @@
               "https://psi.norge.no/los/tema/forerkort-og-sertifikat",
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "trafikk-og-transport/forerkort-og-sertifikat/snoskuter",
               "trafikk-og-transport/kjoretoy/snoskuter"
@@ -14215,7 +14215,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/kultur"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "kultur-idrett-og-fritid/kultur/kulturtilbud"
           ],
@@ -14242,7 +14242,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/planer"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "bygg-og-eiendom/planer/regional-planlegging"
           ],
@@ -14271,7 +14271,7 @@
               "https://psi.norge.no/los/tema/avgift",
               "https://psi.norge.no/los/tema/kjoretoy"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "skatt-og-avgift/avgift/motorvognavgifter",
               "trafikk-og-transport/kjoretoy/motorvognavgifter"
@@ -14312,7 +14312,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/skatt-og-avgift"
           ],
-          "isTema": true,
+          "isTheme": true,
           "losPaths": [
               "skatt-og-avgift/skatt"
           ],
@@ -14333,7 +14333,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/familieytelser"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "familie-og-barn/familieytelser/ytelser-ved-svangerskap-fodsel-og-adopsjon"
           ],
@@ -14365,7 +14365,7 @@
           "parents": [
               "https://psi.norge.no/los/tema/handel-og-service"
           ],
-          "isTema": false,
+          "isTheme": false,
           "losPaths": [
               "naring/handel-og-service/produktsikkerhet"
           ],
@@ -14384,7 +14384,7 @@
           "relatedTerms": null,
           "tema": false
       }
-  ],
+  ]},
   "headers" : {
         "Content-Type" : "application/json;charset=UTF-8" 
     }

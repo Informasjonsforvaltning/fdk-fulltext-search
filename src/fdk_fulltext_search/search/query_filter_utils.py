@@ -19,10 +19,6 @@ def get_field_by_filter_key(filter_key: str) -> str:
         return "spatial.prefLabel.no.keyword"
     elif filter_key == "uri":
         return "uri.keyword"
-    elif filter_key == "formats":
-        return "mediaType.keyword"
-    elif filter_key == "datasetMediaType":
-        return "distribution.mediaType.code.keyword"
     else:
         return filter_key
 
@@ -132,9 +128,7 @@ def collection_filter(filter_obj: Dict) -> Dict[str, Dict]:
     )
 
     clause = "should"
-    if (get_field_by_filter_key("datasetMediaType") == filter_obj["field"]) or (
-        get_field_by_filter_key("formats") == filter_obj["field"]
-    ):
+    if get_field_by_filter_key("formats") == filter_obj["field"]:
         clause = "must"
 
     if "operator" in filter_obj:

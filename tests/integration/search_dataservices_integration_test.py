@@ -37,8 +37,8 @@ class TestDataServiceSearch:
         agg_keys = aggregations.keys()
         assert "orgPath" in agg_keys
         assert len(aggregations["orgPath"]["buckets"]) > 0
-        assert "formats" in agg_keys
-        assert len(aggregations["formats"]["buckets"]) > 0
+        assert "format" in agg_keys
+        assert len(aggregations["format"]["buckets"]) > 0
 
     @pytest.mark.integration
     def test_should_have_correct_size_and_page(
@@ -88,6 +88,27 @@ class TestDataServiceSearch:
         assert len(result_json_hits) == 5
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
+
+    @pytest.mark.integration
+    def test_should_filter_on_fdk_format(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
+        body = {
+            "filters": [
+                {
+                    "collection": {
+                        "field": "fdkFormatPrefixed",
+                        "values": ["MEDIA_TYPE application/rdf+xml"],
+                    }
+                }
+            ]
+        }
+        result = client.post(data_services_url, json=body)
+        assert result.status_code == 200
+        result_json_hits = result.json["hits"]
+        assert len(result_json_hits) == 1
+        for hit in result_json_hits:
+            assert "application/rdf+xml" == hit["fdkFormat"][0]["code"]
 
     @pytest.mark.integration
     def test_get_single_data_service_with_id_search(

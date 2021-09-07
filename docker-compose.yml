@@ -1,7 +1,7 @@
 version: "3"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -9,7 +9,6 @@ services:
       - cluster.name=elasticsearch
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
   servicesmock:
     image: rodolpheche/wiremock
@@ -37,6 +36,7 @@ services:
         - MODEL_HARVESTER_URI=http://servicesmock:8080/infomodel
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
         - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
+        - NEW_REFERENCE_DATA_BASE_URI=http://servicesmock:8080/new-reference-data
         - FDK_SERVICE_HARVESTER_URI=http://servicemock:8080
         - FDK_EVENT_HARVESTER_URI=http://servicemock:8080
         - FDK_CONCEPT_HARVESTER_URI=http://servicesmock:8080/concept

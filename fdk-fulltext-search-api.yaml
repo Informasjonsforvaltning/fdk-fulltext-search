@@ -527,7 +527,7 @@ components:
           type: array
           items:
             type: string
-        isTema:
+        isTheme:
           type: boolean
         losPaths:
           type: array
