@@ -80,7 +80,7 @@ def associated_broader_types_by_events_aggregation() -> Dict[str, Dict]:
 
 
 def fdk_format_aggregation() -> Dict[str, Dict]:
-    return {"terms": {"field": "fdkFormatPrefixed", "size": 1000000000}}
+    return {"terms": {"field": "fdkFormatPrefixed.keyword", "size": 1000000000}}
 
 
 def get_aggregation_term_for_key(

@@ -184,7 +184,12 @@ class TestDataSetSearch:
     ):
         body = {
             "filters": [
-                {"collection": {"field": "fdkFormatPrefixed", "values": ["UNKNOWN"]}}
+                {
+                    "collection": {
+                        "field": "fdkFormatPrefixed.keyword",
+                        "values": ["UNKNOWN"],
+                    }
+                }
             ]
         }
         result = client.post(datasets_url, json=body)

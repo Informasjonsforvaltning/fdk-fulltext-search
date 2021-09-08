@@ -10,6 +10,7 @@ services:
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=false
       - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms2G -Xmx2G
   servicesmock:
     image: rodolpheche/wiremock
     ports:
