@@ -9,13 +9,14 @@ import traceback
 from typing import Any, Dict, Generator, Optional, Union
 
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import BulkIndexError
 import fdk_rdf_parser
 import requests
 from requests import HTTPError, RequestException, Timeout
 import simplejson
 
-from .utils import IndicesKey
+from .utils import IndicesKey, PipelinesKey
 
 ES_HOST = os.getenv("ELASTIC_HOST", "localhost")
 ES_PORT = os.getenv("ELASTIC_PORT", "9200")
@@ -206,13 +207,17 @@ def fetch_data_sets() -> Dict[str, Union[str, int]]:
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.DATA_SETS}-{os.urandom(4).hex()}"
 
+            create_or_update_dataset_pipeline(PipelinesKey.DATA_SETS)
             create_error = create_index(IndicesKey.DATA_SETS, new_index_name)
             if create_error:
                 return create_error
 
             logging.info("ingesting parsed datasets")
             result = elasticsearch_ingest_from_harvester(
-                parsed_rdf, new_index_name, IndicesKey.DATA_SETS_ID_KEY
+                parsed_rdf,
+                new_index_name,
+                IndicesKey.DATA_SETS_ID_KEY,
+                PipelinesKey.DATA_SETS,
             )
 
             alias_error = set_alias_for_new_index(IndicesKey.DATA_SETS, new_index_name)
@@ -251,13 +256,17 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.DATA_SERVICES}-{os.urandom(4).hex()}"
 
+            create_or_update_dataservice_pipeline(PipelinesKey.DATA_SERVICES)
             create_error = create_index(IndicesKey.DATA_SERVICES, new_index_name)
             if create_error:
                 return create_error
 
             logging.info("ingesting parsed data services")
             result = elasticsearch_ingest_from_harvester(
-                parsed_rdf, new_index_name, IndicesKey.DATA_SERVICES_ID_KEY
+                parsed_rdf,
+                new_index_name,
+                IndicesKey.DATA_SERVICES_ID_KEY,
+                PipelinesKey.DATA_SERVICES,
             )
 
             alias_error = set_alias_for_new_index(
@@ -389,11 +398,13 @@ def fetch_events() -> Dict[str, Union[str, int]]:
         return result
 
 
-def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str) -> Any:
+def elasticsearch_ingest_from_harvester(
+    documents: Any, index: str, id_key: str, pipeline: str = None
+) -> Any:
     try:
         result = helpers.bulk(
             client=es_client,
-            actions=yield_documents_from_harvester(documents, index, id_key),
+            actions=yield_documents_from_harvester(documents, index, id_key, pipeline),
         )
 
         return result
@@ -404,17 +415,22 @@ def elasticsearch_ingest_from_harvester(documents: Any, index: str, id_key: str)
 
 
 def yield_documents_from_harvester(
-    documents: Any, index: str, id_key: str
+    documents: Any, index: str, id_key: str, pipeline: str = None
 ) -> Generator:
     """get docs from harvester responses"""
     for doc_index in documents:
-        yield {
+        doc = {
             "_index": index,
             "_id": documents[doc_index].id,
             "_source": simplejson.dumps(
                 asdict(documents[doc_index]), iterable_as_array=True
             ),
         }
+
+        if pipeline:
+            doc["pipeline"] = pipeline
+
+        yield doc
 
 
 def create_index(
@@ -492,3 +508,77 @@ def init_info_doc(index_name: str, now: str) -> None:
     if not es_client.indices.exists("info"):
         es_client.indices.create(index="info")
     es_client.index(index="info", body=init_doc)
+
+
+def create_or_update_dataset_pipeline(pipeline_id: str) -> None:
+    try:
+        es_client.ingest.get_pipeline(pipeline_id)
+        es_client.ingest.delete_pipeline(pipeline_id)
+    except NotFoundError:
+        pass
+
+    es_client.ingest.put_pipeline(
+        pipeline_id,
+        {
+            "processors": [
+                {
+                    "script": {
+                        "description": "Concatinate fdkFormat type and code",
+                        "lang": "painless",
+                        "source": """
+                        ArrayList formats = new ArrayList();
+                        if(ctx['distribution'] != null){
+                            for (Map distr : ctx['distribution']) {
+                                if(distr['fdkFormat'] != null){
+                                    for (Map fmt : distr['fdkFormat']) {
+                                        if(fmt['fdkType'] == 'UNKNOWN') {
+                                            formats.add('UNKNOWN')
+                                        } else {
+                                            formats.add(fmt['fdkType'] + ' ' + fmt['code'])
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        ctx["fdkFormatPrefixed"] = formats
+                      """,
+                    }
+                }
+            ]
+        },
+    )
+
+
+def create_or_update_dataservice_pipeline(pipeline_id: str) -> None:
+    try:
+        es_client.ingest.get_pipeline(pipeline_id)
+        es_client.ingest.delete_pipeline(pipeline_id)
+    except NotFoundError:
+        pass
+
+    es_client.ingest.put_pipeline(
+        pipeline_id,
+        {
+            "processors": [
+                {
+                    "script": {
+                        "description": "Concatinate fdkFormat type and code",
+                        "lang": "painless",
+                        "source": """
+                        ArrayList formats = new ArrayList();
+                        if(ctx['fdkFormat'] != null){
+                            for (Map fmt : ctx['fdkFormat']) {
+                                if(fmt['fdkType'] == 'UNKNOWN') {
+                                    formats.add('UNKNOWN')
+                                } else {
+                                    formats.add(fmt['fdkType'] + ' ' + fmt['code'])
+                                }
+                            }
+                        }
+                        ctx["fdkFormatPrefixed"] = formats
+                      """,
+                    }
+                }
+            ]
+        },
+    )

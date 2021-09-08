@@ -1,13 +1,5 @@
 {
     "mappings": {
-        "runtime": {
-            "fdkFormatPrefixed": {
-                "type": "keyword",
-                "script": {
-                    "source": "if (doc['distribution.fdkFormat.fdkType'].size() > 0){ if(doc['distribution.fdkFormat.fdkType'].value == 'UNKNOWN') {emit('UNKNOWN')} else {emit(doc['distribution.fdkFormat.fdkType'].value + ' ' + doc['distribution.fdkFormat.code'].value)}}"
-                }
-            }
-        },
         "properties": {
             "euTheme": {
                 "type": "alias",

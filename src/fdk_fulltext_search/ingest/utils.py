@@ -16,3 +16,8 @@ class IndicesKey:
     EVENTS = "events"
     EVENTS_ID_KEY = "id"
     PUBLIC_SERVICES_AND_EVENTS_ALIAS = "public_services_and_events"
+
+
+class PipelinesKey:
+    DATA_SETS = "dataset_pipeline"
+    DATA_SERVICES = "dataservice_pipeline"

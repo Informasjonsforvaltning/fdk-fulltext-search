@@ -97,7 +97,7 @@ class TestDataServiceSearch:
             "filters": [
                 {
                     "collection": {
-                        "field": "fdkFormatPrefixed",
+                        "field": "fdkFormatPrefixed.keyword",
                         "values": ["MEDIA_TYPE application/rdf+xml"],
                     }
                 }
@@ -106,9 +106,11 @@ class TestDataServiceSearch:
         result = client.post(data_services_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json["hits"]
-        assert len(result_json_hits) == 1
-        for hit in result_json_hits:
-            assert "application/rdf+xml" == hit["fdkFormat"][0]["code"]
+        assert len(result_json_hits) == 3
+        assert any(
+            "application/rdf+xml" == hit["fdkFormat"][0]["code"]
+            for hit in result_json_hits
+        )
 
     @pytest.mark.integration
     def test_get_single_data_service_with_id_search(

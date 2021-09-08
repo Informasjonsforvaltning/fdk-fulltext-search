@@ -215,6 +215,18 @@ def mock_ingest_from_harvester(mocker):
 
 
 @pytest.fixture
+def mock_create_or_update_dataset_pipeline(mocker):
+    return mocker.patch("fdk_fulltext_search.ingest.create_or_update_dataset_pipeline")
+
+
+@pytest.fixture
+def mock_create_or_update_dataservice_pipeline(mocker):
+    return mocker.patch(
+        "fdk_fulltext_search.ingest.create_or_update_dataservice_pipeline"
+    )
+
+
+@pytest.fixture
 def mock_get(mocker):
     return mocker.patch(
         "fdk_fulltext_search.ingest.requests.get", side_effect=mocked_requests_get

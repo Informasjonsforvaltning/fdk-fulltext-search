@@ -695,7 +695,7 @@ def test_information_model_should_return_query_with_must_not_for_missing():
 @pytest.mark.unit
 def test_dataset_default_aggregations():
     expected_aggs = {
-        "format": {"terms": {"field": "fdkFormatPrefixed", "size": 1000000000}},
+        "format": {"terms": {"field": "fdkFormatPrefixed.keyword", "size": 1000000000}},
         "los": {"terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}},
         "provenance": {"terms": {"field": "provenance.code.keyword"}},
         "orgPath": {
@@ -760,7 +760,9 @@ def test_dataset_empty_query():
             }
         },
         "aggs": {
-            "format": {"terms": {"field": "fdkFormatPrefixed", "size": 1000000000}},
+            "format": {
+                "terms": {"field": "fdkFormatPrefixed.keyword", "size": 1000000000}
+            },
             "los": {
                 "terms": {"field": "losTheme.losPaths.keyword", "size": 1000000000}
             },
