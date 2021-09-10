@@ -90,7 +90,7 @@ class TestDataServiceSearch:
             assert org_path in hit["publisher"]["orgPath"]
 
     @pytest.mark.integration
-    def test_should_filter_on_fdk_format(
+    def test_should_filter_on_fdk_format_of_type_media_type(
         self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
         body = {
@@ -98,7 +98,7 @@ class TestDataServiceSearch:
                 {
                     "collection": {
                         "field": "fdkFormatPrefixed.keyword",
-                        "values": ["MEDIA_TYPE application/rdf+xml"],
+                        "values": ["MEDIA_TYPE rdf+xml"],
                     }
                 }
             ]
@@ -111,6 +111,26 @@ class TestDataServiceSearch:
             "application/rdf+xml" == hit["fdkFormat"][0]["code"]
             for hit in result_json_hits
         )
+
+    @pytest.mark.integration
+    def test_should_filter_on_fdk_format_of_type_file_type(
+        self, client: Flask, docker_service, api, wait_for_datasets_ready
+    ):
+        body = {
+            "filters": [
+                {
+                    "collection": {
+                        "field": "fdkFormatPrefixed.keyword",
+                        "values": ["FILE_TYPE 7Z"],
+                    }
+                }
+            ]
+        }
+        result = client.post(data_services_url, json=body)
+        assert result.status_code == 200
+        result_json_hits = result.json["hits"]
+        assert len(result_json_hits) == 1
+        assert any("7Z" == hit["fdkFormat"][0]["code"] for hit in result_json_hits)
 
     @pytest.mark.integration
     def test_get_single_data_service_with_id_search(

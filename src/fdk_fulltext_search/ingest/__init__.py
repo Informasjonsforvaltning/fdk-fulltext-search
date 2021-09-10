@@ -531,10 +531,10 @@ def create_or_update_dataset_pipeline(pipeline_id: str) -> None:
                             for (Map distr : ctx['distribution']) {
                                 if(distr['fdkFormat'] != null){
                                     for (Map fmt : distr['fdkFormat']) {
-                                        if(fmt['fdkType'] == 'UNKNOWN') {
+                                        if(fmt['type'] == 'UNKNOWN') {
                                             formats.add('UNKNOWN')
                                         } else {
-                                            formats.add(fmt['fdkType'] + ' ' + fmt['code'])
+                                            formats.add(fmt['type'] + ' ' + fmt['name'])
                                         }
                                     }
                                 }
@@ -571,7 +571,7 @@ def create_or_update_dataservice_pipeline(pipeline_id: str) -> None:
                                 if(fmt['fdkType'] == 'UNKNOWN') {
                                     formats.add('UNKNOWN')
                                 } else {
-                                    formats.add(fmt['fdkType'] + ' ' + fmt['code'])
+                                    formats.add(fmt['type'] + ' ' + fmt['name'])
                                 }
                             }
                         }
