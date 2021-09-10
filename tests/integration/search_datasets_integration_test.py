@@ -200,9 +200,7 @@ class TestDataSetSearch:
             if hit["distribution"] is not None:
                 for distr in hit["distribution"]:
                     if distr["fdkFormat"] is not None:
-                        assert all(
-                            f["fdkType"] == "UNKNOWN" for f in distr["fdkFormat"]
-                        )
+                        assert all(f["type"] == "UNKNOWN" for f in distr["fdkFormat"])
 
     @pytest.mark.integration
     def test_should_filter_on_spatial(
