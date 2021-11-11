@@ -6,14 +6,15 @@ suggestions_endpoint = "http://localhost:8000/suggestion"
 
 class TestSuggestions:
     @pytest.mark.contract
-    def test_suggestion_not_implemented(self, docker_service, api):
-        result = requests.get(suggestions_endpoint)
-        assert result.status_code == 501
-
-    @pytest.mark.contract
     def test_suggestion_bad_request(self, docker_service, api):
         result = requests.get(suggestions_endpoint + "/invalid")
         assert result.status_code == 400
+
+    @pytest.mark.contract
+    def test_suggestion_all_implemented(self, docker_service, api):
+        prefix = "Statisti"
+        result = requests.get(f"{suggestions_endpoint}?q={prefix}")
+        assert result.status_code == 200
 
     @pytest.mark.contract
     def test_suggestion_datasets_is_implemented(self, docker_service, api):

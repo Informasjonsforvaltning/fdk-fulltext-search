@@ -177,5 +177,18 @@ def get_indices(index_name: Optional[str] = None) -> Any:
 
 
 def get_suggestions(search_string: str, index_key: str = IndicesKey.DATA_SETS) -> Any:
-    query = SuggestionQuery(index_key=index_key, search_string=search_string)
+    query = SuggestionQuery(indices=[index_key], search_string=search_string)
     return es_client.search(index=index_key, body=query.body)
+
+
+def get_suggestions_all_indices(search_string: str) -> Any:
+    query = SuggestionQuery(
+        indices=[
+            IndicesKey.DATA_SETS,
+            IndicesKey.CONCEPTS,
+            IndicesKey.DATA_SERVICES,
+            IndicesKey.INFO_MODEL,
+        ],
+        search_string=search_string,
+    )
+    return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=query.body)

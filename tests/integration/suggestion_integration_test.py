@@ -9,18 +9,37 @@ suggestions_endpoint = "/suggestion"
 
 class TestSuggestions:
     @pytest.mark.integration
-    def test_suggestion_not_implemented(
-        self, client: Flask, docker_service, api, wait_for_ready
-    ):
-        result = client.get(suggestions_endpoint)
-        assert result.status_code == 501
-
-    @pytest.mark.integration
     def test_suggestion_bad_request(
         self, client: Flask, docker_service, api, wait_for_ready
     ):
         result = client.get(suggestions_endpoint + "/invalid")
         assert result.status_code == 400
+
+    @pytest.mark.integration
+    def test_suggestion_all(self, client: Flask, docker_service, api, wait_for_ready):
+        prefix = "Statisti"
+        result = client.get(f"{suggestions_endpoint}?q={prefix}")
+        assert result.status_code == 200
+        previous_was_prefix = True
+        was_prefix_count = 0
+        was_partial_count = 0
+        for hit in result.json["suggestions"]:
+            title = (
+                hit["prefLabel"] if "prefLabel" in hit.keys() else hit.get("title", "")
+            )
+
+            if has_prefix_in_title_all_languages(title, prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
+                was_prefix_count += 1
+            else:
+                assert has_partial_match_in_title(
+                    title, prefix
+                ), "Title without match on prefix encountered "
+                was_partial_count += 1
+        assert was_prefix_count > 0
+        assert was_partial_count > 0
 
     @pytest.mark.integration
     def test_suggestion_datasets(

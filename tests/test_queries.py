@@ -1841,6 +1841,7 @@ def test_suggestion_query_data_sett():
                                 "title.en.ngrams",
                                 "title.en.ngrams.2_gram",
                                 "title.en.ngrams.3_gram",
+                                "title.en._index_prefix",
                             ],
                         }
                     },
@@ -1852,6 +1853,7 @@ def test_suggestion_query_data_sett():
                                 "title.nb.ngrams",
                                 "title.nb.ngrams.2_gram",
                                 "title.nb.ngrams.3_gram",
+                                "title.nb._index_prefix",
                             ],
                         }
                     },
@@ -1863,6 +1865,7 @@ def test_suggestion_query_data_sett():
                                 "title.nn.ngrams",
                                 "title.nn.ngrams.2_gram",
                                 "title.nn.ngrams.3_gram",
+                                "title.nn._index_prefix",
                             ],
                         }
                     },
@@ -1874,6 +1877,7 @@ def test_suggestion_query_data_sett():
                                 "title.no.ngrams",
                                 "title.no.ngrams.2_gram",
                                 "title.no.ngrams.3_gram",
+                                "title.no._index_prefix",
                             ],
                         }
                     },
@@ -1881,5 +1885,5 @@ def test_suggestion_query_data_sett():
             }
         },
     }
-    result = SuggestionQuery(search_string="Giv", index_key=IndicesKey.DATA_SETS).body
+    result = SuggestionQuery(search_string="Giv", indices=[IndicesKey.DATA_SETS]).body
     assert json.dumps(result) == json.dumps(expected_body)

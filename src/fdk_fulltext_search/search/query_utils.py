@@ -112,6 +112,7 @@ def title_suggestion_query(fields: List, search_string: str) -> Dict:
             field + ".ngrams",
             field + ".ngrams.2_gram",
             field + ".ngrams.3_gram",
+            field + "._index_prefix",
         ]
         query_list.append(
             {
