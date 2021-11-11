@@ -135,9 +135,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
+    /suggestion:
+    get:
+      summary: Returns a list of auto complete suggestions for all content types.
+      operationId: getSuggestion
+      parameters:
+      - in: path
+        name: type
+        required: true
+        schema:
+          type: string
+          enum: [informationmodels,datasets,informationmodels,concepts]
+      - in: query
+        description: The string that suggestions should be based upon
+        name: q
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK. Returns a list of suggestions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestionResult'
   /suggestion/{type}:
     get:
-      summary: Returns a list of auto complete suggestions for the specified content type in FDKs content. TODO-> Default to all content types, [dataservices,concepts,informationmodels]
+      summary: Returns a list of auto complete suggestions for the specified content type in FDKs content.
       operationId: getSuggestion
       parameters:
       - in: path
@@ -203,6 +226,8 @@ components:
     DataSetSuggestion:
       type: object
       properties:
+        index:
+          type: string
         title:
           type: string
         uri:

@@ -181,7 +181,7 @@ def test_search_in_public_services(mock_elastic):
 @pytest.mark.unit
 def test_get_suggestions_for_data_sett(mock_elastic):
     suggestion_body = SuggestionQuery(
-        search_string="Ju hu", index_key=IndicesKey.DATA_SETS
+        search_string="Ju hu", indices=[IndicesKey.DATA_SETS]
     ).body
     get_suggestions(search_string="Ju hu", index_key=IndicesKey.DATA_SETS)
     mock_elastic.assert_called_once_with(

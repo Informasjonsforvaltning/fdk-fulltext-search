@@ -75,7 +75,13 @@ class SuggestionResponse:
         else:
             suggestion_objects = []
             for hits in self.es_result:
-                suggestion_objects.append(hits["_source"])
+                suggestion_objects.append(
+                    {
+                        "index": hits["_index"].split("-")[0],
+                        **hits["_source"],
+                        "id": hits["_id"],
+                    }
+                )
             return {"suggestions": suggestion_objects}
 
     @classmethod

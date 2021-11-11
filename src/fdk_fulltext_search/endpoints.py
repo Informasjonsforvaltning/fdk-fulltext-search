@@ -294,8 +294,11 @@ class Suggestion(Resource):
 
 
 class SuggestionAllIndices(Resource):
-    def get(self: Any) -> None:
-        abort(
-            http_status_code=501,
-            description="fulltext-search does not yet support autocomplete search for all content",
-        )
+    def get(self: Any) -> Dict:
+        args = request.args
+        if "q" in args and len(args["q"]) < 2:
+            return SuggestionResponse.empty_response()
+
+        result = client.get_suggestions_all_indices(search_string=args["q"])
+        response = SuggestionResponse(es_result=result)
+        return response.map_response()
