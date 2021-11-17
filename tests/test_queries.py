@@ -1885,5 +1885,7 @@ def test_suggestion_query_data_sett():
             }
         },
     }
-    result = SuggestionQuery(search_string="Giv", indices=[IndicesKey.DATA_SETS]).body
+    result = SuggestionQuery(
+        search_string="Giv", indices=[IndicesKey.DATA_SETS], is_transport=False
+    ).body
     assert json.dumps(result) == json.dumps(expected_body)

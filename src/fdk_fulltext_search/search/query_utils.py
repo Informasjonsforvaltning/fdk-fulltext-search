@@ -1,6 +1,8 @@
 import re
 from typing import Dict, List, Optional
 
+from fdk_fulltext_search.search.themeprofiles import theme_profile_filter
+
 
 def autorativ_data_service_query() -> Dict[str, Dict[str, str]]:
     return {"term": {"nationalComponent": "true"}}
@@ -105,7 +107,9 @@ def title_query(fields: List, search_string: str) -> Dict:
     }
 
 
-def title_suggestion_query(fields: List, search_string: str) -> Dict:
+def title_suggestion_query(
+    fields: List, search_string: str, is_transport: bool
+) -> Dict:
     query_list = []
     for field in fields:
         fields_list = [
@@ -123,7 +127,14 @@ def title_suggestion_query(fields: List, search_string: str) -> Dict:
                 }
             }
         )
-    return {"dis_max": {"queries": query_list}}
+
+    base_query = {"dis_max": {"queries": query_list}}
+
+    if is_transport:
+        return {
+            "bool": {"must": base_query, "filter": theme_profile_filter("transport")}
+        }
+    return base_query
 
 
 def description_query(fields: List, search_string: str) -> Dict:

@@ -176,12 +176,18 @@ def get_indices(index_name: Optional[str] = None) -> Any:
         return None
 
 
-def get_suggestions(search_string: str, index_key: str = IndicesKey.DATA_SETS) -> Any:
-    query = SuggestionQuery(indices=[index_key], search_string=search_string)
+def get_suggestions(
+    search_string: str,
+    index_key: str = IndicesKey.DATA_SETS,
+    is_transport: bool = False,
+) -> Any:
+    query = SuggestionQuery(
+        indices=[index_key], search_string=search_string, is_transport=is_transport
+    )
     return es_client.search(index=index_key, body=query.body)
 
 
-def get_suggestions_all_indices(search_string: str) -> Any:
+def get_suggestions_all_indices(search_string: str, is_transport: bool = False) -> Any:
     query = SuggestionQuery(
         indices=[
             IndicesKey.DATA_SETS,
@@ -190,5 +196,6 @@ def get_suggestions_all_indices(search_string: str) -> Any:
             IndicesKey.INFO_MODEL,
         ],
         search_string=search_string,
+        is_transport=is_transport,
     )
     return es_client.search(index=IndicesKey.SEARCHABLE_ALIAS, body=query.body)

@@ -133,17 +133,43 @@ class TestSuggestions:
                 ), "Title without match on prefix encountered "
                 was_partial_count += 1
 
+    @pytest.mark.integration
+    def test_suggestion_transport_datasets(
+        self, client: Flask, docker_service, api, wait_for_ready
+    ):
+        prefix = "trafikk"
+        result = client.get(
+            f"{suggestions_endpoint}/datasets?q={prefix}&transport=true"
+        )
+        assert result.status_code == 200
+        previous_was_prefix = True
+        was_prefix_count = 0
+        was_partial_count = 0
+        for hit in result.json["suggestions"]:
+            if has_prefix_in_title_all_languages(hit["title"], prefix):
+                assert (
+                    previous_was_prefix
+                ), "Prefix match encountered after other suggestions"
+                was_prefix_count += 1
+            else:
+                assert has_partial_match_in_title(
+                    hit["title"], prefix
+                ), "Title without match on prefix encountered "
+                was_partial_count += 1
+        assert was_prefix_count > 0
+        assert was_partial_count > 0
+
 
 def has_prefix_in_title_all_languages(title, prefix):
     keys = title.keys()
     has_match_in_prefix = False
-    if "nb" in keys and title["nb"].startswith(prefix):
+    if "nb" in keys and title["nb"].lower().startswith(prefix.lower()):
         has_match_in_prefix = True
-    if "nn" in keys and title["nn"].startswith(prefix):
+    if "nn" in keys and title["nn"].lower().startswith(prefix.lower()):
         has_match_in_prefix = True
-    if "no" in keys and title["no"].startswith(prefix):
+    if "no" in keys and title["no"].lower().startswith(prefix.lower()):
         has_match_in_prefix = True
-    if "en" in keys and title["en"].startswith(prefix):
+    if "en" in keys and title["en"].lower().startswith(prefix.lower()):
         has_match_in_prefix = True
     return has_match_in_prefix
 
