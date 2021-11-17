@@ -770,10 +770,14 @@ class RecentQuery:
 
 
 class SuggestionQuery:
-    def __init__(self: Any, indices: List[str], search_string: str) -> None:
+    def __init__(
+        self: Any, indices: List[str], search_string: str, is_transport: bool
+    ) -> None:
         self.body = {
             "_source": suggestion_fields(indices),
             "query": query_utils.title_suggestion_query(
-                fields=title_fields(indices), search_string=search_string
+                fields=title_fields(indices),
+                search_string=search_string,
+                is_transport=is_transport,
             ),
         }

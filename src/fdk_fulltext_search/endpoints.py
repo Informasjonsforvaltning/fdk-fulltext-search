@@ -280,15 +280,12 @@ class Suggestion(Resource):
         args = request.args
         if "q" in args and len(args["q"]) < 2:
             return SuggestionResponse.empty_response()
-        if "lang" in args:
-            # TODO
-            # return response.map_response(language=args["lang"])
-            abort(
-                http_status_code=501,
-                description="fulltext-search does not yet support autocomplete search for specific language",
-            )
 
-        result = client.get_suggestions(search_string=args["q"], index_key=content_type)
+        result = client.get_suggestions(
+            search_string=args["q"],
+            index_key=content_type,
+            is_transport=args.get("transport", False),
+        )
         response = SuggestionResponse(es_result=result)
         return response.map_response()
 
@@ -299,6 +296,8 @@ class SuggestionAllIndices(Resource):
         if "q" in args and len(args["q"]) < 2:
             return SuggestionResponse.empty_response()
 
-        result = client.get_suggestions_all_indices(search_string=args["q"])
+        result = client.get_suggestions_all_indices(
+            search_string=args["q"], is_transport=args.get("transport", False)
+        )
         response = SuggestionResponse(es_result=result)
         return response.map_response()
