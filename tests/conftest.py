@@ -184,13 +184,13 @@ def mocked_requests_get(*args, **kwargs):
     req_url = kwargs.get("url")
     req_url = req_url if req_url else ""
 
-    if re.findall("infomodel", req_url).__len__() > 0:
+    if re.findall("information-models", req_url).__len__() > 0:
         response_text = turtle_models
-    elif re.findall("concept", req_url).__len__() > 0:
+    elif re.findall("concepts", req_url).__len__() > 0:
         response_text = turtle_concept
-    elif re.findall("dataset", req_url).__len__() > 0:
+    elif re.findall("datasets", req_url).__len__() > 0:
         response_text = turtle_datasets
-    elif re.findall("dataservice", req_url).__len__() > 0:
+    elif re.findall("data-services", req_url).__len__() > 0:
         response_text = turtle_dataservices
     elif re.findall("public-services", req_url).__len__() > 0:
         response_text = turtle_public_services
