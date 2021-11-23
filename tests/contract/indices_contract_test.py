@@ -7,6 +7,7 @@ indices_name = [
     "concepts",
     "informationmodels",
     "public_services",
+    "events",
 ]
 
 index_url = "http://localhost:8000/indices"
@@ -25,7 +26,7 @@ class TestSearchAll:
             assert "count" in keys
             assert isinstance(index["count"], int)
             count += 1
-        assert count == 4
+        assert count == 6
 
     @pytest.mark.contract
     def test_should_return_status_of_concept_index(self, docker_service, api):

@@ -22,24 +22,7 @@ ES_HOST = os.getenv("ELASTIC_HOST", "localhost")
 ES_PORT = os.getenv("ELASTIC_PORT", "9200")
 es_client = Elasticsearch([ES_HOST + ":" + ES_PORT])
 API_URL = os.getenv("API_URL", "http://localhost:8080/")
-DATASET_HARVESTER_BASE_URI = os.getenv(
-    "DATASET_HARVESTER_BASE_URI", "http://localhost:8080/dataset"
-)
-FDK_DATASERVICE_HARVESTER_URI = os.getenv(
-    "FDK_DATASERVICE_HARVESTER_URI", "http://localhost:8080/dataservice"
-)
-FDK_SERVICE_HARVESTER_URI = os.getenv(
-    "FDK_SERVICE_HARVESTER_URI", "http://localhost:8080"
-)
-FDK_EVENT_HARVESTER_URI = os.getenv("FDK_EVENT_HARVESTER_URI", "http://localhost:8080")
-MODEL_HARVESTER_URI = os.getenv(
-    "MODEL_HARVESTER_URI", "http://localhost:8080/infomodel"
-)
-FDK_CONCEPT_HARVESTER_URI = os.getenv(
-    "FDK_CONCEPT_HARVESTER_URI", "http://localhost:8080/concept"
-)
-
-RECORDS_PARAM_TRUE = {"catalogrecords": "true"}
+REASONING_SERVICE_HOST = os.getenv("REASONING_SERVICE_HOST", "http://localhost:8080")
 
 
 def error_msg(
@@ -103,13 +86,13 @@ def fetch_all_content() -> Dict:
 
 
 def fetch_information_models() -> Dict[str, Union[str, int]]:
-    info_url = f"{MODEL_HARVESTER_URI}/catalogs"
+    info_url = f"{REASONING_SERVICE_HOST}/information-models"
 
     logging.info(f"fetching information models from {info_url}")
     try:
         response = requests.get(
             url=info_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -149,12 +132,12 @@ def fetch_information_models() -> Dict[str, Union[str, int]]:
 
 
 def fetch_concepts() -> Dict[str, Union[str, int]]:
-    concept_url = f"{FDK_CONCEPT_HARVESTER_URI}/collections"
+    concept_url = f"{REASONING_SERVICE_HOST}/concepts"
     logging.info(f"fetching concepts from {concept_url}")
     try:
         response = requests.get(
             url=concept_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -193,12 +176,12 @@ def fetch_concepts() -> Dict[str, Union[str, int]]:
 
 
 def fetch_data_sets() -> Dict[str, Union[str, int]]:
-    dataset_url = DATASET_HARVESTER_BASE_URI + "/catalogs"
+    dataset_url = f"{REASONING_SERVICE_HOST}/datasets"
     try:
         logging.info("fetching datasets")
         req = requests.get(
             url=dataset_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=30,
         )
@@ -240,13 +223,13 @@ def fetch_data_sets() -> Dict[str, Union[str, int]]:
 
 
 def fetch_data_services() -> Dict[str, Union[str, int]]:
-    dataservice_url = f"{FDK_DATASERVICE_HARVESTER_URI}/catalogs"
+    dataservice_url = f"{REASONING_SERVICE_HOST}/data-services"
 
     logging.info(f"fetching data services from {dataservice_url}")
     try:
         response = requests.get(
             url=dataservice_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -292,12 +275,12 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
 
 
 def fetch_public_services() -> Dict[str, Union[str, int]]:
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
+    event_url = f"{REASONING_SERVICE_HOST}/events"
     event_response = None
     try:
         event_response = requests.get(
             url=event_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -306,13 +289,13 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
         event_result = error_msg(f"fetch events from {event_url}", err)
         logging.error(f"{traceback.format_exc()} {event_result['message']}")
 
-    public_service_url = f"{FDK_SERVICE_HARVESTER_URI}/public-services"
+    public_service_url = f"{REASONING_SERVICE_HOST}/public-services"
 
     logging.info(f"fetching public_services from {public_service_url}")
     try:
         response = requests.get(
             url=public_service_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -356,13 +339,13 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
 
 
 def fetch_events() -> Dict[str, Union[str, int]]:
-    event_url = f"{FDK_EVENT_HARVESTER_URI}/events"
+    event_url = f"{REASONING_SERVICE_HOST}/events"
 
     logging.info(f"fetching events from {event_url}")
     try:
         response = requests.get(
             url=event_url,
-            params=RECORDS_PARAM_TRUE,
+            params={},
             headers={"Accept": "text/turtle"},
             timeout=10,
         )
@@ -376,7 +359,7 @@ def fetch_events() -> Dict[str, Union[str, int]]:
             if create_error:
                 return create_error
 
-            logging.info("ingesting parsed public_services")
+            logging.info("ingesting parsed events")
             result = elasticsearch_ingest_from_harvester(
                 parsed_rdf, new_index_name, IndicesKey.EVENTS_ID_KEY
             )
