@@ -40,9 +40,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install poetry==1.1.11
-        pip install nox==2021.10.1
-        pip install nox-poetry==0.9.0
+        pip install --constraint=.github/workflows/constraints.txt pip
+        pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+        pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+        pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
 
     - name: Set max map count for elasticsearch
       run: sudo sysctl -w vm.max_map_count=262144
