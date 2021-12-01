@@ -13,6 +13,12 @@ index_title_fields = {
     IndicesKey.EVENTS: ["title.nb", "title.nn", "title.no", "title.en"],
     IndicesKey.INFO_MODEL: ["title.nb", "title.nn", "title.no", "title.en"],
     IndicesKey.PUBLIC_SERVICES: ["title.nb", "title.nn", "title.no", "title.en"],
+    IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS: [
+        "title.nb",
+        "title.nn",
+        "title.no",
+        "title.en",
+    ],
 }
 
 index_suggestion_fields = {
@@ -27,6 +33,7 @@ index_suggestion_fields = {
     IndicesKey.DATA_SETS: ["uri", "title", "publisher"],
     IndicesKey.DATA_SERVICES: ["id", "uri", "title", "publisher"],
     IndicesKey.INFO_MODEL: ["id", "uri", "title", "publisher"],
+    IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS: ["id", "uri", "title"],
 }
 
 index_description_fields = {
