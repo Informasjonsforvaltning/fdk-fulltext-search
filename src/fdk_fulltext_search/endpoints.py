@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Any, Dict, List
+from urllib.parse import unquote
 
 from flask import request, Response
 from flask_restful import abort, Resource
@@ -271,18 +272,21 @@ class Suggestion(Resource):
             IndicesKey.CONCEPTS,
             IndicesKey.DATA_SERVICES,
             IndicesKey.INFO_MODEL,
+            IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS,
         ):
             abort(
                 http_status_code=400,
                 description="{0} is not a valid content type. Valid content types are [datasets, informationmodels, "
-                "dataservices, concepts]".format(content_type),
+                "dataservices, concepts, public_services_and_events]".format(
+                    content_type
+                ),
             )
         args = request.args
         if "q" in args and len(args["q"]) < 2:
             return SuggestionResponse.empty_response()
 
         result = client.get_suggestions(
-            search_string=args["q"],
+            search_string=unquote(args["q"]),
             index_key=content_type,
             is_transport=args.get("transport", False),
         )
@@ -297,7 +301,7 @@ class SuggestionAllIndices(Resource):
             return SuggestionResponse.empty_response()
 
         result = client.get_suggestions_all_indices(
-            search_string=args["q"], is_transport=args.get("transport", False)
+            search_string=unquote(args["q"]), is_transport=args.get("transport", False)
         )
         response = SuggestionResponse(es_result=result)
         return response.map_response()
