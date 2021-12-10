@@ -25,7 +25,7 @@ jobs:
       run: gcloud auth configure-docker eu.gcr.io
 
     - name: Cache Docker layers
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2
       with:
         path: .cache
         key: ${{ runner.os }}-nox-${{ github.sha }}
@@ -77,6 +77,11 @@ jobs:
       run: |
         gcloud container clusters get-credentials digdir-fdk-dev --region europe-north1-a --project digdir-fdk-dev
         kubectl apply -f ./kubectlapply.yaml --force
+        if ! kubectl --namespace=staging rollout status deployment fdk-fulltext-search; then
+          kubectl --namespace=staging rollout undo deployment fdk-fulltext-search
+          kubectl --namespace=staging rollout status deployment fdk-fulltext-search
+          exit 1
+        fi
 
     - name: Notify slack
       uses: 8398a7/action-slack@v3
