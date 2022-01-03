@@ -49,13 +49,13 @@ class TestDataServiceSearch:
         default_result_json = result.json
         assert default_result_json["page"]["size"] == 10
         assert default_result_json["page"]["currentPage"] == 0
-        page_request_body = {"page": 1}
+        page_request_body = {"page": 8}
         page_result = client.post(data_services_url, json=page_request_body)
         assert page_result.status_code == 200
         page_result_json = page_result.json
 
         assert page_result_json["page"]["size"] == 3
-        assert page_result_json["page"]["currentPage"] == 1
+        assert page_result_json["page"]["currentPage"] == 8
         assert json.dumps(default_result_json["hits"][0]) != json.dumps(
             page_result_json["hits"][0]
         )
@@ -80,12 +80,12 @@ class TestDataServiceSearch:
     def test_should_filter_on_org_path(
         self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        org_path = "PRIVAT/910244132"
+        org_path = "/ANNET/910244132"
         body = {"filters": [{"orgPath": org_path}]}
         result = client.post(data_services_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json["hits"]
-        assert len(result_json_hits) == 5
+        assert len(result_json_hits) == 10
         for hit in result_json_hits:
             assert org_path in hit["publisher"]["orgPath"]
 
@@ -106,7 +106,7 @@ class TestDataServiceSearch:
         result = client.post(data_services_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json["hits"]
-        assert len(result_json_hits) == 3
+        assert len(result_json_hits) == 6
         assert any(
             "application/rdf+xml" == hit["fdkFormat"][0]["code"]
             for hit in result_json_hits
@@ -136,12 +136,12 @@ class TestDataServiceSearch:
     def test_get_single_data_service_with_id_search(
         self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        body = {"filters": [{"_id": "d1d698ef-267a-3d57-949f-b2bc44657f3e"}]}
+        body = {"filters": [{"_id": "a0350cbc-19c8-3c13-a196-2ae8f5aadf2e"}]}
         result = client.post(data_services_url, json=body)
         assert result.status_code == 200
         result_json_hits = result.json["hits"]
         assert len(result_json_hits) == 1
-        assert result_json_hits[0].get("id") == "d1d698ef-267a-3d57-949f-b2bc44657f3e"
+        assert result_json_hits[0].get("id") == "a0350cbc-19c8-3c13-a196-2ae8f5aadf2e"
 
 
 def get_time(timestamp: str):

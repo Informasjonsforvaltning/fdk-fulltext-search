@@ -590,8 +590,8 @@ class TestSearchAll:
                     "collection": {
                         "field": "uri",
                         "values": [
-                            "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f",
-                            "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2",
+                            "https://registrering.staging.fellesdatakatalog.digdir.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f",
+                            "https://registrering.staging.fellesdatakatalog.digdir.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2",
                         ],
                     }
                 }
@@ -603,11 +603,11 @@ class TestSearchAll:
         assert len(result.json["hits"]) == 2
         uris = [x["uri"] for x in result.json["hits"]]
         assert (
-            "http://brreg.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f"
+            "https://registrering.staging.fellesdatakatalog.digdir.no/catalogs/910244132/datasets/e89629a3-701f-40f4-acae-fe422029da9f"
             in uris
         )
         assert (
-            "http://brreg.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
+            "https://registrering.staging.fellesdatakatalog.digdir.no/catalogs/910244132/datasets/c32b7a4f-655f-45f6-88f6-d01f05d0f7c2"
             in uris
         )
 

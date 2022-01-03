@@ -70,7 +70,7 @@ class TestInformationModelSearch:
     def test_should_filter_on_org_path(
         self, client: Flask, docker_service, api, wait_for_information_models
     ):
-        org_path = "STAT/972417858/991825827"
+        org_path = "/STAT/972417858/991825827"
         body = {"filters": [{"orgPath": org_path}]}
         result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
@@ -88,7 +88,7 @@ class TestInformationModelSearch:
         result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
         result_hits = result.json["hits"]
-        assert len(result_hits) == 2
+        assert len(result_hits) == 5
         for hit in result_hits:
             los_paths = ",".join(
                 [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
@@ -99,14 +99,14 @@ class TestInformationModelSearch:
     def test_should_filter_on_several_los_themes(
         self, client: Flask, docker_service, api, wait_for_information_models
     ):
-        los_path_1 = "helse-og-omsorg"
-        los_path_2 = "bygg-og-eiendom"
+        los_path_1 = "naring/naringsliv"
+        los_path_2 = "demokrati-og-innbyggerrettigheter/personopplysninger"
         body = {"filters": [{"los": f"{los_path_1},{los_path_2}"}]}
 
         result = client.post(informationmodel_url, json=body)
         result_json = result.json
         assert result.status_code == 200
-        assert len(result_json["hits"]) == 1
+        assert len(result_json["hits"]) == 2
         for hit in result_json["hits"]:
             los_paths = ",".join(
                 [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
@@ -118,7 +118,7 @@ class TestInformationModelSearch:
     def test_should_filter_on_los_and_org_path(
         self, client: Flask, docker_service, api, wait_for_information_models
     ):
-        org_path = "STAT"
+        org_path = "/STAT"
         los_path = "bygg-og-eiendom"
         body = {"filters": [{"orgPath": org_path}, {"los": los_path}]}
         result = client.post(informationmodel_url, json=body)
@@ -133,7 +133,7 @@ class TestInformationModelSearch:
         self, client: Flask, docker_service, api, wait_for_information_models
     ):
         default_result = client.post(informationmodel_url).json
-        assert default_result["page"]["size"] == 4
+        assert default_result["page"]["size"] == 10
         assert default_result["page"]["currentPage"] == 0
 
         page_request_body = {"page": 1, "size": 2}
@@ -168,11 +168,11 @@ def has_exact_match_in_title(hit, search_str):
     has_exact_match = False
     if "nb" in keys and title["nb"] == search_str:
         has_exact_match = True
-    if "nn" in keys and title["nb"] == search_str:
+    if "nn" in keys and title["nn"] == search_str:
         has_exact_match = True
-    if "no" in keys and title["nb"] == search_str:
+    if "no" in keys and title["no"] == search_str:
         has_exact_match = True
-    if "en" in keys and title["nb"] == search_str:
+    if "en" in keys and title["en"] == search_str:
         has_exact_match = True
     return has_exact_match
 

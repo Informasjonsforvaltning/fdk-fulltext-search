@@ -169,7 +169,7 @@ class TestDataSetSearch:
     def test_should_filter_on_org_path(
         self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        org_path = "STAT/972417858/971040238"
+        org_path = "/STAT/972417858/971040238"
         body = {"filters": [{"orgPath": org_path}]}
         result = client.post(datasets_url, json=body)
         assert result.status_code == 200
@@ -197,10 +197,12 @@ class TestDataSetSearch:
         result_json_hits = result.json["hits"]
         assert len(result_json_hits) == 10
         for hit in result_json_hits:
+            fdk_formats = []
             if hit["distribution"] is not None:
                 for distr in hit["distribution"]:
                     if distr["fdkFormat"] is not None:
-                        assert all(f["type"] == "UNKNOWN" for f in distr["fdkFormat"])
+                        fdk_formats.extend(distr["fdkFormat"])
+            assert any(f["type"] == "UNKNOWN" for f in fdk_formats)
 
     @pytest.mark.integration
     def test_should_filter_on_spatial(
@@ -298,9 +300,9 @@ class TestDataSetSearch:
     def test_should_filter_on_org_path_and_spatial(
         self, client: Flask, docker_service, api, wait_for_datasets_ready
     ):
-        expected_org_path = "PRIVAT"
+        expected_org_path = "/ANNET"
         expected_spatial = "Norge"
-        body = {"filters": [{"orgPath": "PRIVAT"}, {"spatial": "Norge"}]}
+        body = {"filters": [{"orgPath": "/ANNET"}, {"spatial": "Norge"}]}
         result = client.post(datasets_url, json=body)
         assert result.status_code == 200
         result_json = result.json
