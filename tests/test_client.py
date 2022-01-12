@@ -65,7 +65,6 @@ def test_should_call_search_with_match_all_query(mock_elastic):
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
         body=expected_query.body,
-        search_type="dfs_query_then_fetch",
     )
 
 
@@ -77,7 +76,6 @@ def test_should_call_search_with_match_all_query_and_filters(mock_elastic):
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
         body=expected_query.body,
-        search_type="dfs_query_then_fetch",
     )
 
 
@@ -91,7 +89,6 @@ def test_should_call_search_with_simple_query_string(mock_elastic):
     mock_elastic.assert_called_once_with(
         index=IndicesKey.SEARCHABLE_ALIAS,
         body=expected_query.body,
-        search_type="dfs_query_then_fetch",
     )
 
 
