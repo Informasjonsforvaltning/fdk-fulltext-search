@@ -27,6 +27,7 @@ def unit_tests(session: Session) -> None:
         "pytest",
         "requests-mock",
         "pytest-mock",
+        "pytest-docker",
     )
     session.run(
         "pytest",
@@ -109,6 +110,7 @@ def lint(session: Session) -> None:
         "flake8-import-order",
         "pep8-naming",
         "flake8-annotations",
+        "pytest-docker",
     )
     session.run("flake8", *args)
 
