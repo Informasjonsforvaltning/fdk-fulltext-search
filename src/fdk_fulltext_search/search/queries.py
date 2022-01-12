@@ -227,21 +227,6 @@ class AllIndicesQuery(AbstractSearchQuery):
                 search_string=param,
             )
         )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
-                fields=fulltext_fields(
-                    [
-                        IndicesKey.CONCEPTS,
-                        IndicesKey.DATA_SERVICES,
-                        IndicesKey.DATA_SETS,
-                        IndicesKey.EVENTS,
-                        IndicesKey.INFO_MODEL,
-                        IndicesKey.PUBLIC_SERVICES,
-                    ]
-                ),
-                search_string=param,
-            ),
-        )
 
 
 class InformationModelQuery(AbstractSearchQuery):
@@ -290,12 +275,6 @@ class InformationModelQuery(AbstractSearchQuery):
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
-                fields=fulltext_fields([IndicesKey.INFO_MODEL]),
-                search_string=search_string,
-            )
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.INFO_MODEL]),
                 search_string=search_string,
             )
@@ -370,12 +349,6 @@ class DataServiceQuery(AbstractSearchQuery):
                 search_string=search_string,
             )
         )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
-                fields=fulltext_fields([IndicesKey.DATA_SERVICES]),
-                search_string=search_string,
-            )
-        )
 
 
 class DataSetQuery(AbstractSearchQuery):
@@ -422,12 +395,6 @@ class DataSetQuery(AbstractSearchQuery):
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
-                fields=fulltext_fields([IndicesKey.DATA_SETS]),
-                search_string=search_string,
-            )
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.DATA_SETS]),
                 search_string=search_string,
             )
@@ -515,12 +482,6 @@ class ConceptQuery(AbstractSearchQuery):
                 search_string=search_string,
             )
         )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
-                fields=fulltext_fields([IndicesKey.CONCEPTS]),
-                search_string=search_string,
-            )
-        )
 
     def add_aggs(self: Any, fields: list) -> Any:
         if fields is None:
@@ -601,12 +562,6 @@ class PublicServiceQuery(AbstractSearchQuery):
                 search_string=search_string,
             )
         )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
-                fields=fulltext_fields([IndicesKey.PUBLIC_SERVICES]),
-                search_string=search_string,
-            )
-        )
 
     def add_aggs(self: Any, fields: List) -> Any:
         if fields is None:
@@ -664,12 +619,6 @@ class EventQuery(AbstractSearchQuery):
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
                 fields=fulltext_fields([IndicesKey.EVENTS]), search_string=search_string
-            )
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
-                fields=fulltext_fields([IndicesKey.EVENTS]),
-                search_string=search_string,
             )
         )
 
@@ -741,12 +690,6 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
         )
         self.query["dis_max"]["queries"].append(
             query_utils.simple_query_string(
-                fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
-                search_string=param,
-            )
-        )
-        self.query["dis_max"]["queries"].append(
-            query_utils.query_string(
                 fields=fulltext_fields([IndicesKey.EVENTS, IndicesKey.PUBLIC_SERVICES]),
                 search_string=param,
             )
