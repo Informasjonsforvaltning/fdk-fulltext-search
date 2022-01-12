@@ -120,7 +120,7 @@ def docker_service(docker_ip, docker_services):
     port = docker_services.port_for("fdk-fulltext-search", HOST_PORT)
     url = "http://{}:{}".format(docker_ip, port)
     docker_services.wait_until_responsive(
-        timeout=90.0, pause=0.5, check=lambda: is_responsive(url)
+        timeout=120.0, pause=0.5, check=lambda: is_responsive(url)
     )
     return url
 
