@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask.testing import FlaskClient
 import pytest
+from pytest_docker.plugin import Services
 import requests
 from requests import get
 from urllib3.exceptions import MaxRetryError, NewConnectionError
@@ -101,10 +102,23 @@ load_dotenv()
 HOST_PORT = int(os.environ.get("HOST_PORT", "8000"))
 
 
-def is_responsive(url):
+def get_logs(self, service):
+    return self._docker_compose.execute("logs {}".format(service))
+
+
+Services.get_logs = get_logs
+
+
+def is_responsive(url, docker_services):
     """Return true if response from service is 200."""
     url = f"{url}/ready"
     try:
+        # print logs of relevant services
+        logs = docker_services.get_logs("fdk-fulltext-search")
+        lines = logs.decode("utf8").strip()
+        for line in lines.split("\n"):
+            print("docker-logs: {}".format(line))
+
         response = requests.get(url)
         if response.status_code == 200:
             time.sleep(2)  # sleep extra 2 sec
@@ -120,7 +134,7 @@ def docker_service(docker_ip, docker_services):
     port = docker_services.port_for("fdk-fulltext-search", HOST_PORT)
     url = "http://{}:{}".format(docker_ip, port)
     docker_services.wait_until_responsive(
-        timeout=120.0, pause=0.5, check=lambda: is_responsive(url)
+        timeout=120.0, pause=0.5, check=lambda: is_responsive(url, docker_services)
     )
     return url
 
