@@ -55,7 +55,6 @@ def search_all(request: Optional[Dict] = None) -> Dict[str, Union[int, str]]:
         return es_client.search(
             index=IndicesKey.SEARCHABLE_ALIAS,
             body=q.body,
-            search_type="dfs_query_then_fetch",
         )
 
     except ConnectionError:
@@ -133,7 +132,6 @@ def search_public_services_and_events(
         return es_client.search(
             index=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS,
             body=q.body,
-            search_type="dfs_query_then_fetch",
         )
 
     except ConnectionError:
