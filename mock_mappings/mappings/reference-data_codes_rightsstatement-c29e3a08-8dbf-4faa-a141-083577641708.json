@@ -1,52 +1,63 @@
 {
-  "id" : "c29e3a08-8dbf-4faa-a141-083577641708",
-  "name" : "reference-data_codes_rightsstatement",
-  "request" : {
-    "url" : "/reference-data/codes/rightsstatement",
-    "method" : "GET"
+  "id": "c29e3a08-8dbf-4faa-a141-083577641708",
+  "name": "reference-data_codes_rightsstatement",
+  "request": {
+    "url": "/new-reference-data/eu/access-rights",
+    "method": "GET"
   },
-  "response" : {
-    "status" : 200,
-    "jsonBody" : [
-      {
-          "uri": "http://publications.europa.eu/resource/authority/access-right",
-          "prefLabel": {
-              "en": "Access right Named Authority List"
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "accessRights": [
+        {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL",
+          "code": "CONFIDENTIAL",
+          "label": {
+            "en": "confidential"
           }
-      },
-      {
+        },
+        {
           "uri": "http://publications.europa.eu/resource/authority/access-right/NON_PUBLIC",
           "code": "NON_PUBLIC",
-          "prefLabel": {
-              "nn": "Ikke-offentlig",
-              "nb": "Ikke-offentlig",
-              "en": "Non-public"
+          "label": {
+            "en": "non-public"
           }
-      },
-      {
+        },
+        {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/OP_DATPRO",
+          "code": "OP_DATPRO",
+          "label": {
+            "en": "Provisional data"
+          }
+        },
+        {
           "uri": "http://publications.europa.eu/resource/authority/access-right/PUBLIC",
           "code": "PUBLIC",
-          "prefLabel": {
-              "en": "Public",
-              "nb": "Offentlig",
-              "nn": "Offentlig"
+          "label": {
+            "en": "public"
           }
-      },
-      {
+        },
+        {
           "uri": "http://publications.europa.eu/resource/authority/access-right/RESTRICTED",
           "code": "RESTRICTED",
-          "prefLabel": {
-              "nb": "Begrenset",
-              "nn": "Begrenset",
-              "en": "Restricted"
+          "label": {
+            "en": "restricted"
           }
-      }
-  ],
-  "headers" : {
-        "Content-Type" : "application/json;charset=UTF-8" 
+        },
+        {
+          "uri": "http://publications.europa.eu/resource/authority/access-right/SENSITIVE",
+          "code": "SENSITIVE",
+          "label": {
+            "en": "sensitive"
+          }
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8"
     }
   },
-  "uuid" : "c29e3a08-8dbf-4faa-a141-083577641708",
-  "persistent" : true,
-  "insertionIndex" : 153
+  "uuid": "c29e3a08-8dbf-4faa-a141-083577641708",
+  "persistent": true,
+  "insertionIndex": 153
 }
