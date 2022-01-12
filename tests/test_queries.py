@@ -342,62 +342,6 @@ def test_all_indices_query_should_return_query_with_dis_max():
                             "boost": 0.02,
                         }
                     },
-                    {
-                        "bool": {
-                            "must": {
-                                "query_string": {
-                                    "query": "*stønad*",
-                                    "fields": [
-                                        "accessRights.code",
-                                        "accessRights.prefLabel.*^3",
-                                        "definition.source.prefLabel.*^3",
-                                        "definition.sourceRelationship",
-                                        "definition.sources.text.*",
-                                        "definition.text.*",
-                                        "description.*",
-                                        "distribution.format",
-                                        "distribution.title.*",
-                                        "hasCompetentAuthority.name^3",
-                                        "hasCompetentAuthority.prefLabel^3",
-                                        "keyword.*^2",
-                                        "losTheme.name.*^3",
-                                        "mediaType.code",
-                                        "objective.*",
-                                        "prefLabel.*^3",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "subject.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "subject.prefLabel.*",
-                                        "theme.title.*",
-                                        "title.*^3",
-                                    ],
-                                }
-                            },
-                            "should": [
-                                {"match": {"provenance.code": "NASJONAL"}},
-                                {"term": {"nationalComponent": "true"}},
-                                {
-                                    "bool": {
-                                        "must": [
-                                            {
-                                                "term": {
-                                                    "accessRights.code.keyword": "PUBLIC"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
-                                        ]
-                                    }
-                                },
-                            ],
-                            "boost": 0.001,
-                        }
-                    },
                 ]
             }
         },
@@ -792,62 +736,6 @@ def test_all_indices_should_return_query_with_filter():
                                         "boost": 0.02,
                                     }
                                 },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "query_string": {
-                                                "query": "*barnehage*",
-                                                "fields": [
-                                                    "accessRights.code",
-                                                    "accessRights.prefLabel.*^3",
-                                                    "definition.source.prefLabel.*^3",
-                                                    "definition.sourceRelationship",
-                                                    "definition.sources.text.*",
-                                                    "definition.text.*",
-                                                    "description.*",
-                                                    "distribution.format",
-                                                    "distribution.title.*",
-                                                    "hasCompetentAuthority.name^3",
-                                                    "hasCompetentAuthority.prefLabel^3",
-                                                    "keyword.*^2",
-                                                    "losTheme.name.*^3",
-                                                    "mediaType.code",
-                                                    "objective.*",
-                                                    "prefLabel.*^3",
-                                                    "publisher.name^3",
-                                                    "publisher.prefLabel^3",
-                                                    "subject.*",
-                                                    "subject.altLabel.*",
-                                                    "subject.definition.*",
-                                                    "subject.prefLabel.*",
-                                                    "theme.title.*",
-                                                    "title.*^3",
-                                                ],
-                                            }
-                                        },
-                                        "should": [
-                                            {"match": {"provenance.code": "NASJONAL"}},
-                                            {"term": {"nationalComponent": "true"}},
-                                            {
-                                                "bool": {
-                                                    "must": [
-                                                        {
-                                                            "term": {
-                                                                "accessRights.code.keyword": "PUBLIC"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "distribution.openLicense": "true"
-                                                            }
-                                                        },
-                                                    ]
-                                                }
-                                            },
-                                        ],
-                                        "boost": 0.001,
-                                    }
-                                },
                             ]
                         }
                     }
@@ -1219,62 +1107,6 @@ def test_all_indices_with_several_words():
                                 },
                             ],
                             "boost": 0.02,
-                        }
-                    },
-                    {
-                        "bool": {
-                            "must": {
-                                "query_string": {
-                                    "query": "*some* *string*",
-                                    "fields": [
-                                        "accessRights.code",
-                                        "accessRights.prefLabel.*^3",
-                                        "definition.source.prefLabel.*^3",
-                                        "definition.sourceRelationship",
-                                        "definition.sources.text.*",
-                                        "definition.text.*",
-                                        "description.*",
-                                        "distribution.format",
-                                        "distribution.title.*",
-                                        "hasCompetentAuthority.name^3",
-                                        "hasCompetentAuthority.prefLabel^3",
-                                        "keyword.*^2",
-                                        "losTheme.name.*^3",
-                                        "mediaType.code",
-                                        "objective.*",
-                                        "prefLabel.*^3",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "subject.*",
-                                        "subject.altLabel.*",
-                                        "subject.definition.*",
-                                        "subject.prefLabel.*",
-                                        "theme.title.*",
-                                        "title.*^3",
-                                    ],
-                                }
-                            },
-                            "should": [
-                                {"match": {"provenance.code": "NASJONAL"}},
-                                {"term": {"nationalComponent": "true"}},
-                                {
-                                    "bool": {
-                                        "must": [
-                                            {
-                                                "term": {
-                                                    "accessRights.code.keyword": "PUBLIC"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
-                                        ]
-                                    }
-                                },
-                            ],
-                            "boost": 0.001,
                         }
                     },
                 ]
@@ -1695,62 +1527,6 @@ def test_all_indices_should_return_query_with_must_not():
                                             },
                                         ],
                                         "boost": 0.02,
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "query_string": {
-                                                "query": "*barnehage*",
-                                                "fields": [
-                                                    "accessRights.code",
-                                                    "accessRights.prefLabel.*^3",
-                                                    "definition.source.prefLabel.*^3",
-                                                    "definition.sourceRelationship",
-                                                    "definition.sources.text.*",
-                                                    "definition.text.*",
-                                                    "description.*",
-                                                    "distribution.format",
-                                                    "distribution.title.*",
-                                                    "hasCompetentAuthority.name^3",
-                                                    "hasCompetentAuthority.prefLabel^3",
-                                                    "keyword.*^2",
-                                                    "losTheme.name.*^3",
-                                                    "mediaType.code",
-                                                    "objective.*",
-                                                    "prefLabel.*^3",
-                                                    "publisher.name^3",
-                                                    "publisher.prefLabel^3",
-                                                    "subject.*",
-                                                    "subject.altLabel.*",
-                                                    "subject.definition.*",
-                                                    "subject.prefLabel.*",
-                                                    "theme.title.*",
-                                                    "title.*^3",
-                                                ],
-                                            }
-                                        },
-                                        "should": [
-                                            {"match": {"provenance.code": "NASJONAL"}},
-                                            {"term": {"nationalComponent": "true"}},
-                                            {
-                                                "bool": {
-                                                    "must": [
-                                                        {
-                                                            "term": {
-                                                                "accessRights.code.keyword": "PUBLIC"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "distribution.openLicense": "true"
-                                                            }
-                                                        },
-                                                    ]
-                                                }
-                                            },
-                                        ],
-                                        "boost": 0.001,
                                     }
                                 },
                             ]

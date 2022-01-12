@@ -277,45 +277,6 @@ def test_information_model_with_search_string_query():
                             "boost": 0.02,
                         }
                     },
-                    {
-                        "bool": {
-                            "must": {
-                                "query_string": {
-                                    "query": "*RA* *0554* *Pris*",
-                                    "fields": [
-                                        "description.*",
-                                        "keyword.*^2",
-                                        "losTheme.name.*^3",
-                                        "publisher.name^3",
-                                        "publisher.prefLabel^3",
-                                        "theme.title.*",
-                                        "title.*^3",
-                                    ],
-                                }
-                            },
-                            "should": [
-                                {"match": {"provenance.code": "NASJONAL"}},
-                                {"term": {"nationalComponent": "true"}},
-                                {
-                                    "bool": {
-                                        "must": [
-                                            {
-                                                "term": {
-                                                    "accessRights.code.keyword": "PUBLIC"
-                                                }
-                                            },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
-                                        ]
-                                    }
-                                },
-                            ],
-                            "boost": 0.001,
-                        }
-                    },
                 ]
             }
         },
@@ -571,45 +532,6 @@ def test_information_model_add_filter():
                                             },
                                         ],
                                         "boost": 0.02,
-                                    }
-                                },
-                                {
-                                    "bool": {
-                                        "must": {
-                                            "query_string": {
-                                                "query": "*RA* *0554* *Pris*",
-                                                "fields": [
-                                                    "description.*",
-                                                    "keyword.*^2",
-                                                    "losTheme.name.*^3",
-                                                    "publisher.name^3",
-                                                    "publisher.prefLabel^3",
-                                                    "theme.title.*",
-                                                    "title.*^3",
-                                                ],
-                                            }
-                                        },
-                                        "should": [
-                                            {"match": {"provenance.code": "NASJONAL"}},
-                                            {"term": {"nationalComponent": "true"}},
-                                            {
-                                                "bool": {
-                                                    "must": [
-                                                        {
-                                                            "term": {
-                                                                "accessRights.code.keyword": "PUBLIC"
-                                                            }
-                                                        },
-                                                        {
-                                                            "term": {
-                                                                "distribution.openLicense": "true"
-                                                            }
-                                                        },
-                                                    ]
-                                                }
-                                            },
-                                        ],
-                                        "boost": 0.001,
                                     }
                                 },
                             ]
@@ -1024,49 +946,6 @@ def test_dataset_with_query_string_query():
                         "boost": 0.02,
                     }
                 },
-                {
-                    "bool": {
-                        "must": {
-                            "query_string": {
-                                "query": "*Elbiloversikt* *i*",
-                                "fields": [
-                                    "accessRights.code",
-                                    "accessRights.prefLabel.*^3",
-                                    "description.*",
-                                    "distribution.format",
-                                    "distribution.title.*",
-                                    "keyword.*^2",
-                                    "losTheme.name.*^3",
-                                    "objective.*",
-                                    "publisher.name^3",
-                                    "publisher.prefLabel^3",
-                                    "subject.altLabel.*",
-                                    "subject.definition.*",
-                                    "subject.prefLabel.*",
-                                    "theme.title.*",
-                                    "title.*^3",
-                                ],
-                            }
-                        },
-                        "should": [
-                            {"match": {"provenance.code": "NASJONAL"}},
-                            {"term": {"nationalComponent": "true"}},
-                            {
-                                "bool": {
-                                    "must": [
-                                        {
-                                            "term": {
-                                                "accessRights.code.keyword": "PUBLIC"
-                                            }
-                                        },
-                                        {"term": {"distribution.openLicense": "true"}},
-                                    ]
-                                }
-                            },
-                        ],
-                        "boost": 0.001,
-                    }
-                },
             ]
         }
     }
@@ -1321,53 +1200,6 @@ def test_dataset_with_spatial_filter():
                                         },
                                     ],
                                     "boost": 0.02,
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "query_string": {
-                                            "query": "*Ad*",
-                                            "fields": [
-                                                "accessRights.code",
-                                                "accessRights.prefLabel.*^3",
-                                                "description.*",
-                                                "distribution.format",
-                                                "distribution.title.*",
-                                                "keyword.*^2",
-                                                "losTheme.name.*^3",
-                                                "objective.*",
-                                                "publisher.name^3",
-                                                "publisher.prefLabel^3",
-                                                "subject.altLabel.*",
-                                                "subject.definition.*",
-                                                "subject.prefLabel.*",
-                                                "theme.title.*",
-                                                "title.*^3",
-                                            ],
-                                        }
-                                    },
-                                    "should": [
-                                        {"match": {"provenance.code": "NASJONAL"}},
-                                        {"term": {"nationalComponent": "true"}},
-                                        {
-                                            "bool": {
-                                                "must": [
-                                                    {
-                                                        "term": {
-                                                            "accessRights.code.keyword": "PUBLIC"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "distribution.openLicense": "true"
-                                                        }
-                                                    },
-                                                ]
-                                            }
-                                        },
-                                    ],
-                                    "boost": 0.001,
                                 }
                             },
                         ]
@@ -1631,53 +1463,6 @@ def test_dataset_with_media_type_filter():
                                         },
                                     ],
                                     "boost": 0.02,
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "query_string": {
-                                            "query": "*Fotball*",
-                                            "fields": [
-                                                "accessRights.code",
-                                                "accessRights.prefLabel.*^3",
-                                                "description.*",
-                                                "distribution.format",
-                                                "distribution.title.*",
-                                                "keyword.*^2",
-                                                "losTheme.name.*^3",
-                                                "objective.*",
-                                                "publisher.name^3",
-                                                "publisher.prefLabel^3",
-                                                "subject.altLabel.*",
-                                                "subject.definition.*",
-                                                "subject.prefLabel.*",
-                                                "theme.title.*",
-                                                "title.*^3",
-                                            ],
-                                        }
-                                    },
-                                    "should": [
-                                        {"match": {"provenance.code": "NASJONAL"}},
-                                        {"term": {"nationalComponent": "true"}},
-                                        {
-                                            "bool": {
-                                                "must": [
-                                                    {
-                                                        "term": {
-                                                            "accessRights.code.keyword": "PUBLIC"
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "distribution.openLicense": "true"
-                                                        }
-                                                    },
-                                                ]
-                                            }
-                                        },
-                                    ],
-                                    "boost": 0.001,
                                 }
                             },
                         ]
