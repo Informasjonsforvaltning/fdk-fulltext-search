@@ -180,11 +180,11 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "distro"
-version = "1.6.0"
+version = "1.7.0"
 description = "Distro - an OS platform information API"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "docker"
@@ -312,7 +312,7 @@ develop = ["mock", "pytest (>=3.0.0)", "pytest-cov", "pytest-mock (<3.0.0)", "py
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "2.0.2"
+version = "2.0.3"
 description = ""
 category = "main"
 optional = false
@@ -1096,7 +1096,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "62c20dce9cbf05d9050b1ce2f9f8a9a024b2f3e6a9eb6222bfd2ba6b70d67772"
+content-hash = "50012ec89bc42447dad504ea3b10beeb6ea64f2c95edf98ba72e28e1fb5adb70"
 
 [metadata.files]
 aniso8601 = [
@@ -1290,8 +1290,8 @@ decorator = [
     {file = "decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
 ]
 distro = [
-    {file = "distro-1.6.0-py2.py3-none-any.whl", hash = "sha256:c8713330ab31a034623a9515663ed87696700b55f04556b97c39cd261aa70dc7"},
-    {file = "distro-1.6.0.tar.gz", hash = "sha256:83f5e5a09f9c5f68f60173de572930effbcc0287bb84fdc4426cb4168c088424"},
+    {file = "distro-1.7.0-py3-none-any.whl", hash = "sha256:d596311d707e692c2160c37807f83e3820c5d539d5a83e87cfb6babd8ba3a06b"},
+    {file = "distro-1.7.0.tar.gz", hash = "sha256:151aeccf60c216402932b52e40ee477a939f8d58898927378a02abbe852c1c39"},
 ]
 docker = [
     {file = "docker-5.0.3-py2.py3-none-any.whl", hash = "sha256:7a79bb439e3df59d0a72621775d600bc8bc8b422d285824cb37103eab91d1ce0"},
@@ -1323,8 +1323,8 @@ elasticsearch-dsl = [
     {file = "elasticsearch_dsl-7.4.0-py2.py3-none-any.whl", hash = "sha256:046ea10820b94c075081b528b4526c5bc776bda4226d702f269a5f203232064b"},
 ]
 fdk-rdf-parser = [
-    {file = "fdk-rdf-parser-2.0.2.tar.gz", hash = "sha256:1fc2b1d38449e000ca6cee6a942cb270c317b4537366144577f470fad9faadee"},
-    {file = "fdk_rdf_parser-2.0.2-py3-none-any.whl", hash = "sha256:75d56551f105f08900622d9e6c28a6d4d7500ec2a3d471f040f378881edc3f0c"},
+    {file = "fdk-rdf-parser-2.0.3.tar.gz", hash = "sha256:1684dcb39521827d53de94ed31e606b23f0b4fdc2d9a5575e3490eb60082c8e0"},
+    {file = "fdk_rdf_parser-2.0.3-py3-none-any.whl", hash = "sha256:76e21e0ac7d69e4d8e3bd5b53d99c66d626a912e2b0d0839d056b79a4456f380"},
 ]
 feedgen = [
     {file = "feedgen-0.9.0.tar.gz", hash = "sha256:8e811bdbbed6570034950db23a4388453628a70e689a6e8303ccec430f5a804a"},
