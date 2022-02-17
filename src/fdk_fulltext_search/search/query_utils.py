@@ -108,7 +108,10 @@ def title_query(fields: List, search_string: str) -> Dict:
 
 
 def title_suggestion_query(
-    fields: List, search_string: str, is_transport: bool
+    fields: List,
+    search_string: str,
+    is_transport: bool,
+    publisher_id: Optional[str] = None,
 ) -> Dict:
     query_list = []
     for field in fields:
@@ -130,6 +133,11 @@ def title_suggestion_query(
 
     base_query = {"dis_max": {"queries": query_list}}
     filters = []
+
+    if publisher_id is not None:
+        filters.append(
+            {"bool": {"must": [{"term": {"publisher.id.keyword": publisher_id}}]}}
+        )
 
     if is_transport:
         filters.append(theme_profile_filter(("transport")))
