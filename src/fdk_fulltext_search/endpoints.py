@@ -289,6 +289,7 @@ class Suggestion(Resource):
             search_string=unquote(args["q"]),
             index_key=content_type,
             is_transport=args.get("transport", False),
+            publisher_id=args.get("publisherId", None),
         )
         response = SuggestionResponse(es_result=result)
         return response.map_response()

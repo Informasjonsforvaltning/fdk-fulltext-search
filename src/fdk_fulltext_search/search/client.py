@@ -178,9 +178,13 @@ def get_suggestions(
     search_string: str,
     index_key: str = IndicesKey.DATA_SETS,
     is_transport: bool = False,
+    publisher_id: Optional[str] = None,
 ) -> Any:
     query = SuggestionQuery(
-        indices=[index_key], search_string=search_string, is_transport=is_transport
+        indices=[index_key],
+        search_string=search_string,
+        is_transport=is_transport,
+        publisher_id=publisher_id,
     )
     return es_client.search(index=index_key, body=query.body)
 
