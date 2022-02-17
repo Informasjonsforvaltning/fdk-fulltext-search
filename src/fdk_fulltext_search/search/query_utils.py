@@ -129,12 +129,12 @@ def title_suggestion_query(
         )
 
     base_query = {"dis_max": {"queries": query_list}}
+    filters = []
 
     if is_transport:
-        return {
-            "bool": {"must": base_query, "filter": theme_profile_filter("transport")}
-        }
-    return base_query
+        filters.append(theme_profile_filter(("transport")))
+
+    return {"bool": {"must": base_query, "filter": filters}}
 
 
 def description_query(fields: List, search_string: str) -> Dict:

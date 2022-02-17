@@ -1607,57 +1607,62 @@ def test_suggestion_query_data_sett():
     expected_body = {
         "_source": ["publisher", "title", "uri"],
         "query": {
-            "dis_max": {
-                "queries": [
-                    {
-                        "multi_match": {
-                            "query": "Giv",
-                            "type": "bool_prefix",
-                            "fields": [
-                                "title.en.ngrams",
-                                "title.en.ngrams.2_gram",
-                                "title.en.ngrams.3_gram",
-                                "title.en._index_prefix",
-                            ],
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": "Giv",
-                            "type": "bool_prefix",
-                            "fields": [
-                                "title.nb.ngrams",
-                                "title.nb.ngrams.2_gram",
-                                "title.nb.ngrams.3_gram",
-                                "title.nb._index_prefix",
-                            ],
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": "Giv",
-                            "type": "bool_prefix",
-                            "fields": [
-                                "title.nn.ngrams",
-                                "title.nn.ngrams.2_gram",
-                                "title.nn.ngrams.3_gram",
-                                "title.nn._index_prefix",
-                            ],
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": "Giv",
-                            "type": "bool_prefix",
-                            "fields": [
-                                "title.no.ngrams",
-                                "title.no.ngrams.2_gram",
-                                "title.no.ngrams.3_gram",
-                                "title.no._index_prefix",
-                            ],
-                        }
-                    },
-                ]
+            "bool": {
+                "must": {
+                    "dis_max": {
+                        "queries": [
+                            {
+                                "multi_match": {
+                                    "query": "Giv",
+                                    "type": "bool_prefix",
+                                    "fields": [
+                                        "title.en.ngrams",
+                                        "title.en.ngrams.2_gram",
+                                        "title.en.ngrams.3_gram",
+                                        "title.en._index_prefix",
+                                    ],
+                                }
+                            },
+                            {
+                                "multi_match": {
+                                    "query": "Giv",
+                                    "type": "bool_prefix",
+                                    "fields": [
+                                        "title.nb.ngrams",
+                                        "title.nb.ngrams.2_gram",
+                                        "title.nb.ngrams.3_gram",
+                                        "title.nb._index_prefix",
+                                    ],
+                                }
+                            },
+                            {
+                                "multi_match": {
+                                    "query": "Giv",
+                                    "type": "bool_prefix",
+                                    "fields": [
+                                        "title.nn.ngrams",
+                                        "title.nn.ngrams.2_gram",
+                                        "title.nn.ngrams.3_gram",
+                                        "title.nn._index_prefix",
+                                    ],
+                                }
+                            },
+                            {
+                                "multi_match": {
+                                    "query": "Giv",
+                                    "type": "bool_prefix",
+                                    "fields": [
+                                        "title.no.ngrams",
+                                        "title.no.ngrams.2_gram",
+                                        "title.no.ngrams.3_gram",
+                                        "title.no._index_prefix",
+                                    ],
+                                }
+                            },
+                        ]
+                    }
+                },
+                "filter": [],
             }
         },
     }
