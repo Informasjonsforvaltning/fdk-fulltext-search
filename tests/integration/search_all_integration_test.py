@@ -615,11 +615,15 @@ class TestSearchAll:
     def test_search_all_total_should_be_sum_of_indices(
         self, client: Flask, docker_service, api, wait_for_ready
     ):
-        total_all = client.post("/search").json["page"]["totalElements"]
-        total_datasets = client.post("/datasets").json["page"]["totalElements"]
-        total_services = client.post("/dataservices").json["page"]["totalElements"]
-        total_concepts = client.post("/concepts").json["page"]["totalElements"]
-        total_models = client.post("/informationmodels").json["page"]["totalElements"]
+        total_all = client.post("/search", json={}).json["page"]["totalElements"]
+        total_datasets = client.post("/datasets", json={}).json["page"]["totalElements"]
+        total_services = client.post("/dataservices", json={}).json["page"][
+            "totalElements"
+        ]
+        total_concepts = client.post("/concepts", json={}).json["page"]["totalElements"]
+        total_models = client.post("/informationmodels", json={}).json["page"][
+            "totalElements"
+        ]
 
         assert total_all == sum(
             [total_datasets, total_services, total_concepts, total_models]
