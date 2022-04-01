@@ -25,14 +25,24 @@ services:
       depends_on:
         - elasticsearch
         - servicesmock
+        - rabbitmq
       environment:
         - HOST_URL=http://localhost
         - HOST_PORT=8000
         - ELASTIC_HOST=elasticsearch
         - ELASTIC_PORT=9200
         - ELASTIC_TCP_PORT=9300
+        - RABBIT_HOST=rabbitmq
         - API_URL=http://servicesmock:8080/
         - REASONING_SERVICE_HOST=http://servicesmock:8080
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
         - REFERENCE_DATA_BASE_URI=http://servicesmock:8080/reference-data
         - NEW_REFERENCE_DATA_BASE_URI=http://servicesmock:8080/new-reference-data
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"

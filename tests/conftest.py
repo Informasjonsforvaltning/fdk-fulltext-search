@@ -290,6 +290,13 @@ def mock_env(monkeypatch):
 
 
 @pytest.fixture
+def mock_publish_ingest_completed(mocker):
+    return mocker.patch(
+        "fdk_fulltext_search.ingest.publish_ingest_completed", return_value=None
+    )
+
+
+@pytest.fixture
 def mock_count_elastic(mocker):
     return mocker.patch(
         "elasticsearch.Elasticsearch.count",

@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import asdict
 from datetime import datetime
 import json
@@ -12,17 +13,20 @@ from elasticsearch import Elasticsearch, helpers
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import BulkIndexError
 import fdk_rdf_parser
+import pytz
 import requests
 from requests import HTTPError, RequestException, Timeout
 import simplejson
 
 from .utils import IndicesKey, PipelinesKey
+from ..service.rabbit import publish_ingest_completed
 
 ES_HOST = os.getenv("ELASTIC_HOST", "localhost")
 ES_PORT = os.getenv("ELASTIC_PORT", "9200")
 es_client = Elasticsearch([ES_HOST + ":" + ES_PORT])
 API_URL = os.getenv("API_URL", "http://localhost:8080/")
 REASONING_SERVICE_HOST = os.getenv("REASONING_SERVICE_HOST", "http://localhost:8080")
+TIMEZONE_OSLO = pytz.timezone("Europe/Oslo")
 
 
 def error_msg(
@@ -90,6 +94,7 @@ def fetch_information_models() -> Dict[str, Union[str, int]]:
 
     logging.info(f"fetching information models from {info_url}")
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         response = requests.get(
             url=info_url,
             params={},
@@ -115,6 +120,7 @@ def fetch_information_models() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("informationmodels", start_date))
             return result_msg(result[0])
         else:
             try:
@@ -135,6 +141,7 @@ def fetch_concepts() -> Dict[str, Union[str, int]]:
     concept_url = f"{REASONING_SERVICE_HOST}/concepts"
     logging.info(f"fetching concepts from {concept_url}")
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         response = requests.get(
             url=concept_url,
             params={},
@@ -160,6 +167,7 @@ def fetch_concepts() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("concepts", start_date))
             return result_msg(result[0])
         else:
             try:
@@ -178,6 +186,7 @@ def fetch_concepts() -> Dict[str, Union[str, int]]:
 def fetch_data_sets() -> Dict[str, Union[str, int]]:
     dataset_url = f"{REASONING_SERVICE_HOST}/datasets"
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         logging.info("fetching datasets")
         req = requests.get(
             url=dataset_url,
@@ -207,6 +216,7 @@ def fetch_data_sets() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("datasets", start_date))
             return result_msg(result[0])
         else:
             try:
@@ -227,6 +237,7 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
 
     logging.info(f"fetching data services from {dataservice_url}")
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         response = requests.get(
             url=dataservice_url,
             params={},
@@ -258,6 +269,7 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("dataservices", start_date))
             return result_msg(result[0])
         else:
             try:
@@ -278,6 +290,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
     event_url = f"{REASONING_SERVICE_HOST}/events"
     event_response = None
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         event_response = requests.get(
             url=event_url,
             params={},
@@ -322,6 +335,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("public_services", start_date))
             return result_msg(result[0])
         else:
             try:
@@ -343,6 +357,7 @@ def fetch_events() -> Dict[str, Union[str, int]]:
 
     logging.info(f"fetching events from {event_url}")
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         response = requests.get(
             url=event_url,
             params={},
@@ -368,6 +383,7 @@ def fetch_events() -> Dict[str, Union[str, int]]:
             if alias_error:
                 return alias_error
 
+            asyncio.run(publish_ingest_completed("events", start_date))
             return result_msg(result[0])
         else:
             try:

@@ -19,6 +19,7 @@ def test_fetch_info_models_should_create_index_and_update_alias(
     mock_single_reindex,
     mock_set_alias,
     mock_model_parser,
+    mock_publish_ingest_completed,
 ):
     fetch_information_models()
     assert mock_ingest_from_harvester.call_count == 1
@@ -37,7 +38,12 @@ def test_fetch_info_models_should_create_index_and_update_alias(
 
 @pytest.mark.unit
 def test_fetch_concepts_should_create_index_and_update_alias(
-    mock_env, mock_ingest_from_harvester, mock_get, mock_single_reindex, mock_set_alias
+    mock_env,
+    mock_ingest_from_harvester,
+    mock_get,
+    mock_single_reindex,
+    mock_set_alias,
+    mock_publish_ingest_completed,
 ):
     fetch_concepts()
     assert mock_ingest_from_harvester.call_count == 1
@@ -63,6 +69,7 @@ def test_fetch_data_services_should_create_index_and_update_alias(
     mock_single_reindex,
     mock_set_alias,
     mock_data_service_parser,
+    mock_publish_ingest_completed,
 ):
     fetch_data_services()
     assert mock_create_or_update_dataservice_pipeline.call_count == 1
@@ -92,6 +99,7 @@ def test_fetch_datasets_should_create_index_and_update_alias(
     mock_single_reindex,
     mock_set_alias,
     mock_dataset_parser,
+    mock_publish_ingest_completed,
 ):
     fetch_data_sets()
     assert mock_create_or_update_dataset_pipeline.call_count == 1
@@ -120,6 +128,7 @@ def test_fetch_public_services_should_create_index_and_update_alias(
     mock_single_reindex,
     mock_set_alias,
     mock_dataset_parser,
+    mock_publish_ingest_completed,
 ):
     fetch_public_services()
     assert mock_ingest_from_harvester.call_count == 1
@@ -144,6 +153,7 @@ def test_fetch_events_should_create_index_and_update_alias(
     mock_single_reindex,
     mock_set_alias,
     mock_dataset_parser,
+    mock_publish_ingest_completed,
 ):
     fetch_events()
     assert mock_ingest_from_harvester.call_count == 1
