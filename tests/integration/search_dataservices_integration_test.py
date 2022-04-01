@@ -17,7 +17,7 @@ class TestDataServiceSearch:
     def test_response_should_have_correct_content(
         self, client: Flask, docker_service, api, wait_for_dataservice_ready
     ):
-        result = client.post(data_services_url)
+        result = client.post(data_services_url, json={})
         assert result.status_code == 200
         result_json = result.json
         content_keys = result_json.keys()
@@ -44,7 +44,7 @@ class TestDataServiceSearch:
     def test_should_have_correct_size_and_page(
         self, client: Flask, docker_service, api, wait_for_dataservice_ready
     ):
-        result = client.post(data_services_url)
+        result = client.post(data_services_url, json={})
         assert result.status_code == 200
         default_result_json = result.json
         assert default_result_json["page"]["size"] == 10
