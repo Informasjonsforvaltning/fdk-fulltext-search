@@ -27,8 +27,8 @@ async def publish_ingest_completed(catalog_type: str, start_date: datetime) -> N
             aio_pika.Message(
                 body=json.dumps(
                     {
-                        "start": start_date.strftime(DATE_FORMAT),
-                        "end": datetime.now(pytz.timezone("Europe/Oslo")).strftime(
+                        "startTime": start_date.strftime(DATE_FORMAT),
+                        "endTime": datetime.now(pytz.timezone("Europe/Oslo")).strftime(
                             DATE_FORMAT
                         ),
                     }
