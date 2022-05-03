@@ -76,7 +76,7 @@ def get_datasets_for_feed(search_request_body: Dict[str, Any]) -> Iterable[Dict]
 
 
 def translate(translatable: Dict[str, str]) -> str:
-    languages = ["nb", "no", "nn", "en"] 
+    languages = ["nb", "no", "nn", "en"]
 
     # supported languages in preferred order
     for lang in languages:
@@ -87,7 +87,7 @@ def translate(translatable: Dict[str, str]) -> str:
     for translation in translatable.values():
         if translation != "":
             return translation
-        
+
     logging.error("No translation found")
     return ""
 
