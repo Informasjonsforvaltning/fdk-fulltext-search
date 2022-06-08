@@ -22,6 +22,7 @@ jobs:
       cluster: digdir-fdk-dev
       set_es_map_count: True
       nox_image: True
+      run_safety: True
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GCP_SA_DIGDIR_FDK_GCR_KEY: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
