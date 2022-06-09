@@ -341,7 +341,7 @@ develop = ["mock", "pytest (>=3.0.0)", "pytest-cov", "pytest-mock (<3.0.0)", "py
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "2.1.7"
+version = "2.1.8"
 description = ""
 category = "main"
 optional = false
@@ -1189,7 +1189,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b877bd837eab15a14f7fa654bc8af794e8023bafef0de6c7c9050d6ee9df9b5e"
+content-hash = "cff1be3fdc5be83539b09a4977ee9c041381769610b629f4e2203035eac191e0"
 
 [metadata.files]
 aio-pika = [
@@ -1426,8 +1426,8 @@ elasticsearch-dsl = [
     {file = "elasticsearch_dsl-7.4.0-py2.py3-none-any.whl", hash = "sha256:046ea10820b94c075081b528b4526c5bc776bda4226d702f269a5f203232064b"},
 ]
 fdk-rdf-parser = [
-    {file = "fdk-rdf-parser-2.1.7.tar.gz", hash = "sha256:05b78be16698aa6d46db4d802b5f90a60c5b08dec65a6af3fc9ceade64da59e1"},
-    {file = "fdk_rdf_parser-2.1.7-py3-none-any.whl", hash = "sha256:bba17227f6d804166662335241955d8097669f7033c9608ce10f93263730f3c0"},
+    {file = "fdk-rdf-parser-2.1.8.tar.gz", hash = "sha256:7a4bd3f91d96d43b1611a298f58d7b2bb790a3feeb1d99907efeba839eb17d47"},
+    {file = "fdk_rdf_parser-2.1.8-py3-none-any.whl", hash = "sha256:b3ed57a9aa69e2b9413b755b15a7753ee8ba93fa843d1fad7f4d93aa41d800e0"},
 ]
 feedgen = [
     {file = "feedgen-0.9.0.tar.gz", hash = "sha256:8e811bdbbed6570034950db23a4388453628a70e689a6e8303ccec430f5a804a"},
