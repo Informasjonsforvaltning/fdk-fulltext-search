@@ -1,0 +1,31 @@
+{
+  "id" : "ff4a4071-d542-4e8f-8313-5be31a6aea02",
+  "name" : "reference-types",
+  "request" : {
+    "url" : "/reference-types",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"referenceTypes\":[{\"uri\":\"http://purl.org/dc/terms/hasVersion\",\"code\":\"hasVersion\",\"label\":{\"nn\":\"Har versjon\",\"nb\":\"Har versjon\",\"en\":\"Has version\"}},{\"uri\":\"http://purl.org/dc/terms/isPartOf\",\"code\":\"isPartOf\",\"label\":{\"nn\":\"Er del av\",\"nb\":\"Er en del av\",\"en\":\"Is Part Of\"}},{\"uri\":\"http://purl.org/dc/terms/isReferencedBy\",\"code\":\"isReferencedBy\",\"label\":{\"nn\":\"Er referert av\",\"nb\":\"Er referert av\",\"en\":\"Is Referenced By\"}},{\"uri\":\"http://purl.org/dc/terms/isReplacedBy\",\"code\":\"isReplacedBy\",\"label\":{\"nn\":\"Er erstatta av\",\"nb\":\"Er erstattet av\",\"en\":\"Is replaced by\"}},{\"uri\":\"http://purl.org/dc/terms/isRequiredBy\",\"code\":\"isRequiredBy\",\"label\":{\"nn\":\"Er påkravd av\",\"nb\":\"Er påkrevd av\",\"en\":\"Is required by\"}},{\"uri\":\"http://purl.org/dc/terms/isVersionOf\",\"code\":\"isVersionOf\",\"label\":{\"nn\":\"Er versjon av\",\"nb\":\"Er versjon av\",\"en\":\"Is version of\"}},{\"uri\":\"http://purl.org/dc/terms/references\",\"code\":\"references\",\"label\":{\"nn\":\"Refererar\",\"nb\":\"Refererer\",\"en\":\"References\"}},{\"uri\":\"http://purl.org/dc/terms/relation\",\"code\":\"relation\",\"label\":{\"nn\":\"Er relatert til\",\"nb\":\"Er relatert til\",\"en\":\"Has relation to\"}},{\"uri\":\"http://purl.org/dc/terms/replaces\",\"code\":\"replaces\",\"label\":{\"nn\":\"Erstatter\",\"nb\":\"Erstatter\",\"en\":\"Replaces\"}},{\"uri\":\"http://purl.org/dc/terms/requires\",\"code\":\"requires\",\"label\":{\"nn\":\"Krevjar\",\"nb\":\"Krever\",\"en\":\"Requires\"}},{\"uri\":\"http://purl.org/dc/terms/source\",\"code\":\"source\",\"label\":{\"nn\":\"Er avleda frå (kjelde)\",\"nb\":\"Er avledet fra (kilde)\",\"en\":\"Source\"}}]}",
+    "headers" : {
+      "Server" : "nginx/1.21.6",
+      "Date" : "Thu, 04 Aug 2022 07:48:20 GMT",
+      "Content-Type" : "application/json",
+      "Vary" : [ "origin,access-control-request-method,access-control-request-headers,accept-encoding", "Accept, Accept-Encoding" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "DENY",
+      "X-Robots-Tag" : "noindex, nofollow, nosnippet, noarchive",
+      "Via" : "1.1 google",
+      "Alt-Svc" : "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    }
+  },
+  "uuid" : "ff4a4071-d542-4e8f-8313-5be31a6aea02",
+  "persistent" : true,
+  "insertionIndex" : 17
+}

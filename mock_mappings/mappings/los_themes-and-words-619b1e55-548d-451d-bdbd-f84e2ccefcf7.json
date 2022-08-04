@@ -2,7 +2,7 @@
   "id" : "619b1e55-548d-451d-bdbd-f84e2ccefcf7",
   "name" : "reference-data_los",
   "request" : {
-    "url" : "/new-reference-data/los/themes-and-words",
+    "url" : "/los/themes-and-words",
     "method" : "GET"
   },
   "response" : {

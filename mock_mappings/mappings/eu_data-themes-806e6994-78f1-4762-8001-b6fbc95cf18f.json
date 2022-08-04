@@ -2,7 +2,7 @@
   "id" : "806e6994-78f1-4762-8001-b6fbc95cf18f",
   "name" : "reference-data_eu_data-themes",
   "request" : {
-    "url" : "/new-reference-data/eu/data-themes",
+    "url" : "/eu/data-themes",
     "method" : "GET"
   },
   "response" : {

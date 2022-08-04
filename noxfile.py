@@ -144,4 +144,6 @@ def safety(session: Session) -> None:
             external=True,
         )
         session.install("safety")
-        session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+        session.run(
+            "safety", "check", f"--file={requirements.name}", "--output", "text"
+        )
