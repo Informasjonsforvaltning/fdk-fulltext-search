@@ -2,7 +2,7 @@
   "id" : "013c5bbe-5037-4477-9d51-be389a1d8f9a",
   "name" : "reference-data_eu_file-types",
   "request" : {
-    "url" : "/new-reference-data/eu/file-types",
+    "url" : "/eu/file-types",
     "method" : "GET"
   },
   "response" : {

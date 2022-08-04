@@ -1,0 +1,31 @@
+{
+  "id" : "37333090-0919-4767-877c-e1bc55a1b58f",
+  "name" : "linguistic-systems",
+  "request" : {
+    "url" : "/linguistic-systems",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"linguisticSystems\":[{\"uri\":\"http://publications.europa.eu/resource/authority/language/ENG\",\"code\":\"ENG\",\"label\":{\"nn\":\"Engelsk\",\"no\":\"Engelsk\",\"nb\":\"Engelsk\",\"en\":\"English\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/language/NNO\",\"code\":\"NNO\",\"label\":{\"nn\":\"Norsk Nynorsk\",\"no\":\"Norsk Nynorsk\",\"nb\":\"Norsk Nynorsk\",\"en\":\"Norwegian Nynorsk\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/language/NOB\",\"code\":\"NOB\",\"label\":{\"nn\":\"Norsk Bokmål\",\"no\":\"Norsk Bokmål\",\"nb\":\"Norsk Bokmål\",\"en\":\"Norwegian Bokmål\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/language/NOR\",\"code\":\"NOR\",\"label\":{\"nn\":\"Norsk\",\"no\":\"Norsk\",\"nb\":\"Norsk\",\"en\":\"Norwegian\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/language/SMI\",\"code\":\"SMI\",\"label\":{\"en\":\"Sami languages\"}}]}",
+    "headers" : {
+      "Server" : "nginx/1.21.6",
+      "Date" : "Thu, 04 Aug 2022 07:48:20 GMT",
+      "Content-Type" : "application/json",
+      "Vary" : [ "origin,access-control-request-method,access-control-request-headers,accept-encoding", "Accept, Accept-Encoding" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "DENY",
+      "X-Robots-Tag" : "noindex, nofollow, nosnippet, noarchive",
+      "Via" : "1.1 google",
+      "Alt-Svc" : "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    }
+  },
+  "uuid" : "37333090-0919-4767-877c-e1bc55a1b58f",
+  "persistent" : true,
+  "insertionIndex" : 16
+}
