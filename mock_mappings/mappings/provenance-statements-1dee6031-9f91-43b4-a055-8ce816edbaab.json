@@ -2,7 +2,7 @@
   "id" : "1dee6031-9f91-43b4-a055-8ce816edbaab",
   "name" : "provenance-statements",
   "request" : {
-    "url" : "/provenance-statements",
+    "url" : "/reference-data/provenance-statements",
     "method" : "GET"
   },
   "response" : {

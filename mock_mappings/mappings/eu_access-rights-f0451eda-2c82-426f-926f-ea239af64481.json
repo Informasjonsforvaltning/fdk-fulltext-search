@@ -2,7 +2,7 @@
   "id" : "f0451eda-2c82-426f-926f-ea239af64481",
   "name" : "eu_access-rights",
   "request" : {
-    "url" : "/eu/access-rights",
+    "url" : "/reference-data/eu/access-rights",
     "method" : "GET"
   },
   "response" : {
