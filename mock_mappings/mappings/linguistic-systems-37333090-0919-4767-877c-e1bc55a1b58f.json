@@ -2,7 +2,7 @@
   "id" : "37333090-0919-4767-877c-e1bc55a1b58f",
   "name" : "linguistic-systems",
   "request" : {
-    "url" : "/linguistic-systems",
+    "url" : "/reference-data/linguistic-systems",
     "method" : "GET"
   },
   "response" : {

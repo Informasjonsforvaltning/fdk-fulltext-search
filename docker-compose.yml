@@ -36,7 +36,7 @@ services:
         - API_URL=http://servicesmock:8080/
         - REASONING_SERVICE_HOST=http://servicesmock:8080
         - ORGANIZATION_CATALOGUE_BASE_URI=http://servicesmock:8080
-        - NEW_REFERENCE_DATA_BASE_URI=http://servicesmock:8080
+        - FDK_REFERENCE_DATA_BASE_URI=http://servicesmock:8080
   rabbitmq:
     image: rabbitmq:3-management
     environment:
