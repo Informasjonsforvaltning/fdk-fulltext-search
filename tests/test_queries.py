@@ -63,11 +63,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -197,11 +193,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -234,11 +226,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -275,11 +263,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -330,11 +314,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -382,7 +362,7 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     "bool": {
                         "must": [
                             {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
+                            {"term": {"isOpenData": "true"}},
                         ]
                     }
                 }
@@ -407,7 +387,7 @@ def test_empty_all_indices_query():
                     "bool": {
                         "must": [
                             {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
+                            {"term": {"isOpenData": "true"}},
                         ]
                     }
                 },
@@ -459,7 +439,7 @@ def test_all_indices_should_return_query_with_filter():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -593,7 +573,7 @@ def test_all_indices_should_return_query_with_filter():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -630,7 +610,7 @@ def test_all_indices_should_return_query_with_filter():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -671,7 +651,7 @@ def test_all_indices_should_return_query_with_filter():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -726,7 +706,7 @@ def test_all_indices_should_return_query_with_filter():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -780,7 +760,7 @@ def test_all_indices_should_return_query_with_filter():
                     "bool": {
                         "must": [
                             {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
+                            {"term": {"isOpenData": "true"}},
                         ]
                     }
                 }
@@ -830,11 +810,7 @@ def test_all_indices_with_several_words():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -964,11 +940,7 @@ def test_all_indices_with_several_words():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -1001,11 +973,7 @@ def test_all_indices_with_several_words():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -1042,11 +1010,7 @@ def test_all_indices_with_several_words():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -1097,11 +1061,7 @@ def test_all_indices_with_several_words():
                                                     "accessRights.code.keyword": "PUBLIC"
                                                 }
                                             },
-                                            {
-                                                "term": {
-                                                    "distribution.openLicense": "true"
-                                                }
-                                            },
+                                            {"term": {"isOpenData": "true"}},
                                         ]
                                     }
                                 },
@@ -1149,7 +1109,7 @@ def test_all_indices_with_several_words():
                     "bool": {
                         "must": [
                             {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
+                            {"term": {"isOpenData": "true"}},
                         ]
                     }
                 }
@@ -1252,7 +1212,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -1386,7 +1346,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -1423,7 +1383,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -1464,7 +1424,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -1519,7 +1479,7 @@ def test_all_indices_should_return_query_with_must_not():
                                                         },
                                                         {
                                                             "term": {
-                                                                "distribution.openLicense": "true"
+                                                                "isOpenData": "true"
                                                             }
                                                         },
                                                     ]
@@ -1575,7 +1535,7 @@ def test_all_indices_should_return_query_with_must_not():
                     "bool": {
                         "must": [
                             {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                            {"term": {"distribution.openLicense": "true"}},
+                            {"term": {"isOpenData": "true"}},
                         ]
                     }
                 }
