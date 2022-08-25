@@ -17,7 +17,7 @@ def open_data_query() -> Dict[str, Dict[str, List[Dict[str, Dict[str, str]]]]]:
         "bool": {
             "must": [
                 {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                {"term": {"distribution.openLicense": "true"}},
+                {"term": {"isOpenData": "true"}},
             ]
         }
     }
@@ -29,7 +29,7 @@ def must_not_be_open_data_query() -> Dict[
     return {
         "bool": {
             "must_not": [
-                {"term": {"distribution.openLicense": "true"}},
+                {"term": {"isOpenData": "true"}},
             ]
         }
     }

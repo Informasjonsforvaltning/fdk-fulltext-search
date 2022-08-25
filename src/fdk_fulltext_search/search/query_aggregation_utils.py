@@ -36,7 +36,7 @@ def default_all_indices_aggs() -> Dict:
                 "bool": {
                     "must": [
                         {"term": {"accessRights.code.keyword": "PUBLIC"}},
-                        {"term": {"distribution.openLicense": "true"}},
+                        {"term": {"isOpenData": "true"}},
                     ]
                 }
             }
