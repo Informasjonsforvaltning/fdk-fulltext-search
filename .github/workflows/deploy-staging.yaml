@@ -7,16 +7,6 @@ on:
       - main
 
 jobs:
-  codeql:
-    name: Run codeql
-    uses: Informasjonsforvaltning/workflows/.github/workflows/codeql.yaml@main
-    with:
-      language: python
-      python_version: '3.8'
-      python_architecture: x64
-    secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build-and-deploy-staging:
     name: Build & deploy to staging when pull request is created
     if: github.event.pull_request.draft == false
