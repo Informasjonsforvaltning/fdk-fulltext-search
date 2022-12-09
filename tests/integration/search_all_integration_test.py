@@ -546,7 +546,9 @@ class TestSearchAll:
             == result["aggregations"]["accessRights"]["buckets"][0]["doc_count"]
         )
         for hits in result["hits"]:
-            assert not hits.get("accessRights")
+            assert not hits.get("accessRights") or not hits.get("accessRights").get(
+                "code"
+            )
 
     @pytest.mark.integration
     def test_search_with_empty_result_should_return_empty_object(

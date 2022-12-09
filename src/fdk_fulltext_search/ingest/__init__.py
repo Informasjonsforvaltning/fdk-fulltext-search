@@ -9,7 +9,8 @@ import time
 import traceback
 from typing import Any, Dict, Generator, Optional, Union
 
-from elasticsearch import Elasticsearch, helpers
+from elasticsearch import helpers
+from elasticsearch.client import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import BulkIndexError
 import fdk_rdf_parser
@@ -398,7 +399,7 @@ def fetch_events() -> Dict[str, Union[str, int]]:
 
 
 def elasticsearch_ingest_from_harvester(
-    documents: Any, index: str, id_key: str, pipeline: str = None
+    documents: Any, index: str, id_key: str, pipeline: Optional[str] = None
 ) -> Any:
     try:
         result = helpers.bulk(
@@ -414,7 +415,7 @@ def elasticsearch_ingest_from_harvester(
 
 
 def yield_documents_from_harvester(
-    documents: Any, index: str, id_key: str, pipeline: str = None
+    documents: Any, index: str, id_key: str, pipeline: Optional[str] = None
 ) -> Generator:
     """get docs from harvester responses"""
     for doc_index in documents:
