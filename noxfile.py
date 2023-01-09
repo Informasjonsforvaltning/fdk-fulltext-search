@@ -17,7 +17,7 @@ nox.options.sessions = (
 )
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def unit_tests(session: Session) -> None:
     """Run the unit test suite."""
     args = session.posargs
@@ -36,7 +36,7 @@ def unit_tests(session: Session) -> None:
     )
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def integration_tests(session: Session) -> None:
     """Run the integration test suite."""
     args = session.posargs
@@ -55,7 +55,7 @@ def integration_tests(session: Session) -> None:
     )
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def tests(session: Session) -> None:
     """Run the integration test suite."""
     args = session.posargs or ["--cov"]
@@ -76,7 +76,7 @@ def tests(session: Session) -> None:
     )
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def contract_tests(session: Session) -> None:
     """Run the contract test suite."""
     args = session.posargs
@@ -89,7 +89,7 @@ def contract_tests(session: Session) -> None:
     )
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def black(session: Session) -> None:
     """Run black code formatter."""
     args = session.posargs or locations
@@ -97,7 +97,7 @@ def black(session: Session) -> None:
     session.run("black", *args)
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def lint(session: Session) -> None:
     """Lint using flake8."""
     args = session.posargs or locations
@@ -114,7 +114,7 @@ def lint(session: Session) -> None:
     session.run("flake8", *args)
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def coverage(session: Session) -> None:
     """Upload coverage data."""
     session.install("coverage[toml]", "codecov")
@@ -122,7 +122,7 @@ def coverage(session: Session) -> None:
     session.run("codecov", *session.posargs)
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
@@ -130,7 +130,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args)
 
 
-@nox_poetry.session
+@nox_poetry.session(python=["3.8"])
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     with tempfile.NamedTemporaryFile() as requirements:
