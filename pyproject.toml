@@ -7,7 +7,7 @@ authors = ["NilsOveTen <nils.ove.tendenes@digdir.no>"]
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 flask = "2.2.2"
-python-dotenv = "0.21.0"
+python-dotenv = "0.21.1"
 flask-restful = "0.3.9"
 elasticsearch = "7.16.2"
 elasticsearch-dsl = "7.4.0"
