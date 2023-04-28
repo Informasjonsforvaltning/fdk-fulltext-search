@@ -23,9 +23,9 @@ def open_data_query() -> Dict[str, Dict[str, List[Dict[str, Dict[str, str]]]]]:
     }
 
 
-def must_not_be_open_data_query() -> Dict[
-    str, Dict[str, List[Dict[str, Dict[str, str]]]]
-]:
+def must_not_be_open_data_query() -> (
+    Dict[str, Dict[str, List[Dict[str, Dict[str, str]]]]]
+):
     return {
         "bool": {
             "must_not": [
