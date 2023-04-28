@@ -322,7 +322,6 @@ class TestDataSetSearch:
     def test_filter_with_transport_profile(
         self, client: Flask, wait_for_datasets_ready
     ):
-
         default_profile_body = {
             "filters": [
                 {"accessRights": "PUBLIC"},

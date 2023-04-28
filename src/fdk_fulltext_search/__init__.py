@@ -10,7 +10,6 @@ import fdk_fulltext_search.endpoints as endpoints
 
 
 def create_app(test_config: Optional[Any] = None) -> Flask:
-
     # Create and configure the app
     load_dotenv(override=True)
     app = Flask(__name__, instance_relative_config=True)
