@@ -761,20 +761,20 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "2.2.10"
+version = "2.2.11"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "fdk_rdf_parser-2.2.10-py3-none-any.whl", hash = "sha256:6ff64c7e8444ba85afd5f9b6ab17cab7255f46242776297071e483e207fc1a4c"},
-    {file = "fdk_rdf_parser-2.2.10.tar.gz", hash = "sha256:7f5e774c8d481c81c66a9e8eca5958709df80d5b1cc1b5fac5085c5c07ca2db5"},
+    {file = "fdk_rdf_parser-2.2.11-py3-none-any.whl", hash = "sha256:5614da9433a2003e4e8d7e22f368695f4400e2a2dd713be1bb23d9009746ed0c"},
+    {file = "fdk_rdf_parser-2.2.11.tar.gz", hash = "sha256:a36e8a21d94e02068d89d574a2ab7f9b7bac801b19020e30a793d03c94496ad4"},
 ]
 
 [package.dependencies]
 isodate = ">=0.6.1,<0.7.0"
-rdflib = ">=6.2.0,<7.0.0"
-requests = ">=2.28.1,<3.0.0"
+rdflib = ">=6.3.2,<7.0.0"
+requests = ">=2.29.0,<3.0.0"
 
 [[package]]
 name = "feedgen"
@@ -3139,4 +3139,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "4efa6707fc739ee0dfde0fb6af715a32abbb3c75d814b6cd3254462ef90d05b3"
+content-hash = "0e189e28d61158bc1d11d1f5a552a8dcc95e0f5105c277535c48f40647bdf9f2"

@@ -426,7 +426,7 @@ class TestSearchAll:
     ):
         body = {
             "filters": [
-                {"los": "helse-og-omsorg,naring"},
+                {"los": "bygg-og-eiendom,naring"},
             ],
         }
         result = client.post("/search", json=body)
@@ -438,7 +438,7 @@ class TestSearchAll:
     ):
         body = {
             "filters": [
-                {"los": "helse-og-omsorg,helse-og-omsorg/svangerskap"},
+                {"los": "naring,naring/landbruk/vegbygging"},
             ],
         }
         result = client.post("/search", json=body).json

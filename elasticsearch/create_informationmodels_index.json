@@ -3,15 +3,6 @@
         "properties": {
             "losTheme": {
                 "properties": {
-                    "children": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
                     "isTema": {
                         "type": "boolean"
                     },
@@ -67,33 +58,6 @@
                             }
                         }
                     },
-                    "parents": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "relatedTerms": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "synonyms": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
                     "uri": {
                         "type": "text",
                         "fields": {
@@ -116,51 +80,6 @@
                             }
                         }
                     },
-                    "conceptSchema": {
-                        "properties": {
-                            "id": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
-                            },
-                            "title": {
-                                "properties": {
-                                    "en": {
-                                        "type": "text",
-                                        "analyzer": "english",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "versioninfo": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
-                            },
-                            "versionnumber": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                }
-                            }
-                        }
-                    },
                     "id": {
                         "type": "text",
                         "fields": {
@@ -169,9 +88,6 @@
                                 "ignore_above": 256
                             }
                         }
-                    },
-                    "startUse": {
-                        "type": "date"
                     },
                     "title": {
                         "properties": {

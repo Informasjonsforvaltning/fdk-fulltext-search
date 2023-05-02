@@ -88,7 +88,7 @@ class TestInformationModelSearch:
         result = client.post(informationmodel_url, json=body)
         assert result.status_code == 200
         result_hits = result.json["hits"]
-        assert len(result_hits) == 5
+        assert len(result_hits) == 6
         for hit in result_hits:
             los_paths = ",".join(
                 [",".join(los_theme["losPaths"]) for los_theme in hit["losTheme"]]
