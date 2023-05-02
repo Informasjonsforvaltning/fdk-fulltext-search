@@ -1,0 +1,31 @@
+{
+  "id" : "23bd153d-b961-43f0-a728-a21014b67ad1",
+  "name" : "reference-data_open-licenses",
+  "request" : {
+    "url" : "/reference-data/open-licenses",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"openLicenses\":[{\"uri\":\"http://publications.europa.eu/resource/authority/licence/CC0\",\"code\":\"CC0 1.0\",\"label\":{\"no\":\"Creative Commons Universal Fristatus-erklæring\",\"en\":\"Creative Commons Universal Public Domain Dedication\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/licence/CC_BY_4_0\",\"code\":\"CC BY 4.0\",\"label\":{\"no\":\"Creative Commons Navngivelse 4.0 Internasjonal\",\"en\":\"Creative Commons Attribution 4.0 International\"}},{\"uri\":\"http://publications.europa.eu/resource/authority/licence/NLOD_2_0\",\"code\":\"NLOD20\",\"label\":{\"no\":\"Norsk lisens for offentlige data\",\"en\":\"Norwegian Licence for Open Government Data\"}},{\"uri\":\"http://creativecommons.org/licenses/by/4.0/\",\"code\":\"CC BY 4.0\",\"label\":{\"no\":\"Creative Commons Navngivelse 4.0 Internasjonal\",\"en\":\"Creative Commons Attribution 4.0 International\"}},{\"uri\":\"http://creativecommons.org/licenses/by/4.0/deed.no\",\"code\":\"CC BY 4.0 DEED\",\"isReplacedBy\":\"http://creativecommons.org/licenses/by/4.0/\",\"label\":{\"no\":\"Creative Commons Navngivelse 4.0 Internasjonal\",\"en\":\"Creative Commons Attribution 4.0 International\"}},{\"uri\":\"http://creativecommons.org/publicdomain/zero/1.0/\",\"code\":\"CC0 1.0\",\"label\":{\"no\":\"Creative Commons Universal Fristatus-erklæring\",\"en\":\"Creative Commons Universal Public Domain Dedication\"}},{\"uri\":\"http://data.norge.no/nlod/\",\"code\":\"NLOD\",\"isReplacedBy\":\"http://data.norge.no/nlod/no/2.0\",\"label\":{\"no\":\"Norsk lisens for offentlige data\",\"en\":\"Norwegian Licence for Open Government Data\"}},{\"uri\":\"http://data.norge.no/nlod/no/\",\"code\":\"NLOD\",\"isReplacedBy\":\"http://data.norge.no/nlod/no/2.0\",\"label\":{\"no\":\"Norsk lisens for offentlige data\",\"en\":\"Norwegian Licence for Open Government Data\"}},{\"uri\":\"http://data.norge.no/nlod/no/1.0\",\"code\":\"NLOD10\",\"isReplacedBy\":\"http://data.norge.no/nlod/no/2.0\",\"label\":{\"no\":\"Norsk lisens for offentlige data\",\"en\":\"Norwegian Licence for Open Government Data\"}},{\"uri\":\"http://data.norge.no/nlod/no/2.0\",\"code\":\"NLOD20\",\"label\":{\"no\":\"Norsk lisens for offentlige data\",\"en\":\"Norwegian Licence for Open Government Data\"}}]}",
+    "headers" : {
+      "Server" : "nginx/1.23.4",
+      "Date" : "Tue, 02 May 2023 13:43:39 GMT",
+      "Content-Type" : "application/json",
+      "Vary" : [ "origin,access-control-request-method,access-control-request-headers,accept-encoding", "Accept, Accept-Encoding" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "0",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Strict-Transport-Security" : "max-age=31536000 ; includeSubDomains",
+      "X-Frame-Options" : "DENY",
+      "X-Robots-Tag" : "noindex, nofollow, nosnippet, noarchive",
+      "Via" : "1.1 google",
+      "Alt-Svc" : "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    }
+  },
+  "uuid" : "23bd153d-b961-43f0-a728-a21014b67ad1",
+  "persistent" : true,
+  "insertionIndex" : 20
+}
