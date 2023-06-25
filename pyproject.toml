@@ -28,7 +28,7 @@ poetry = "^1.4.2"
 virtualenv = "20.23.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "7.3.1"
+pytest = "7.4.0"
 pytest-cov = "4.0.0"
 pytest-mock = "3.10.0"
 mock = "5.0.2"
