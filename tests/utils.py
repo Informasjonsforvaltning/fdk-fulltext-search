@@ -33,7 +33,7 @@ def wait_for_es():
 
 
 def populate():
-    min_documents = 6511
+    min_documents = 6527
     initial = requests.get("http://localhost:8000/count")
     if initial.json()["count"] < min_documents:
         start_reindex("all")

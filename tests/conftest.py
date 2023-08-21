@@ -112,6 +112,7 @@ Services.get_logs = get_logs
 def is_responsive(url, docker_services):
     """Return true if response from service is 200."""
     url = f"{url}/ready"
+    time.sleep(1)
     try:
         # print logs of relevant services
         logs = docker_services.get_logs("fdk-fulltext-search")
