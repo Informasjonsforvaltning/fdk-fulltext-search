@@ -4,15 +4,18 @@ fdk-fulltext-search
 
 ## Developing
 ### Requirements
+- [pyenv](https://github.com/pyenv/pyenv) (recommended)
 - [poetry](https://python-poetry.org/)
 - [nox](https://nox.thea.codes/en/stable/)
 - [nox-poetry](https://pypi.org/project/nox-poetry/)
 
 ### Install software:
 ```
-% pip install poetry==1.1.11
-% pip install nox==2021.10.1
-% pip install nox-poetry==0.9.0
+% pyenv install 3.8.17
+% pyenv local 3.8.17
+% pip install poetry==1.5.1
+% pip install nox==2023.4.22
+% pip install nox-poetry==1.0.2
 % poetry install
 ```
 #### Env variables:
