@@ -5,3 +5,4 @@ import-order-style = google
 per-file-ignores =
     # S113: requests without timeout
     tests/*: S101,ANN,E501,S113
+    src/fdk_fulltext_search/gunicorn_config.py: B026
