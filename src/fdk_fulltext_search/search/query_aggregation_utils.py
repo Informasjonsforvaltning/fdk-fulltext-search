@@ -69,6 +69,16 @@ def has_competent_authority_aggregation() -> Dict[str, Dict]:
     }
 
 
+def owned_by_aggregation() -> Dict[str, Dict]:
+    return {
+        "terms": {
+            "field": "ownedBy.orgPath",
+            "missing": "MISSING",
+            "size": 1000000000,
+        }
+    }
+
+
 def is_grouped_by_aggregation() -> Dict[str, Dict]:
     return {"terms": {"field": "isGroupedBy.keyword", "size": 1000000000}}
 

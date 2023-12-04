@@ -569,6 +569,9 @@ class PublicServiceQuery(AbstractSearchQuery):
                 "hasCompetentAuthority"
             ] = query_aggregation_utils.has_competent_authority_aggregation()
             self.body["aggs"][
+                "ownedBy"
+            ] = query_aggregation_utils.owned_by_aggregation()
+            self.body["aggs"][
                 "isGroupedBy"
             ] = query_aggregation_utils.is_grouped_by_aggregation()
 
@@ -657,6 +660,9 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
             self.body["aggs"][
                 "hasCompetentAuthority"
             ] = query_aggregation_utils.has_competent_authority_aggregation()
+            self.body["aggs"][
+                "ownedBy"
+            ] = query_aggregation_utils.owned_by_aggregation()
             self.body["aggs"][
                 "isGroupedBy"
             ] = query_aggregation_utils.is_grouped_by_aggregation()

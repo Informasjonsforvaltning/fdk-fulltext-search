@@ -120,5 +120,7 @@ index_fulltext_fields = {
         "description.*",
         "hasCompetentAuthority.name^3",
         "hasCompetentAuthority.prefLabel^3",
+        "ownedBy.name^3",
+        "ownedBy.prefLabel^3",
     ],
 }
