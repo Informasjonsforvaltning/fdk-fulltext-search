@@ -2,7 +2,7 @@
   "id" : "425a001e-ea59-4a98-ac95-dbee337426ce",
   "name" : "events",
   "request" : {
-    "url" : "/events",
+    "url" : "/events/catalogs",
     "method" : "GET"
   },
   "response" : {
