@@ -2,7 +2,7 @@
   "id" : "59a16896-2fba-46f0-802b-289a19ebac14",
   "name" : "public-services",
   "request" : {
-    "url" : "/public-services",
+    "url" : "/public-services/catalogs",
     "method" : "GET"
   },
   "response" : {

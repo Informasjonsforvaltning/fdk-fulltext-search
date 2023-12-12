@@ -288,7 +288,7 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
 
 
 def fetch_public_services() -> Dict[str, Union[str, int]]:
-    event_url = f"{REASONING_SERVICE_HOST}/events"
+    event_url = f"{REASONING_SERVICE_HOST}/events/catalogs"
     event_response = None
     try:
         start_date = datetime.now(TIMEZONE_OSLO)
@@ -303,7 +303,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
         event_result = error_msg(f"fetch events from {event_url}", err)
         logging.error(f"{traceback.format_exc()} {event_result['message']}")
 
-    public_service_url = f"{REASONING_SERVICE_HOST}/public-services"
+    public_service_url = f"{REASONING_SERVICE_HOST}/public-services/catalogs"
 
     logging.info(f"fetching public_services from {public_service_url}")
     try:
@@ -354,7 +354,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
 
 
 def fetch_events() -> Dict[str, Union[str, int]]:
-    event_url = f"{REASONING_SERVICE_HOST}/events"
+    event_url = f"{REASONING_SERVICE_HOST}/events/catalogs"
 
     logging.info(f"fetching events from {event_url}")
     try:
