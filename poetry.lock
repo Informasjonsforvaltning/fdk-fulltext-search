@@ -756,18 +756,18 @@ devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benc
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "2.2.14"
+version = "2.2.15"
 description = ""
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "fdk_rdf_parser-2.2.14-py3-none-any.whl", hash = "sha256:4000820dc91f7aab133b6803b678b127c57ddef2589deb44f69257eaf57f2390"},
-    {file = "fdk_rdf_parser-2.2.14.tar.gz", hash = "sha256:3629a4d50862ce7d6b635db73abe245516f3805297050b2e998645fb909ffbf4"},
+    {file = "fdk_rdf_parser-2.2.15-py3-none-any.whl", hash = "sha256:d67c13934cace6f19524f9fc73280176b92ce6341300b271e3265584bf5515e4"},
+    {file = "fdk_rdf_parser-2.2.15.tar.gz", hash = "sha256:cf46575997edcee492bb597850f09c00cbf076232a7a33f0ba73a0792248e451"},
 ]
 
 [package.dependencies]
 isodate = ">=0.6.1,<0.7.0"
-rdflib = ">=6.3.2,<7.0.0"
+rdflib = ">=7.0.0,<8.0.0"
 requests = ">=2.31.0,<3.0.0"
 
 [[package]]
@@ -2308,13 +2308,13 @@ full = ["numpy"]
 
 [[package]]
 name = "rdflib"
-version = "6.3.2"
+version = "7.0.0"
 description = "RDFLib is a Python library for working with RDF, a simple yet powerful language for representing information."
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8.1,<4.0.0"
 files = [
-    {file = "rdflib-6.3.2-py3-none-any.whl", hash = "sha256:36b4e74a32aa1e4fa7b8719876fb192f19ecd45ff932ea5ebbd2e417a0247e63"},
-    {file = "rdflib-6.3.2.tar.gz", hash = "sha256:72af591ff704f4caacea7ecc0c5a9056b8553e0489dd4f35a9bc52dbd41522e0"},
+    {file = "rdflib-7.0.0-py3-none-any.whl", hash = "sha256:0438920912a642c866a513de6fe8a0001bd86ef975057d6962c79ce4771687cd"},
+    {file = "rdflib-7.0.0.tar.gz", hash = "sha256:9995eb8569428059b8c1affd26b25eac510d64f5043d9ce8c84e0d0036e995ae"},
 ]
 
 [package.dependencies]
@@ -2971,4 +2971,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "7ff0915b6433bb223f909c2ab6b8b402dd4adae04022055797bb4590a10fc3a0"
+content-hash = "0cab0b0532c592ad71c522292063cded95014371325f563a5ca29e94c22213de"
