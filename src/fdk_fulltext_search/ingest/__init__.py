@@ -288,25 +288,11 @@ def fetch_data_services() -> Dict[str, Union[str, int]]:
 
 
 def fetch_public_services() -> Dict[str, Union[str, int]]:
-    event_url = f"{REASONING_SERVICE_HOST}/events/catalogs"
-    event_response = None
-    try:
-        start_date = datetime.now(TIMEZONE_OSLO)
-        event_response = requests.get(
-            url=event_url,
-            params={},
-            headers={"Accept": "text/turtle"},
-            timeout=10,
-        )
-        event_response.raise_for_status()
-    except Exception as err:
-        event_result = error_msg(f"fetch events from {event_url}", err)
-        logging.error(f"{traceback.format_exc()} {event_result['message']}")
-
     public_service_url = f"{REASONING_SERVICE_HOST}/public-services/catalogs"
 
     logging.info(f"fetching public_services from {public_service_url}")
     try:
+        start_date = datetime.now(TIMEZONE_OSLO)
         response = requests.get(
             url=public_service_url,
             params={},
@@ -315,9 +301,7 @@ def fetch_public_services() -> Dict[str, Union[str, int]]:
         )
         response.raise_for_status()
 
-        parsed_rdf = fdk_rdf_parser.parse_public_services(
-            response.text, event_response.text if event_response is not None else None
-        )
+        parsed_rdf = fdk_rdf_parser.parse_public_services(response.text)
         if parsed_rdf is not None:
             new_index_name = f"{IndicesKey.PUBLIC_SERVICES}-{os.urandom(4).hex()}"
 

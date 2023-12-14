@@ -756,13 +756,13 @@ devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benc
 
 [[package]]
 name = "fdk-rdf-parser"
-version = "2.2.16"
+version = "2.3.0"
 description = ""
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "fdk_rdf_parser-2.2.16-py3-none-any.whl", hash = "sha256:940ff3bf055c03e25b9ec639af262f7e0ebe1cf9bd725bd75cc7d0b402fb6a6c"},
-    {file = "fdk_rdf_parser-2.2.16.tar.gz", hash = "sha256:90473dd9c89b54fe87370fec51d3c07663cd329dee0768f0f584a97371df0e65"},
+    {file = "fdk_rdf_parser-2.3.0-py3-none-any.whl", hash = "sha256:05c55766fd05a69aec85c7353f6ab1128e949dfc01c2f3ceeeec5f6b176b0cbf"},
+    {file = "fdk_rdf_parser-2.3.0.tar.gz", hash = "sha256:ad762a568473415517eabb561a49302aa11beca69eff5c742bd174f4359d30df"},
 ]
 
 [package.dependencies]
@@ -2971,4 +2971,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "80f5fcd75c72183955f8946a0c77fb0e963413ea17125341548b9c74b71b4cff"
+content-hash = "85c941b8ed47ee3424a205c5425ffa715efe2cc48cd3446d9f30b7707b696dec"

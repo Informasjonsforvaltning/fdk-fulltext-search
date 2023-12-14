@@ -280,14 +280,6 @@
           }
         }
       },
-      "associatedBroaderTypesByEvents": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword"
-          }
-        }
-      },
       "uri": {
         "type": "text",
         "fields": {
