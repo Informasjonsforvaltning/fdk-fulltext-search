@@ -73,12 +73,6 @@ def is_grouped_by_aggregation() -> Dict[str, Dict]:
     return {"terms": {"field": "isGroupedBy.keyword", "size": 1000000000}}
 
 
-def associated_broader_types_by_events_aggregation() -> Dict[str, Dict]:
-    return {
-        "terms": {"field": "associatedBroaderTypesByEvents.keyword", "size": 1000000000}
-    }
-
-
 def fdk_format_aggregation() -> Dict[str, Dict]:
     return {"terms": {"field": "fdkFormatPrefixed.keyword", "size": 1000000000}}
 

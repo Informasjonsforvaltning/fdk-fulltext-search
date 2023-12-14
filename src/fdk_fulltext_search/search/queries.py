@@ -660,9 +660,6 @@ class PublicServicesAndEventsQuery(AbstractSearchQuery):
             self.body["aggs"][
                 "isGroupedBy"
             ] = query_aggregation_utils.is_grouped_by_aggregation()
-            self.body["aggs"][
-                "associatedBroaderTypesByEvents"
-            ] = query_aggregation_utils.associated_broader_types_by_events_aggregation()
 
     def add_search_string(self: Any, param: str) -> Any:
         self.query["dis_max"]["queries"].append(
