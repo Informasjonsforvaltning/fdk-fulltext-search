@@ -772,12 +772,12 @@ requests = ">=2.31.0,<3.0.0"
 
 [[package]]
 name = "feedgen"
-version = "0.9.0"
+version = "1.0.0"
 description = "Feed Generator (ATOM, RSS, Podcasts)"
 optional = false
 python-versions = "*"
 files = [
-    {file = "feedgen-0.9.0.tar.gz", hash = "sha256:8e811bdbbed6570034950db23a4388453628a70e689a6e8303ccec430f5a804a"},
+    {file = "feedgen-1.0.0.tar.gz", hash = "sha256:d9bd51c3b5e956a2a52998c3708c4d2c729f2fcc311188e1e5d3b9726393546a"},
 ]
 
 [package.dependencies]
@@ -2971,4 +2971,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "85c941b8ed47ee3424a205c5425ffa715efe2cc48cd3446d9f30b7707b696dec"
+content-hash = "a42cf7b54ee72bef190ab5303c2adeaf623ee194f1b21df3f1b357c1564a814e"
