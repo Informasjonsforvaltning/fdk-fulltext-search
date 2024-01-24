@@ -101,13 +101,11 @@ class TestSearchAll:
         keys = result.keys()
         assert "los" in keys
         assert "orgPath" in keys
-        assert "availability" in keys
         assert "accessRights" in keys
         assert "opendata" in keys
         assert "theme" in keys
         assert len(result["los"]["buckets"]) > 0
         assert len(result["orgPath"]["buckets"]) > 0
-        assert len(result["availability"]["buckets"]) == 3
         assert len(result["accessRights"]["buckets"]) > 0
         assert len(result["theme"]["buckets"]) > 0
 
@@ -270,15 +268,6 @@ class TestSearchAll:
             arr = prt1 + prt2
             assert (len(arr)) > 0
             assert "/KOMMUNE/840029212" in hit["publisher"]["orgPath"]
-
-    @pytest.mark.integration
-    def test_hits_should_be_filtered_on_is_open_access(
-        self, client: Flask, docker_service, api, wait_for_ready
-    ):
-        body = {"filters": [{"isOpenAccess": "true"}]}
-        result = client.post("/search", json=body)
-        for hit in result.json["hits"]:
-            assert hit["isOpenAccess"] is True
 
     @pytest.mark.integration
     def test_hits_should_have_word_and_be_filtered_on_is_not_open_access(
@@ -515,7 +504,7 @@ class TestSearchAll:
                         assert not entry.get("code")
 
     @pytest.mark.integration
-    def test_filter_on_open_access(
+    def test_filter_on_open_data(
         self, client: Flask, docker_service, api, wait_for_ready
     ):
         body = {"filters": [{"opendata": "true"}]}
@@ -525,14 +514,9 @@ class TestSearchAll:
             result["page"]["totalElements"]
             == result["aggregations"]["opendata"]["doc_count"]
         )
-        has_open_licence_distribution = False
-        for hits in result["hits"]:
-            assert hits["accessRights"]["code"] == "PUBLIC"
-            for dists in hits["distribution"]:
-                if "openLicense" in dists.keys() and dists["openLicense"]:
-                    has_open_licence_distribution = True
-                    break
-        assert has_open_licence_distribution is True
+        for hit in result["hits"]:
+            assert hit["accessRights"]["code"] == "PUBLIC"
+            assert hit["isOpenData"] is True
 
     @pytest.mark.integration
     def test_filter_on_unknown_access_datasets(

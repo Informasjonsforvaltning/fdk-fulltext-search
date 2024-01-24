@@ -422,15 +422,6 @@ def test_default_aggs():
                 "size": 1000000000,
             }
         },
-        "availability": {
-            "filters": {
-                "filters": {
-                    "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                    "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                    "isFree": {"term": {"isFree": "true"}},
-                }
-            }
-        },
         "dataset_access": {
             "filter": {"term": {"_index": "datasets"}},
             "aggs": {
@@ -472,7 +463,7 @@ def test_get_filter_key():
     result_random_key = get_field_by_filter_key("random")
     assert result_random_key == "random"
     result_spatial = get_field_by_filter_key("spatial")
-    assert result_spatial == "spatial.prefLabel.no.keyword"
+    assert result_spatial == "spatial.prefLabel.nb.keyword"
     result_provenance = get_field_by_filter_key("provenance")
     assert result_provenance == "provenance.code.keyword"
 
@@ -670,7 +661,7 @@ def test_match_in_title_info_model():
 
 @pytest.mark.unit
 def test_get_aggregation_term_for_key():
-    expected_spatial = {"terms": {"field": "spatial.prefLabel.no.keyword"}}
+    expected_spatial = {"terms": {"field": "spatial.prefLabel.nb.keyword"}}
 
     expected_access = {
         "terms": {"field": "accessRights.code.keyword", "missing": "Ukjent", "size": 10}

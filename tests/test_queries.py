@@ -334,15 +334,6 @@ def test_all_indices_query_should_return_query_with_dis_max():
                     "size": 1000000000,
                 }
             },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                        "isFree": {"term": {"isFree": "true"}},
-                    }
-                }
-            },
             "dataset_access": {
                 "filter": {"term": {"_index": "datasets"}},
                 "aggs": {
@@ -730,15 +721,6 @@ def test_all_indices_should_return_query_with_filter():
                     "size": 1000000000,
                 }
             },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                        "isFree": {"term": {"isFree": "true"}},
-                    }
-                }
-            },
             "dataset_access": {
                 "filter": {"term": {"_index": "datasets"}},
                 "aggs": {
@@ -1075,15 +1057,6 @@ def test_all_indices_with_several_words():
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
                     "size": 1000000000,
-                }
-            },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                        "isFree": {"term": {"isFree": "true"}},
-                    }
                 }
             },
             "dataset_access": {
@@ -1499,15 +1472,6 @@ def test_all_indices_should_return_query_with_must_not():
                     "field": "publisher.orgPath",
                     "missing": "MISSING",
                     "size": 1000000000,
-                }
-            },
-            "availability": {
-                "filters": {
-                    "filters": {
-                        "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                        "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                        "isFree": {"term": {"isFree": "true"}},
-                    }
                 }
             },
             "dataset_access": {
