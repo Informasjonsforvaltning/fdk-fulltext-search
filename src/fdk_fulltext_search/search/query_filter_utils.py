@@ -16,7 +16,7 @@ def get_field_by_filter_key(filter_key: str) -> str:
     elif filter_key == "provenance":
         return "provenance.code.keyword"
     elif filter_key == "spatial":
-        return "spatial.prefLabel.no.keyword"
+        return "spatial.prefLabel.nb.keyword"
     elif filter_key == "uri":
         return "uri.keyword"
     else:

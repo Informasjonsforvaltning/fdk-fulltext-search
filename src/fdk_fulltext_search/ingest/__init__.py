@@ -435,7 +435,7 @@ def create_index(
                 )
 
             update_index_info(index_alias)
-        except BaseException as err:
+        except Exception as err:
             logging.error(
                 f"{traceback.format_exc()}: error when attempting to create {new_index_name}"
             )
@@ -465,7 +465,7 @@ def set_alias_for_new_index(
                 index=new_index_name, name=IndicesKey.PUBLIC_SERVICES_AND_EVENTS_ALIAS
             )
 
-    except BaseException as err:
+    except Exception as err:
         logging.error(
             f"{traceback.format_exc()}: error when attempting to set alias {index_alias} for index {new_index_name}"
         )

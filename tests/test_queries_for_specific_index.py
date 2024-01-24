@@ -621,7 +621,7 @@ def test_dataset_default_aggregations():
                 "size": 10,
             }
         },
-        "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
+        "spatial": {"terms": {"field": "spatial.prefLabel.nb.keyword"}},
     }
     result = DataSetQuery().body["aggs"]
     agg_keys = result.keys()
@@ -690,7 +690,7 @@ def test_dataset_empty_query():
                     "size": 10,
                 }
             },
-            "spatial": {"terms": {"field": "spatial.prefLabel.no.keyword"}},
+            "spatial": {"terms": {"field": "spatial.prefLabel.nb.keyword"}},
         },
     }
     assert json.dumps(DataSetQuery().body) == json.dumps(expected_body)
@@ -1160,7 +1160,7 @@ def test_dataset_with_spatial_filter():
                     }
                 }
             ],
-            "filter": [{"term": {"spatial.prefLabel.no.keyword": "Norge"}}],
+            "filter": [{"term": {"spatial.prefLabel.nb.keyword": "Norge"}}],
         }
     }
     result = DataSetQuery(search_string="Ad", filters=[{"spatial": "Norge"}]).body[

@@ -246,14 +246,9 @@ class TestDataSetSearch:
             result["page"]["totalElements"]
             == result["aggregations"]["opendata"]["doc_count"]
         )
-        has_open_licence_distribution = False
-        for hits in result["hits"]:
-            assert hits["accessRights"]["code"] == "PUBLIC"
-            for dists in hits["distribution"]:
-                if "openLicense" in dists.keys() and dists["openLicense"]:
-                    has_open_licence_distribution = True
-                    break
-        assert has_open_licence_distribution is True
+        for hit in result["hits"]:
+            assert hit["accessRights"]["code"] == "PUBLIC"
+            assert hit["isOpenData"] is True
 
     @pytest.mark.integration
     def test_filter_on_access_rights_non_public(

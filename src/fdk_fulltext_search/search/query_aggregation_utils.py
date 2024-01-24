@@ -10,15 +10,6 @@ def default_all_indices_aggs() -> Dict:
     return {
         "los": los_aggregation(),
         "orgPath": org_path_aggregation(),
-        "availability": {
-            "filters": {
-                "filters": {
-                    "isOpenAccess": {"term": {"isOpenAccess": "true"}},
-                    "isOpenLicense": {"term": {"isOpenLicense": "true"}},
-                    "isFree": {"term": {"isFree": "true"}},
-                }
-            }
-        },
         "dataset_access": {
             "filter": {"term": {"_index": "datasets"}},
             "aggs": {
