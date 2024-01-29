@@ -1,4 +1,5 @@
 """Nox sessions."""
+
 import tempfile
 
 import nox
