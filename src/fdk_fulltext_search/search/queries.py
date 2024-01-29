@@ -406,29 +406,29 @@ class DataSetQuery(AbstractSearchQuery):
                 "format"
             ] = query_aggregation_utils.fdk_format_aggregation()
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
-            self.body["aggs"][
-                "provenance"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="provenance"
+            self.body["aggs"]["provenance"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="provenance"
+                )
             )
             self.body["aggs"][
                 "orgPath"
             ] = query_aggregation_utils.org_path_aggregation()
             self.body["aggs"]["opendata"] = {"filter": query_utils.open_data_query()}
-            self.body["aggs"][
-                "theme"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="theme"
+            self.body["aggs"]["theme"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="theme"
+                )
             )
-            self.body["aggs"][
-                "accessRights"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="accessRights", missing="Ukjent", size=10
+            self.body["aggs"]["accessRights"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="accessRights", missing="Ukjent", size=10
+                )
             )
-            self.body["aggs"][
-                "spatial"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="spatial"
+            self.body["aggs"]["spatial"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="spatial"
+                )
             )
 
 
@@ -486,29 +486,29 @@ class ConceptQuery(AbstractSearchQuery):
     def add_aggs(self: Any, fields: list) -> Any:
         if fields is None:
             self.body["aggs"]["los"] = query_aggregation_utils.los_aggregation()
-            self.body["aggs"][
-                "provenance"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="provenance"
+            self.body["aggs"]["provenance"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="provenance"
+                )
             )
             self.body["aggs"][
                 "orgPath"
             ] = query_aggregation_utils.org_path_aggregation()
             self.body["aggs"]["opendata"] = {"filter": query_utils.open_data_query()}
-            self.body["aggs"][
-                "theme"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="theme"
+            self.body["aggs"]["theme"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="theme"
+                )
             )
-            self.body["aggs"][
-                "accessRights"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="accessRights", missing="Ukjent", size=10
+            self.body["aggs"]["accessRights"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="accessRights", missing="Ukjent", size=10
+                )
             )
-            self.body["aggs"][
-                "spatial"
-            ] = query_aggregation_utils.get_aggregation_term_for_key(
-                aggregation_key="spatial"
+            self.body["aggs"]["spatial"] = (
+                query_aggregation_utils.get_aggregation_term_for_key(
+                    aggregation_key="spatial"
+                )
             )
 
 
