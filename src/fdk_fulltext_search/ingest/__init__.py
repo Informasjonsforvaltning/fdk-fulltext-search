@@ -510,7 +510,7 @@ def create_or_update_dataset_pipeline(pipeline_id: str) -> None:
                         "description": "Concatinate fdkFormat type and code",
                         "lang": "painless",
                         "source": """
-                        ArrayList formats = new ArrayList();
+                        Set formats = new LinkedHashSet();
                         if(ctx['distribution'] != null){
                             for (Map distr : ctx['distribution']) {
                                 if(distr['fdkFormat'] != null){
@@ -549,7 +549,7 @@ def create_or_update_dataservice_pipeline(pipeline_id: str) -> None:
                         "description": "Concatinate fdkFormat type and code",
                         "lang": "painless",
                         "source": """
-                        ArrayList formats = new ArrayList();
+                        Set formats = new LinkedHashSet();
                         if(ctx['fdkFormat'] != null){
                             for (Map fmt : ctx['fdkFormat']) {
                                 if(fmt['fdkType'] == 'UNKNOWN') {
