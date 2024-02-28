@@ -145,7 +145,7 @@ def search_public_services_and_events(
 def count(index: Optional[str] = None) -> Dict[str, Union[int, str]]:
     try:
         result = es_client.count(index=index) if index else es_client.count()
-        return { "count": result.get('count') } if result else { "count": 0 }
+        return {"count": result.get("count")} if result else {"count": 0}
     except ConnectionError:
         return {
             "count": -1,
