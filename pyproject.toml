@@ -26,6 +26,7 @@ pip = "^23.3.2"
 nox-poetry = "^1.0.3"
 poetry = "^1.7.1"
 virtualenv = "20.25.0"
+lxml = "4.9.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "8.0.0"
