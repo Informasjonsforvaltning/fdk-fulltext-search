@@ -42,7 +42,7 @@ flake8-black = "^0.3.6"
 flake8-import-order = "^0.18.2"
 flake8-bandit = "^4.1.1"
 flake8-bugbear = "^24.2.6"
-mypy = "^1.8.0"
+mypy = "^1.9.0"
 pep8-naming = "^0.13.3"
 safety = "^3.0.1"
 
